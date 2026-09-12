@@ -1,0 +1,464 @@
+import Link from "next/link";
+import AppShell from "@/components/app-shell";
+import { EmptyState, StatusBadge } from "@/components/fleet-ui";
+import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import AddReimbursementForm from "./add-reimbursement-form";
+
+type Reimbursement = {
+  id: string;
+  expense_id: string;
+  reimbursement_date: string | null;
+  amount: number | string | null;
+  notes: string | null;
+};
+
+type Expense = {
+  id: string;
+  category: string | null;
+  vendor: string | null;
+  amount: number | string | null;
+  expense_date: string | null;
+  truck_id?: string | null;
+};
+
+type Truck = {
+  id: string;
+  unit_number: string;
+};
+
+type Params = {
+  q?: string;
+  kind?: string;
+  truck?: string;
+  sort?: string;
+  page?: string;
+};
+
+const PAGE_SIZE = 10;
+
+export default async function ReimbursementsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Params>;
+}) {
+  const params = await searchParams;
+  const q = (params.q || "").trim().toLowerCase();
+  const kind = (params.kind || "all").toLowerCase();
+  const truckFilter = params.truck || "all";
+  const sort = (params.sort || "newest").toLowerCase();
+  const requestedPage = Math.max(1, Number(params.page || "1") || 1);
+
+  const { supabase, fullName, companyName, role } =
+    await getFleetPilotAccount();
+
+  const [
+    { data: reimbursementData, error },
+    { data: expenseData },
+    { data: truckData },
+  ] = await Promise.all([
+    supabase
+      .from("reimbursements")
+      .select("id, expense_id, reimbursement_date, amount, notes")
+      .order("reimbursement_date", { ascending: false }),
+    supabase
+      .from("expenses")
+      .select("id, category, vendor, amount, expense_date, truck_id")
+      .order("expense_date", { ascending: false })
+      .limit(300),
+    supabase.from("trucks").select("id, unit_number").order("unit_number"),
+  ]);
+
+  const reimbursements = (reimbursementData ?? []) as Reimbursement[];
+  const expenses = (expenseData ?? []) as Expense[];
+  const trucks = (truckData ?? []) as Truck[];
+  const expenseMap = new Map(expenses.map((expense) => [expense.id, expense]));
+  const truckMap = new Map(trucks.map((truck) => [truck.id, truck]));
+
+  const total = reimbursements.reduce((sum, row) => sum + numberValue(row.amount), 0);
+
+  const isFull = (row: Reimbursement) => {
+    const expense = expenseMap.get(row.expense_id);
+    if (!expense) return false;
+    return numberValue(row.amount) >= numberValue(expense.amount) - 0.005;
+  };
+
+  const fullCount = reimbursements.filter(isFull).length;
+  const partialCount = reimbursements.length - fullCount;
+  const fullAmount = reimbursements
+    .filter(isFull)
+    .reduce((sum, row) => sum + numberValue(row.amount), 0);
+  const partialAmount = total - fullAmount;
+
+  let filtered = reimbursements.filter((row) => {
+    if (!q) return true;
+    const expense = expenseMap.get(row.expense_id);
+    const truck = expense?.truck_id ? truckMap.get(expense.truck_id) : null;
+    return [
+      row.notes,
+      expense?.category,
+      expense?.vendor,
+      truck?.unit_number,
+    ].some((value) => (value || "").toLowerCase().includes(q));
+  });
+
+  if (kind === "full") filtered = filtered.filter(isFull);
+  if (kind === "partial") filtered = filtered.filter((row) => !isFull(row));
+
+  if (truckFilter !== "all") {
+    filtered = filtered.filter((row) => expenseMap.get(row.expense_id)?.truck_id === truckFilter);
+  }
+
+  filtered = [...filtered].sort((a, b) => {
+    if (sort === "oldest") return dateValue(a.reimbursement_date) - dateValue(b.reimbursement_date);
+    if (sort === "amount-desc") return numberValue(b.amount) - numberValue(a.amount);
+    return dateValue(b.reimbursement_date) - dateValue(a.reimbursement_date);
+  });
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const page = Math.min(requestedPage, pageCount);
+  const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const categoryTotals = new Map<string, number>();
+  for (const row of reimbursements) {
+    const expense = expenseMap.get(row.expense_id);
+    const label = expense?.category || "Other";
+    categoryTotals.set(label, (categoryTotals.get(label) || 0) + numberValue(row.amount));
+  }
+  const topCategories = [...categoryTotals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const query = new URLSearchParams();
+  if (q) query.set("q", q);
+  if (kind !== "all") query.set("kind", kind);
+  if (truckFilter !== "all") query.set("truck", truckFilter);
+  if (sort !== "newest") query.set("sort", sort);
+
+  return (
+    <AppShell
+      active="reimbursements"
+      fullName={fullName}
+      companyName={companyName}
+      role={role}
+    >
+      <div className="fp-reimb-page">
+        <section className="fp-reimb-heading">
+          <div>
+            <h1 className="fp-reimb-title">Reimbursements</h1>
+            <p className="fp-reimb-subtitle">
+              Track recovered business expenses and reimbursement history.
+            </p>
+          </div>
+          <div id="add-reimbursement">
+            <AddReimbursementForm expenses={expenses} />
+          </div>
+        </section>
+
+        {error && (
+          <div className="mt-3 rounded-[10px] border border-[#ffcf82] bg-[#fff7e8] px-4 py-3 text-[10px] font-[600] text-[#966217]">
+            {error.message}
+          </div>
+        )}
+
+        <div className="fp-reimb-layout mt-4">
+          <div className="min-w-0">
+            <div className="fp-reimb-kpi-grid">
+              <ReimbKpi label="Total Reimbursed" value={money(total)} tone="blue" icon="wallet" note="Recovered expenses" />
+              <ReimbKpi label="Records" value={`${reimbursements.length}`} tone="amber" icon="clock" note="Reimbursement entries" />
+              <ReimbKpi label="Full Recovery" value={money(fullAmount)} tone="green" icon="check" note={`${fullCount} records`} />
+              <ReimbKpi label="Partial Recovery" value={money(partialAmount)} tone="red" icon="partial" note={`${partialCount} records`} />
+            </div>
+
+            <section className="fp-reimb-table-card mt-4">
+              <div className="fp-reimb-tabs">
+                <ReimbTab href={tabHref("all", q, truckFilter, sort)} label="All" count={reimbursements.length} active={kind === "all"} />
+                <ReimbTab href={tabHref("full", q, truckFilter, sort)} label="Full Recovery" count={fullCount} active={kind === "full"} />
+                <ReimbTab href={tabHref("partial", q, truckFilter, sort)} label="Partial Recovery" count={partialCount} active={kind === "partial"} />
+              </div>
+
+              <form action="/reimbursements" className="fp-reimb-filterbar">
+                <label className="fp-reimb-search">
+                  <SearchIcon />
+                  <input name="q" defaultValue={params.q || ""} placeholder="Search by category, vendor, truck, notes..." />
+                </label>
+
+                <select name="truck" defaultValue={truckFilter} className="fp-reimb-filter-select">
+                  <option value="all">Truck</option>
+                  {trucks.map((truck) => (
+                    <option key={truck.id} value={truck.id}>Truck #{truck.unit_number}</option>
+                  ))}
+                </select>
+
+                <button type="button" className="fp-reimb-filter-button">
+                  <CalendarIcon /> Date Range <span>⌄</span>
+                </button>
+
+                <select name="kind" defaultValue={kind} className="fp-reimb-filter-select">
+                  <option value="all">Recovery Type</option>
+                  <option value="full">Full Recovery</option>
+                  <option value="partial">Partial Recovery</option>
+                </select>
+
+                <button type="submit" className="fp-reimb-filter-button">
+                  <FilterIcon /> More Filters
+                </button>
+
+                <div className="fp-reimb-sort">
+                  <span>Sort by</span>
+                  <select name="sort" defaultValue={sort}>
+                    <option value="newest">Date (Newest)</option>
+                    <option value="oldest">Date (Oldest)</option>
+                    <option value="amount-desc">Amount (Highest)</option>
+                  </select>
+                </div>
+              </form>
+
+              <div className="fp-reimb-table-wrap">
+                <table className="fp-reimb-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Description</th>
+                      <th>Recovered</th>
+                      <th>Truck</th>
+                      <th>Vendor</th>
+                      <th>Recovery</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pageRows.map((row, index) => {
+                      const expense = expenseMap.get(row.expense_id);
+                      const truck = expense?.truck_id ? truckMap.get(expense.truck_id) : null;
+                      const full = isFull(row);
+                      return (
+                        <tr key={row.id}>
+                          <td className="fp-reimb-number">#{String((page - 1) * PAGE_SIZE + index + 1).padStart(4, "0")}</td>
+                          <td>{shortDate(row.reimbursement_date)}</td>
+                          <td className="fp-reimb-description">
+                            {row.notes || `${expense?.category || "Expense"} reimbursement`}
+                          </td>
+                          <td className="fp-reimb-amount">{money(numberValue(row.amount))}</td>
+                          <td>{truck ? `#${truck.unit_number}` : "—"}</td>
+                          <td>{expense?.vendor || "—"}</td>
+                          <td>
+                            <StatusBadge tone={full ? "green" : "orange"}>
+                              {full ? "Full" : "Partial"}
+                            </StatusBadge>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {pageRows.length === 0 && <EmptyState text="No reimbursements match these filters." />}
+              </div>
+
+              <div className="fp-reimb-pagination">
+                <span>
+                  Showing {filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}–
+                  {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} reimbursements
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <PageLink href={pageHref(query, Math.max(1, page - 1))} disabled={page === 1}>‹</PageLink>
+                  <PageLink href={pageHref(query, page)} active>{page}</PageLink>
+                  <PageLink href={pageHref(query, Math.min(pageCount, page + 1))} disabled={page === pageCount}>›</PageLink>
+                  <span className="fp-reimb-page-size">10 per page⌄</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside className="fp-reimb-right-rail">
+            <section className="fp-reimb-side-card">
+              <h2>Quick Actions</h2>
+              <div className="mt-3 grid gap-2">
+                <Link href="/reimbursements#add-reimbursement" className="fp-reimb-side-action primary">
+                  <span className="fp-reimb-side-icon"><WalletIcon /></span>
+                  <span>Add Reimbursement</span><span>›</span>
+                </Link>
+                <button className="fp-reimb-side-action">
+                  <span className="fp-reimb-side-icon"><ImportIcon /></span>
+                  <span>Import from File</span><span>›</span>
+                </button>
+                <button className="fp-reimb-side-action">
+                  <span className="fp-reimb-side-icon"><ExportIcon /></span>
+                  <span>Export Reimbursements</span><span>›</span>
+                </button>
+                <Link href="/reimbursements?kind=partial" className="fp-reimb-side-action">
+                  <span className="fp-reimb-side-icon"><ClockIcon /></span>
+                  <span>View Partial Recovery</span><span>›</span>
+                </Link>
+              </div>
+            </section>
+
+            <section className="fp-reimb-side-card">
+              <h2>Recovery Breakdown</h2>
+              <div className="mt-4 flex justify-center">
+                <ReimbDonut total={total} full={fullAmount} partial={partialAmount} />
+              </div>
+              <div className="fp-reimb-stat-list mt-4">
+                <ReimbStatRow label="Full Recovery" amount={fullAmount} total={total} color="#58bd69" />
+                <ReimbStatRow label="Partial Recovery" amount={partialAmount} total={total} color="#f4b53e" />
+              </div>
+            </section>
+
+            <section className="fp-reimb-side-card">
+              <div className="flex items-center justify-between">
+                <h2>Top Recovered Categories</h2>
+                <span className="text-[9px] font-[600] text-[#1188ff]">View All →</span>
+              </div>
+              <div className="fp-reimb-ranking mt-3">
+                {topCategories.map(([label, amount], index) => (
+                  <div key={label} className="fp-reimb-ranking-row">
+                    <span className="fp-reimb-rank">{index + 1}</span>
+                    <span className="min-w-0 flex-1 truncate">{label}</span>
+                    <span>{money(amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div className="fp-reimb-promo">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/28 to-transparent" />
+              <div className="relative z-10">
+                <div className="text-[16px] font-[740] leading-[1.18] text-white">
+                  Recover More.<br />Protect Profit.
+                </div>
+                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </AppShell>
+  );
+}
+
+function ReimbKpi({ label, value, tone, icon, note }: {
+  label: string; value: string; tone: "blue" | "amber" | "green" | "red"; icon: "wallet" | "clock" | "check" | "partial"; note: string;
+}) {
+  const palette = {
+    blue: { color: "#4b8df6", soft: "#eaf3ff" },
+    amber: { color: "#d69d2c", soft: "#fff5df" },
+    green: { color: "#55a965", soft: "#e9f7ed" },
+    red: { color: "#e75b63", soft: "#fff0f1" },
+  }[tone];
+  return (
+    <div className="fp-reimb-kpi">
+      <div className="fp-reimb-kpi-icon" style={{ color: palette.color, backgroundColor: palette.soft }}>
+        <ReimbKpiIcon type={icon} />
+      </div>
+      <div>
+        <div className="fp-reimb-kpi-label">{label}</div>
+        <div className="fp-number fp-reimb-kpi-value">{value}</div>
+        <div className="fp-reimb-kpi-note">{note}</div>
+      </div>
+    </div>
+  );
+}
+
+function ReimbKpiIcon({ type }: { type: "wallet" | "clock" | "check" | "partial" }) {
+  if (type === "clock") return <ClockIcon />;
+  if (type === "check") return <CheckIcon />;
+  if (type === "partial") return <PartialIcon />;
+  return <WalletIcon />;
+}
+
+function ReimbTab({ href, label, count, active }: { href: string; label: string; count: number; active: boolean }) {
+  return (
+    <Link href={href} className={`fp-reimb-tab ${active ? "active" : ""}`}>
+      <span>{label}</span><span className="fp-reimb-tab-count">{count}</span>
+    </Link>
+  );
+}
+
+function ReimbDonut({ total, full, partial }: { total: number; full: number; partial: number }) {
+  const safe = Math.max(1, total);
+  const fullPct = (full / safe) * 100;
+  const partialPct = (partial / safe) * 100;
+  const end = Math.min(100, fullPct + partialPct);
+  const background = total > 0
+    ? `conic-gradient(#58bd69 0 ${fullPct}%, #f4b53e ${fullPct}% ${end}%, #e7edf3 ${end}% 100%)`
+    : "conic-gradient(#e7edf3 0 100%)";
+  return (
+    <div className="fp-reimb-donut" style={{ background }}>
+      <div><strong>{money(total)}</strong><span>Total</span></div>
+    </div>
+  );
+}
+
+function ReimbStatRow({ label, amount, total, color }: { label: string; amount: number; total: number; color: string }) {
+  const pct = total > 0 ? Math.round((amount / total) * 100) : 0;
+  return (
+    <div className="fp-reimb-stat-row">
+      <span className="h-[9px] w-[9px] rounded-full" style={{ backgroundColor: color }} />
+      <span className="flex-1">{label}</span><strong>{money(amount)}</strong><span>{pct}%</span>
+    </div>
+  );
+}
+
+function tabHref(kind: string, q: string, truck: string, sort: string) {
+  const params = new URLSearchParams();
+  if (kind !== "all") params.set("kind", kind);
+  if (q) params.set("q", q);
+  if (truck !== "all") params.set("truck", truck);
+  if (sort !== "newest") params.set("sort", sort);
+  return `/reimbursements${params.toString() ? `?${params}` : ""}`;
+}
+
+function pageHref(base: URLSearchParams, page: number) {
+  const params = new URLSearchParams(base);
+  if (page > 1) params.set("page", String(page)); else params.delete("page");
+  return `/reimbursements${params.toString() ? `?${params}` : ""}`;
+}
+
+function PageLink({ href, children, active = false, disabled = false }: {
+  href: string; children: React.ReactNode; active?: boolean; disabled?: boolean;
+}) {
+  if (disabled) return <span className="fp-reimb-page-button disabled">{children}</span>;
+  return <Link href={href} className={`fp-reimb-page-button ${active ? "active" : ""}`}>{children}</Link>;
+}
+
+function numberValue(value: number | string | null | undefined) {
+  const number = Number(value || 0);
+  return Number.isFinite(number) ? number : 0;
+}
+function dateValue(value?: string | null) {
+  if (!value) return 0;
+  return new Date(`${value.slice(0,10)}T12:00:00`).getTime();
+}
+function money(value: number) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+}
+function shortDate(value?: string | null) {
+  if (!value) return "—";
+  return new Date(`${value.slice(0,10)}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+function SearchIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>;
+}
+function FilterIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>;
+}
+function CalendarIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 9h16"/></svg>;
+}
+function WalletIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><path d="M4 6h16v12H4z"/><path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z"/></svg>;
+}
+function ClockIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>;
+}
+function CheckIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="m8 12 2.5 2.5L16 9"/></svg>;
+}
+function PartialIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="M9 9l6 6M15 9l-6 6"/></svg>;
+}
+function ImportIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M5 19h14V9H5z"/><path d="M12 3v10M8 7l4-4 4 4"/></svg>;
+}
+function ExportIcon() {
+  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M5 5h14v14H5z"/><path d="M12 15V5M8 9l4-4 4 4"/></svg>;
+}
