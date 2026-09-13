@@ -12,7 +12,7 @@ export async function getFleetPilotAccount() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name")
+    .select("full_name, avatar_path")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -34,11 +34,40 @@ export async function getFleetPilotAccount() {
     companyName = company?.name ?? "";
   }
 
+  const avatarUrl = await getAvatarUrl(
+    supabase,
+    profile?.avatar_path || null
+  );
+
   return {
     supabase,
     user,
     fullName: profile?.full_name || "FleetPilot User",
+    avatarPath: profile?.avatar_path || null,
+    avatarUrl,
     companyName,
     role: membership?.role || "Member",
   };
+}
+
+
+export async function getAvatarUrl(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  avatarPath?: string | null
+) {
+  if (!avatarPath) return null;
+
+  const { data, error } = await supabase.storage
+    .from("avatars")
+    .createSignedUrl(avatarPath, 60 * 60);
+
+  if (!error && data?.signedUrl) {
+    return data.signedUrl;
+  }
+
+  const { data: publicData } = supabase.storage
+    .from("avatars")
+    .getPublicUrl(avatarPath);
+
+  return publicData?.publicUrl || null;
 }

@@ -21,6 +21,11 @@ export default function SettingsProfileForm({
   const [name, setName] = useState(fullName);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [billingBusy, setBillingBusy] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [deleteReason, setDeleteReason] = useState("");
+  const [deleteBusy, setDeleteBusy] = useState(false);
 
   async function save(event: FormEvent) {
     event.preventDefault();
@@ -73,6 +78,65 @@ export default function SettingsProfileForm({
     URL.revokeObjectURL(url);
   }
 
+
+async function billingAction(mode: "checkout" | "portal") {
+  setBillingBusy(true);
+  setMessage("");
+
+  try {
+    const response = await fetch(`/api/billing/${mode}`, {
+      method: "POST",
+    });
+    const payload = await response.json();
+
+    if (!response.ok || !payload?.url) {
+      throw new Error(payload?.error || "Billing is unavailable.");
+    }
+
+    window.location.href = payload.url;
+  } catch (caught) {
+    setMessage(
+      caught instanceof Error ? caught.message : "Billing is unavailable."
+    );
+    setBillingBusy(false);
+  }
+}
+
+async function requestDeletion() {
+  setDeleteBusy(true);
+  setMessage("");
+
+  try {
+    const response = await fetch("/api/account/delete-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        confirmation: deleteConfirmation,
+        reason: deleteReason,
+      }),
+    });
+
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload?.error || "Could not submit deletion request.");
+    }
+
+    setMessage(payload.message || "Deletion request submitted.");
+    setDeleteOpen(false);
+    setDeleteConfirmation("");
+    setDeleteReason("");
+  } catch (caught) {
+    setMessage(
+      caught instanceof Error
+        ? caught.message
+        : "Could not submit deletion request."
+    );
+  } finally {
+    setDeleteBusy(false);
+  }
+}
+
   return (
     <>
       <section className="fp-panel fp-settings-main-card">
@@ -118,9 +182,10 @@ export default function SettingsProfileForm({
         <section className="fp-panel side">
           <h2>Quick Actions</h2>
           <button className="fp-side-action" onClick={resetPassword}>▣ <span>Change Password</span><b>›</b></button>
-          <button className="fp-side-action">▣ <span>Manage Subscription</span><b>›</b></button>
+          <button className="fp-side-action" disabled={billingBusy} onClick={() => billingAction("portal")}>▣ <span>Manage Subscription</span><b>›</b></button>
+          <button className="fp-side-action" disabled={billingBusy} onClick={() => billingAction("checkout")}>▣ <span>Start / Upgrade Plan</span><b>›</b></button>
           <button className="fp-side-action" onClick={exportProfile}>▣ <span>Export Your Data</span><b>›</b></button>
-          <button className="fp-side-action" disabled>▣ <span>Delete Account</span><b>›</b></button>
+          <button className="fp-side-action danger" onClick={() => setDeleteOpen(true)}>▣ <span>Delete Account</span><b>›</b></button>
         </section>
 
         <section className="fp-panel side">
@@ -133,6 +198,53 @@ export default function SettingsProfileForm({
           <button className="fp-primary-btn prefs-save" type="button">Save Preferences</button>
         </section>
       </aside>
+
+{deleteOpen && (
+  <div className="fp-delete-overlay" role="dialog" aria-modal="true">
+    <div className="fp-delete-modal">
+      <h2>Request Account Deletion</h2>
+      <p>
+        This sends a deletion request for review. It does not immediately remove your company data or account.
+      </p>
+
+      <label>
+        Optional reason
+        <textarea
+          rows={3}
+          value={deleteReason}
+          onChange={(event) => setDeleteReason(event.target.value)}
+          placeholder="Why are you leaving?"
+        />
+      </label>
+
+      <label>
+        Type DELETE to confirm
+        <input
+          value={deleteConfirmation}
+          onChange={(event) => setDeleteConfirmation(event.target.value)}
+          placeholder="DELETE"
+        />
+      </label>
+
+      <div className="fp-delete-actions">
+        <button
+          type="button"
+          onClick={() => setDeleteOpen(false)}
+          disabled={deleteBusy}
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          disabled={deleteBusy || deleteConfirmation !== "DELETE"}
+          onClick={requestDeletion}
+        >
+          {deleteBusy ? "Submitting..." : "Submit Deletion Request"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }

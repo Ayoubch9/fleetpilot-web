@@ -1,57 +1,59 @@
-# FleetPilot Web v1.4.0 — Real Pilot AI Backend
+# FleetPilot Web v2.6.0 — Company Profile + Preferences
 
-Pilot AI now uses a protected Next.js server API route and the OpenAI Responses API.
+## Company
+Settings → Company now contains a real trucking business profile:
 
-## Security model
-- `OPENAI_API_KEY` is server-only.
-- The browser never receives the API key.
-- `/api/pilot/ask` verifies the authenticated Supabase user.
-- Fleet data is read through the user's existing company-scoped Supabase RLS session.
-- Pilot AI receives only the signed-in company's FleetPilot data.
-- No Supabase service-role key is used.
+Business Identity:
+- Display Name
+- Legal Business Name
+- USDOT Number
+- MC Number
 
-## Pilot AI data context
-The backend currently summarizes:
-- loads and routes
-- revenue and mileage
-- expenses and expense categories
-- reimbursements
-- fuel spend and gallons
-- truck performance
-- maintenance and upcoming service
-- active weekly fixed expenses
-- company fee settings
-- recent odometer records
+Contact:
+- Business Email
+- Business Phone
 
-## Required local environment variable
-Add to `.env.local`:
+Business Address:
+- Address
+- Address Line 2
+- City
+- State
+- ZIP Code
+- Country
 
-OPENAI_API_KEY=your_openai_api_key
+Operations:
+- Company Time Zone
+- Current member role
 
-Optional:
+Only the company owner can edit company-level information.
 
-OPENAI_MODEL=gpt-5.6-luna
+## Preferences
+The Preferences tab was reorganized so it no longer presents USD/Miles as
+fake selectable dropdowns.
 
-The model defaults to `gpt-5.6-luna` when `OPENAI_MODEL` is not set.
+Regional & Formatting:
+- Language
+- Date Format
+- Time Format
+- Time Zone
 
-## Vercel
-Add the same `OPENAI_API_KEY` as a Vercel Environment Variable for Production.
-Optionally add `OPENAI_MODEL`.
+Operating Defaults:
+- Week Starts On
+- Default Performance Period
+- Currency shown as a locked USD capability
+- Distance shown as a locked Miles capability
 
-Then redeploy.
+Display:
+- Compact Tables preference
 
-## Validation
-Run:
+Existing notification preferences remain under Notifications.
 
-npm run typecheck
-npm run build
+## Database migration
+Run once:
 
-Then test:
-- `/pilot-ai`
-- ask about fuel
-- ask which truck is most profitable
-- ask for an expense summary
-- ask which maintenance is due soon
-- ask which routes are strongest
+`supabase_company_preferences_setup.sql`
 
-Important business decisions should still be reviewed by the user.
+It adds the company profile fields and the new user preference columns.
+Existing authenticated RLS policies remain in place.
+
+No anonymous access or service-role credentials are introduced.

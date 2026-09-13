@@ -5,7 +5,14 @@ import PilotChat from "./pilot-chat";
 const n=(v:unknown)=>Number(v||0)||0;
 const money=(v:number)=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(v);
 
-export default async function PilotAIPage(){
+type SearchParams = Promise<{ q?: string }>;
+
+export default async function PilotAIPage({
+ searchParams,
+}: {
+ searchParams: SearchParams;
+}){
+ const params = await searchParams;
  const {supabase,fullName,companyName,role}=await getFleetPilotAccount();
  const [{data:loads},{data:expenses},{data:trucks},{data:maintenance}] = await Promise.all([
   supabase.from("loads").select("rate, loaded_miles, deadhead_miles, truck_id").limit(500),
@@ -27,6 +34,7 @@ export default async function PilotAIPage(){
     <section className="fp-panel fp-ai-chat">
       <h2>Ask Pilot</h2>
       <PilotChat
+        initialQuestion={params.q || ""}
         suggested={[
           "How can I reduce my fuel costs?",
           "What is my current profit margin?",
@@ -36,7 +44,7 @@ export default async function PilotAIPage(){
       />
     </section>
     <aside className="fp-right-stack">
-      <section className="fp-panel side"><h2>Suggested Questions</h2>{["How can I reduce my fuel costs?","Which truck is the most profitable?","Show me this month's expense summary","What maintenance is due soon?","Analyze fleet performance","Which routes are most profitable?","Compare fuel efficiency by truck","Give me tips to increase profits"].map(x=><button key={x} className="fp-ai-suggest">✦ {x}</button>)}</section>
+      <section className="fp-panel side"><h2>Suggested Questions</h2>{["How can I reduce my fuel costs?","Which truck is the most profitable?","Show me this month's expense summary","What maintenance is due soon?","Analyze fleet performance","Which routes are most profitable?","Compare fuel efficiency by truck","Give me tips to increase profits"].map(x=><a key={x} href={`/pilot-ai?q=${encodeURIComponent(x)}`} className="fp-ai-suggest">✦ {x}</a>)}</section>
       <section className="fp-panel side"><h2>Quick Insights</h2><Insight text={`Fuel expenses: ${money(fuel)}`}/><Insight text={`${active} active truck${active===1?"":"s"}`}/><Insight text={`${service} service date${service===1?"":"s"} tracked`}/><Insight text={`Net profit: ${money(profit)}`}/></section>
     </aside>
    </div>

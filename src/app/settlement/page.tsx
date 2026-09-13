@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
@@ -71,7 +72,9 @@ export default async function SettlementPage({
   const { supabase, fullName, companyName, role } = await getFleetPilotAccount();
 
   const currentStart = selectedWeek(undefined);
-  let start = selectedWeek(params.week);
+  const cookieStore = await cookies();
+  const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
+  let start = selectedWeek(params.week || rememberedWeek);
   if (start.getTime() > currentStart.getTime()) start = currentStart;
 
   const sunday = weekEnd(start);
@@ -159,12 +162,6 @@ export default async function SettlementPage({
     settingsResult.error,
   ].filter(Boolean);
 
-  const isCurrent = dbDate(start) === dbDate(currentStart);
-  const prev = `/settlement?week=${dbDate(plusDays(start, -7))}`;
-  const nextStart = plusDays(start, 7);
-  const next = dbDate(nextStart) === dbDate(currentStart)
-    ? "/settlement"
-    : `/settlement?week=${dbDate(nextStart)}`;
 
   const breakdown = [
     { label: "Gross Revenue", value: grossRevenue, kind: "positive" as const },
@@ -186,14 +183,6 @@ export default async function SettlementPage({
             </p>
           </div>
 
-          <div className="fp-settle-week-control">
-            <Link href={prev}>←</Link>
-            <div>
-              <span>{isCurrent ? "This Week" : "Selected Week"}</span>
-              <strong>{displayDate(start)} – {displayDate(sunday)}</strong>
-            </div>
-            {!isCurrent ? <Link href={next}>→</Link> : <span className="disabled-arrow">→</span>}
-          </div>
         </section>
 
         {errors.length > 0 && (

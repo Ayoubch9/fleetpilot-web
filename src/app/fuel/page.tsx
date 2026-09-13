@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
@@ -56,7 +57,9 @@ export default async function FuelPage({
   const { supabase, fullName, companyName, role } = await getFleetPilotAccount();
 
   const currentStart = selectedWeek(undefined);
-  let start = selectedWeek(params.week);
+  const cookieStore = await cookies();
+  const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
+  let start = selectedWeek(params.week || rememberedWeek);
   if (start.getTime() > currentStart.getTime()) start = currentStart;
 
   const sunday = weekEnd(start);
@@ -147,12 +150,6 @@ export default async function FuelPage({
     return { date, cost, revenue };
   });
 
-  const isCurrent = dbDate(start) === dbDate(currentStart);
-  const prev = `/fuel?week=${dbDate(plusDays(start, -7))}${selectedTruckId !== "all" ? `&truck=${selectedTruckId}` : ""}`;
-  const nextStart = plusDays(start, 7);
-  const next = dbDate(nextStart) === dbDate(currentStart)
-    ? `/fuel${selectedTruckId !== "all" ? `?truck=${selectedTruckId}` : ""}`
-    : `/fuel?week=${dbDate(nextStart)}${selectedTruckId !== "all" ? `&truck=${selectedTruckId}` : ""}`;
 
   const dataError = truckError?.message ?? fuelResult.error?.message ?? loadResult.error?.message ?? null;
 
@@ -167,14 +164,6 @@ export default async function FuelPage({
             </p>
           </div>
 
-          <div className="fp-fuel-week-control">
-            <Link href={prev}>←</Link>
-            <div>
-              <span>{isCurrent ? "This Week" : "Selected Week"}</span>
-              <strong>{displayDate(start)} – {displayDate(sunday)}</strong>
-            </div>
-            {!isCurrent ? <Link href={next}>→</Link> : <span className="disabled-arrow">→</span>}
-          </div>
         </section>
 
         {dataError && (

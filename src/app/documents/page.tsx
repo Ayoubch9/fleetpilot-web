@@ -1,7 +1,7 @@
 import AppShell from "@/components/app-shell";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import DocumentManager from "./document-manager";
-import DocumentActions from "./document-actions";
+import DocumentCenter from "./document-center";
 
 type DocumentRow = {
   id: string;
@@ -34,7 +34,6 @@ export default async function DocumentsPage() {
   ]);
 
   const trucks = (truckData ?? []) as Truck[];
-  const truckMap = new Map(trucks.map((truck) => [truck.id, truck]));
   const docs = (documentResult.data ?? []) as DocumentRow[];
   const today = new Date();
   const soon = new Date(today.getTime() + 30 * 86400000);
@@ -86,53 +85,7 @@ export default async function DocumentsPage() {
         )}
 
         <div className="fp-doc-layout">
-          <section className="fp-panel">
-            <div className="fp-tabs-row">
-              <span className="active">All Documents <b>{docs.length}</b></span>
-              <span>Expiring Soon <b>{expiring.length}</b></span>
-              <span>Expired <b>{expired.length}</b></span>
-            </div>
-
-            <div className="fp-doc-filters">
-              <div>⌕ Search documents, name, tags...</div>
-              <button>Document Type⌄</button>
-              <button>Truck⌄</button>
-              <button>Status⌄</button>
-              <span>Sort by <b>Date (Newest)⌄</b></span>
-            </div>
-
-            <table className="fp-compact-table docs">
-              <thead>
-                <tr>
-                  <th>#</th><th>Name</th><th>Type</th><th>Associated With</th><th>Expiration</th><th>Status</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {docs.map((doc, index) => {
-                  const exp = doc.expiration_date ? new Date(`${doc.expiration_date}T12:00:00`) : null;
-                  const status = !exp ? "Valid" : exp < today ? "Expired" : exp <= soon ? "Expiring Soon" : "Valid";
-                  return (
-                    <tr key={doc.id}>
-                      <td>#{String(index + 1).padStart(4, "0")}</td>
-                      <td>{doc.name}</td>
-                      <td><span className="fp-doc-type">{doc.document_type || "Other"}</span></td>
-                      <td>{doc.truck_id ? `#${truckMap.get(doc.truck_id)?.unit_number || "—"}` : "Company"}</td>
-                      <td>{doc.expiration_date || "—"}</td>
-                      <td><span className={`fp-doc-status ${status.toLowerCase().replace(" ", "-")}`}>{status}</span></td>
-                      <td><DocumentActions id={doc.id} storagePath={doc.storage_path} /></td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-
-            {docs.length === 0 && (
-              <div className="fp-empty-docs">
-                <strong>No documents uploaded yet.</strong>
-                <span>{setupMissing ? "Complete the one-time Supabase setup first." : "Use Upload Document to begin building your fleet document center."}</span>
-              </div>
-            )}
-          </section>
+          <DocumentCenter docs={docs} trucks={trucks} setupMissing={setupMissing} />
 
           <aside className="fp-right-stack">
             <section className="fp-panel side">

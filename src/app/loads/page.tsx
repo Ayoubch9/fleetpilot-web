@@ -1,9 +1,20 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import AddLoadForm from "./add-load-form";
+import LoadsQuickActions from "./loads-quick-actions";
 import LoadActions from "./load-actions";
+import LoadFilters from "./load-filters";
+import LoadPeriodSelector from "./load-period-selector";
+import {
+  dbDate,
+  monday,
+  parseDate,
+  plusDays,
+  weekEnd,
+} from "@/lib/fleetpilot-week";
 
 type Load = {
   id: string;
@@ -38,6 +49,16 @@ type Params = {
   status?: string;
   page?: string;
   sort?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  truck?: string;
+  broker?: string;
+  minRate?: string;
+  maxRate?: string;
+  minMiles?: string;
+  maxMiles?: string;
+  period?: string;
+  week?: string;
 };
 
 const PAGE_SIZE = 10;
@@ -51,7 +72,29 @@ export default async function LoadsPage({
   const q = (params.q || "").trim().toLowerCase();
   const filter = (params.status || "all").toLowerCase();
   const sort = (params.sort || "newest").toLowerCase();
+  const dateFrom = params.dateFrom || "";
+  const dateTo = params.dateTo || "";
+  const truckFilter = params.truck || "";
+  const brokerFilter = (params.broker || "").trim().toLowerCase();
+  const minRate = numberParam(params.minRate);
+  const maxRate = numberParam(params.maxRate);
+  const minMiles = numberParam(params.minMiles);
+  const maxMiles = numberParam(params.maxMiles);
+  const requestedPeriod = (params.period || "week").toLowerCase();
+  const period =
+    requestedPeriod === "month" || requestedPeriod === "all"
+      ? requestedPeriod
+      : requestedPeriod === "custom"
+        ? "custom"
+        : "week";
   const requestedPage = Math.max(1, Number(params.page || "1") || 1);
+
+  const cookieStore = await cookies();
+  const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
+  const selectedWeekStart = monday(
+    parseDate(params.week || rememberedWeek) || new Date()
+  );
+  const selectedWeekEnd = weekEnd(selectedWeekStart);
 
   const { supabase, fullName, companyName, role } =
     await getFleetPilotAccount();
@@ -93,29 +136,141 @@ export default async function LoadsPage({
   const loadProfit = (load: Load) =>
     numberValue(load.rate) - (directExpenseByLoad.get(load.id) || 0);
 
+  const selectedWeekMidpoint = plusDays(selectedWeekStart, 3);
+  const monthStart = new Date(
+    selectedWeekMidpoint.getFullYear(),
+    selectedWeekMidpoint.getMonth(),
+    1
+  );
+  const monthEnd = new Date(
+    selectedWeekMidpoint.getFullYear(),
+    selectedWeekMidpoint.getMonth() + 1,
+    0
+  );
+
+  let periodStart: Date | null = null;
+  let periodEnd: Date | null = null;
+  let periodLabel = "All Time";
+
+  if (period === "week") {
+    periodStart = selectedWeekStart;
+    periodEnd = selectedWeekEnd;
+    periodLabel = `${formatShortDate(periodStart)} – ${formatShortDate(periodEnd)}`;
+  } else if (period === "month") {
+    periodStart = monthStart;
+    periodEnd = monthEnd;
+    periodLabel = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      year: "numeric",
+    }).format(monthStart);
+  } else if (period === "custom" && (dateFrom || dateTo)) {
+    periodStart = dateFrom ? parseDate(dateFrom) : null;
+    periodEnd = dateTo ? parseDate(dateTo) : null;
+    periodLabel = customRangeLabel(dateFrom, dateTo);
+  }
+
+  const periodLoads =
+    period === "all"
+      ? allLoads
+      : allLoads.filter((load) =>
+          loadInDateWindow(load, periodStart, periodEnd)
+        );
+
+  let previousPeriodLoads: Load[] | null = null;
+  let comparisonLabel = "";
+
+  if (period === "week") {
+    const previousStart = plusDays(selectedWeekStart, -7);
+    const previousEnd = plusDays(selectedWeekEnd, -7);
+    previousPeriodLoads = allLoads.filter((load) =>
+      loadInDateWindow(load, previousStart, previousEnd)
+    );
+    comparisonLabel = "vs previous week";
+  } else if (period === "month") {
+    const previousMonthStart = new Date(
+      monthStart.getFullYear(),
+      monthStart.getMonth() - 1,
+      1
+    );
+    const previousMonthEnd = new Date(
+      monthStart.getFullYear(),
+      monthStart.getMonth(),
+      0
+    );
+    previousPeriodLoads = allLoads.filter((load) =>
+      loadInDateWindow(load, previousMonthStart, previousMonthEnd)
+    );
+    comparisonLabel = "vs previous month";
+  }
+
   const counts = {
-    all: allLoads.length,
-    active: allLoads.filter((load) => isActive(load.status)).length,
-    completed: allLoads.filter((load) => isCompleted(load.status)).length,
-    dispatched: allLoads.filter(
+    all: periodLoads.length,
+    active: periodLoads.filter((load) => isActive(load.status)).length,
+    completed: periodLoads.filter((load) => isCompleted(load.status)).length,
+    dispatched: periodLoads.filter(
       (load) => normalizedStatus(load.status) === "DISPATCHED"
     ).length,
-    cancelled: allLoads.filter(
+    cancelled: periodLoads.filter(
       (load) => normalizedStatus(load.status) === "CANCELLED"
     ).length,
   };
 
-  const totalRevenue = allLoads.reduce(
+  const totalRevenue = periodLoads.reduce(
     (sum, load) => sum + numberValue(load.rate),
     0
   );
-  const totalProfit = allLoads.reduce(
+  const totalProfit = periodLoads.reduce(
     (sum, load) => sum + loadProfit(load),
     0
   );
-  const avgProfit = allLoads.length > 0 ? totalProfit / allLoads.length : 0;
+  const avgProfit =
+    periodLoads.length > 0 ? totalProfit / periodLoads.length : 0;
 
-  let filteredLoads = allLoads.filter((load) => {
+  const previousRevenue = previousPeriodLoads?.reduce(
+    (sum, load) => sum + numberValue(load.rate),
+    0
+  );
+  const previousProfit = previousPeriodLoads?.reduce(
+    (sum, load) => sum + loadProfit(load),
+    0
+  );
+  const previousAvgProfit =
+    previousPeriodLoads && previousPeriodLoads.length > 0
+      ? (previousProfit || 0) / previousPeriodLoads.length
+      : previousPeriodLoads
+        ? 0
+        : undefined;
+
+  const loadChange = metricChange(
+    counts.all,
+    previousPeriodLoads?.length,
+    comparisonLabel,
+    period,
+    periodLabel
+  );
+  const revenueChange = metricChange(
+    totalRevenue,
+    previousRevenue,
+    comparisonLabel,
+    period,
+    periodLabel
+  );
+  const profitChange = metricChange(
+    totalProfit,
+    previousProfit,
+    comparisonLabel,
+    period,
+    periodLabel
+  );
+  const avgProfitChange = metricChange(
+    avgProfit,
+    previousAvgProfit,
+    comparisonLabel,
+    period,
+    periodLabel
+  );
+
+  let filteredLoads = periodLoads.filter((load) => {
     if (!q) return true;
     return [
       load.load_number,
@@ -130,6 +285,8 @@ export default async function LoadsPage({
     filteredLoads = filteredLoads.filter((load) => {
       const status = normalizedStatus(load.status);
       if (filter === "active") return isActive(status);
+      if (filter === "upcoming") return status === "UPCOMING";
+      if (filter === "in-transit") return status === "IN TRANSIT";
       if (filter === "completed") return isCompleted(status);
       if (filter === "dispatched") return status === "DISPATCHED";
       if (filter === "cancelled") return status === "CANCELLED";
@@ -137,15 +294,74 @@ export default async function LoadsPage({
     });
   }
 
+  if (dateFrom) {
+    const from = dateValue(dateFrom);
+    filteredLoads = filteredLoads.filter(
+      (load) => dateValue(load.pickup_date) >= from
+    );
+  }
+
+  if (dateTo) {
+    const to = dateValue(dateTo);
+    filteredLoads = filteredLoads.filter(
+      (load) => dateValue(load.pickup_date) <= to
+    );
+  }
+
+  if (truckFilter) {
+    filteredLoads = filteredLoads.filter(
+      (load) => load.truck_id === truckFilter
+    );
+  }
+
+  if (brokerFilter) {
+    filteredLoads = filteredLoads.filter((load) =>
+      (load.broker || "").toLowerCase().includes(brokerFilter)
+    );
+  }
+
+  filteredLoads = filteredLoads.filter((load) => {
+    const rate = numberValue(load.rate);
+    const miles =
+      numberValue(load.loaded_miles) + numberValue(load.deadhead_miles);
+
+    if (minRate != null && rate < minRate) return false;
+    if (maxRate != null && rate > maxRate) return false;
+    if (minMiles != null && miles < minMiles) return false;
+    if (maxMiles != null && miles > maxMiles) return false;
+
+    return true;
+  });
+
   filteredLoads = [...filteredLoads].sort((a, b) => {
+    const aMiles =
+      numberValue(a.loaded_miles) + numberValue(a.deadhead_miles);
+    const bMiles =
+      numberValue(b.loaded_miles) + numberValue(b.deadhead_miles);
+
     if (sort === "oldest") {
       return dateValue(a.pickup_date) - dateValue(b.pickup_date);
+    }
+    if (sort === "delivery-newest") {
+      return dateValue(b.delivery_date) - dateValue(a.delivery_date);
     }
     if (sort === "rate") {
       return numberValue(b.rate) - numberValue(a.rate);
     }
+    if (sort === "rate-low") {
+      return numberValue(a.rate) - numberValue(b.rate);
+    }
     if (sort === "profit") {
       return loadProfit(b) - loadProfit(a);
+    }
+    if (sort === "profit-low") {
+      return loadProfit(a) - loadProfit(b);
+    }
+    if (sort === "miles") {
+      return bMiles - aMiles;
+    }
+    if (sort === "miles-low") {
+      return aMiles - bMiles;
     }
     return dateValue(b.pickup_date) - dateValue(a.pickup_date);
   });
@@ -158,7 +374,7 @@ export default async function LoadsPage({
   );
 
   const laneMap = new Map<string, number>();
-  for (const load of allLoads) {
+  for (const load of periodLoads) {
     const route = `${compactLocation(load.pickup)} → ${compactLocation(
       load.delivery
     )}`;
@@ -173,6 +389,21 @@ export default async function LoadsPage({
   if (q) query.set("q", q);
   if (filter !== "all") query.set("status", filter);
   if (sort !== "newest") query.set("sort", sort);
+  if (dateFrom) query.set("dateFrom", dateFrom);
+  if (dateTo) query.set("dateTo", dateTo);
+  if (truckFilter) query.set("truck", truckFilter);
+  if (brokerFilter) query.set("broker", brokerFilter);
+  if (minRate != null) query.set("minRate", String(minRate));
+  if (maxRate != null) query.set("maxRate", String(maxRate));
+  if (minMiles != null) query.set("minMiles", String(minMiles));
+  if (maxMiles != null) query.set("maxMiles", String(maxMiles));
+  if (period !== "week") query.set("period", period);
+  if (params.week) query.set("week", params.week);
+
+  const exportLoads = filteredLoads.map((load) => ({
+    ...load,
+    profit: loadProfit(load),
+  }));
 
   const errors = [loadError, truckError, expenseError].filter(Boolean);
 
@@ -192,7 +423,7 @@ export default async function LoadsPage({
             </p>
           </div>
 
-          <div id="add-load">
+          <div id="add-load" className="fp-load-add-form-host">
             <AddLoadForm trucks={trucks} />
           </div>
         </section>
@@ -206,36 +437,41 @@ export default async function LoadsPage({
 
         <div className="fp-loads-layout mt-4">
           <div className="min-w-0">
-            <div className="fp-load-kpi-grid">
+            <LoadPeriodSelector
+              label={periodLabel}
+              isCustom={period === "custom"}
+            />
+
+            <div className="fp-load-kpi-grid mt-3">
               <LoadKpi
                 label="Total Loads"
                 value={`${counts.all}`}
-                change="↑ 20%"
-                note="vs last month"
+                change={loadChange.change}
+                note={loadChange.note}
                 tone="blue"
                 icon="truck"
               />
               <LoadKpi
                 label="Total Revenue"
                 value={money(totalRevenue)}
-                change="↑ 18%"
-                note="vs last month"
+                change={revenueChange.change}
+                note={revenueChange.note}
                 tone="green"
                 icon="money"
               />
               <LoadKpi
                 label="Total Profit"
                 value={money(totalProfit)}
-                change="↑ 24%"
-                note="vs last month"
+                change={profitChange.change}
+                note={profitChange.note}
                 tone="purple"
                 icon="profit"
               />
               <LoadKpi
                 label="Avg. Profit per Load"
                 value={money(avgProfit)}
-                change="↑ 12%"
-                note="vs last month"
+                change={avgProfitChange.change}
+                note={avgProfitChange.note}
                 tone="blue"
                 icon="pie"
               />
@@ -244,84 +480,43 @@ export default async function LoadsPage({
             <section className="fp-loads-table-card mt-4">
               <div className="fp-load-tabs">
                 <LoadTab
-                  href={filterHref("all", q, sort)}
+                  href={statusHref(query, "all")}
                   label="All Loads"
                   count={counts.all}
                   active={filter === "all"}
                 />
                 <LoadTab
-                  href={filterHref("active", q, sort)}
+                  href={statusHref(query, "active")}
                   label="Active"
                   count={counts.active}
                   active={filter === "active"}
                 />
                 <LoadTab
-                  href={filterHref("completed", q, sort)}
+                  href={statusHref(query, "completed")}
                   label="Completed"
                   count={counts.completed}
                   active={filter === "completed"}
                 />
                 <LoadTab
-                  href={filterHref("dispatched", q, sort)}
+                  href={statusHref(query, "dispatched")}
                   label="Dispatched"
                   count={counts.dispatched}
                   active={filter === "dispatched"}
                 />
                 <LoadTab
-                  href={filterHref("cancelled", q, sort)}
+                  href={statusHref(query, "cancelled")}
                   label="Cancelled"
                   count={counts.cancelled}
                   active={filter === "cancelled"}
                 />
               </div>
 
-              <form action="/loads" className="fp-load-filterbar">
-                {filter !== "all" && (
-                  <input type="hidden" name="status" value={filter} />
-                )}
-
-                <label className="fp-load-search">
-                  <SearchIcon />
-                  <input
-                    name="q"
-                    defaultValue={params.q || ""}
-                    placeholder="Search by load #, broker, origin, destination..."
-                  />
-                </label>
-
-                <button type="button" className="fp-filter-button">
-                  <CalendarIcon />
-                  Date Range
-                  <span>⌄</span>
-                </button>
-
-                <select
-                  name="status"
-                  defaultValue={filter}
-                  className="fp-filter-select"
-                >
-                  <option value="all">Status</option>
-                  <option value="active">Active</option>
-                  <option value="completed">Completed</option>
-                  <option value="dispatched">Dispatched</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-
-                <button type="submit" className="fp-filter-button">
-                  <FilterIcon />
-                  More Filters
-                </button>
-
-                <div className="fp-load-sort">
-                  <span>Sort by</span>
-                  <select name="sort" defaultValue={sort}>
-                    <option value="newest">Pickup Date (Newest)</option>
-                    <option value="oldest">Pickup Date (Oldest)</option>
-                    <option value="rate">Highest Revenue</option>
-                    <option value="profit">Highest Profit</option>
-                  </select>
-                </div>
-              </form>
+              <LoadFilters
+                trucks={trucks.map((truck) => ({
+                  id: truck.id,
+                  unit_number: truck.unit_number,
+                }))}
+              />
 
               <div className="fp-load-table-wrap">
                 <table className="fp-load-table">
@@ -380,7 +575,13 @@ export default async function LoadsPage({
                             </StatusBadge>
                           </td>
                           <td className="fp-load-actions-cell">
-                            <LoadActions id={load.id} status={load.status} />
+                            <LoadActions
+                              load={load}
+                              trucks={trucks.map((truck) => ({
+                                id: truck.id,
+                                unit_number: truck.unit_number,
+                              }))}
+                            />
                           </td>
                         </tr>
                       );
@@ -442,39 +643,10 @@ export default async function LoadsPage({
           <aside className="fp-loads-right-rail">
             <section className="fp-load-side-card fp-load-quick-card">
               <h2>Quick Actions</h2>
-              <div className="mt-3 grid gap-2">
-                <Link href="/loads#add-load" className="fp-load-side-action primary">
-                  <span className="fp-load-side-icon">
-                    <PlusIcon />
-                  </span>
-                  <span>Add Load</span>
-                  <span>›</span>
-                </Link>
-
-                <Link href="/loads#add-load" className="fp-load-side-action">
-                  <span className="fp-load-side-icon">
-                    <ImportIcon />
-                  </span>
-                  <span>Import from Broker</span>
-                  <span>›</span>
-                </Link>
-
-                <button className="fp-load-side-action">
-                  <span className="fp-load-side-icon">
-                    <DuplicateIcon />
-                  </span>
-                  <span>Duplicate Load</span>
-                  <span>›</span>
-                </button>
-
-                <button className="fp-load-side-action">
-                  <span className="fp-load-side-icon">
-                    <ExportIcon />
-                  </span>
-                  <span>Export Loads</span>
-                  <span>›</span>
-                </button>
-              </div>
+              <LoadsQuickActions
+                loads={allLoads}
+                exportLoads={exportLoads}
+              />
             </section>
 
             <section className="fp-load-side-card">
@@ -585,7 +757,17 @@ function LoadKpi({
       <div className="min-w-0">
         <div className="fp-load-kpi-label">{label}</div>
         <div className="fp-load-kpi-value fp-number">{value}</div>
-        <div className="fp-load-kpi-change">{change}</div>
+        <div
+          className={`fp-load-kpi-change ${
+            change.startsWith("↓")
+              ? "negative"
+              : change.startsWith("—")
+                ? "neutral"
+                : ""
+          }`}
+        >
+          {change}
+        </div>
         <div className="fp-load-kpi-note">{note}</div>
       </div>
 
@@ -774,11 +956,11 @@ function PageLink({
   );
 }
 
-function filterHref(status: string, q: string, sort: string) {
-  const params = new URLSearchParams();
-  if (status !== "all") params.set("status", status);
-  if (q) params.set("q", q);
-  if (sort !== "newest") params.set("sort", sort);
+function statusHref(baseQuery: URLSearchParams, status: string) {
+  const params = new URLSearchParams(baseQuery);
+  if (status === "all") params.delete("status");
+  else params.set("status", status);
+  params.delete("page");
   return `/loads${params.toString() ? `?${params}` : ""}`;
 }
 
@@ -830,6 +1012,87 @@ function compactLocation(value?: string | null) {
 function dateValue(value?: string | null) {
   if (!value) return 0;
   return new Date(`${value.slice(0, 10)}T12:00:00`).getTime();
+}
+
+function loadInDateWindow(
+  load: Load,
+  start: Date | null,
+  end: Date | null
+) {
+  const pickup = parseDate(load.pickup_date);
+  if (!pickup) return false;
+  if (start && pickup.getTime() < start.getTime()) return false;
+  if (end && pickup.getTime() > end.getTime()) return false;
+  return true;
+}
+
+function formatShortDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
+
+function customRangeLabel(from?: string, to?: string) {
+  const fromDate = parseDate(from);
+  const toDate = parseDate(to);
+
+  if (fromDate && toDate) {
+    return `${formatShortDate(fromDate)} – ${formatShortDate(toDate)}`;
+  }
+  if (fromDate) return `From ${formatShortDate(fromDate)}`;
+  if (toDate) return `Through ${formatShortDate(toDate)}`;
+  return "Custom Range";
+}
+
+function metricChange(
+  current: number,
+  previous: number | undefined,
+  comparisonLabel: string,
+  period: string,
+  periodLabel: string
+) {
+  if (period === "all") {
+    return {
+      change: "— Lifetime",
+      note: "all recorded loads",
+    };
+  }
+
+  if (period === "custom") {
+    return {
+      change: "— Custom",
+      note: periodLabel,
+    };
+  }
+
+  if (previous == null) {
+    return {
+      change: "—",
+      note: comparisonLabel,
+    };
+  }
+
+  if (previous === 0) {
+    return {
+      change: current === 0 ? "→ 0%" : "↑ New",
+      note: comparisonLabel,
+    };
+  }
+
+  const pct = ((current - previous) / Math.abs(previous)) * 100;
+  const arrow = pct > 0.05 ? "↑" : pct < -0.05 ? "↓" : "→";
+
+  return {
+    change: `${arrow} ${Math.abs(pct).toFixed(0)}%`,
+    note: comparisonLabel,
+  };
+}
+
+function numberParam(value?: string) {
+  if (value == null || value === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function numberValue(value: number | string | null | undefined) {

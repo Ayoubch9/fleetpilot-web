@@ -1,13 +1,8 @@
-FLEETPILOT WEB v1.4.0 — REAL PILOT AI
+FLEETPILOT WEB v1.7.0 — OPERATIONAL NOTIFICATIONS
 
-Keep your existing Supabase variables.
+No new SQL is required.
 
-Add to .env.local:
-
-OPENAI_API_KEY=YOUR_OPENAI_API_KEY
-OPENAI_MODEL=gpt-5.6-luna
-
-OPENAI_MODEL is optional.
+Keep your existing .env.local and Supabase setup.
 
 Then:
 
@@ -18,10 +13,14 @@ npm run build
 npm run dev
 
 Test:
-http://localhost:3000/pilot-ai
+http://localhost:3000/notifications
 
-For Vercel:
-Project -> Settings -> Environment Variables
-Add OPENAI_API_KEY
-Optionally add OPENAI_MODEL
-Then redeploy production.
+Also check the bell in the top header. Its badge should now reflect the real alert count.
+
+Recommended tests:
+1. Open Notifications.
+2. Check Critical / Due Soon / Upcoming filters.
+3. Click an alert and confirm it opens the relevant page.
+4. Compare maintenance alerts with Maintenance records.
+5. Compare document alerts with Documents expiration dates.
+6. Compare load alerts with open/upcoming Loads.

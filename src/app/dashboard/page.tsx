@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import SignOutButton from "./sign-out-button";
 import AppShell from "@/components/app-shell";
 import { PageHeading, StatCard, SectionPanel, TinyBar, EmptyState } from "@/components/fleet-ui";
+import DashboardQuickActions from "./dashboard-quick-actions";
 
 type SearchParams = Promise<{
   week?: string;
@@ -53,6 +55,7 @@ type RawCompanyFeeSettings = {
 
 type RawTruck = {
   id?: string | null;
+  unit_number?: string | null;
   current_mileage?: number | string | null;
   status?: string | null;
 };
@@ -215,12 +218,38 @@ export default async function DashboardPage({
   const today = new Date();
   const currentWeekStart = weekStart(today);
 
-  const requestedDate = parseDatabaseDate(params.week);
+  const cookieStore = await cookies();
+  const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
+  const requestedDate = parseDatabaseDate(params.week || rememberedWeek);
   const selectedWeekStart = requestedDate
     ? weekStart(requestedDate)
     : currentWeekStart;
 
   const selectedWeekEnd = weekEnd(selectedWeekStart);
+  const isCurrentWeek = sameDate(selectedWeekStart, currentWeekStart);
+
+  const todayClean = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+  const weekProgressDays = isCurrentWeek
+    ? Math.min(
+        7,
+        Math.max(
+          1,
+          Math.floor(
+            (todayClean.getTime() - selectedWeekStart.getTime()) /
+              (24 * 60 * 60 * 1000)
+          ) + 1
+        )
+      )
+    : 7;
+  const weekProgressPercent = Math.round((weekProgressDays / 7) * 100);
+  const weekDaysRemaining = Math.max(0, 7 - weekProgressDays);
+  const settlementHref = isCurrentWeek
+    ? "/settlement"
+    : `/settlement?week=${databaseDate(selectedWeekStart)}`;
 
   if (selectedWeekStart.getTime() > currentWeekStart.getTime()) {
     redirect("/dashboard");
@@ -307,7 +336,7 @@ export default async function DashboardPage({
 
     supabase
       .from("trucks")
-      .select("id, current_mileage, status"),
+      .select("id, unit_number, current_mileage, status"),
 
     supabase
       .from("maintenance_records")
@@ -488,6 +517,17 @@ export default async function DashboardPage({
   const expenseBreakdown = expenseCategoryTotals(expenses);
 
   const activeTrucks = trucks.filter((truck) => isActiveTruck(truck.status));
+  const quickActionTrucks = activeTrucks
+    .filter(
+      (truck): truck is RawTruck & { id: string; unit_number: string } =>
+        Boolean(truck.id && truck.unit_number)
+    )
+    .map((truck) => ({
+      id: truck.id,
+      unit_number: truck.unit_number,
+      current_mileage: numberValue(truck.current_mileage),
+    }));
+
   const activeTruckIds = new Set(
     activeTrucks
       .map((truck) => truck.id)
@@ -531,12 +571,6 @@ export default async function DashboardPage({
     if (due) maintenanceDueCount += 1;
   }
 
-  const isCurrentWeek = sameDate(selectedWeekStart, currentWeekStart);
-  const previousHref = `/dashboard?week=${databaseDate(addDays(selectedWeekStart, -7))}`;
-  const nextWeekStart = addDays(selectedWeekStart, 7);
-  const nextHref = sameDate(nextWeekStart, currentWeekStart)
-    ? "/dashboard"
-    : `/dashboard?week=${databaseDate(nextWeekStart)}`;
 
   const fullName = profile?.full_name || "FleetPilot User";
   const firstName = fullName.split(/\s+/)[0] || "Driver";
@@ -654,33 +688,6 @@ export default async function DashboardPage({
               FleetPilot Control Center
             </div>
           </div>
-          <div className="absolute right-6 top-5 z-20 hidden items-center gap-2 xl:flex">
-            <Link
-              href={previousHref}
-              className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/30 bg-white/80 text-[12px] font-[600] text-[#2b3f58] backdrop-blur"
-              aria-label="Previous week"
-            >
-              ←
-            </Link>
-            <div className="rounded-[9px] border border-white/35 bg-white/90 px-4 py-2 text-center backdrop-blur">
-              <div className="text-[8px] font-[700] uppercase tracking-[.13em] text-[#6f8298]">
-                {isCurrentWeek ? "This Week" : "Selected Week"}
-              </div>
-              <div className="mt-1 text-[10px] font-[650] text-[#0b1730]">
-                {displayDate(selectedWeekStart)} – {displayDate(selectedWeekEnd)}
-              </div>
-            </div>
-            {!isCurrentWeek && (
-              <Link
-                href={nextHref}
-                className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/30 bg-white/80 text-[12px] font-[600] text-[#2b3f58] backdrop-blur"
-                aria-label="Next week"
-              >
-                →
-              </Link>
-            )}
-          </div>
-
           <div className="absolute bottom-5 right-8 z-10 hidden text-right text-[10px] font-[650] uppercase tracking-[.27em] text-white drop-shadow-lg xl:block">
             Drive<br />Smarter.<br />Earn More.
             <div className="ml-auto mt-2 h-[3px] w-9 bg-[#1188ff]" />
@@ -730,33 +737,6 @@ export default async function DashboardPage({
       <SectionPanel
         className="fp-chart-card"
         title="Revenue vs Expenses"
-        right={
-          <div className="flex items-center gap-1.5">
-            <Link
-              href={previousHref}
-              className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#dce6ef] bg-[#f8fbfe] text-[11px] font-[600] text-[#536780] transition hover:bg-white"
-              aria-label="Previous week"
-            >
-              ←
-            </Link>
-
-            <div className="min-w-[112px] rounded-[8px] border border-[#dce6ef] bg-[#f8fbfe] px-3 py-2 text-center text-[9px] font-[600] text-[#536780]">
-              {displayDate(selectedWeekStart)} – {displayDate(selectedWeekEnd)}
-            </div>
-
-            {!isCurrentWeek ? (
-              <Link
-                href={nextHref}
-                className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#dce6ef] bg-[#f8fbfe] text-[11px] font-[600] text-[#536780] transition hover:bg-white"
-                aria-label="Next week"
-              >
-                →
-              </Link>
-            ) : (
-              <div className="h-8 w-8" />
-            )}
-          </div>
-        }
       >
         <div className="px-4 pb-4">
           <BarChart revenue={grossRevenue} expenses={totalExpenses} profit={netProfit} weekStart={selectedWeekStart} />
@@ -967,27 +947,45 @@ export default async function DashboardPage({
   </div>
 
   <aside className="fp-dashboard-right-rail">
-    <SectionPanel className="fp-side-compact" title="Week Progress">
-      <div className="flex items-center gap-4 px-4 pb-4">
-        <ProgressRing value={100} />
-        <div>
-          <div className="text-[11px] font-[720] text-[#0a1730]">
+    <SectionPanel className="fp-side-compact fp-week-progress-card" title="Week Progress">
+      <Link href={settlementHref} className="fp-week-progress-link">
+        <ProgressRing value={weekProgressPercent} />
+        <div className="fp-week-progress-copy">
+          <div className="fp-week-progress-range">
             {displayDate(selectedWeekStart)} – {displayDate(selectedWeekEnd)}
           </div>
-          <div className="mt-1 text-[9px] leading-4 text-[#74869c]">
-            {isCurrentWeek ? "Current Week" : "Selected Week"}<br />Complete
+
+          <div className="fp-week-progress-state">
+            {isCurrentWeek ? "Current Week" : "Selected Week"}
           </div>
+
+          <div className="fp-week-progress-detail">
+            {isCurrentWeek ? (
+              <>
+                <strong>{weekProgressDays} of 7 days</strong>
+                <span>
+                  {weekDaysRemaining === 0
+                    ? "Week complete"
+                    : `${weekDaysRemaining} day${weekDaysRemaining === 1 ? "" : "s"} remaining`}
+                </span>
+              </>
+            ) : (
+              <>
+                <strong>7 of 7 days</strong>
+                <span>Week complete</span>
+              </>
+            )}
+          </div>
+
+          <span className="fp-week-progress-open">
+            View settlement →
+          </span>
         </div>
-      </div>
+      </Link>
     </SectionPanel>
 
     <SectionPanel className="fp-quick-actions-card" title="Quick Actions">
-      <div className="fp-quick-actions-list px-3 pb-3">
-        <Quick href="/loads" label="Add Load" type="load" primary />
-        <Quick href="/expenses" label="Add Expense" type="expense" />
-        <Quick href="/fuel" label="Add Fuel Purchase" type="fuel" />
-        <Quick href="/maintenance" label="Add Maintenance" type="maintenance" />
-      </div>
+      <DashboardQuickActions trucks={quickActionTrucks} />
     </SectionPanel>
 
     <SectionPanel
@@ -1020,9 +1018,9 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        <button className="fp-pilot-start mt-3">
+        <Link href="/pilot-ai" className="fp-pilot-start mt-3">
           Start a conversation <span>→</span>
-        </button>
+        </Link>
 
         <div className="fp-pilot-questions mt-3">
           {[
@@ -1031,10 +1029,15 @@ export default async function DashboardPage({
             "Show me my fuel spending trends",
             "What maintenance is due soon?",
           ].map((question) => (
-            <div key={question} className="fp-pilot-question">
+            <Link
+              key={question}
+              href={`/pilot-ai?q=${encodeURIComponent(question)}`}
+              className="fp-pilot-question"
+              title={question}
+            >
               <span className="fp-pilot-question-icon">?</span>
               <span className="truncate">{question}</span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

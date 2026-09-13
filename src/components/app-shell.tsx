@@ -1,4 +1,10 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { getFleetPilotAlerts } from "@/lib/fleetpilot-alerts";
+import WeekSelector from "@/components/week-selector";
+import GlobalSearch from "@/components/global-search";
+import { getAvatarUrl } from "@/lib/fleetpilot-account";
+import SidebarSignOut from "@/components/sidebar-sign-out";
 
 type ActivePage =
   | "overview"
@@ -12,7 +18,8 @@ type ActivePage =
   | "reports"
   | "documents"
   | "pilot"
-  | "settings";
+  | "settings"
+  | "notifications";
 
 type AppShellProps = {
   active: ActivePage;
@@ -43,30 +50,48 @@ const tools = [
 ] as const;
 
 
-function currentWeekLabel() {
-  const now = new Date();
-  const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const day = date.getDay();
-  const mondayOffset = day === 0 ? -6 : 1 - day;
-  const monday = new Date(date);
-  monday.setDate(date.getDate() + mondayOffset);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
 
-  const monthDay = (d: Date) =>
-    new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(d);
-
-  return `${monthDay(monday)} – ${monthDay(sunday)}, ${sunday.getFullYear()}`;
-}
-
-export default function AppShell({
+export default async function AppShell({
   active,
   fullName,
   companyName,
   role,
   children,
 }: AppShellProps) {
-  const weekLabel = currentWeekLabel();
+  let alertCount = 0;
+  let avatarUrl: string | null = null;
+
+  try {
+    const supabase = await createClient();
+
+    const [
+      alerts,
+      {
+        data: { user },
+      },
+    ] = await Promise.all([
+      getFleetPilotAlerts(supabase),
+      supabase.auth.getUser(),
+    ]);
+
+    alertCount = alerts.length;
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("avatar_path")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      avatarUrl = await getAvatarUrl(
+        supabase,
+        profile?.avatar_path || null
+      );
+    }
+  } catch {
+    alertCount = 0;
+    avatarUrl = null;
+  }
 
   return (
     <main className="min-h-screen bg-[#f4f7fb]">
@@ -103,19 +128,9 @@ export default function AppShell({
 
           <div className="my-3 border-t border-white/10" />
           <SideItem href="/settings" label="Settings" icon="settings" active={active === "settings"} />
+          <SidebarSignOut />
         </div>
 
-        <div className="p-3.5 pt-1">
-          <div className="rounded-[12px] border border-[#1d3955] bg-[#0d2340] p-4">
-            <div className="text-[10.5px] font-[750] text-[#319fff]">Upgrade to Pro</div>
-            <div className="mt-1.5 text-[8px] leading-4 text-[#8ba2b8]">
-              Unlock advanced analytics,<br />exports and premium tools.
-            </div>
-            <button className="mt-3 w-full rounded-[8px] bg-[#168eff] py-2.5 text-[10px] font-black text-white">
-              View Plans →
-            </button>
-          </div>
-        </div>
       </aside>
 
       <section className="min-h-screen lg:ml-[222px]">
@@ -128,35 +143,47 @@ export default function AppShell({
           </div>
 
           <div className="hidden max-w-[505px] flex-1 lg:block">
-            <div className="relative">
-              <svg viewBox="0 0 24 24" className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 fill-none stroke-[#8899aa]" strokeWidth="2">
-                <circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" />
-              </svg>
-              <input
-                placeholder="Search loads, trucks, expenses..."
-                className="w-full rounded-[10px] border border-[#dde6ef] bg-[#f8fbfe] py-3 pl-11 pr-4 text-[11px] text-[#263a53] outline-none placeholder:text-[#95a6b8]"
-              />
-            </div>
+            <GlobalSearch />
           </div>
 
           <div className="ml-auto flex items-center gap-3 text-[#0b1730]">
-            <div className="hidden rounded-[10px] border border-[#dfe7ef] bg-[#fbfdff] px-4 py-2.5 text-[10px] font-black md:block">
-              {weekLabel}
+            <div className="hidden md:block">
+              <WeekSelector />
             </div>
-            <div className="relative flex h-9 w-9 items-center justify-center">
+            <Link
+              href="/notifications"
+              aria-label={`${alertCount} FleetPilot notifications`}
+              className={`relative flex h-9 w-9 items-center justify-center rounded-full transition ${
+                active === "notifications" ? "bg-[#edf6ff]" : "hover:bg-[#f4f8fc]"
+              }`}
+            >
               <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-none stroke-[#263a53]" strokeWidth="1.8">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>
               </svg>
-              <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#1188ff] text-[8px] font-black text-white">3</span>
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#07172a] text-[11px] font-black text-white">
-              {fullName?.[0]?.toUpperCase() || "F"}
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-[10px] font-[700]">{fullName}</div>
-              <div className="mt-.5 text-[8px] font-[600] text-[#7d8ea1]">{role || companyName || "Member"}</div>
-            </div>
-            <span className="hidden text-[#5f7188] sm:block">⌄</span>
+              {alertCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#1188ff] px-[3px] text-[7px] font-black text-white">
+                  {alertCount > 99 ? "99+" : alertCount}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/settings"
+              className="fp-header-account"
+              aria-label="Open profile settings"
+            >
+              <span className="fp-header-avatar">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" />
+                ) : (
+                  fullName?.[0]?.toUpperCase() || "F"
+                )}
+              </span>
+              <span className="hidden sm:block">
+                <span className="block text-[10px] font-[700]">{fullName}</span>
+                <span className="mt-.5 block text-[8px] font-[600] text-[#7d8ea1]">{role || companyName || "Member"}</span>
+              </span>
+              <span className="hidden text-[#5f7188] sm:block">⌄</span>
+            </Link>
           </div>
         </header>
 

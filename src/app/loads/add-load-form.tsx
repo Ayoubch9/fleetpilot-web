@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SmartLoadImport from "./smart-load-import";
@@ -14,6 +14,7 @@ type Truck = {
 
 type Draft = {
   loadNumber: string;
+  referenceNumber: string;
   broker: string;
   pickup: string;
   delivery: string;
@@ -27,8 +28,10 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [smartImportSignal, setSmartImportSignal] = useState(0);
   const [draft, setDraft] = useState<Draft>({
     loadNumber: "",
+    referenceNumber: "",
     broker: "",
     pickup: "",
     delivery: "",
@@ -37,12 +40,36 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
     rate: "",
   });
 
+
+useEffect(() => {
+  function openAddLoad(event: Event) {
+    const custom = event as CustomEvent<{ mode?: "add" | "import" }>;
+    setOpen(true);
+    setError("");
+
+    if (custom.detail?.mode === "import") {
+      setSmartImportSignal((value) => value + 1);
+    }
+
+    window.setTimeout(() => {
+      document
+        .getElementById("add-load")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  }
+
+  window.addEventListener("fleetpilot:open-add-load", openAddLoad);
+  return () =>
+    window.removeEventListener("fleetpilot:open-add-load", openAddLoad);
+}, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSaving(true);
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const rate = Number(form.get("rate")) || 0;
     const loadedMiles = Number(form.get("loaded_miles")) || 0;
 
@@ -73,9 +100,10 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
       return;
     }
 
-    event.currentTarget.reset();
+    formElement.reset();
     setDraft({
       loadNumber: "",
+      referenceNumber: "",
       broker: "",
       pickup: "",
       delivery: "",
@@ -94,23 +122,26 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
 
   return (
     <>
-      <button
-        onClick={() => setOpen((value) => !value)}
-        disabled={trucks.length === 0}
-        className="rounded-[6px] bg-[#1188ff] px-4 py-2.5 text-[10px] font-black text-white shadow-[0_7px_18px_rgba(17,136,255,.15)] hover:bg-[#0879ee] disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {open ? "Close" : "+ Add Load"}
-      </button>
-
       {open && (
         <form
           onSubmit={submit}
-          className="mt-5 grid gap-4 rounded-[10px] border border-[#dce5ef] bg-white p-5 md:grid-cols-2"
+          className="fp-add-load-form"
         >
+          <div className="fp-add-load-header md:col-span-2">
+            <div>
+              <span>New Load</span>
+              <h3>Add Load Details</h3>
+              <p>Enter the core dispatch and financial information for this load.</p>
+            </div>
+            <div className="fp-add-load-required">* Required fields</div>
+          </div>
           <SmartLoadImport
+            openSignal={smartImportSignal}
             onParsed={(data) =>
               patchDraft({
                 loadNumber: data.loadNumber ?? draft.loadNumber,
+                referenceNumber:
+                  data.referenceNumber ?? draft.referenceNumber,
                 broker: data.broker ?? draft.broker,
                 pickup: data.pickup ?? draft.pickup,
                 delivery: data.delivery ?? draft.delivery,
@@ -122,9 +153,18 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
           />
 
           <SelectTruck trucks={trucks} />
-          <ControlledField name="load_number" label="Load / Reference # *" value={draft.loadNumber} setValue={(v) => patchDraft({ loadNumber: v })} />
-          <ControlledField name="broker" label="Broker / Customer" value={draft.broker} setValue={(v) => patchDraft({ broker: v })} />
-          <div />
+          <ControlledField name="load_number" label="Load ID *" value={draft.loadNumber} setValue={(v) => patchDraft({ loadNumber: v })} />
+
+          {draft.referenceNumber && (
+            <div className="fp-telegram-ref-preview">
+              <span>Telegram REF #</span>
+              <strong>{draft.referenceNumber}</strong>
+              <small>
+                Reference is shown for review only because the current Loads table has no dedicated REF # column.
+              </small>
+            </div>
+          )}
+          <ControlledField name="broker" label="Broker / Customer" value={draft.broker} setValue={(v) => patchDraft({ broker: v })} wide />
           <ControlledField name="pickup" label="Pickup City, State *" value={draft.pickup} setValue={(v) => patchDraft({ pickup: v })} />
           <ControlledField name="delivery" label="Delivery City, State *" value={draft.delivery} setValue={(v) => patchDraft({ delivery: v })} />
           <ControlledField name="pickup_date" label="Pickup Date *" type="date" value={draft.pickupDate} setValue={(v) => patchDraft({ pickupDate: v })} />
@@ -134,18 +174,31 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
           <Field name="deadhead_miles" label="Deadhead Miles" type="number" step="0.1" />
 
           {error && (
-            <div className="md:col-span-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            <div className="fp-add-load-error md:col-span-2">
               {error}
             </div>
           )}
 
-          <div className="md:col-span-2 flex justify-end">
-            <button
-              disabled={saving}
-              className="rounded-[6px] bg-[#17c978] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-50"
-            >
-              {saving ? "Saving..." : "Save Load"}
-            </button>
+          <div className="fp-add-load-footer md:col-span-2">
+            <span>Load will be created with <b>Upcoming</b> status.</span>
+
+            <div className="fp-add-load-footer-actions">
+              <button
+                type="button"
+                className="fp-add-load-close"
+                onClick={() => setOpen(false)}
+                disabled={saving}
+              >
+                Close
+              </button>
+
+              <button
+                disabled={saving}
+                className="fp-add-load-save"
+              >
+                {saving ? "Saving..." : "Save Load"}
+              </button>
+            </div>
           </div>
         </form>
       )}
@@ -155,14 +208,14 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
 
 function SelectTruck({ trucks }: { trucks: Truck[] }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">
+    <label className="fp-add-load-field">
+      <span>
         Assign Truck *
       </span>
       <select
         name="truck_id"
         required
-        className="w-full fp-field text-[11px]"
+        className="fp-add-load-control"
       >
         <option value="">Select truck</option>
         {trucks.map((truck) => (
@@ -182,6 +235,7 @@ function ControlledField({
   step,
   value,
   setValue,
+  wide = false,
 }: {
   name: string;
   label: string;
@@ -189,10 +243,11 @@ function ControlledField({
   step?: string;
   value: string;
   setValue: (value: string) => void;
+  wide?: boolean;
 }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">
+    <label className={`fp-add-load-field ${wide ? "wide" : ""}`}>
+      <span>
         {label}
       </span>
       <input
@@ -201,7 +256,7 @@ function ControlledField({
         step={step}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full fp-field text-[11px]"
+        className="fp-add-load-control"
       />
     </label>
   );
@@ -219,15 +274,15 @@ function Field({
   step?: string;
 }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">
+    <label className="fp-add-load-field">
+      <span>
         {label}
       </span>
       <input
         name={name}
         type={type}
         step={step}
-        className="w-full fp-field text-[11px]"
+        className="fp-add-load-control"
       />
     </label>
   );

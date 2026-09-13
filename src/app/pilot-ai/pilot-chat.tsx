@@ -9,8 +9,10 @@ type Message = {
 
 export default function PilotChat({
   suggested,
+  initialQuestion = "",
 }: {
   suggested: string[];
+  initialQuestion?: string;
 }) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -18,7 +20,7 @@ export default function PilotChat({
       text: "I’m connected to your FleetPilot business data. Ask me about loads, revenue, expenses, trucks, fuel, routes, maintenance, or profitability.",
     },
   ]);
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState(initialQuestion);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
