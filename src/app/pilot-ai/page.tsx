@@ -27,7 +27,6 @@ export default async function PilotAIPage(){
     <section className="fp-panel fp-ai-chat">
       <h2>Ask Pilot</h2>
       <PilotChat
-        metrics={{ revenue, costs, profit, fuel, activeTrucks: active, serviceDue: service, totalMiles }}
         suggested={[
           "How can I reduce my fuel costs?",
           "What is my current profit margin?",

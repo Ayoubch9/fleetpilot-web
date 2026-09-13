@@ -4355,3 +4355,37 @@ input:disabled {
   }
 }
 /* === END Production Readiness v1.3.0 === */
+
+
+/* === Pilot AI Backend v1.4.0 === */
+.fp-ai-composer button:disabled,
+.fp-ai-chip-row button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+.fp-ai-error {
+  margin-top: 10px;
+  border: 1px solid #f2c6ca;
+  border-radius: 8px;
+  background: #fff1f2;
+  padding: 8px 10px;
+  color: #b94b55;
+  font-size: 9px;
+  line-height: 1.45;
+}
+.fp-ai-thinking {
+  color: #60738a;
+}
+.fp-ai-dots {
+  display: inline-block;
+  width: 20px;
+  margin-left: 4px;
+  overflow: hidden;
+  vertical-align: bottom;
+  animation: fp-ai-dots 1.2s steps(4,end) infinite;
+}
+@keyframes fp-ai-dots {
+  0% { width: 0; }
+  100% { width: 20px; }
+}
+/* === END Pilot AI Backend v1.4.0 === */

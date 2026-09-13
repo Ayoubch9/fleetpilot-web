@@ -1,8 +1,15 @@
-FLEETPILOT WEB v1.3.1
+FLEETPILOT WEB v1.4.0 — REAL PILOT AI
 
-Keep your existing .env.local.
+Keep your existing Supabase variables.
 
-Replace the project files, then run:
+Add to .env.local:
+
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+OPENAI_MODEL=gpt-5.6-luna
+
+OPENAI_MODEL is optional.
+
+Then:
 
 cd C:\projects\fleetpilot_web
 npm install
@@ -10,6 +17,11 @@ npm run typecheck
 npm run build
 npm run dev
 
-Then verify:
-http://localhost:3000/health
-http://localhost:3000/dashboard
+Test:
+http://localhost:3000/pilot-ai
+
+For Vercel:
+Project -> Settings -> Environment Variables
+Add OPENAI_API_KEY
+Optionally add OPENAI_MODEL
+Then redeploy production.
