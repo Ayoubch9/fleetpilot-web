@@ -3,10 +3,16 @@ import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import AddReimbursementForm from "./add-reimbursement-form";
+import ReimbursementFilters from "./reimbursement-filters";
+import ReimbursementQuickActions from "./reimbursement-quick-actions";
+import ReimbursementActions from "./reimbursement-actions";
 
 type Reimbursement = {
   id: string;
-  expense_id: string;
+  expense_id: string | null;
+  truck_id: string | null;
+  category: string | null;
+  reference: string | null;
   reimbursement_date: string | null;
   amount: number | string | null;
   notes: string | null;
@@ -18,7 +24,7 @@ type Expense = {
   vendor: string | null;
   amount: number | string | null;
   expense_date: string | null;
-  truck_id?: string | null;
+  truck_id: string | null;
 };
 
 type Truck = {
@@ -32,6 +38,12 @@ type Params = {
   truck?: string;
   sort?: string;
   page?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  vendor?: string;
+  category?: string;
+  minAmount?: string;
+  maxAmount?: string;
 };
 
 const PAGE_SIZE = 10;
@@ -47,6 +59,12 @@ export default async function ReimbursementsPage({
   const truckFilter = params.truck || "all";
   const sort = (params.sort || "newest").toLowerCase();
   const requestedPage = Math.max(1, Number(params.page || "1") || 1);
+  const dateFrom = params.dateFrom || "";
+  const dateTo = params.dateTo || "";
+  const vendorFilter = (params.vendor || "").trim().toLowerCase();
+  const categoryFilter = (params.category || "").trim().toLowerCase();
+  const minAmount = params.minAmount ? Number(params.minAmount) : null;
+  const maxAmount = params.maxAmount ? Number(params.maxAmount) : null;
 
   const { supabase, fullName, companyName, role } =
     await getFleetPilotAccount();
@@ -58,7 +76,7 @@ export default async function ReimbursementsPage({
   ] = await Promise.all([
     supabase
       .from("reimbursements")
-      .select("id, expense_id, reimbursement_date, amount, notes")
+      .select("id, expense_id, truck_id, category, reference, reimbursement_date, amount, notes")
       .order("reimbursement_date", { ascending: false }),
     supabase
       .from("expenses")
@@ -73,44 +91,135 @@ export default async function ReimbursementsPage({
   const trucks = (truckData ?? []) as Truck[];
   const expenseMap = new Map(expenses.map((expense) => [expense.id, expense]));
   const truckMap = new Map(trucks.map((truck) => [truck.id, truck]));
+  const categories = [...new Set(
+    [
+      ...expenses.map((expense) => (expense.category || "").trim()),
+      ...reimbursements.map((row) => (row.category || "").trim()),
+    ].filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b));
 
-  const total = reimbursements.reduce((sum, row) => sum + numberValue(row.amount), 0);
+
+  const linkedExpense = (row: Reimbursement) =>
+    row.expense_id ? expenseMap.get(row.expense_id) : undefined;
+
+  const effectiveTruckId = (row: Reimbursement) =>
+    row.truck_id || linkedExpense(row)?.truck_id || null;
+
+  const effectiveCategory = (row: Reimbursement) =>
+    row.category || linkedExpense(row)?.category || "Other";
+
+  const isStandalone = (row: Reimbursement) => !row.expense_id;
 
   const isFull = (row: Reimbursement) => {
-    const expense = expenseMap.get(row.expense_id);
+    const expense = linkedExpense(row);
     if (!expense) return false;
     return numberValue(row.amount) >= numberValue(expense.amount) - 0.005;
   };
 
-  const fullCount = reimbursements.filter(isFull).length;
-  const partialCount = reimbursements.length - fullCount;
-  const fullAmount = reimbursements
-    .filter(isFull)
-    .reduce((sum, row) => sum + numberValue(row.amount), 0);
-  const partialAmount = total - fullAmount;
-
-  let filtered = reimbursements.filter((row) => {
+  let filteredBase = reimbursements.filter((row) => {
     if (!q) return true;
-    const expense = expenseMap.get(row.expense_id);
-    const truck = expense?.truck_id ? truckMap.get(expense.truck_id) : null;
+    const expense = linkedExpense(row);
+    const truckId = effectiveTruckId(row);
+    const truck = truckId ? truckMap.get(truckId) : null;
     return [
       row.notes,
-      expense?.category,
+      row.reference,
+      row.reimbursement_date,
+      effectiveCategory(row),
       expense?.vendor,
       truck?.unit_number,
+      isStandalone(row)
+        ? "standalone reimbursement"
+        : isFull(row)
+          ? "full recovery"
+          : "partial recovery",
     ].some((value) => (value || "").toLowerCase().includes(q));
   });
 
-  if (kind === "full") filtered = filtered.filter(isFull);
-  if (kind === "partial") filtered = filtered.filter((row) => !isFull(row));
-
   if (truckFilter !== "all") {
-    filtered = filtered.filter((row) => expenseMap.get(row.expense_id)?.truck_id === truckFilter);
+    filteredBase = filteredBase.filter(
+      (row) => effectiveTruckId(row) === truckFilter
+    );
   }
+
+  if (dateFrom) {
+    filteredBase = filteredBase.filter(
+      (row) => (row.reimbursement_date || "") >= dateFrom
+    );
+  }
+
+  if (dateTo) {
+    filteredBase = filteredBase.filter(
+      (row) => (row.reimbursement_date || "") <= dateTo
+    );
+  }
+
+  if (vendorFilter) {
+    filteredBase = filteredBase.filter((row) =>
+      (linkedExpense(row)?.vendor || "")
+        .toLowerCase()
+        .includes(vendorFilter)
+    );
+  }
+
+  if (categoryFilter) {
+    filteredBase = filteredBase.filter(
+      (row) =>
+        effectiveCategory(row).toLowerCase() === categoryFilter
+    );
+  }
+
+  if (minAmount != null && Number.isFinite(minAmount)) {
+    filteredBase = filteredBase.filter(
+      (row) => numberValue(row.amount) >= minAmount
+    );
+  }
+
+  if (maxAmount != null && Number.isFinite(maxAmount)) {
+    filteredBase = filteredBase.filter(
+      (row) => numberValue(row.amount) <= maxAmount
+    );
+  }
+
+  const total = filteredBase.reduce(
+    (sum, row) => sum + numberValue(row.amount),
+    0
+  );
+  const standaloneRows = filteredBase.filter(isStandalone);
+  const linkedRows = filteredBase.filter((row) => !isStandalone(row));
+  const fullRows = linkedRows.filter(isFull);
+  const partialRows = linkedRows.filter((row) => !isFull(row));
+
+  const fullCount = fullRows.length;
+  const partialCount = partialRows.length;
+  const standaloneCount = standaloneRows.length;
+
+  const fullAmount = fullRows.reduce(
+    (sum, row) => sum + numberValue(row.amount),
+    0
+  );
+  const partialAmount = partialRows.reduce(
+    (sum, row) => sum + numberValue(row.amount),
+    0
+  );
+  const standaloneAmount = standaloneRows.reduce(
+    (sum, row) => sum + numberValue(row.amount),
+    0
+  );
+
+  let filtered =
+    kind === "all"
+      ? [...filteredBase]
+      : kind === "full"
+        ? fullRows
+        : kind === "partial"
+          ? partialRows
+          : standaloneRows;
 
   filtered = [...filtered].sort((a, b) => {
     if (sort === "oldest") return dateValue(a.reimbursement_date) - dateValue(b.reimbursement_date);
     if (sort === "amount-desc") return numberValue(b.amount) - numberValue(a.amount);
+    if (sort === "amount-asc") return numberValue(a.amount) - numberValue(b.amount);
     return dateValue(b.reimbursement_date) - dateValue(a.reimbursement_date);
   });
 
@@ -119,9 +228,8 @@ export default async function ReimbursementsPage({
   const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const categoryTotals = new Map<string, number>();
-  for (const row of reimbursements) {
-    const expense = expenseMap.get(row.expense_id);
-    const label = expense?.category || "Other";
+  for (const row of filteredBase) {
+    const label = effectiveCategory(row);
     categoryTotals.set(label, (categoryTotals.get(label) || 0) + numberValue(row.amount));
   }
   const topCategories = [...categoryTotals.entries()]
@@ -133,6 +241,12 @@ export default async function ReimbursementsPage({
   if (kind !== "all") query.set("kind", kind);
   if (truckFilter !== "all") query.set("truck", truckFilter);
   if (sort !== "newest") query.set("sort", sort);
+  if (dateFrom) query.set("dateFrom", dateFrom);
+  if (dateTo) query.set("dateTo", dateTo);
+  if (vendorFilter) query.set("vendor", vendorFilter);
+  if (categoryFilter) query.set("category", categoryFilter);
+  if (minAmount != null && Number.isFinite(minAmount)) query.set("minAmount", String(minAmount));
+  if (maxAmount != null && Number.isFinite(maxAmount)) query.set("maxAmount", String(maxAmount));
 
   return (
     <AppShell
@@ -149,8 +263,8 @@ export default async function ReimbursementsPage({
               Track recovered business expenses and reimbursement history.
             </p>
           </div>
-          <div id="add-reimbursement">
-            <AddReimbursementForm expenses={expenses} />
+          <div id="add-reimbursement" className="fp-reimb-add-form-host">
+            <AddReimbursementForm expenses={expenses} trucks={trucks} />
           </div>
         </section>
 
@@ -163,55 +277,24 @@ export default async function ReimbursementsPage({
         <div className="fp-reimb-layout mt-4">
           <div className="min-w-0">
             <div className="fp-reimb-kpi-grid">
-              <ReimbKpi label="Total Reimbursed" value={money(total)} tone="blue" icon="wallet" note="Recovered expenses" />
-              <ReimbKpi label="Records" value={`${reimbursements.length}`} tone="amber" icon="clock" note="Reimbursement entries" />
+              <ReimbKpi label="Total Reimbursed" value={money(total)} tone="blue" icon="wallet" note={reimbursementRangeNote(dateFrom, dateTo)} />
+              <ReimbKpi label="Records" value={`${filteredBase.length}`} tone="amber" icon="clock" note={reimbursementRangeNote(dateFrom, dateTo)} />
               <ReimbKpi label="Full Recovery" value={money(fullAmount)} tone="green" icon="check" note={`${fullCount} records`} />
               <ReimbKpi label="Partial Recovery" value={money(partialAmount)} tone="red" icon="partial" note={`${partialCount} records`} />
             </div>
 
             <section className="fp-reimb-table-card mt-4">
               <div className="fp-reimb-tabs">
-                <ReimbTab href={tabHref("all", q, truckFilter, sort)} label="All" count={reimbursements.length} active={kind === "all"} />
-                <ReimbTab href={tabHref("full", q, truckFilter, sort)} label="Full Recovery" count={fullCount} active={kind === "full"} />
-                <ReimbTab href={tabHref("partial", q, truckFilter, sort)} label="Partial Recovery" count={partialCount} active={kind === "partial"} />
+                <ReimbTab href={reimbursementKindHref(query, "all")} label="All" count={filteredBase.length} active={kind === "all"} />
+                <ReimbTab href={reimbursementKindHref(query, "full")} label="Full Recovery" count={fullCount} active={kind === "full"} />
+                <ReimbTab href={reimbursementKindHref(query, "partial")} label="Partial Recovery" count={partialCount} active={kind === "partial"} />
+                <ReimbTab href={reimbursementKindHref(query, "standalone")} label="Standalone" count={standaloneCount} active={kind === "standalone"} />
               </div>
 
-              <form action="/reimbursements" className="fp-reimb-filterbar">
-                <label className="fp-reimb-search">
-                  <SearchIcon />
-                  <input name="q" defaultValue={params.q || ""} placeholder="Search by category, vendor, truck, notes..." />
-                </label>
-
-                <select name="truck" defaultValue={truckFilter} className="fp-reimb-filter-select">
-                  <option value="all">Truck</option>
-                  {trucks.map((truck) => (
-                    <option key={truck.id} value={truck.id}>Truck #{truck.unit_number}</option>
-                  ))}
-                </select>
-
-                <button type="button" className="fp-reimb-filter-button">
-                  <CalendarIcon /> Date Range <span>⌄</span>
-                </button>
-
-                <select name="kind" defaultValue={kind} className="fp-reimb-filter-select">
-                  <option value="all">Recovery Type</option>
-                  <option value="full">Full Recovery</option>
-                  <option value="partial">Partial Recovery</option>
-                </select>
-
-                <button type="submit" className="fp-reimb-filter-button">
-                  <FilterIcon /> More Filters
-                </button>
-
-                <div className="fp-reimb-sort">
-                  <span>Sort by</span>
-                  <select name="sort" defaultValue={sort}>
-                    <option value="newest">Date (Newest)</option>
-                    <option value="oldest">Date (Oldest)</option>
-                    <option value="amount-desc">Amount (Highest)</option>
-                  </select>
-                </div>
-              </form>
+              <ReimbursementFilters
+                trucks={trucks}
+                categories={categories}
+              />
 
               <div className="fp-reimb-table-wrap">
                 <table className="fp-reimb-table">
@@ -224,27 +307,38 @@ export default async function ReimbursementsPage({
                       <th>Truck</th>
                       <th>Vendor</th>
                       <th>Recovery</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {pageRows.map((row, index) => {
-                      const expense = expenseMap.get(row.expense_id);
-                      const truck = expense?.truck_id ? truckMap.get(expense.truck_id) : null;
+                      const expense = linkedExpense(row);
+                      const truckId = effectiveTruckId(row);
+                      const truck = truckId ? truckMap.get(truckId) : null;
                       const full = isFull(row);
+                      const standalone = isStandalone(row);
+                      const category = effectiveCategory(row);
                       return (
                         <tr key={row.id}>
                           <td className="fp-reimb-number">#{String((page - 1) * PAGE_SIZE + index + 1).padStart(4, "0")}</td>
                           <td>{shortDate(row.reimbursement_date)}</td>
                           <td className="fp-reimb-description">
-                            {row.notes || `${expense?.category || "Expense"} reimbursement`}
+                            {row.notes || row.reference || `${category} reimbursement`}
                           </td>
                           <td className="fp-reimb-amount">{money(numberValue(row.amount))}</td>
                           <td>{truck ? `#${truck.unit_number}` : "—"}</td>
-                          <td>{expense?.vendor || "—"}</td>
+                          <td>{expense?.vendor || row.reference || "—"}</td>
                           <td>
-                            <StatusBadge tone={full ? "green" : "orange"}>
-                              {full ? "Full" : "Partial"}
+                            <StatusBadge tone={standalone ? "blue" : full ? "green" : "orange"}>
+                              {standalone ? "Standalone" : full ? "Full" : "Partial"}
                             </StatusBadge>
+                          </td>
+                          <td className="fp-reimb-actions-cell">
+                            <ReimbursementActions
+                              row={row}
+                              expenses={expenses}
+                              trucks={trucks}
+                            />
                           </td>
                         </tr>
                       );
@@ -272,34 +366,23 @@ export default async function ReimbursementsPage({
           <aside className="fp-reimb-right-rail">
             <section className="fp-reimb-side-card">
               <h2>Quick Actions</h2>
-              <div className="mt-3 grid gap-2">
-                <Link href="/reimbursements#add-reimbursement" className="fp-reimb-side-action primary">
-                  <span className="fp-reimb-side-icon"><WalletIcon /></span>
-                  <span>Add Reimbursement</span><span>›</span>
-                </Link>
-                <button className="fp-reimb-side-action">
-                  <span className="fp-reimb-side-icon"><ImportIcon /></span>
-                  <span>Import from File</span><span>›</span>
-                </button>
-                <button className="fp-reimb-side-action">
-                  <span className="fp-reimb-side-icon"><ExportIcon /></span>
-                  <span>Export Reimbursements</span><span>›</span>
-                </button>
-                <Link href="/reimbursements?kind=partial" className="fp-reimb-side-action">
-                  <span className="fp-reimb-side-icon"><ClockIcon /></span>
-                  <span>View Partial Recovery</span><span>›</span>
-                </Link>
-              </div>
+              <ReimbursementQuickActions rows={filtered} />
             </section>
 
             <section className="fp-reimb-side-card">
               <h2>Recovery Breakdown</h2>
               <div className="mt-4 flex justify-center">
-                <ReimbDonut total={total} full={fullAmount} partial={partialAmount} />
+                <ReimbDonut
+                  total={total}
+                  full={fullAmount}
+                  partial={partialAmount}
+                  standalone={standaloneAmount}
+                />
               </div>
               <div className="fp-reimb-stat-list mt-4">
                 <ReimbStatRow label="Full Recovery" amount={fullAmount} total={total} color="#58bd69" />
                 <ReimbStatRow label="Partial Recovery" amount={partialAmount} total={total} color="#f4b53e" />
+                <ReimbStatRow label="Standalone" amount={standaloneAmount} total={total} color="#4f8df7" />
               </div>
             </section>
 
@@ -373,17 +456,43 @@ function ReimbTab({ href, label, count, active }: { href: string; label: string;
   );
 }
 
-function ReimbDonut({ total, full, partial }: { total: number; full: number; partial: number }) {
+function ReimbDonut({
+  total,
+  full,
+  partial,
+  standalone,
+}: {
+  total: number;
+  full: number;
+  partial: number;
+  standalone: number;
+}) {
   const safe = Math.max(1, total);
   const fullPct = (full / safe) * 100;
   const partialPct = (partial / safe) * 100;
-  const end = Math.min(100, fullPct + partialPct);
-  const background = total > 0
-    ? `conic-gradient(#58bd69 0 ${fullPct}%, #f4b53e ${fullPct}% ${end}%, #e7edf3 ${end}% 100%)`
-    : "conic-gradient(#e7edf3 0 100%)";
+  const standalonePct = (standalone / safe) * 100;
+  const partialEnd = Math.min(100, fullPct + partialPct);
+  const standaloneEnd = Math.min(
+    100,
+    partialEnd + standalonePct
+  );
+
+  const background =
+    total > 0
+      ? `conic-gradient(
+          #58bd69 0 ${fullPct}%,
+          #f4b53e ${fullPct}% ${partialEnd}%,
+          #4f8df7 ${partialEnd}% ${standaloneEnd}%,
+          #e7edf3 ${standaloneEnd}% 100%
+        )`
+      : "conic-gradient(#e7edf3 0 100%)";
+
   return (
     <div className="fp-reimb-donut" style={{ background }}>
-      <div><strong>{money(total)}</strong><span>Total</span></div>
+      <div>
+        <strong>{money(total)}</strong>
+        <span>Total</span>
+      </div>
     </div>
   );
 }
@@ -398,13 +507,28 @@ function ReimbStatRow({ label, amount, total, color }: { label: string; amount: 
   );
 }
 
-function tabHref(kind: string, q: string, truck: string, sort: string) {
-  const params = new URLSearchParams();
-  if (kind !== "all") params.set("kind", kind);
-  if (q) params.set("q", q);
-  if (truck !== "all") params.set("truck", truck);
-  if (sort !== "newest") params.set("sort", sort);
+function reimbursementKindHref(base: URLSearchParams, kind: string) {
+  const params = new URLSearchParams(base);
+  params.delete("page");
+
+  if (kind === "all") params.delete("kind");
+  else params.set("kind", kind);
+
   return `/reimbursements${params.toString() ? `?${params}` : ""}`;
+}
+
+function reimbursementRangeNote(from?: string, to?: string) {
+  if (from && to) return `${shortRangeDate(from)} – ${shortRangeDate(to)}`;
+  if (from) return `from ${shortRangeDate(from)}`;
+  if (to) return `through ${shortRangeDate(to)}`;
+  return "current filtered view";
+}
+
+function shortRangeDate(value: string) {
+  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function pageHref(base: URLSearchParams, page: number) {

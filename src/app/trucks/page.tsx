@@ -4,6 +4,7 @@ import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import AddTruckForm from "./add-truck-form";
 import TruckActions from "./truck-actions";
+import TrucksQuickActions from "./trucks-quick-actions";
 
 type Truck = {
   id: string;
@@ -14,6 +15,8 @@ type Truck = {
   vin: string | null;
   license_plate: string | null;
   current_mileage: number | string | null;
+  registration_expiry: string | null;
+  insurance_expiry: string | null;
   status: string | null;
 };
 
@@ -55,7 +58,7 @@ export default async function TrucksPage({
     supabase
       .from("trucks")
       .select(
-        "id, unit_number, year, make, model, vin, license_plate, current_mileage, status"
+        "id, unit_number, year, make, model, vin, license_plate, current_mileage, registration_expiry, insurance_expiry, status"
       )
       .order("created_at", { ascending: false }),
     supabase
@@ -145,7 +148,7 @@ export default async function TrucksPage({
             </p>
           </div>
 
-          <div id="add-truck">
+          <div id="add-truck" className="fp-truck-add-form-host">
             <AddTruckForm />
           </div>
         </section>
@@ -280,7 +283,7 @@ export default async function TrucksPage({
                           <td>{nextService}</td>
 
                           <td className="fp-truck-actions-cell">
-                            <TruckActions id={truck.id} currentStatus={truck.status} />
+                            <TruckActions truck={truck} />
                           </td>
                         </tr>
                       );
@@ -312,31 +315,10 @@ export default async function TrucksPage({
           <aside className="fp-trucks-right-rail">
             <section className="fp-truck-side-card">
               <h2>Quick Actions</h2>
-              <div className="mt-3 grid gap-2">
-                <Link href="/trucks#add-truck" className="fp-truck-side-action primary">
-                  <span className="fp-truck-side-icon"><PlusIcon /></span>
-                  <span>Add Truck</span>
-                  <span>›</span>
-                </Link>
-
-                <button className="fp-truck-side-action">
-                  <span className="fp-truck-side-icon"><ImportIcon /></span>
-                  <span>Import from File</span>
-                  <span>›</span>
-                </button>
-
-                <button className="fp-truck-side-action">
-                  <span className="fp-truck-side-icon"><ExportIcon /></span>
-                  <span>Export Trucks</span>
-                  <span>›</span>
-                </button>
-
-                <Link href={filterHref("inactive", q, makeFilter, sort)} className="fp-truck-side-action">
-                  <span className="fp-truck-side-icon"><InactiveIcon /></span>
-                  <span>View Inactive Trucks</span>
-                  <span>›</span>
-                </Link>
-              </div>
+              <TrucksQuickActions
+                visibleTrucks={trucks}
+                inactiveHref={filterHref("inactive", q, makeFilter, sort)}
+              />
             </section>
 
             <section className="fp-truck-side-card">

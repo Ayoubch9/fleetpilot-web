@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -10,12 +10,29 @@ export default function AddTruckForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    function openAddTruck() {
+      setError("");
+      setOpen(true);
+      window.setTimeout(() => {
+        document
+          .getElementById("add-truck")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 40);
+    }
+
+    window.addEventListener("fleetpilot:open-add-truck", openAddTruck);
+    return () =>
+      window.removeEventListener("fleetpilot:open-add-truck", openAddTruck);
+  }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSaving(true);
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const unitNumber = String(form.get("unit_number") || "").trim();
 
     if (!unitNumber) {
@@ -44,7 +61,7 @@ export default function AddTruckForm() {
       return;
     }
 
-    event.currentTarget.reset();
+    formElement.reset();
     setSaving(false);
     setOpen(false);
     router.refresh();
@@ -52,17 +69,10 @@ export default function AddTruckForm() {
 
   return (
     <>
-      <button
-        onClick={() => setOpen((value) => !value)}
-        className="rounded-[6px] bg-[#1188ff] px-4 py-2.5 text-[10px] font-black text-white shadow-[0_7px_18px_rgba(17,136,255,.15)] hover:bg-[#0879ee]"
-      >
-        {open ? "Close" : "+ Add Truck"}
-      </button>
-
       {open && (
         <form
           onSubmit={submit}
-          className="mt-5 grid gap-4 rounded-[10px] border border-[#dce5ef] bg-white p-5 md:grid-cols-2"
+          className="fp-add-truck-form"
         >
           <Field name="unit_number" label="Unit Number *" />
           <Field name="year" label="Year" type="number" />
@@ -76,15 +86,23 @@ export default function AddTruckForm() {
           <Field name="insurance_expiry" label="Insurance Expiry" type="date" />
 
           {error && (
-            <div className="md:col-span-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            <div className="fp-add-truck-error md:col-span-2">
               {error}
             </div>
           )}
 
-          <div className="md:col-span-2 flex justify-end">
+          <div className="fp-add-truck-footer md:col-span-2">
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => setOpen(false)}
+              className="fp-add-truck-close"
+            >
+              Close
+            </button>
             <button
               disabled={saving}
-              className="rounded-[6px] bg-[#17c978] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-50"
+              className="fp-add-truck-save"
             >
               {saving ? "Saving..." : "Save Truck"}
             </button>
@@ -107,15 +125,15 @@ function Field({
   step?: string;
 }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">
+    <label className="fp-add-truck-field">
+      <span>
         {label}
       </span>
       <input
         name={name}
         type={type}
         step={step}
-        className="w-full fp-field text-[11px]"
+        className="fp-add-truck-control"
       />
     </label>
   );

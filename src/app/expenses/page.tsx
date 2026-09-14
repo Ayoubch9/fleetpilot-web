@@ -4,6 +4,8 @@ import { EmptyState } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import AddExpenseForm from "./add-expense-form";
 import ExpenseActions from "./expense-actions";
+import ExpenseFilters from "./expense-filters";
+import ExpenseQuickActions from "./expense-quick-actions";
 
 type Expense = {
   id: string;
@@ -38,6 +40,11 @@ type Params = {
   truck?: string;
   sort?: string;
   page?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  vendor?: string;
+  minAmount?: string;
+  maxAmount?: string;
 };
 
 const PAGE_SIZE = 10;
@@ -62,6 +69,11 @@ export default async function ExpensesPage({
   const truckFilter = params.truck || "all";
   const sort = (params.sort || "newest").toLowerCase();
   const requestedPage = Math.max(1, Number(params.page || "1") || 1);
+  const dateFrom = params.dateFrom || "";
+  const dateTo = params.dateTo || "";
+  const vendorFilter = (params.vendor || "").trim().toLowerCase();
+  const minAmount = params.minAmount ? Number(params.minAmount) : null;
+  const maxAmount = params.maxAmount ? Number(params.maxAmount) : null;
 
   const { supabase, fullName, companyName, role } =
     await getFleetPilotAccount();
@@ -108,29 +120,7 @@ export default async function ExpensesPage({
     );
   }
 
-  const total = totalOf(allExpenses);
-  const fuel = totalOf(
-    allExpenses.filter((expense) => categoryKey(expense.category) === "fuel")
-  );
-  const maintenance = totalOf(
-    allExpenses.filter(
-      (expense) => categoryKey(expense.category) === "maintenance"
-    )
-  );
-  const otherExpenses = Math.max(0, total - fuel - maintenance);
-
-  const categoryCounts = Object.fromEntries(
-    TAB_CATEGORIES.map((tab) => [
-      tab.key,
-      tab.key === "all"
-        ? allExpenses.length
-        : allExpenses.filter((expense) =>
-            matchesCategoryTab(expense.category, tab.key)
-          ).length,
-    ])
-  ) as Record<(typeof TAB_CATEGORIES)[number]["key"], number>;
-
-  let expenses = allExpenses.filter((expense) => {
+  let filteredExpenses = allExpenses.filter((expense) => {
     if (!q) return true;
     const truck = expense.truck_id ? truckMap.get(expense.truck_id) : null;
     return [
@@ -142,15 +132,72 @@ export default async function ExpensesPage({
     ].some((value) => (value || "").toLowerCase().includes(q));
   });
 
-  if (categoryFilter !== "all") {
-    expenses = expenses.filter((expense) =>
-      matchesCategoryTab(expense.category, categoryFilter)
+  if (truckFilter !== "all") {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.truck_id === truckFilter
     );
   }
 
-  if (truckFilter !== "all") {
-    expenses = expenses.filter((expense) => expense.truck_id === truckFilter);
+  if (dateFrom) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => (expense.expense_date || "") >= dateFrom
+    );
   }
+
+  if (dateTo) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => (expense.expense_date || "") <= dateTo
+    );
+  }
+
+  if (vendorFilter) {
+    filteredExpenses = filteredExpenses.filter((expense) =>
+      (expense.vendor || "").toLowerCase().includes(vendorFilter)
+    );
+  }
+
+  if (minAmount != null && Number.isFinite(minAmount)) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => numberValue(expense.amount) >= minAmount
+    );
+  }
+
+  if (maxAmount != null && Number.isFinite(maxAmount)) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => numberValue(expense.amount) <= maxAmount
+    );
+  }
+
+  const total = totalOf(filteredExpenses);
+  const fuel = totalOf(
+    filteredExpenses.filter(
+      (expense) => categoryKey(expense.category) === "fuel"
+    )
+  );
+  const maintenance = totalOf(
+    filteredExpenses.filter(
+      (expense) => categoryKey(expense.category) === "maintenance"
+    )
+  );
+  const otherExpenses = Math.max(0, total - fuel - maintenance);
+
+  const categoryCounts = Object.fromEntries(
+    TAB_CATEGORIES.map((tab) => [
+      tab.key,
+      tab.key === "all"
+        ? filteredExpenses.length
+        : filteredExpenses.filter((expense) =>
+            matchesCategoryTab(expense.category, tab.key)
+          ).length,
+    ])
+  ) as Record<(typeof TAB_CATEGORIES)[number]["key"], number>;
+
+  let expenses =
+    categoryFilter === "all"
+      ? [...filteredExpenses]
+      : filteredExpenses.filter((expense) =>
+          matchesCategoryTab(expense.category, categoryFilter)
+        );
 
   expenses = [...expenses].sort((a, b) => {
     if (sort === "oldest") {
@@ -172,7 +219,7 @@ export default async function ExpensesPage({
     page * PAGE_SIZE
   );
 
-  const breakdown = expenseBreakdown(allExpenses);
+  const breakdown = expenseBreakdown(filteredExpenses);
   const rankedCategories = [...breakdown]
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
@@ -189,6 +236,11 @@ export default async function ExpensesPage({
   if (categoryFilter !== "all") query.set("category", categoryFilter);
   if (truckFilter !== "all") query.set("truck", truckFilter);
   if (sort !== "newest") query.set("sort", sort);
+  if (dateFrom) query.set("dateFrom", dateFrom);
+  if (dateTo) query.set("dateTo", dateTo);
+  if (vendorFilter) query.set("vendor", vendorFilter);
+  if (minAmount != null && Number.isFinite(minAmount)) query.set("minAmount", String(minAmount));
+  if (maxAmount != null && Number.isFinite(maxAmount)) query.set("maxAmount", String(maxAmount));
 
   return (
     <AppShell
@@ -206,7 +258,7 @@ export default async function ExpensesPage({
             </p>
           </div>
 
-          <div id="add-expense">
+          <div id="add-expense" className="fp-expense-add-form-host">
             <AddExpenseForm trucks={trucks} loads={loads} />
           </div>
         </section>
@@ -223,32 +275,32 @@ export default async function ExpensesPage({
               <ExpenseKpi
                 label="Total Expenses"
                 value={money(total)}
-                change="↑ 12%"
-                note="vs last month"
+                change={dateFrom || dateTo ? "Selected range" : "All time"}
+                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded expenses"}
                 tone="blue"
                 icon="card"
               />
               <ExpenseKpi
                 label="Fuel Expenses"
                 value={money(fuel)}
-                change="↑ 8%"
-                note="vs last month"
+                change={dateFrom || dateTo ? "Selected range" : "All time"}
+                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded fuel"}
                 tone="green"
                 icon="fuel"
               />
               <ExpenseKpi
                 label="Maintenance"
                 value={money(maintenance)}
-                change="↓ 15%"
-                note="vs last month"
+                change={dateFrom || dateTo ? "Selected range" : "All time"}
+                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded maintenance"}
                 tone="purple"
                 icon="maintenance"
               />
               <ExpenseKpi
                 label="Other Expenses"
                 value={money(otherExpenses)}
-                change="↑ 22%"
-                note="vs last month"
+                change={dateFrom || dateTo ? "Selected range" : "All time"}
+                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "other recorded costs"}
                 tone="blue"
                 icon="other"
               />
@@ -272,63 +324,7 @@ export default async function ExpensesPage({
                 ))}
               </div>
 
-              <form action="/expenses" className="fp-expense-filterbar">
-                <label className="fp-expense-search">
-                  <SearchIcon />
-                  <input
-                    name="q"
-                    defaultValue={params.q || ""}
-                    placeholder="Search by description, vendor, truck..."
-                  />
-                </label>
-
-                <button type="button" className="fp-expense-filter-button">
-                  <CalendarIcon />
-                  Date Range
-                  <span>⌄</span>
-                </button>
-
-                <select
-                  name="category"
-                  defaultValue={categoryFilter}
-                  className="fp-expense-filter-select"
-                >
-                  <option value="all">Category</option>
-                  <option value="fuel">Fuel</option>
-                  <option value="maintenance">Maintenance</option>
-                  <option value="tolls">Tolls</option>
-                  <option value="insurance">Insurance</option>
-                  <option value="other">Other</option>
-                </select>
-
-                <select
-                  name="truck"
-                  defaultValue={truckFilter}
-                  className="fp-expense-filter-select"
-                >
-                  <option value="all">Truck</option>
-                  {trucks.map((truck) => (
-                    <option key={truck.id} value={truck.id}>
-                      Truck #{truck.unit_number}
-                    </option>
-                  ))}
-                </select>
-
-                <button type="submit" className="fp-expense-filter-button">
-                  <FilterIcon />
-                  More Filters
-                </button>
-
-                <div className="fp-expense-sort">
-                  <span>Sort by</span>
-                  <select name="sort" defaultValue={sort}>
-                    <option value="newest">Date (Newest)</option>
-                    <option value="oldest">Date (Oldest)</option>
-                    <option value="amount-desc">Amount (Highest)</option>
-                    <option value="amount-asc">Amount (Lowest)</option>
-                  </select>
-                </div>
-              </form>
+              <ExpenseFilters trucks={trucks} />
 
               <div className="fp-expense-table-wrap">
                 <table className="fp-expense-table">
@@ -381,8 +377,9 @@ export default async function ExpensesPage({
 
                           <td className="fp-expense-actions-cell">
                             <ExpenseActions
-                              id={expense.id}
-                              receiptPath={expense.receipt_path}
+                              expense={expense}
+                              trucks={trucks}
+                              loads={loads}
                             />
                           </td>
                         </tr>
@@ -454,34 +451,7 @@ export default async function ExpensesPage({
             <section className="fp-expense-side-card">
               <h2>Quick Actions</h2>
 
-              <div className="mt-3 grid gap-2">
-                <Link
-                  href="/expenses#add-expense"
-                  className="fp-expense-side-action primary"
-                >
-                  <span className="fp-expense-side-icon"><PlusIcon /></span>
-                  <span>Add Expense</span>
-                  <span>›</span>
-                </Link>
-
-                <button className="fp-expense-side-action">
-                  <span className="fp-expense-side-icon"><ImportIcon /></span>
-                  <span>Import from File</span>
-                  <span>›</span>
-                </button>
-
-                <button className="fp-expense-side-action">
-                  <span className="fp-expense-side-icon"><ExportIcon /></span>
-                  <span>Export Expenses</span>
-                  <span>›</span>
-                </button>
-
-                <Link href="/reimbursements" className="fp-expense-side-action">
-                  <span className="fp-expense-side-icon"><RecurringIcon /></span>
-                  <span>Reimbursements</span>
-                  <span>›</span>
-                </Link>
-              </div>
+              <ExpenseQuickActions expenses={expenses} />
             </section>
 
             <section className="fp-expense-side-card">
@@ -572,7 +542,11 @@ function ExpenseKpi({
         <div className="fp-number fp-expense-kpi-value">{value}</div>
         <div
           className={`fp-expense-kpi-change ${
-            change.startsWith("↓") ? "positive" : ""
+            change.startsWith("↓")
+              ? "positive"
+              : change === "Selected range" || change === "All time"
+                ? "neutral"
+                : ""
           }`}
         >
           {change}
@@ -848,6 +822,22 @@ function totalOf(expenses: Expense[]) {
     (sum, expense) => sum + numberValue(expense.amount),
     0
   );
+}
+
+function expenseRangeLabel(from?: string, to?: string) {
+  if (from && to) {
+    return `${shortDate(from)} – ${shortDate(to)}`;
+  }
+  if (from) return `from ${shortDate(from)}`;
+  if (to) return `through ${shortDate(to)}`;
+  return "selected dates";
+}
+
+function shortDate(value: string) {
+  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function longDate(value?: string | null) {

@@ -1,59 +1,26 @@
-# FleetPilot Web v2.6.0 — Company Profile + Preferences
+# FleetPilot Web v3.0.3 — Reimbursement TypeScript Build Fix
 
-## Company
-Settings → Company now contains a real trucking business profile:
+Fixes the v3.0.2 production type-check errors introduced by the standalone
+reimbursement model.
 
-Business Identity:
-- Display Name
-- Legal Business Name
-- USDOT Number
-- MC Number
+Changes:
+- reimbursement `expense_id` remains nullable
+- vendor filtering now uses the null-safe `linkedExpense(row)` helper
+- the page-level `Expense.truck_id` type is now consistently
+  `string | null` instead of optional
+- AddReimbursementForm and ReimbursementActions now receive the same Expense
+  shape as the page
 
-Contact:
-- Business Email
-- Business Phone
+The mobile-style reimbursement behavior from v3.0.2 is unchanged:
+- existing expense link is optional
+- standalone reimbursement supported
+- category
+- truck assignment
+- reference / statement
+- date
+- amount
+- notes
+- safe CSV export
 
-Business Address:
-- Address
-- Address Line 2
-- City
-- State
-- ZIP Code
-- Country
-
-Operations:
-- Company Time Zone
-- Current member role
-
-Only the company owner can edit company-level information.
-
-## Preferences
-The Preferences tab was reorganized so it no longer presents USD/Miles as
-fake selectable dropdowns.
-
-Regional & Formatting:
-- Language
-- Date Format
-- Time Format
-- Time Zone
-
-Operating Defaults:
-- Week Starts On
-- Default Performance Period
-- Currency shown as a locked USD capability
-- Distance shown as a locked Miles capability
-
-Display:
-- Compact Tables preference
-
-Existing notification preferences remain under Notifications.
-
-## Database migration
-Run once:
-
-`supabase_company_preferences_setup.sql`
-
-It adds the company profile fields and the new user preference columns.
-Existing authenticated RLS policies remain in place.
-
-No anonymous access or service-role credentials are introduced.
+The Supabase migration from v3.0.2 is still required once:
+`supabase_reimbursement_mobile_model_setup.sql`

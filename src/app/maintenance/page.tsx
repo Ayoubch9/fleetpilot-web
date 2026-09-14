@@ -4,6 +4,9 @@ import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
 import { num, parseDate, money } from "@/lib/fleetpilot-week";
 import AddMaintenanceForm from "./add-maintenance-form";
+import MaintenanceFilters from "./maintenance-filters";
+import MaintenanceQuickActions from "./maintenance-quick-actions";
+import MaintenanceActions from "./maintenance-actions";
 
 type Truck = {
   id: string;
@@ -32,6 +35,13 @@ type Params = {
   service?: string;
   sort?: string;
   page?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  vendor?: string;
+  minCost?: string;
+  maxCost?: string;
+  minMileage?: string;
+  maxMileage?: string;
 };
 
 const PAGE_SIZE = 10;
@@ -54,6 +64,13 @@ export default async function MaintenancePage({
   const serviceFilter = (params.service || "all").toLowerCase();
   const sort = (params.sort || "newest").toLowerCase();
   const requestedPage = Math.max(1, Number(params.page || "1") || 1);
+  const dateFrom = params.dateFrom || "";
+  const dateTo = params.dateTo || "";
+  const vendorFilter = (params.vendor || "").trim().toLowerCase();
+  const minCost = params.minCost ? Number(params.minCost) : null;
+  const maxCost = params.maxCost ? Number(params.maxCost) : null;
+  const minMileage = params.minMileage ? Number(params.minMileage) : null;
+  const maxMileage = params.maxMileage ? Number(params.maxMileage) : null;
 
   const { supabase, fullName, companyName, role } =
     await getFleetPilotAccount();
@@ -105,17 +122,13 @@ export default async function MaintenancePage({
     return overdue ? "Overdue" : upcoming ? "Upcoming" : "Completed";
   };
 
-  const completed = records.filter((record) => state(record) === "Completed").length;
-  const upcoming = records.filter((record) => state(record) === "Upcoming").length;
-  const overdue = records.filter((record) => state(record) === "Overdue").length;
-
   const serviceTypes = [...new Set(
     records
       .map((record) => (record.service_type || "").trim())
       .filter(Boolean)
   )].sort((a, b) => a.localeCompare(b));
 
-  let filtered = records.filter((record) => {
+  let filteredBase = records.filter((record) => {
     if (!q) return true;
     const truck = record.truck_id ? truckMap.get(record.truck_id) : null;
     return [
@@ -123,28 +136,87 @@ export default async function MaintenancePage({
       record.vendor,
       truck?.unit_number,
       state(record),
+      record.service_date,
     ].some((value) => (value || "").toLowerCase().includes(q));
   });
 
-  if (stateFilter !== "all") {
-    filtered = filtered.filter(
-      (record) => state(record).toLowerCase() === stateFilter
-    );
-  }
-
   if (truckFilter !== "all") {
-    filtered = filtered.filter((record) => record.truck_id === truckFilter);
+    filteredBase = filteredBase.filter(
+      (record) => record.truck_id === truckFilter
+    );
   }
 
   if (serviceFilter !== "all") {
-    filtered = filtered.filter(
-      (record) => (record.service_type || "").toLowerCase() === serviceFilter
+    filteredBase = filteredBase.filter(
+      (record) =>
+        (record.service_type || "").toLowerCase() === serviceFilter
     );
   }
+
+  if (dateFrom) {
+    filteredBase = filteredBase.filter(
+      (record) => (record.service_date || "") >= dateFrom
+    );
+  }
+
+  if (dateTo) {
+    filteredBase = filteredBase.filter(
+      (record) => (record.service_date || "") <= dateTo
+    );
+  }
+
+  if (vendorFilter) {
+    filteredBase = filteredBase.filter((record) =>
+      (record.vendor || "").toLowerCase().includes(vendorFilter)
+    );
+  }
+
+  if (minCost != null && Number.isFinite(minCost)) {
+    filteredBase = filteredBase.filter(
+      (record) => num(record.cost) >= minCost
+    );
+  }
+
+  if (maxCost != null && Number.isFinite(maxCost)) {
+    filteredBase = filteredBase.filter(
+      (record) => num(record.cost) <= maxCost
+    );
+  }
+
+  if (minMileage != null && Number.isFinite(minMileage)) {
+    filteredBase = filteredBase.filter(
+      (record) => num(record.mileage) >= minMileage
+    );
+  }
+
+  if (maxMileage != null && Number.isFinite(maxMileage)) {
+    filteredBase = filteredBase.filter(
+      (record) => num(record.mileage) <= maxMileage
+    );
+  }
+
+  const completed = filteredBase.filter(
+    (record) => state(record) === "Completed"
+  ).length;
+  const upcoming = filteredBase.filter(
+    (record) => state(record) === "Upcoming"
+  ).length;
+  const overdue = filteredBase.filter(
+    (record) => state(record) === "Overdue"
+  ).length;
+
+  let filtered =
+    stateFilter === "all"
+      ? [...filteredBase]
+      : filteredBase.filter(
+          (record) => state(record).toLowerCase() === stateFilter
+        );
 
   filtered = [...filtered].sort((a, b) => {
     if (sort === "oldest") return dateValue(a.service_date) - dateValue(b.service_date);
     if (sort === "mileage") return num(b.mileage) - num(a.mileage);
+    if (sort === "cost-desc") return num(b.cost) - num(a.cost);
+    if (sort === "cost-asc") return num(a.cost) - num(b.cost);
     return dateValue(b.service_date) - dateValue(a.service_date);
   });
 
@@ -152,7 +224,7 @@ export default async function MaintenancePage({
   const page = Math.min(requestedPage, pageCount);
   const pageRecords = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const upcomingServices = records
+  const upcomingServices = filteredBase
     .filter((record) => ["Upcoming", "Overdue"].includes(state(record)))
     .sort((a, b) => {
       const ad = dateValue(a.next_service_date);
@@ -169,6 +241,13 @@ export default async function MaintenancePage({
   if (truckFilter !== "all") query.set("truck", truckFilter);
   if (serviceFilter !== "all") query.set("service", serviceFilter);
   if (sort !== "newest") query.set("sort", sort);
+  if (dateFrom) query.set("dateFrom", dateFrom);
+  if (dateTo) query.set("dateTo", dateTo);
+  if (vendorFilter) query.set("vendor", vendorFilter);
+  if (minCost != null && Number.isFinite(minCost)) query.set("minCost", String(minCost));
+  if (maxCost != null && Number.isFinite(maxCost)) query.set("maxCost", String(maxCost));
+  if (minMileage != null && Number.isFinite(minMileage)) query.set("minMileage", String(minMileage));
+  if (maxMileage != null && Number.isFinite(maxMileage)) query.set("maxMileage", String(maxMileage));
 
   return (
     <AppShell
@@ -186,7 +265,7 @@ export default async function MaintenancePage({
             </p>
           </div>
 
-          <div id="add-maintenance">
+          <div id="add-maintenance" className="fp-maint-add-form-host">
             <AddMaintenanceForm trucks={trucks} />
           </div>
         </section>
@@ -200,59 +279,41 @@ export default async function MaintenancePage({
         <div className="fp-maint-layout mt-4">
           <div className="min-w-0">
             <div className="fp-maint-kpi-grid">
-              <MaintKpi label="Total Services" value={records.length} tone="blue" icon="service" note="↑ 20% vs last month" />
-              <MaintKpi label="Completed" value={completed} tone="green" icon="completed" note="↑ 28% vs last month" />
-              <MaintKpi label="Upcoming" value={upcoming} tone="blue" icon="calendar" note="— current schedule" />
+              <MaintKpi
+                label="Total Services"
+                value={filteredBase.length}
+                tone="blue"
+                icon="service"
+                note={maintenanceRangeNote(dateFrom, dateTo)}
+              />
+              <MaintKpi
+                label="Completed"
+                value={completed}
+                tone="green"
+                icon="completed"
+                note={maintenanceRangeNote(dateFrom, dateTo)}
+              />
+              <MaintKpi
+                label="Upcoming"
+                value={upcoming}
+                tone="blue"
+                icon="calendar"
+                note={maintenanceRangeNote(dateFrom, dateTo)}
+              />
             </div>
 
             <section className="fp-maint-table-card mt-4">
               <div className="fp-maint-tabs">
-                <MaintTab href={tabHref("all", q, truckFilter, serviceFilter, sort)} label="All Services" count={records.length} active={stateFilter === "all"} />
-                <MaintTab href={tabHref("upcoming", q, truckFilter, serviceFilter, sort)} label="Upcoming" count={upcoming} active={stateFilter === "upcoming"} />
-                <MaintTab href={tabHref("overdue", q, truckFilter, serviceFilter, sort)} label="Overdue" count={overdue} active={stateFilter === "overdue"} />
-                <MaintTab href={tabHref("completed", q, truckFilter, serviceFilter, sort)} label="Completed" count={completed} active={stateFilter === "completed"} />
+                <MaintTab href={maintenanceStateHref(query, "all")} label="All Services" count={filteredBase.length} active={stateFilter === "all"} />
+                <MaintTab href={maintenanceStateHref(query, "upcoming")} label="Upcoming" count={upcoming} active={stateFilter === "upcoming"} />
+                <MaintTab href={maintenanceStateHref(query, "overdue")} label="Overdue" count={overdue} active={stateFilter === "overdue"} />
+                <MaintTab href={maintenanceStateHref(query, "completed")} label="Completed" count={completed} active={stateFilter === "completed"} />
               </div>
 
-              <form action="/maintenance" className="fp-maint-filterbar">
-                <label className="fp-maint-search">
-                  <SearchIcon />
-                  <input name="q" defaultValue={params.q || ""} placeholder="Search by truck, service type, vendor..." />
-                </label>
-
-                <select name="service" defaultValue={serviceFilter} className="fp-maint-filter-select">
-                  <option value="all">Service Type</option>
-                  {serviceTypes.map((type) => (
-                    <option key={type} value={type.toLowerCase()}>{type}</option>
-                  ))}
-                </select>
-
-                <select name="truck" defaultValue={truckFilter} className="fp-maint-filter-select">
-                  <option value="all">Truck</option>
-                  {allTrucks.map((truck) => (
-                    <option key={truck.id} value={truck.id}>Truck #{truck.unit_number}</option>
-                  ))}
-                </select>
-
-                <select name="state" defaultValue={stateFilter} className="fp-maint-filter-select">
-                  <option value="all">Status</option>
-                  <option value="upcoming">Upcoming</option>
-                  <option value="overdue">Overdue</option>
-                  <option value="completed">Completed</option>
-                </select>
-
-                <button type="submit" className="fp-maint-filter-button">
-                  <FilterIcon /> More Filters
-                </button>
-
-                <div className="fp-maint-sort">
-                  <span>Sort by</span>
-                  <select name="sort" defaultValue={sort}>
-                    <option value="newest">Date (Newest)</option>
-                    <option value="oldest">Date (Oldest)</option>
-                    <option value="mileage">Mileage (Highest)</option>
-                  </select>
-                </div>
-              </form>
+              <MaintenanceFilters
+                trucks={allTrucks}
+                serviceTypes={serviceTypes}
+              />
 
               <div className="fp-maint-table-wrap">
                 <table className="fp-maint-table">
@@ -266,6 +327,7 @@ export default async function MaintenancePage({
                       <th>Mileage</th>
                       <th>Status</th>
                       <th>Next Due</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -289,6 +351,12 @@ export default async function MaintenancePage({
                           </td>
                           <td className={status === "Overdue" ? "text-[#e5525b]" : ""}>
                             {nextDue(record)}
+                          </td>
+                          <td className="fp-maint-actions-cell">
+                            <MaintenanceActions
+                              record={record}
+                              trucks={allTrucks}
+                            />
                           </td>
                         </tr>
                       );
@@ -316,35 +384,18 @@ export default async function MaintenancePage({
           <aside className="fp-maint-right-rail">
             <section className="fp-maint-side-card">
               <h2>Quick Actions</h2>
-              <div className="mt-3 grid gap-2">
-                <Link href="/maintenance#add-maintenance" className="fp-maint-side-action primary">
-                  <span className="fp-maint-side-icon"><ToolIcon /></span>
-                  <span>Add Maintenance</span><span>›</span>
-                </Link>
-                <Link href="/maintenance#add-maintenance" className="fp-maint-side-action">
-                  <span className="fp-maint-side-icon"><CalendarIcon /></span>
-                  <span>Schedule Service</span><span>›</span>
-                </Link>
-                <Link href="/maintenance?state=completed" className="fp-maint-side-action">
-                  <span className="fp-maint-side-icon"><HistoryIcon /></span>
-                  <span>Service History</span><span>›</span>
-                </Link>
-                <Link href="/maintenance?state=overdue" className="fp-maint-side-action">
-                  <span className="fp-maint-side-icon"><AlertIcon /></span>
-                  <span>View Overdue</span><span>›</span>
-                </Link>
-              </div>
+              <MaintenanceQuickActions records={filtered} />
             </section>
 
             <section className="fp-maint-side-card">
               <h2>Maintenance Status</h2>
               <div className="mt-4 flex justify-center">
-                <MaintDonut total={records.length} completed={completed} upcoming={upcoming} overdue={overdue} />
+                <MaintDonut total={filteredBase.length} completed={completed} upcoming={upcoming} overdue={overdue} />
               </div>
               <div className="fp-maint-stat-list mt-4">
-                <MaintStatRow label="Completed" value={completed} total={records.length} color="#58bd69" />
-                <MaintStatRow label="Upcoming" value={upcoming} total={records.length} color="#4f8df7" />
-                <MaintStatRow label="Overdue" value={overdue} total={records.length} color="#ef5755" />
+                <MaintStatRow label="Completed" value={completed} total={filteredBase.length} color="#58bd69" />
+                <MaintStatRow label="Upcoming" value={upcoming} total={filteredBase.length} color="#4f8df7" />
+                <MaintStatRow label="Overdue" value={overdue} total={filteredBase.length} color="#ef5755" />
               </div>
             </section>
 
@@ -460,14 +511,28 @@ function nextDue(record: Maintenance) {
   return "—";
 }
 
-function tabHref(state: string, q: string, truck: string, service: string, sort: string) {
-  const params = new URLSearchParams();
-  if (state !== "all") params.set("state", state);
-  if (q) params.set("q", q);
-  if (truck !== "all") params.set("truck", truck);
-  if (service !== "all") params.set("service", service);
-  if (sort !== "newest") params.set("sort", sort);
+function maintenanceStateHref(base: URLSearchParams, state: string) {
+  const params = new URLSearchParams(base);
+  params.delete("page");
+
+  if (state === "all") params.delete("state");
+  else params.set("state", state);
+
   return `/maintenance${params.toString() ? `?${params}` : ""}`;
+}
+
+function maintenanceRangeNote(from?: string, to?: string) {
+  if (from && to) return `${shortRangeDate(from)} – ${shortRangeDate(to)}`;
+  if (from) return `from ${shortRangeDate(from)}`;
+  if (to) return `through ${shortRangeDate(to)}`;
+  return "current filtered view";
+}
+
+function shortRangeDate(value: string) {
+  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function pageHref(base: URLSearchParams, page: number) {

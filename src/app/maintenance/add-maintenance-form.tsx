@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -29,12 +29,37 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    function openAddMaintenance() {
+      setError("");
+      setOpen(true);
+      window.setTimeout(() => {
+        document.getElementById("add-maintenance")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 40);
+    }
+
+    window.addEventListener(
+      "fleetpilot:open-add-maintenance",
+      openAddMaintenance
+    );
+
+    return () =>
+      window.removeEventListener(
+        "fleetpilot:open-add-maintenance",
+        openAddMaintenance
+      );
+  }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSaving(true);
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const truckId = String(form.get("truck_id") || "");
     const serviceDate = String(form.get("service_date") || "");
     const serviceType = String(form.get("service_type") || "");
@@ -91,7 +116,7 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
 
       if (maintenanceError) throw maintenanceError;
 
-      event.currentTarget.reset();
+      formElement.reset();
       setSaving(false);
       setOpen(false);
       router.refresh();
@@ -107,25 +132,17 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
 
   return (
     <>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        disabled={trucks.length === 0}
-        className="rounded-[6px] bg-[#1188ff] px-4 py-2.5 text-[10px] font-black text-white shadow-[0_7px_18px_rgba(17,136,255,.15)] disabled:opacity-40"
-      >
-        {open ? "Close" : "+ Add Service"}
-      </button>
-
       {open && (
         <form
           onSubmit={submit}
-          className="mt-5 grid gap-4 rounded-[10px] border border-[#dce5ef] bg-white p-5 md:grid-cols-2"
+          className="fp-add-maint-form"
         >
-          <label>
+          <label className="fp-add-maint-field">
             <Label>Truck *</Label>
             <select
               name="truck_id"
               required
-              className={inputClass}
+              className="fp-add-maint-control"
             >
               <option value="">Select truck</option>
               {trucks.map((truck) => (
@@ -136,9 +153,9 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
             </select>
           </label>
 
-          <label>
+          <label className="fp-add-maint-field">
             <Label>Service Type *</Label>
-            <select name="service_type" required className={inputClass}>
+            <select name="service_type" required className="fp-add-maint-control">
               {serviceTypes.map((type) => (
                 <option key={type}>{type}</option>
               ))}
@@ -158,16 +175,21 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
           <Field name="next_service_date" label="Next Service Date" type="date" />
 
           {error && (
-            <div className="md:col-span-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            <div className="fp-add-maint-error md:col-span-2">
               {error}
             </div>
           )}
 
-          <div className="md:col-span-2 flex justify-end">
+          <div className="fp-add-maint-footer md:col-span-2">
             <button
+              type="button"
               disabled={saving}
-              className="rounded-[6px] bg-[#17c978] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-50"
+              onClick={() => setOpen(false)}
+              className="fp-add-maint-close"
             >
+              Close
+            </button>
+            <button disabled={saving} className="fp-add-maint-save">
               {saving ? "Saving..." : "Save Service"}
             </button>
           </div>
@@ -177,12 +199,9 @@ export default function AddMaintenanceForm({ trucks }: { trucks: Truck[] }) {
   );
 }
 
-const inputClass =
-  "w-full fp-field text-[11px]";
-
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">
+    <span>
       {children}
     </span>
   );
@@ -202,7 +221,7 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <label>
+    <label className="fp-add-maint-field">
       <Label>{label}</Label>
       <input
         name={name}
@@ -210,7 +229,7 @@ function Field({
         step={step}
         required={required}
         defaultValue={type === "date" && required ? new Date().toISOString().slice(0, 10) : undefined}
-        className={inputClass}
+        className="fp-add-maint-control"
       />
     </label>
   );

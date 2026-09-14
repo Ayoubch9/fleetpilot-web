@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ReceiptUpload from "./receipt-upload";
@@ -37,12 +37,30 @@ export default function AddExpenseForm({
   const [category, setCategory] = useState("Fuel");
   const [receiptPath, setReceiptPath] = useState<string | null>(null);
 
+  useEffect(() => {
+    function openAddExpense() {
+      setError("");
+      setOpen(true);
+      window.setTimeout(() => {
+        document.getElementById("add-expense")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 40);
+    }
+
+    window.addEventListener("fleetpilot:open-add-expense", openAddExpense);
+    return () =>
+      window.removeEventListener("fleetpilot:open-add-expense", openAddExpense);
+  }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSaving(true);
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const amount = Number(form.get("amount")) || 0;
 
     if (amount <= 0) {
@@ -73,7 +91,7 @@ export default function AddExpenseForm({
       return;
     }
 
-    event.currentTarget.reset();
+    formElement.reset();
     setCategory("Fuel");
     setReceiptPath(null);
     setSaving(false);
@@ -83,24 +101,17 @@ export default function AddExpenseForm({
 
   return (
     <>
-      <button
-        onClick={() => setOpen((value) => !value)}
-        className="rounded-[6px] bg-[#1188ff] px-4 py-2.5 text-[10px] font-black text-white shadow-[0_7px_18px_rgba(17,136,255,.15)] hover:bg-[#0879ee]"
-      >
-        {open ? "Close" : "+ Add Expense"}
-      </button>
-
       {open && (
         <form
           onSubmit={submit}
-          className="mt-5 grid gap-4 rounded-[10px] border border-[#dce5ef] bg-white p-5 md:grid-cols-2"
+          className="fp-add-expense-form"
         >
-          <label>
-            <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">Category *</span>
+          <label className="fp-add-expense-field">
+            <span>Category *</span>
             <select
               value={category}
               onChange={(event) => setCategory(event.target.value)}
-              className="w-full fp-field text-[11px]"
+              className="fp-add-expense-control"
             >
               {categories.map((item) => <option key={item}>{item}</option>)}
             </select>
@@ -137,26 +148,31 @@ export default function AddExpenseForm({
 
           <ReceiptUpload onUploaded={setReceiptPath} />
 
-          <label className="md:col-span-2">
-            <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">Description / Notes</span>
+          <label className="fp-add-expense-field md:col-span-2">
+            <span>Description / Notes</span>
             <textarea
               name="description"
               rows={3}
-              className="w-full resize-none fp-field text-[11px]"
+              className="fp-add-expense-textarea"
             />
           </label>
 
           {error && (
-            <div className="md:col-span-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            <div className="fp-add-expense-error md:col-span-2">
               {error}
             </div>
           )}
 
-          <div className="md:col-span-2 flex justify-end">
+          <div className="fp-add-expense-footer md:col-span-2">
             <button
+              type="button"
               disabled={saving}
-              className="rounded-[6px] bg-[#17c978] px-4 py-2.5 text-[10px] font-black text-white disabled:opacity-50"
+              onClick={() => setOpen(false)}
+              className="fp-add-expense-close"
             >
+              Close
+            </button>
+            <button disabled={saving} className="fp-add-expense-save">
               {saving ? "Saving..." : "Save Expense"}
             </button>
           </div>
@@ -180,15 +196,15 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <label>
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">{label}</span>
+    <label className="fp-add-expense-field">
+      <span>{label}</span>
       <input
         name={name}
         type={type}
         step={step}
         required={required}
         defaultValue={type === "date" ? new Date().toISOString().slice(0, 10) : undefined}
-        className="w-full fp-field text-[11px]"
+        className="fp-add-expense-control"
       />
     </label>
   );
@@ -204,11 +220,11 @@ function Select({
   items: { value: string; label: string }[];
 }) {
   return (
-    <label>
-      <span className="mb-2 block text-[8px] font-black uppercase tracking-[.12em] text-[#71859a]">{label}</span>
+    <label className="fp-add-expense-field">
+      <span>{label}</span>
       <select
         name={name}
-        className="w-full fp-field text-[11px]"
+        className="fp-add-expense-control"
       >
         {items.map((item) => (
           <option key={`${name}-${item.value}`} value={item.value}>
