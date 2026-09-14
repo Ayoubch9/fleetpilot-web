@@ -10049,3 +10049,1289 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
   }
 }
 /* === END Reimbursement Mobile Model v3.0.2 === */
+
+
+/* === Weekly Settlement Operational Control Center v3.1.0 === */
+
+/* Tabs are now real buttons */
+.fp-settle-tabs button.fp-settle-tab{
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+
+/* Search + Week + contextual filter + More + Sort on one desktop line */
+.fp-settle-filterbar-operational{
+  box-sizing:border-box !important;
+  display:grid !important;
+  grid-template-columns:
+    minmax(260px,1.65fr)
+    125px
+    130px
+    135px
+    minmax(190px,.85fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:12px 14px !important;
+}
+
+.fp-settle-filterbar-operational>*{
+  min-width:0 !important;
+  max-width:100% !important;
+  margin:0 !important;
+}
+
+.fp-settle-filter-pop{
+  position:relative;
+  min-width:0;
+}
+
+.fp-settle-filterbar-operational .fp-settle-search{
+  position:relative;
+  display:flex;
+  width:100%;
+  height:40px !important;
+  align-items:center;
+}
+
+.fp-settle-filterbar-operational .fp-settle-search input{
+  width:100%;
+  height:38px;
+  border:0;
+  outline:0;
+  background:transparent;
+  padding:0 30px 0 0;
+  color:#334b64;
+  font-size:8.5px;
+}
+
+.fp-settle-search-clear{
+  position:absolute;
+  right:8px;
+  top:50%;
+  display:flex;
+  width:20px;
+  height:20px;
+  transform:translateY(-50%);
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#8193a5;
+  font-size:14px;
+}
+
+.fp-settle-search-clear:hover{
+  background:#edf4fb;
+  color:#4e6b86;
+}
+
+.fp-settle-filter-button,
+.fp-settle-filter-select,
+.fp-settle-sort select{
+  width:100%;
+  height:40px;
+  border:1px solid #dfe7ef;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 10px;
+  color:#40566f;
+  font-size:8.5px;
+  font-weight:570;
+}
+
+.fp-settle-filter-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.fp-settle-filter-button.active{
+  border-color:#89baf0;
+  background:#f3f8ff;
+  color:#3f79b9;
+}
+
+.fp-settle-sort{
+  grid-column:auto !important;
+  display:grid !important;
+  grid-template-columns:43px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:6px !important;
+  width:100% !important;
+  color:#8192a6;
+  font-size:8px;
+}
+
+.fp-settle-sort>span{
+  text-align:right;
+  white-space:nowrap;
+}
+
+.fp-settle-sort select{
+  min-width:0;
+}
+
+/* Filter portals */
+.fp-settle-filter-portal{
+  position:fixed !important;
+  z-index:10070 !important;
+  display:grid;
+  gap:9px;
+  width:292px;
+  max-width:calc(100vw - 24px);
+  border:1px solid #dce6ef;
+  border-radius:10px;
+  background:#fff;
+  padding:12px;
+  box-shadow:0 18px 44px rgba(25,52,80,.20);
+}
+
+.fp-settle-filter-portal h3{
+  color:#304860;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-settle-filter-portal p{
+  color:#8494a4;
+  font-size:7px;
+  line-height:1.45;
+}
+
+.fp-settle-filter-portal label{
+  display:grid;
+  gap:4px;
+}
+
+.fp-settle-filter-portal label>span{
+  color:#65798e;
+  font-size:7px;
+  font-weight:650;
+}
+
+.fp-settle-filter-portal input{
+  width:100%;
+  height:34px;
+  border:1px solid #dce6ef;
+  border-radius:7px;
+  padding:0 8px;
+  font-size:8px;
+  outline:none;
+}
+
+.fp-settle-popover-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.fp-settle-popover-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:6px;
+  border-top:1px solid #edf2f6;
+  padding-top:9px;
+}
+
+.fp-settle-popover-actions button{
+  height:30px;
+  border:1px solid #dce5ee;
+  border-radius:7px;
+  background:#fff;
+  padding:0 10px;
+  color:#566d83;
+  font-size:7.5px;
+  font-weight:650;
+}
+
+.fp-settle-popover-actions button.primary{
+  border-color:#4f88e9;
+  background:#4f88e9;
+  color:#fff;
+}
+
+/* Different table views use the same polished shell */
+.fp-settle-cost-table th:nth-child(1),
+.fp-settle-cost-table td:nth-child(1),
+.fp-settle-reimb-table th:nth-child(1),
+.fp-settle-reimb-table td:nth-child(1){
+  width:14%;
+}
+
+.fp-settle-cost-table th:nth-child(2),
+.fp-settle-cost-table td:nth-child(2){
+  width:18%;
+}
+
+.fp-settle-cost-table th:nth-child(3),
+.fp-settle-cost-table td:nth-child(3){
+  width:20%;
+}
+
+.fp-settle-cost-table th:nth-child(4),
+.fp-settle-cost-table td:nth-child(4){
+  width:32%;
+}
+
+.fp-settle-cost-table th:nth-child(5),
+.fp-settle-cost-table td:nth-child(5){
+  width:16%;
+}
+
+.fp-settle-reimb-table th:nth-child(2),
+.fp-settle-reimb-table td:nth-child(2){
+  width:17%;
+}
+
+.fp-settle-reimb-table th:nth-child(3),
+.fp-settle-reimb-table td:nth-child(3){
+  width:19%;
+}
+
+.fp-settle-reimb-table th:nth-child(4),
+.fp-settle-reimb-table td:nth-child(4){
+  width:34%;
+}
+
+.fp-settle-reimb-table th:nth-child(5),
+.fp-settle-reimb-table td:nth-child(5){
+  width:16%;
+}
+
+/* Weekly overview fills the unused lower area */
+.fp-settle-weekly-overview{
+  border:1px solid #e0e8f0;
+  border-radius:13px;
+  background:#fff;
+  padding:16px;
+  box-shadow:0 8px 26px rgba(34,67,101,.045);
+}
+
+.fp-settle-weekly-overview-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.fp-settle-weekly-overview-heading>div:first-child{
+  display:grid;
+  gap:4px;
+}
+
+.fp-settle-weekly-overview-heading>div:first-child>span{
+  color:#4d8df4;
+  font-size:6.5px;
+  font-weight:760;
+  letter-spacing:.11em;
+}
+
+.fp-settle-weekly-overview-heading h2{
+  color:#13273f;
+  font-size:15px;
+  font-weight:730;
+  letter-spacing:-.02em;
+}
+
+.fp-settle-weekly-overview-heading p{
+  color:#7c8da0;
+  font-size:8px;
+}
+
+.fp-settle-margin-pill{
+  display:grid;
+  min-width:116px;
+  gap:3px;
+  border:1px solid #dce7f2;
+  border-radius:9px;
+  background:#f7fbff;
+  padding:9px 12px;
+  text-align:right;
+}
+
+.fp-settle-margin-pill span{
+  color:#6e8195;
+  font-size:7px;
+}
+
+.fp-settle-margin-pill strong{
+  color:#2f9d61;
+  font-size:14px;
+  font-weight:740;
+}
+
+.fp-settle-overview-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin-top:14px;
+}
+
+.fp-settle-overview-metric{
+  position:relative;
+  display:grid;
+  min-height:92px;
+  align-content:center;
+  gap:5px;
+  overflow:hidden;
+  border:1px solid #e5ecf3;
+  border-radius:10px;
+  background:#fbfdff;
+  padding:12px;
+}
+
+.fp-settle-overview-metric::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  width:3px;
+}
+
+.fp-settle-overview-metric.blue::before{background:#4f8df7}
+.fp-settle-overview-metric.green::before{background:#55b878}
+.fp-settle-overview-metric.red::before{background:#e55d66}
+.fp-settle-overview-metric.amber::before{background:#eeb044}
+.fp-settle-overview-metric.purple::before{background:#765ce7}
+
+.fp-settle-overview-metric>span{
+  color:#65798e;
+  font-size:7.5px;
+  font-weight:650;
+}
+
+.fp-settle-overview-metric>strong{
+  color:#142942;
+  font-size:16px;
+  line-height:1;
+  font-weight:740;
+  letter-spacing:-.025em;
+}
+
+.fp-settle-overview-metric>small{
+  color:#8a9aaa;
+  font-size:6.5px;
+  line-height:1.35;
+}
+
+.fp-settle-flow{
+  display:grid;
+  grid-template-columns:1fr 26px 1fr 26px 1fr;
+  align-items:center;
+  gap:7px;
+  margin-top:12px;
+  border-top:1px solid #edf2f6;
+  padding-top:12px;
+}
+
+.fp-settle-flow-step{
+  display:flex;
+  min-height:48px;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-radius:8px;
+  padding:0 12px;
+}
+
+.fp-settle-flow-step.blue{background:#eef6ff}
+.fp-settle-flow-step.red{background:#fff2f3}
+.fp-settle-flow-step.green{background:#edf9f1}
+
+.fp-settle-flow-step span{
+  color:#667b90;
+  font-size:7.5px;
+  font-weight:620;
+}
+
+.fp-settle-flow-step strong{
+  color:#172c44;
+  font-size:11px;
+  font-weight:730;
+}
+
+.fp-settle-flow-arrow{
+  color:#9bacbd;
+  font-size:15px;
+  text-align:center;
+}
+
+@media(max-width:1260px){
+  .fp-settle-filterbar-operational{
+    grid-template-columns:
+      minmax(220px,1.4fr)
+      112px
+      118px
+      120px
+      minmax(172px,.8fr) !important;
+    gap:6px !important;
+  }
+
+  .fp-settle-overview-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:920px){
+  .fp-settle-filterbar-operational{
+    grid-template-columns:1fr 1fr !important;
+    row-gap:8px !important;
+  }
+
+  .fp-settle-filterbar-operational .fp-settle-search,
+  .fp-settle-filterbar-operational .fp-settle-sort{
+    grid-column:1/-1 !important;
+  }
+
+  .fp-settle-flow{
+    grid-template-columns:1fr;
+  }
+
+  .fp-settle-flow-arrow{
+    transform:rotate(90deg);
+  }
+}
+
+@media(max-width:650px){
+  .fp-settle-overview-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-settle-weekly-overview-heading{
+    flex-direction:column;
+  }
+
+  .fp-settle-margin-pill{
+    width:100%;
+    text-align:left;
+  }
+}
+/* === END Weekly Settlement Operational Control Center v3.1.0 === */
+
+
+/* === Weekly Settlement Quick Actions v3.1.1 === */
+.fp-settle-week-action{
+  width:100%;
+  text-align:left;
+}
+
+.fp-settle-week-action:disabled{
+  cursor:wait;
+  opacity:.6;
+}
+
+.fp-settle-week-action-copy{
+  display:grid;
+  min-width:0;
+  flex:1;
+  gap:3px;
+}
+
+.fp-settle-week-action-copy strong{
+  color:inherit;
+  font-size:8.5px;
+  font-weight:650;
+  line-height:1;
+}
+
+.fp-settle-week-action-copy small{
+  overflow:hidden;
+  color:#8293a4;
+  font-size:6.5px;
+  font-weight:500;
+  line-height:1;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-settle-week-action.primary .fp-settle-week-action-copy small{
+  color:rgba(255,255,255,.76);
+}
+
+.fp-settle-summary-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:10100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(7,20,35,.58);
+  padding:18px;
+  backdrop-filter:blur(5px);
+}
+
+.fp-settle-summary-modal{
+  width:min(690px,100%);
+  overflow:hidden;
+  border:1px solid #dce6ef;
+  border-radius:15px;
+  background:#fff;
+  box-shadow:0 30px 90px rgba(10,30,53,.26);
+}
+
+.fp-settle-summary-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  border-bottom:1px solid #edf2f6;
+  padding:17px 18px 14px;
+}
+
+.fp-settle-summary-modal>header>div{
+  display:grid;
+  gap:3px;
+}
+
+.fp-settle-summary-modal>header span{
+  color:#4f88e9;
+  font-size:6.5px;
+  font-weight:760;
+  letter-spacing:.11em;
+}
+
+.fp-settle-summary-modal>header h2{
+  color:#172b42;
+  font-size:15px;
+  font-weight:740;
+}
+
+.fp-settle-summary-modal>header p{
+  color:#8192a4;
+  font-size:7.5px;
+}
+
+.fp-settle-summary-modal>header>button{
+  display:flex;
+  width:30px;
+  height:30px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fbfdff;
+  color:#718397;
+  font-size:15px;
+}
+
+.fp-settle-summary-hero{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  padding:15px 18px 0;
+}
+
+.fp-settle-summary-hero>div{
+  display:grid;
+  gap:5px;
+  border:1px solid #e3eaf2;
+  border-radius:10px;
+  background:#f9fbfe;
+  padding:12px;
+}
+
+.fp-settle-summary-hero span{
+  color:#6d8094;
+  font-size:7px;
+  font-weight:620;
+}
+
+.fp-settle-summary-hero strong{
+  color:#192e46;
+  font-size:16px;
+  font-weight:740;
+}
+
+.fp-settle-summary-hero .profit{
+  border-color:#d8eddf;
+  background:#f1faf4;
+}
+
+.fp-settle-summary-hero .profit strong{
+  color:#24945b;
+}
+
+.fp-settle-summary-hero .loss{
+  border-color:#f2d9dc;
+  background:#fff4f5;
+}
+
+.fp-settle-summary-hero .loss strong{
+  color:#d14f5a;
+}
+
+.fp-settle-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 22px;
+  padding:14px 18px;
+}
+
+.fp-settle-summary-line{
+  display:flex;
+  min-height:32px;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid #edf2f6;
+}
+
+.fp-settle-summary-line span{
+  color:#667b90;
+  font-size:7.5px;
+}
+
+.fp-settle-summary-line strong{
+  color:#263c54;
+  font-size:8.5px;
+  font-weight:680;
+}
+
+.fp-settle-summary-line strong.positive{
+  color:#23945a;
+}
+
+.fp-settle-summary-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #edf2f6;
+  padding:12px 18px 15px;
+}
+
+.fp-settle-summary-modal>footer button{
+  min-width:120px;
+  height:35px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fff;
+  color:#536a81;
+  font-size:8px;
+  font-weight:650;
+}
+
+.fp-settle-summary-modal>footer button.primary{
+  border-color:#4f88e9;
+  background:#4f88e9;
+  color:#fff;
+}
+
+@media(max-width:640px){
+  .fp-settle-summary-hero,
+  .fp-settle-summary-grid{
+    grid-template-columns:1fr;
+  }
+}
+/* === END Weekly Settlement Quick Actions v3.1.1 === */
+
+
+/* === Weekly Settlement Quick Action Polish v3.1.2 === */
+
+/* Match the normal FleetPilot right-rail typography. */
+.fp-settle-week-action{
+  min-height:54px !important;
+}
+
+.fp-settle-week-action-copy{
+  gap:4px !important;
+}
+
+.fp-settle-week-action-copy strong{
+  font-size:9.5px !important;
+  font-weight:640 !important;
+  line-height:1.15 !important;
+  letter-spacing:0 !important;
+}
+
+.fp-settle-week-action-copy small{
+  font-size:7.5px !important;
+  font-weight:500 !important;
+  line-height:1.25 !important;
+}
+
+.fp-settle-week-action .fp-settle-side-icon{
+  width:31px !important;
+  height:31px !important;
+}
+
+/* Week issues modal */
+.fp-settle-issues-modal{
+  width:min(610px,100%);
+  overflow:hidden;
+  border:1px solid #dce6ef;
+  border-radius:15px;
+  background:#fff;
+  box-shadow:0 30px 90px rgba(10,30,53,.26);
+}
+
+.fp-settle-issues-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  border-bottom:1px solid #edf2f6;
+  padding:17px 18px 14px;
+}
+
+.fp-settle-issues-modal>header>div{
+  display:grid;
+  gap:3px;
+}
+
+.fp-settle-issues-modal>header span{
+  color:#4f88e9;
+  font-size:7px;
+  font-weight:760;
+  letter-spacing:.1em;
+}
+
+.fp-settle-issues-modal>header h2{
+  color:#172b42;
+  font-size:15px;
+  font-weight:740;
+}
+
+.fp-settle-issues-modal>header p{
+  color:#8192a4;
+  font-size:8px;
+}
+
+.fp-settle-issues-modal>header>button{
+  display:flex;
+  width:30px;
+  height:30px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fbfdff;
+  color:#718397;
+  font-size:15px;
+}
+
+.fp-settle-issues-body{
+  display:grid;
+  gap:8px;
+  padding:16px 18px;
+}
+
+.fp-settle-issue-row{
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr);
+  gap:10px;
+  align-items:flex-start;
+  border:1px solid #e3eaf1;
+  border-radius:10px;
+  background:#fbfdff;
+  padding:11px 12px;
+}
+
+.fp-settle-issue-dot{
+  width:8px;
+  height:8px;
+  margin-top:4px;
+  border-radius:50%;
+  background:#7890a7;
+}
+
+.fp-settle-issue-row.warning{
+  border-color:#f0e0b9;
+  background:#fffaf0;
+}
+
+.fp-settle-issue-row.warning .fp-settle-issue-dot{
+  background:#e5a72e;
+}
+
+.fp-settle-issue-row.danger{
+  border-color:#f0d2d6;
+  background:#fff5f6;
+}
+
+.fp-settle-issue-row.danger .fp-settle-issue-dot{
+  background:#db5963;
+}
+
+.fp-settle-issue-row.info{
+  border-color:#d7e6f7;
+  background:#f5f9ff;
+}
+
+.fp-settle-issue-row.info .fp-settle-issue-dot{
+  background:#4f8df7;
+}
+
+.fp-settle-issue-row strong{
+  color:#263c54;
+  font-size:9px;
+  font-weight:680;
+}
+
+.fp-settle-issue-row p{
+  margin-top:3px;
+  color:#75889b;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-settle-no-issues{
+  display:grid;
+  justify-items:center;
+  gap:6px;
+  border:1px solid #d8ecdf;
+  border-radius:11px;
+  background:#f2faf5;
+  padding:24px 18px;
+  text-align:center;
+}
+
+.fp-settle-no-issues>div{
+  display:flex;
+  width:38px;
+  height:38px;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#dff3e6;
+  color:#2d9a5f;
+  font-size:18px;
+}
+
+.fp-settle-no-issues strong{
+  color:#276d48;
+  font-size:10px;
+}
+
+.fp-settle-no-issues p{
+  max-width:380px;
+  color:#718b7d;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-settle-issues-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #edf2f6;
+  padding:12px 18px 15px;
+}
+
+.fp-settle-issues-modal>footer button{
+  min-width:110px;
+  height:35px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fff;
+  color:#536a81;
+  font-size:8.5px;
+  font-weight:650;
+}
+
+.fp-settle-issues-modal>footer button.primary{
+  border-color:#4f88e9;
+  background:#4f88e9;
+  color:#fff;
+}
+/* === END Weekly Settlement Quick Action Polish v3.1.2 === */
+
+
+/* === Weekly Settlement Quick Actions typography match v3.1.3 === */
+/* Match the Reimbursements Quick Actions visual language exactly:
+   single-line label, larger normal page font, no secondary text. */
+
+.fp-settle-week-action{
+  min-height:56px !important;
+  height:56px !important;
+  padding:0 12px !important;
+  gap:10px !important;
+  border-radius:9px !important;
+}
+
+.fp-settle-week-action .fp-settle-side-icon{
+  width:32px !important;
+  height:32px !important;
+  min-width:32px !important;
+  border-radius:8px !important;
+}
+
+.fp-settle-week-action .fp-settle-side-icon svg{
+  width:14px !important;
+  height:14px !important;
+}
+
+.fp-settle-week-action-label{
+  display:flex !important;
+  min-width:0 !important;
+  flex:1 !important;
+  align-items:center !important;
+  color:#17304d !important;
+  font-size:10.5px !important;
+  font-weight:580 !important;
+  line-height:1.2 !important;
+  letter-spacing:0 !important;
+  white-space:nowrap !important;
+}
+
+.fp-settle-week-action.primary .fp-settle-week-action-label{
+  color:#fff !important;
+  font-weight:620 !important;
+}
+
+.fp-settle-week-action>span:last-child{
+  flex:0 0 auto !important;
+  font-size:13px !important;
+  line-height:1 !important;
+}
+
+/* Neutralize previous two-line copy rules from v3.1.1/v3.1.2. */
+.fp-settle-week-action-copy{
+  display:none !important;
+}
+/* === END Weekly Settlement Quick Actions typography match v3.1.3 === */
+
+
+/* === Fuel Analytics Operational Pass v3.2.0 === */
+
+.fp-fuel-tabs-operational{
+  display:flex !important;
+  align-items:center !important;
+  gap:28px !important;
+  min-height:52px !important;
+  border-bottom:1px solid #e7edf3 !important;
+  padding:0 18px !important;
+}
+
+.fp-fuel-tabs-operational button{
+  position:relative;
+  height:52px;
+  border:0;
+  background:transparent;
+  color:#64778f;
+  font-size:9.5px;
+  font-weight:560;
+  cursor:pointer;
+}
+
+.fp-fuel-tabs-operational button.active{
+  color:#4b86ee;
+  font-weight:650;
+}
+
+.fp-fuel-tabs-operational button.active::after{
+  content:"";
+  position:absolute;
+  right:0;
+  bottom:0;
+  left:0;
+  height:2px;
+  border-radius:999px 999px 0 0;
+  background:#4f8df7;
+}
+
+.fp-fuel-filterbar-operational{
+  box-sizing:border-box !important;
+  display:grid !important;
+  grid-template-columns:minmax(280px,1.7fr) 140px 140px minmax(205px,.85fr) !important;
+  align-items:center !important;
+  gap:9px !important;
+  width:100% !important;
+  max-width:100% !important;
+  border-bottom:1px solid #edf2f6;
+  padding:12px 14px !important;
+}
+
+.fp-fuel-filterbar-operational>*{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+.fp-fuel-filterbar-operational .fp-fuel-search{
+  position:relative;
+  display:flex;
+  width:100%;
+  height:40px;
+  align-items:center;
+  gap:8px;
+  border:1px solid #dfe7ef;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 11px;
+  color:#8192a6;
+}
+
+.fp-fuel-filterbar-operational .fp-fuel-search input{
+  min-width:0;
+  width:100%;
+  border:0;
+  background:transparent;
+  outline:none;
+  padding-right:26px;
+  color:#32475f;
+  font-size:8.5px;
+}
+
+.fp-fuel-search-clear{
+  position:absolute;
+  right:8px;
+  top:50%;
+  display:flex;
+  width:20px;
+  height:20px;
+  transform:translateY(-50%);
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#8193a5;
+  font-size:14px;
+}
+
+.fp-fuel-search-clear:hover{
+  background:#edf4fb;
+  color:#4e6b86;
+}
+
+.fp-fuel-filter-select,
+.fp-fuel-filter-button,
+.fp-fuel-sort select{
+  width:100%;
+  height:40px;
+  border:1px solid #dfe7ef;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 10px;
+  color:#40566f;
+  font-size:8.5px;
+  font-weight:570;
+  outline:none;
+}
+
+.fp-fuel-filter-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.fp-fuel-filter-button.active{
+  border-color:#89baf0;
+  background:#f3f8ff;
+  color:#3f79b9;
+}
+
+.fp-fuel-sort{
+  display:grid;
+  grid-template-columns:43px minmax(0,1fr);
+  align-items:center;
+  gap:6px;
+  width:100%;
+  color:#8192a6;
+  font-size:8px;
+}
+
+.fp-fuel-sort>span{
+  text-align:right;
+  white-space:nowrap;
+}
+
+.fp-fuel-date-popover{
+  position:fixed !important;
+  z-index:10070 !important;
+  display:grid;
+  gap:9px;
+  width:292px;
+  max-width:calc(100vw - 24px);
+  border:1px solid #dce6ef;
+  border-radius:10px;
+  background:#fff;
+  padding:12px;
+  box-shadow:0 18px 44px rgba(25,52,80,.20);
+}
+
+.fp-fuel-date-popover h3{
+  color:#304860;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-fuel-date-popover p{
+  color:#8494a4;
+  font-size:7px;
+  line-height:1.45;
+}
+
+.fp-fuel-date-popover label{
+  display:grid;
+  gap:4px;
+}
+
+.fp-fuel-date-popover label span{
+  color:#65798e;
+  font-size:7px;
+  font-weight:650;
+}
+
+.fp-fuel-date-popover input{
+  width:100%;
+  height:34px;
+  border:1px solid #dce6ef;
+  border-radius:7px;
+  padding:0 8px;
+  font-size:8px;
+  outline:none;
+}
+
+.fp-fuel-date-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:6px;
+  border-top:1px solid #edf2f6;
+  padding-top:9px;
+}
+
+.fp-fuel-date-actions button{
+  height:30px;
+  border:1px solid #dce5ee;
+  border-radius:7px;
+  background:#fff;
+  padding:0 10px;
+  color:#566d83;
+  font-size:7.5px;
+  font-weight:650;
+}
+
+.fp-fuel-date-actions button.primary{
+  border-color:#4f88e9;
+  background:#4f88e9;
+  color:#fff;
+}
+
+.fp-fuel-breakdown-view{
+  padding:18px;
+}
+
+.fp-fuel-breakdown-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.fp-fuel-breakdown-heading>div{
+  display:grid;
+  gap:4px;
+}
+
+.fp-fuel-breakdown-heading h2{
+  color:#152a43;
+  font-size:14px;
+  font-weight:720;
+}
+
+.fp-fuel-breakdown-heading p{
+  color:#7e8fa2;
+  font-size:8px;
+}
+
+.fp-fuel-breakdown-heading>strong{
+  color:#142942;
+  font-size:17px;
+  font-weight:740;
+}
+
+.fp-fuel-breakdown-table-wrap{
+  margin-top:15px;
+  overflow-x:auto;
+}
+
+.fp-fuel-breakdown-table{
+  width:100%;
+  min-width:680px;
+  table-layout:fixed;
+  border-collapse:collapse;
+}
+
+.fp-fuel-breakdown-table thead{
+  background:#f1f5fa;
+}
+
+.fp-fuel-breakdown-table th{
+  height:32px;
+  padding:0 9px;
+  color:#65788f;
+  text-align:left;
+  font-size:7.5px;
+  font-weight:700;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+}
+
+.fp-fuel-breakdown-table td{
+  height:48px;
+  border-bottom:1px solid #edf2f6;
+  padding:0 9px;
+  color:#31475f;
+  font-size:9px;
+  font-weight:520;
+}
+
+.fp-fuel-breakdown-table td:first-child{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.fp-fuel-breakdown-table td strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-fuel-breakdown-dot{
+  width:8px;
+  height:8px;
+  flex:0 0 8px;
+  border-radius:50%;
+}
+
+.fp-fuel-transactions-heading>div{
+  display:grid;
+  gap:2px;
+}
+
+.fp-fuel-transactions-heading small{
+  color:#8293a6;
+  font-size:7px;
+}
+
+@media(max-width:1150px){
+  .fp-fuel-filterbar-operational{
+    grid-template-columns:minmax(220px,1.4fr) 122px 126px minmax(180px,.8fr) !important;
+    gap:7px !important;
+  }
+}
+
+@media(max-width:850px){
+  .fp-fuel-filterbar-operational{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .fp-fuel-filterbar-operational .fp-fuel-search,
+  .fp-fuel-filterbar-operational .fp-fuel-sort{
+    grid-column:1/-1 !important;
+  }
+
+  .fp-fuel-tabs-operational{
+    gap:18px !important;
+    overflow-x:auto;
+  }
+}
+/* === END Fuel Analytics Operational Pass v3.2.0 === */
