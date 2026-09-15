@@ -5,6 +5,7 @@ import WeekSelector from "@/components/week-selector";
 import GlobalSearch from "@/components/global-search";
 import { getAvatarUrl } from "@/lib/fleetpilot-account";
 import SidebarSignOut from "@/components/sidebar-sign-out";
+import MobileAppNavigation from "@/components/mobile-app-navigation";
 
 type ActivePage =
   | "overview"
@@ -136,9 +137,15 @@ export default async function AppShell({
       <section className="min-h-screen lg:ml-[222px]">
         <header className="sticky top-0 z-30 flex h-[68px] items-center gap-4 border-b border-[#e0e8f0] bg-white/95 px-5 backdrop-blur-xl sm:px-6">
           <div className="lg:hidden">
-            <Link href="/dashboard" className="flex items-center gap-2 text-[#0b1730]">
+            <Link
+              href="/dashboard"
+              className="fp-mobile-header-brand"
+              aria-label="FleetPilot dashboard"
+            >
               <Logo />
-              <span className="font-black">Fleet<span className="text-[#1188ff]">Pilot</span></span>
+              <span>
+                Fleet<span> Pilot</span>
+              </span>
             </Link>
           </div>
 
@@ -187,25 +194,18 @@ export default async function AppShell({
           </div>
         </header>
 
-        <div className="fp-scroll border-b border-[#dfe7ef] bg-white px-3 py-2 lg:hidden">
-          <div className="flex gap-2 overflow-x-auto">
-            {[...operations, ...analytics, ...tools, ["settings", "Settings", "/settings", "settings"] as const].map(([key, label, href]) => (
-              <Link
-                key={`${href}-${label}`}
-                href={href}
-                className={`whitespace-nowrap rounded-[8px] px-3 py-2 text-[10px] font-black ${
-                  active === key
-                    ? "bg-[#1188ff] text-white"
-                    : "bg-[#f1f5f9] text-[#65758a]"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
+        <div className="fp-mobile-control-zone lg:hidden">
+          <div className="fp-mobile-global-search">
+            <GlobalSearch />
+          </div>
+          <div className="fp-mobile-week-selector">
+            <WeekSelector />
           </div>
         </div>
 
         {children}
+
+        <MobileAppNavigation active={active} />
       </section>
     </main>
   );

@@ -1,57 +1,77 @@
-# FleetPilot Web v3.2.0 — Fuel Analytics Operational Pass
+# FleetPilot Web v3.4.0 — Full Mobile App Responsive Pass
 
-Fuel Analytics is now fully interactive.
+FleetPilot now has an app-like phone experience while preserving the existing
+desktop design.
 
-## Functional analytics tabs
-- Overview
-- By Truck
-- By Location
-- By Vendor
+## Mobile application shell
+- fixed bottom navigation:
+  - Home
+  - Loads
+  - Trucks
+  - Expenses
+  - More
+- More opens a native-style bottom sheet with:
+  - Maintenance
+  - Reimbursements
+  - Weekly Settlement
+  - Fuel Analytics
+  - Reports
+  - Pilot AI
+  - Documents
+  - Notifications
+  - Settings
+- mobile header remains compact
+- Global Search is available directly below the header
+- the global Week Selector is available on mobile
+- safe-area support for modern iPhones
 
-Each view is driven by the currently filtered fuel transactions.
+## App pages
+Responsive treatment applied globally to:
+- Dashboard
+- Loads
+- Trucks
+- Expenses
+- Maintenance
+- Reimbursements
+- Weekly Settlement
+- Fuel Analytics
+- Reports
+- Documents
+- Pilot AI
+- Settings
+- Load Profitability
+- Truck Profiles
 
-### By Truck
-Shows:
-- transactions
-- gallons
-- average price / gallon
-- total spend
-- fuel-spend share
+Mobile behavior includes:
+- 2-column KPI cards
+- stacked main/right-rail layouts
+- swipeable tabs
+- compact two-column filters
+- full-width search
+- mobile Sort controls
+- touch-safe table scrolling
+- sticky first table column
+- touch-friendly pagination
+- forms transformed into mobile bottom sheets
+- portal menus/popovers constrained to the viewport
 
-### By Vendor
-Shows the same operating metrics grouped by fuel vendor.
+## Public website
+Responsive treatment also applied to:
+- Homepage
+- Pricing
+- Free Tools
+- 14-day-trial CTAs
+- all six public calculators
+- Lease Operator / Contractor calculator
 
-### By Location
-The current `expenses` schema does not contain a dedicated fuel-location
-column. This view therefore uses the transaction `description` as the
-location when available, and falls back to the vendor. No fake location data
-is created.
+The Free Tools selector becomes a horizontal swipe row on phones and
+calculators become one-column forms.
 
-## Functional filters
-- live Search
-- Truck
-- Date Range
-- Sort By:
-  - Date Newest / Oldest
-  - Cost Highest / Lowest
-  - Gallons Highest
-  - Price/Gallon Highest
+## Mobile browser improvements
+- 16px form controls on phone to avoid iOS Safari input zoom
+- `dvh` modal sizing
+- safe-area spacing
+- touch momentum scrolling
+- horizontal scrollbars hidden while preserving swipe
 
-The Date Range popup is rendered in a body portal so it cannot be clipped.
-
-## Data recalculation
-The active filters now update:
-- Total Fuel Cost
-- Total Gallons
-- Avg. Price/Gallon
-- Avg. MPG
-- trend chart
-- truck donut
-- truck/vendor/location breakdowns
-- transactions table
-- Fuel Insights
-
-The default period remains the selected FleetPilot week. A custom Date Range
-can expand or narrow Fuel Analytics beyond that week.
-
-No SQL changes are required.
+No SQL or Supabase changes are required.

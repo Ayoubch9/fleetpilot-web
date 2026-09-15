@@ -65,6 +65,7 @@ export default function HomePage() {
 
         <nav className="fp-marketing-nav" aria-label="Main navigation">
           <a href="#features">Features</a>
+          <Link href="/tools">Free Tools</Link>
           <Link href="/pricing">Pricing</Link>
           <a href="#about">About</a>
         </nav>
@@ -242,6 +243,21 @@ export default function HomePage() {
           <AboutPoint number="02" title="For small fleets" text="Keep trucks, loads, expenses, maintenance and documents organized under one company account." />
           <AboutPoint number="03" title="For better decisions" text="Use real operating history to compare weeks, understand costs and decide what needs attention next." />
         </div>
+      </section>
+
+      <section className="fp-marketing-free-tools-preview">
+        <div>
+          <span>Free trucking calculators</span>
+          <h2>Useful before you ever create an account.</h2>
+          <p>
+            Calculate load profit, rate per mile, cost per mile, fuel spend,
+            owner-operator profit and lease-operator take-home with
+            FleetPilot&apos;s free tools.
+          </p>
+        </div>
+        <Link href="/tools" className="fp-marketing-button primary large">
+          Open Free Tools <span>→</span>
+        </Link>
       </section>
 
       <section className="fp-marketing-pricing-preview">

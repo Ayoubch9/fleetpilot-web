@@ -251,9 +251,12 @@ export default async function TrucksPage({
                                 aria-hidden="true"
                               />
                               <div className="min-w-0">
-                                <div className="fp-truck-name">
+                                <Link
+                                  href={`/trucks/${truck.id}`}
+                                  className="fp-truck-name fp-table-profile-link"
+                                >
                                   Truck {displayUnit(truck)}
-                                </div>
+                                </Link>
                                 <div className="fp-truck-plate">
                                   {truck.license_plate || "No plate"}
                                 </div>

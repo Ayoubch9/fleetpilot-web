@@ -11335,3 +11335,886 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
   }
 }
 /* === END Fuel Analytics Operational Pass v3.2.0 === */
+
+
+/* === FleetPilot Profitability + Profiles + Public Tools v3.3.0 === */
+.fp-table-profile-link{
+  color:inherit;
+  font-weight:680;
+  text-decoration:none;
+}
+.fp-table-profile-link:hover{color:#367fe8;text-decoration:underline;text-underline-offset:3px}
+
+.fp-detail-page{padding:24px;max-width:1500px;margin:0 auto}
+.fp-detail-breadcrumb{display:flex;align-items:center;gap:7px;color:#8293a6;font-size:8.5px;margin-bottom:12px}
+.fp-detail-breadcrumb a{color:#4d89ef;font-weight:620}
+.fp-detail-hero,.fp-truck-profile-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #dfe7ef;border-radius:14px;background:#fff;padding:20px;box-shadow:0 9px 26px rgba(32,64,96,.045)}
+.fp-detail-eyebrow{color:#4f8df7;font-size:7px;font-weight:780;letter-spacing:.12em}
+.fp-detail-hero h1,.fp-truck-profile-copy h1{margin-top:4px;color:#13273f;font-size:25px;font-weight:760;letter-spacing:-.035em}
+.fp-detail-hero p,.fp-truck-profile-copy p{margin-top:5px;color:#718398;font-size:10px}
+.fp-detail-hero-meta{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.fp-detail-hero-meta span,.fp-truck-profile-status span{border:1px solid #dce7f1;border-radius:999px;background:#f6f9fc;padding:7px 10px;color:#51677e;font-size:8px;font-weight:650}
+.fp-detail-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.fp-detail-kpi{position:relative;display:grid;gap:6px;overflow:hidden;border:1px solid #e0e8f0;border-radius:12px;background:#fff;padding:16px}
+.fp-detail-kpi::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
+.fp-detail-kpi.blue::before{background:#4f8df7}.fp-detail-kpi.red::before{background:#e35c65}.fp-detail-kpi.amber::before{background:#eeb044}.fp-detail-kpi.green::before{background:#55b878}
+.fp-detail-kpi span{color:#6d8094;font-size:8px;font-weight:620}
+.fp-detail-kpi strong{color:#142943;font-size:20px;font-weight:760;letter-spacing:-.025em}
+.fp-detail-two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
+.fp-detail-card{margin-top:14px;border:1px solid #dfe7ef;border-radius:13px;background:#fff;padding:16px;box-shadow:0 8px 24px rgba(34,67,101,.04)}
+.fp-detail-two-col .fp-detail-card{margin-top:0}
+.fp-detail-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2f6;padding-bottom:11px}
+.fp-detail-card-heading>div{display:grid;gap:3px}.fp-detail-card-heading span{color:#4e89ef;font-size:6.5px;font-weight:760;letter-spacing:.11em}.fp-detail-card-heading h2{color:#1c324a;font-size:13px;font-weight:710}.fp-detail-card-heading>a{color:#4e89ef;font-size:8px;font-weight:630}
+.fp-load-economics-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:13px}
+.fp-detail-metric{display:grid;gap:4px;border:1px solid #e6edf4;border-radius:9px;background:#fafcff;padding:11px}
+.fp-detail-metric span{color:#718499;font-size:7px}.fp-detail-metric strong{color:#193049;font-size:12px;font-weight:700}
+.fp-profit-cost-list{display:grid;margin-top:8px}.fp-profit-cost-list>div{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2f6;padding:9px 0}.fp-profit-cost-list>div>span{display:grid;gap:2px}.fp-profit-cost-list b{color:#405870;font-size:8px;font-weight:620}.fp-profit-cost-list small{color:#8a9baa;font-size:6.5px}.fp-profit-cost-list strong{color:#263d55;font-size:9px}
+.fp-detail-table-wrap{overflow-x:auto;margin-top:12px}.fp-detail-table{width:100%;min-width:680px;border-collapse:collapse}.fp-detail-table thead{background:#f1f5fa}.fp-detail-table th{height:33px;padding:0 9px;color:#66798f;text-align:left;font-size:7px;font-weight:720;text-transform:uppercase}.fp-detail-table td{height:47px;border-bottom:1px solid #edf2f6;padding:0 9px;color:#334b64;font-size:8.5px}.fp-detail-money{font-weight:700!important;color:#17314d!important}.fp-detail-link{color:#367fe8;font-weight:680}.fp-detail-empty{padding:24px;color:#8193a5;text-align:center;font-size:8.5px}.fp-detail-muted{margin-top:12px;color:#8294a6;font-size:8px}
+.fp-detail-note{margin-top:14px;border:1px solid #d9e7f6;border-radius:10px;background:#f4f9ff;padding:13px}.fp-detail-note strong{color:#355f8d;font-size:8.5px}.fp-detail-note p{margin-top:4px;max-width:1000px;color:#72869a;font-size:7.5px;line-height:1.5}
+
+.fp-truck-profile-hero{justify-content:flex-start}.fp-truck-profile-avatar{display:flex;width:64px;height:64px;align-items:center;justify-content:center;border-radius:16px;background:linear-gradient(135deg,#4e94fb,#3977db);color:#fff;font-size:17px;font-weight:760}.fp-truck-profile-copy{flex:1}.fp-truck-profile-status{display:grid;justify-items:end;gap:6px}.fp-truck-profile-status small{color:#8495a6;font-size:8px}
+.fp-truck-profile-tabs{display:flex;gap:24px;margin-top:14px;border:1px solid #dfe7ef;border-radius:12px;background:#fff;padding:0 16px}.fp-truck-profile-tabs a{position:relative;display:flex;height:45px;align-items:center;color:#677b91;font-size:8.5px;font-weight:580}.fp-truck-profile-tabs a.active{color:#4484ec;font-weight:660}.fp-truck-profile-tabs a.active::after{content:"";position:absolute;right:0;bottom:0;left:0;height:2px;background:#4f8df7}
+.fp-truck-info-list{display:grid;margin-top:8px}.fp-truck-info-list>div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2f6;padding:9px 0}.fp-truck-info-list span{color:#788a9e;font-size:7.5px}.fp-truck-info-list strong{color:#334b63;font-size:8px;font-weight:650;text-align:right}
+.fp-truck-history{display:grid;margin-top:12px}.fp-truck-history>div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;border-bottom:1px solid #edf2f6;padding:10px 0}.fp-truck-history i{width:9px;height:9px;margin-top:4px;border-radius:50%;background:#8296aa}.fp-truck-history i.load{background:#4f8df7}.fp-truck-history i.expense{background:#e8a63e}.fp-truck-history i.maintenance{background:#765ce7}.fp-truck-history>div>div{display:grid;gap:2px}.fp-truck-history span{color:#8a9aaa;font-size:6.5px}.fp-truck-history strong{color:#334b63;font-size:8.5px}.fp-truck-history p{color:#708398;font-size:7.5px}
+
+.fp-tools-public-hero{max-width:1100px;margin:0 auto;padding:78px 24px 34px;text-align:center}.fp-tools-public-hero>span{color:#4c8cf2;font-size:8px;font-weight:780;letter-spacing:.14em}.fp-tools-public-hero h1{max-width:800px;margin:10px auto 0;color:#0c1d35;font-size:43px;font-weight:790;line-height:1.03;letter-spacing:-.045em}.fp-tools-public-hero p{max-width:650px;margin:14px auto 0;color:#708297;font-size:14px;line-height:1.65}
+.fp-tools-public-section{max-width:1240px;margin:0 auto;padding:20px 24px 72px}.fp-free-tools-shell{display:grid;grid-template-columns:330px minmax(0,1fr);overflow:hidden;border:1px solid #dce5ee;border-radius:18px;background:#fff;box-shadow:0 20px 60px rgba(31,62,94,.08)}
+.fp-free-tools-menu{background:#0a1b31;padding:28px;color:#fff}.fp-free-tools-menu>span{color:#74adff;font-size:8px;font-weight:760;letter-spacing:.12em}.fp-free-tools-menu h2{margin-top:10px;font-size:23px;line-height:1.08;font-weight:740;letter-spacing:-.03em}.fp-free-tools-menu>p{margin-top:10px;color:#9fb2c8;font-size:10px;line-height:1.6}.fp-free-tools-menu>div{display:grid;gap:7px;margin-top:22px}.fp-free-tools-menu button{display:grid;gap:3px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);padding:11px 12px;color:#dbe6f1;text-align:left}.fp-free-tools-menu button.active{border-color:#348df2;background:#147fe8;color:#fff}.fp-free-tools-menu button strong{font-size:9px}.fp-free-tools-menu button small{color:#91a6bc;font-size:7px;line-height:1.4}.fp-free-tools-menu button.active small{color:#dcebff}
+.fp-free-tool-workspace{padding:28px}.fp-tool-frame-heading>span{color:#4b8bf1;font-size:7px;font-weight:760;letter-spacing:.12em}.fp-tool-frame-heading h1{margin-top:5px;color:#10233b;font-size:24px;font-weight:760;letter-spacing:-.035em}.fp-tool-frame-heading p{margin-top:5px;color:#75879a;font-size:9.5px}.fp-tool-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.fp-tool-field{display:grid;gap:5px}.fp-tool-field>span{color:#5f748a;font-size:8px;font-weight:620}.fp-tool-input{display:flex;height:43px;align-items:center;border:1px solid #dce6ef;border-radius:9px;background:#fbfdff;padding:0 11px}.fp-tool-input b{margin-right:5px;color:#718398;font-size:10px}.fp-tool-input input{width:100%;border:0;background:transparent;outline:0;color:#193049;font-size:11px}
+.fp-tool-results{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:5px;border-top:1px solid #edf2f6;padding-top:14px}.fp-tool-results>div{display:grid;gap:5px;border:1px solid #e3eaf2;border-radius:10px;background:#f8fbfe;padding:12px}.fp-tool-results>div.primary{border-color:#cfe3ff;background:#eef6ff}.fp-tool-results span{color:#6f8296;font-size:7.5px}.fp-tool-results strong{color:#18314b;font-size:16px;font-weight:740}
+.fp-tool-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;border-radius:12px;background:#eef6ff;padding:14px 16px}.fp-tool-cta>div{display:grid;gap:3px}.fp-tool-cta span{color:#66809a;font-size:7.5px}.fp-tool-cta strong{color:#244b73;font-size:9px}.fp-tool-cta>a{border-radius:8px;background:#4f8df7;padding:10px 12px;color:#fff;font-size:8px;font-weight:680}
+.fp-tools-public-bottom{max-width:1190px;margin:0 auto 80px;border-radius:18px;background:#0b1c31;padding:38px;color:#fff;text-align:center}.fp-tools-public-bottom>span{color:#72aafa;font-size:7px;font-weight:760;letter-spacing:.12em}.fp-tools-public-bottom h2{margin-top:8px;font-size:28px;font-weight:750;letter-spacing:-.03em}.fp-tools-public-bottom p{max-width:700px;margin:10px auto 0;color:#a9b9c9;font-size:10px;line-height:1.65}.fp-tools-public-bottom a{display:inline-flex;margin-top:18px;border-radius:9px;background:#4f8df7;padding:11px 15px;color:#fff;font-size:9px;font-weight:690}
+.fp-marketing-free-tools-preview{display:flex;max-width:1180px;margin:0 auto 70px;align-items:center;justify-content:space-between;gap:24px;border:1px solid #dce6ef;border-radius:18px;background:#f5f9ff;padding:26px 30px}.fp-marketing-free-tools-preview>div{max-width:700px}.fp-marketing-free-tools-preview span{color:#4d8ef3;font-size:8px;font-weight:760;text-transform:uppercase;letter-spacing:.12em}.fp-marketing-free-tools-preview h2{margin-top:7px;font-size:27px;font-weight:750;letter-spacing:-.035em}.fp-marketing-free-tools-preview p{margin-top:7px;color:#718398;font-size:10px;line-height:1.6}
+
+@media(max-width:980px){.fp-detail-two-col{grid-template-columns:1fr}.fp-load-economics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fp-free-tools-shell{grid-template-columns:1fr}.fp-free-tools-menu>div{grid-template-columns:repeat(2,minmax(0,1fr))}.fp-detail-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.fp-detail-page{padding:16px}.fp-detail-hero,.fp-truck-profile-hero{align-items:flex-start;flex-direction:column}.fp-detail-hero-meta{justify-content:flex-start}.fp-detail-kpi-grid,.fp-load-economics-grid,.fp-tool-form-grid,.fp-tool-results{grid-template-columns:1fr}.fp-truck-profile-tabs{gap:16px;overflow-x:auto}.fp-free-tools-menu>div{grid-template-columns:1fr}.fp-free-tool-workspace{padding:20px}.fp-tools-public-hero h1{font-size:34px}.fp-marketing-free-tools-preview{align-items:flex-start;flex-direction:column}}
+/* === END FleetPilot Profitability + Profiles + Public Tools v3.3.0 === */
+
+
+/* === Lease Operator / Contractor Tool v3.3.1 === */
+.fp-tool-lease-breakdown{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:2px;
+}
+
+.fp-tool-lease-breakdown>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid #e3eaf2;
+  border-radius:9px;
+  background:#fbfdff;
+  padding:9px 10px;
+}
+
+.fp-tool-lease-breakdown span{
+  color:#6e8195;
+  font-size:7px;
+}
+
+.fp-tool-lease-breakdown strong{
+  color:#263e57;
+  font-size:8px;
+  font-weight:680;
+}
+
+.fp-tool-helper-note{
+  grid-column:1/-1;
+  border:1px solid #d8e7f7;
+  border-radius:10px;
+  background:#f4f9ff;
+  padding:11px 12px;
+}
+
+.fp-tool-helper-note strong{
+  color:#355f8d;
+  font-size:8px;
+}
+
+.fp-tool-helper-note p{
+  margin-top:4px;
+  color:#72869a;
+  font-size:7px;
+  line-height:1.5;
+}
+
+@media(max-width:720px){
+  .fp-tool-lease-breakdown{
+    grid-template-columns:1fr;
+  }
+}
+/* === END Lease Operator / Contractor Tool v3.3.1 === */
+
+
+/* ==========================================================================
+   FleetPilot Full Mobile App Pass v3.4.0
+   Desktop behavior remains unchanged. These rules intentionally sit last.
+   ========================================================================== */
+
+html, body{
+  max-width:100%;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+/* ---------- Mobile app shell ---------- */
+.fp-mobile-header-brand{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#0b1730;
+  font-size:15px;
+  font-weight:780;
+  letter-spacing:-.035em;
+}
+
+.fp-mobile-header-brand svg{
+  width:27px;
+  height:27px;
+}
+
+.fp-mobile-header-brand>span>span{
+  color:#1188ff;
+}
+
+.fp-mobile-control-zone{
+  position:sticky;
+  top:56px;
+  z-index:25;
+  display:grid;
+  gap:8px;
+  border-bottom:1px solid #dfe7ef;
+  background:rgba(255,255,255,.97);
+  padding:9px 12px 10px;
+  backdrop-filter:blur(16px);
+}
+
+.fp-mobile-global-search{
+  min-width:0;
+}
+
+.fp-mobile-global-search input{
+  font-size:16px !important; /* prevents iOS input zoom */
+}
+
+.fp-mobile-week-selector{
+  min-width:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.fp-mobile-week-selector::-webkit-scrollbar{
+  display:none;
+}
+
+.fp-mobile-week-selector .fp-global-week{
+  width:max-content;
+  min-width:100%;
+  justify-content:center;
+}
+
+.fp-mobile-bottom-nav{
+  position:fixed;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:90;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  border-top:1px solid #dbe5ef;
+  background:rgba(255,255,255,.98);
+  padding:6px max(6px,env(safe-area-inset-right))
+    calc(6px + env(safe-area-inset-bottom))
+    max(6px,env(safe-area-inset-left));
+  box-shadow:0 -12px 32px rgba(24,49,75,.08);
+  backdrop-filter:blur(18px);
+}
+
+.fp-mobile-bottom-nav>a,
+.fp-mobile-bottom-nav>button{
+  display:grid;
+  min-width:0;
+  min-height:49px;
+  place-items:center;
+  align-content:center;
+  gap:3px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#75879a;
+  font-size:10px;
+  font-weight:600;
+}
+
+.fp-mobile-bottom-nav>a.active,
+.fp-mobile-bottom-nav>button.active{
+  color:#2485f0;
+}
+
+.fp-mobile-bottom-nav>a.active svg,
+.fp-mobile-bottom-nav>button.active svg{
+  stroke-width:2.2;
+}
+
+.fp-mobile-more-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:120;
+}
+
+.fp-mobile-more-scrim{
+  position:absolute;
+  inset:0;
+  width:100%;
+  border:0;
+  background:rgba(5,17,31,.56);
+  backdrop-filter:blur(3px);
+}
+
+.fp-mobile-more-sheet{
+  position:absolute;
+  right:0;
+  bottom:0;
+  left:0;
+  max-height:min(78vh,660px);
+  overflow-y:auto;
+  border-radius:22px 22px 0 0;
+  background:#fff;
+  padding:8px 16px calc(22px + env(safe-area-inset-bottom));
+  box-shadow:0 -28px 70px rgba(7,26,47,.24);
+}
+
+.fp-mobile-sheet-handle{
+  width:42px;
+  height:4px;
+  margin:2px auto 10px;
+  border-radius:999px;
+  background:#d8e1ea;
+}
+
+.fp-mobile-more-sheet>header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #edf2f6;
+  padding:4px 2px 13px;
+}
+
+.fp-mobile-more-sheet>header>div{
+  display:grid;
+  gap:2px;
+}
+
+.fp-mobile-more-sheet>header span{
+  color:#4d8df5;
+  font-size:9px;
+  font-weight:760;
+  letter-spacing:.11em;
+}
+
+.fp-mobile-more-sheet>header h2{
+  color:#162b43;
+  font-size:22px;
+  font-weight:750;
+}
+
+.fp-mobile-more-sheet>header>button{
+  display:flex;
+  width:36px;
+  height:36px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #dce5ee;
+  border-radius:10px;
+  background:#f8fbfe;
+  color:#667b90;
+  font-size:20px;
+}
+
+.fp-mobile-more-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  padding-top:14px;
+}
+
+.fp-mobile-more-grid>a{
+  display:grid;
+  min-height:96px;
+  place-items:center;
+  align-content:center;
+  gap:8px;
+  border:1px solid #e1e8ef;
+  border-radius:13px;
+  background:#fbfdff;
+  color:#3b5269;
+  padding:10px 6px;
+  text-align:center;
+  font-size:11px;
+  font-weight:630;
+}
+
+.fp-mobile-more-grid>a.active{
+  border-color:#b9d9ff;
+  background:#edf6ff;
+  color:#247fe7;
+}
+
+.fp-mobile-more-icon{
+  display:flex;
+  width:38px;
+  height:38px;
+  align-items:center;
+  justify-content:center;
+  border-radius:11px;
+  background:#eef5ff;
+  color:#408af0;
+}
+
+/* ---------- Universal mobile surfaces ---------- */
+@media(max-width:767px){
+  body{
+    padding-bottom:calc(68px + env(safe-area-inset-bottom));
+  }
+
+  .min-h-screen.bg-\[\#f4f7fb\] > section{
+    padding-bottom:0;
+  }
+
+  header.sticky.top-0.z-30{
+    height:56px !important;
+    padding-right:12px !important;
+    padding-left:12px !important;
+    gap:8px !important;
+  }
+
+  .fp-header-account{
+    min-width:auto !important;
+    padding:2px !important;
+    border:0 !important;
+    background:transparent !important;
+  }
+
+  .fp-header-avatar{
+    width:34px !important;
+    height:34px !important;
+  }
+
+  /* Main page spacing */
+  .fp-dashboard-page,
+  .fp-loads-page,
+  .fp-trucks-page,
+  .fp-expenses-page,
+  .fp-maintenance-page,
+  .fp-reimb-page,
+  .fp-settle-page,
+  .fp-fuel-page,
+  .fp-reports-page,
+  .fp-documents-page,
+  .fp-pilot-page,
+  .fp-settings-page,
+  .fp-detail-page{
+    width:100% !important;
+    max-width:none !important;
+    padding:14px 12px 18px !important;
+  }
+
+  /* Headings */
+  .fp-dashboard-heading,
+  .fp-loads-heading,
+  .fp-trucks-heading,
+  .fp-expenses-heading,
+  .fp-maintenance-heading,
+  .fp-reimb-heading,
+  .fp-settle-heading,
+  .fp-fuel-heading,
+  .fp-reports-heading,
+  .fp-documents-heading,
+  .fp-settings-heading{
+    align-items:flex-start !important;
+    flex-direction:column !important;
+    gap:10px !important;
+  }
+
+  .fp-dashboard-title,
+  .fp-loads-title,
+  .fp-trucks-title,
+  .fp-expenses-title,
+  .fp-maintenance-title,
+  .fp-reimb-title,
+  .fp-settle-title,
+  .fp-fuel-title,
+  .fp-reports-title,
+  .fp-documents-title,
+  .fp-settings-title{
+    font-size:25px !important;
+    line-height:1.08 !important;
+  }
+
+  .fp-dashboard-subtitle,
+  .fp-loads-subtitle,
+  .fp-trucks-subtitle,
+  .fp-expenses-subtitle,
+  .fp-maintenance-subtitle,
+  .fp-reimb-subtitle,
+  .fp-settle-subtitle,
+  .fp-fuel-subtitle,
+  .fp-reports-subtitle,
+  .fp-documents-subtitle{
+    max-width:100% !important;
+    font-size:12px !important;
+    line-height:1.45 !important;
+  }
+
+  /* KPI grids: app-like 2-column cards */
+  .fp-dashboard-kpi-grid,
+  .fp-load-kpi-grid,
+  .fp-truck-kpi-grid,
+  .fp-expense-kpi-grid,
+  .fp-maintenance-kpi-grid,
+  .fp-reimb-kpi-grid,
+  .fp-settle-kpi-grid,
+  .fp-fuel-kpi-grid,
+  .fp-detail-kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:9px !important;
+  }
+
+  .fp-dashboard-kpi,
+  .fp-load-kpi,
+  .fp-truck-kpi,
+  .fp-expense-kpi,
+  .fp-maintenance-kpi,
+  .fp-reimb-kpi,
+  .fp-settle-kpi,
+  .fp-fuel-kpi,
+  .fp-detail-kpi{
+    min-height:112px !important;
+    padding:12px !important;
+  }
+
+  /* Primary + right rails stack */
+  .fp-dashboard-layout,
+  .fp-loads-layout,
+  .fp-trucks-layout,
+  .fp-expenses-layout,
+  .fp-maintenance-layout,
+  .fp-reimb-layout,
+  .fp-settle-layout,
+  .fp-fuel-bottom-grid{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  .fp-dashboard-right,
+  .fp-loads-right-rail,
+  .fp-trucks-right-rail,
+  .fp-expenses-right-rail,
+  .fp-maintenance-right-rail,
+  .fp-reimb-right-rail,
+  .fp-settle-right-rail,
+  .fp-fuel-insights-column{
+    width:100% !important;
+  }
+
+  /* Tables become intentional swipe surfaces */
+  .fp-load-table-wrap,
+  .fp-truck-table-wrap,
+  .fp-expense-table-wrap,
+  .fp-maintenance-table-wrap,
+  .fp-reimb-table-wrap,
+  .fp-settle-table-wrap,
+  .fp-fuel-table-wrap,
+  .fp-detail-table-wrap,
+  .fp-fuel-breakdown-table-wrap{
+    overflow-x:auto !important;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .fp-load-table-wrap::-webkit-scrollbar,
+  .fp-truck-table-wrap::-webkit-scrollbar,
+  .fp-expense-table-wrap::-webkit-scrollbar,
+  .fp-maintenance-table-wrap::-webkit-scrollbar,
+  .fp-reimb-table-wrap::-webkit-scrollbar,
+  .fp-settle-table-wrap::-webkit-scrollbar,
+  .fp-fuel-table-wrap::-webkit-scrollbar,
+  .fp-detail-table-wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  .fp-load-table,
+  .fp-truck-table,
+  .fp-expense-table,
+  .fp-maintenance-table,
+  .fp-reimb-table,
+  .fp-settle-table,
+  .fp-fuel-table,
+  .fp-detail-table{
+    min-width:760px !important;
+  }
+
+  /* Sticky first useful column during horizontal swipe */
+  .fp-load-table th:first-child,
+  .fp-load-table td:first-child,
+  .fp-truck-table th:first-child,
+  .fp-truck-table td:first-child,
+  .fp-expense-table th:first-child,
+  .fp-expense-table td:first-child,
+  .fp-maintenance-table th:first-child,
+  .fp-maintenance-table td:first-child,
+  .fp-reimb-table th:first-child,
+  .fp-reimb-table td:first-child,
+  .fp-settle-table th:first-child,
+  .fp-settle-table td:first-child,
+  .fp-fuel-table th:first-child,
+  .fp-fuel-table td:first-child{
+    position:sticky;
+    left:0;
+    z-index:2;
+    background:#fff;
+    box-shadow:7px 0 12px rgba(35,65,95,.04);
+  }
+
+  .fp-load-table thead th:first-child,
+  .fp-truck-table thead th:first-child,
+  .fp-expense-table thead th:first-child,
+  .fp-maintenance-table thead th:first-child,
+  .fp-reimb-table thead th:first-child,
+  .fp-settle-table thead th:first-child,
+  .fp-fuel-table thead th:first-child{
+    background:#f1f5fa;
+  }
+
+  /* Tabs swipe naturally */
+  .fp-load-tabs,
+  .fp-truck-tabs,
+  .fp-expense-tabs,
+  .fp-maintenance-tabs,
+  .fp-reimb-tabs,
+  .fp-settle-tabs,
+  .fp-fuel-tabs,
+  .fp-settings-tabs,
+  .fp-truck-profile-tabs{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:auto !important;
+    overscroll-behavior-x:contain;
+    scrollbar-width:none;
+    white-space:nowrap;
+  }
+
+  .fp-load-tabs::-webkit-scrollbar,
+  .fp-truck-tabs::-webkit-scrollbar,
+  .fp-expense-tabs::-webkit-scrollbar,
+  .fp-maintenance-tabs::-webkit-scrollbar,
+  .fp-reimb-tabs::-webkit-scrollbar,
+  .fp-settle-tabs::-webkit-scrollbar,
+  .fp-fuel-tabs::-webkit-scrollbar,
+  .fp-settings-tabs::-webkit-scrollbar,
+  .fp-truck-profile-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  /* All filter bars collapse to clean 2-column mobile grids */
+  .fp-load-filterbar,
+  .fp-truck-filterbar,
+  .fp-expense-filterbar,
+  .fp-maintenance-filterbar,
+  .fp-reimb-filterbar,
+  .fp-settle-filterbar,
+  .fp-fuel-filterbar,
+  .fp-reimb-filterbar-operational,
+  .fp-settle-filterbar-operational,
+  .fp-fuel-filterbar-operational{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    padding:10px !important;
+  }
+
+  .fp-load-search,
+  .fp-truck-search,
+  .fp-expense-search,
+  .fp-maintenance-search,
+  .fp-reimb-search,
+  .fp-settle-search,
+  .fp-fuel-search{
+    grid-column:1/-1 !important;
+    width:100% !important;
+  }
+
+  .fp-load-search input,
+  .fp-truck-search input,
+  .fp-expense-search input,
+  .fp-maintenance-search input,
+  .fp-reimb-search input,
+  .fp-settle-search input,
+  .fp-fuel-search input,
+  select,
+  textarea,
+  input{
+    font-size:16px; /* avoid iOS Safari zoom */
+  }
+
+  .fp-load-sort,
+  .fp-truck-sort,
+  .fp-expense-sort,
+  .fp-maintenance-sort,
+  .fp-reimb-sort,
+  .fp-settle-sort,
+  .fp-fuel-sort{
+    grid-column:1/-1 !important;
+    grid-template-columns:54px minmax(0,1fr) !important;
+  }
+
+  /* Pagination */
+  .fp-load-pagination,
+  .fp-truck-pagination,
+  .fp-expense-pagination,
+  .fp-maintenance-pagination,
+  .fp-reimb-pagination{
+    align-items:flex-start !important;
+    flex-direction:column !important;
+    gap:10px !important;
+    padding:12px !important;
+  }
+
+  /* Modals/forms behave as bottom sheets */
+  .fp-add-load-form,
+  .fp-add-truck-form,
+  .fp-add-expense-form,
+  .fp-add-maintenance-form,
+  .fp-add-reimb-form,
+  .fp-reimb-heading #add-reimbursement>form.fp-add-reimb-form,
+  .fp-truck-heading #add-truck>form,
+  .fp-load-heading #add-load>form{
+    position:fixed !important;
+    right:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    top:auto !important;
+    z-index:110 !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    max-width:none !important;
+    max-height:88dvh !important;
+    overflow-y:auto !important;
+    margin:0 !important;
+    border-radius:20px 20px 0 0 !important;
+    padding:18px 14px calc(18px + env(safe-area-inset-bottom)) !important;
+    box-shadow:0 -30px 70px rgba(8,28,50,.24) !important;
+  }
+
+  /* Existing portal dialogs */
+  .fp-reimb-import-backdrop,
+  .fp-reimb-action-backdrop,
+  .fp-settle-summary-backdrop{
+    align-items:flex-end !important;
+    padding:0 !important;
+  }
+
+  .fp-reimb-import-modal,
+  .fp-reimb-edit-modal,
+  .fp-reimb-delete-modal,
+  .fp-settle-summary-modal,
+  .fp-settle-issues-modal{
+    width:100% !important;
+    max-height:90dvh !important;
+    overflow-y:auto !important;
+    border-radius:20px 20px 0 0 !important;
+  }
+
+  /* Portals stay inside mobile viewport */
+  .fp-reimb-filter-portal,
+  .fp-settle-filter-portal,
+  .fp-fuel-date-popover{
+    right:12px !important;
+    left:12px !important;
+    width:auto !important;
+    max-width:none !important;
+  }
+
+  /* Weekly overview */
+  .fp-settle-overview-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  /* Fuel overview */
+  .fp-fuel-overview-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Detail/profile pages */
+  .fp-detail-two-col{
+    grid-template-columns:1fr !important;
+  }
+
+  .fp-load-economics-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .fp-detail-hero,
+  .fp-truck-profile-hero{
+    align-items:flex-start !important;
+    flex-direction:column !important;
+  }
+
+  .fp-detail-hero-meta{
+    justify-content:flex-start !important;
+  }
+
+  .fp-truck-profile-status{
+    justify-items:start !important;
+  }
+
+  .fp-truck-profile-avatar{
+    width:54px !important;
+    height:54px !important;
+  }
+
+  /* Settings cards/forms */
+  .fp-settings-content,
+  .fp-settings-grid,
+  .fp-settings-form-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Public marketing site */
+  .fp-marketing-header{
+    min-height:64px !important;
+    padding:10px 14px !important;
+  }
+
+  .fp-marketing-nav{
+    display:none !important;
+  }
+
+  .fp-marketing-header-actions{
+    gap:6px !important;
+  }
+
+  .fp-marketing-header-actions .fp-marketing-button{
+    padding:8px 10px !important;
+    font-size:10px !important;
+  }
+
+  .fp-marketing-hero,
+  .fp-tools-public-hero{
+    padding-right:16px !important;
+    padding-left:16px !important;
+  }
+
+  .fp-marketing-hero{
+    grid-template-columns:1fr !important;
+  }
+
+  .fp-marketing-hero h1,
+  .fp-tools-public-hero h1{
+    font-size:34px !important;
+    line-height:1.02 !important;
+  }
+
+  .fp-marketing-hero p,
+  .fp-tools-public-hero p{
+    font-size:13px !important;
+  }
+
+  .fp-marketing-free-tools-preview{
+    margin-right:14px !important;
+    margin-left:14px !important;
+    padding:20px !important;
+  }
+
+  .fp-tools-public-section{
+    padding-right:14px !important;
+    padding-left:14px !important;
+  }
+
+  .fp-free-tools-shell{
+    grid-template-columns:1fr !important;
+    border-radius:14px !important;
+  }
+
+  .fp-free-tools-menu{
+    padding:20px !important;
+  }
+
+  .fp-free-tools-menu>div{
+    display:flex !important;
+    overflow-x:auto !important;
+    gap:8px !important;
+    scrollbar-width:none;
+  }
+
+  .fp-free-tools-menu>div::-webkit-scrollbar{
+    display:none;
+  }
+
+  .fp-free-tools-menu button{
+    min-width:190px !important;
+  }
+
+  .fp-free-tool-workspace{
+    padding:18px 14px !important;
+  }
+
+  .fp-tool-form-grid,
+  .fp-tool-results,
+  .fp-tool-lease-breakdown{
+    grid-template-columns:1fr !important;
+  }
+
+  .fp-tool-cta{
+    align-items:flex-start !important;
+    flex-direction:column !important;
+  }
+
+  .fp-tools-public-bottom{
+    margin-right:14px !important;
+    margin-left:14px !important;
+    padding:28px 18px !important;
+  }
+}
+
+/* Extra-small phones */
+@media(max-width:430px){
+  .fp-dashboard-kpi-grid,
+  .fp-load-kpi-grid,
+  .fp-truck-kpi-grid,
+  .fp-expense-kpi-grid,
+  .fp-maintenance-kpi-grid,
+  .fp-reimb-kpi-grid,
+  .fp-settle-kpi-grid,
+  .fp-fuel-kpi-grid,
+  .fp-detail-kpi-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .fp-mobile-more-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .fp-settle-overview-grid,
+  .fp-load-economics-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .fp-mobile-week-selector .fp-week-label{
+    min-width:138px !important;
+  }
+
+  .fp-mobile-week-selector .fp-week-today{
+    display:none !important;
+  }
+}
+/* === END FleetPilot Full Mobile App Pass v3.4.0 === */

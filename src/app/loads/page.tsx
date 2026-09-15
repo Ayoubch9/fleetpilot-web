@@ -545,7 +545,12 @@ export default async function LoadsPage({
                       return (
                         <tr key={load.id}>
                           <td className="fp-load-number">
-                            #{load.load_number || "—"}
+                            <Link
+                              href={`/loads/${load.id}`}
+                              className="fp-table-profile-link"
+                            >
+                              #{load.load_number || "—"}
+                            </Link>
                           </td>
                           <td className="fp-load-route-cell">
                             {compactLocation(load.pickup)}
