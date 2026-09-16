@@ -12218,3 +12218,2148 @@ body{
   }
 }
 /* === END FleetPilot Full Mobile App Pass v3.4.0 === */
+
+
+/* === Mobile Free Tools Typography v3.4.1 === */
+@media(max-width:767px){
+  .fp-free-tools-menu{
+    padding:18px 14px 20px !important;
+  }
+
+  .fp-free-tools-menu>span{
+    font-size:10px !important;
+    letter-spacing:.11em !important;
+  }
+
+  .fp-free-tools-menu h2{
+    margin-top:8px !important;
+    font-size:23px !important;
+    line-height:1.12 !important;
+  }
+
+  .fp-free-tools-menu>p{
+    margin-top:8px !important;
+    font-size:12px !important;
+    line-height:1.5 !important;
+  }
+
+  .fp-free-tools-menu>div{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+    overflow:visible !important;
+    margin-top:18px !important;
+  }
+
+  .fp-free-tools-menu button{
+    min-width:0 !important;
+    min-height:74px !important;
+    gap:5px !important;
+    border-radius:13px !important;
+    padding:14px 18px !important;
+  }
+
+  .fp-free-tools-menu button strong{
+    font-size:14px !important;
+    line-height:1.2 !important;
+    font-weight:700 !important;
+  }
+
+  .fp-free-tools-menu button small{
+    font-size:11px !important;
+    line-height:1.42 !important;
+  }
+
+  .fp-free-tools-menu button.active{
+    box-shadow:0 7px 18px rgba(40,115,220,.18) !important;
+  }
+}
+/* === END Mobile Free Tools Typography v3.4.1 === */
+
+
+/* === Free Tools Typography All Breakpoints v3.4.2 === */
+
+/* Desktop / tablet */
+.fp-free-tools-menu>span{
+  font-size:9px !important;
+  letter-spacing:.12em !important;
+}
+
+.fp-free-tools-menu h2{
+  font-size:25px !important;
+  line-height:1.12 !important;
+}
+
+.fp-free-tools-menu>p{
+  font-size:11px !important;
+  line-height:1.55 !important;
+}
+
+.fp-free-tools-menu>div{
+  gap:9px !important;
+  margin-top:22px !important;
+}
+
+.fp-free-tools-menu button{
+  min-height:72px !important;
+  gap:5px !important;
+  border-radius:12px !important;
+  padding:13px 14px !important;
+}
+
+.fp-free-tools-menu button strong{
+  font-size:13px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+}
+
+.fp-free-tools-menu button small{
+  font-size:10px !important;
+  line-height:1.4 !important;
+  font-weight:500 !important;
+}
+
+.fp-free-tools-menu button.active{
+  box-shadow:0 8px 20px rgba(40,115,220,.18) !important;
+}
+
+/* Workspace typography */
+.fp-tool-frame-heading>span{
+  font-size:8px !important;
+}
+
+.fp-tool-frame-heading h1{
+  font-size:27px !important;
+  line-height:1.08 !important;
+}
+
+.fp-tool-frame-heading p{
+  font-size:11px !important;
+  line-height:1.5 !important;
+}
+
+.fp-tool-field>span{
+  font-size:9px !important;
+}
+
+.fp-tool-input input{
+  font-size:12px !important;
+}
+
+.fp-tool-results span{
+  font-size:8.5px !important;
+}
+
+.fp-tool-results strong{
+  font-size:18px !important;
+}
+
+.fp-tool-cta span{
+  font-size:8.5px !important;
+}
+
+.fp-tool-cta strong{
+  font-size:10px !important;
+}
+
+.fp-tool-cta>a{
+  font-size:9px !important;
+}
+
+/* Mobile keeps its dedicated larger tuning */
+@media(max-width:767px){
+  .fp-free-tools-menu>span{
+    font-size:10px !important;
+  }
+
+  .fp-free-tools-menu h2{
+    font-size:23px !important;
+  }
+
+  .fp-free-tools-menu>p{
+    font-size:12px !important;
+  }
+
+  .fp-free-tools-menu button{
+    min-height:76px !important;
+    padding:14px 18px !important;
+  }
+
+  .fp-free-tools-menu button strong{
+    font-size:14px !important;
+  }
+
+  .fp-free-tools-menu button small{
+    font-size:11px !important;
+  }
+
+  .fp-tool-frame-heading h1{
+    font-size:25px !important;
+  }
+
+  .fp-tool-frame-heading p{
+    font-size:12px !important;
+  }
+}
+/* === END Free Tools Typography All Breakpoints v3.4.2 === */
+
+
+/* === Desktop/Mobile Visibility Correction v3.4.3 ===
+   Mobile components must never override lg:hidden on desktop.
+   ------------------------------------------------------------------ */
+
+/* Default desktop state */
+.fp-mobile-control-zone,
+.fp-mobile-bottom-nav,
+.fp-mobile-more-backdrop{
+  display:none !important;
+}
+
+/* App mobile/tablet navigation becomes active only below Tailwind lg (1024px). */
+@media(max-width:1023px){
+  .fp-mobile-control-zone{
+    display:grid !important;
+  }
+
+  .fp-mobile-bottom-nav{
+    display:grid !important;
+  }
+
+  .fp-mobile-more-backdrop{
+    display:block !important;
+  }
+}
+
+/* Desktop explicitly keeps the standard FleetPilot header/sidebar only. */
+@media(min-width:1024px){
+  .fp-mobile-control-zone,
+  .fp-mobile-bottom-nav,
+  .fp-mobile-more-backdrop{
+    display:none !important;
+  }
+
+  body{
+    padding-bottom:0 !important;
+  }
+}
+/* === END Desktop/Mobile Visibility Correction v3.4.3 === */
+
+
+/* === Shared Business Costs Settings v3.5.0 === */
+.fp-business-costs-settings{
+  overflow:hidden;
+}
+
+.fp-business-cost-sync-note{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:11px;
+  align-items:center;
+  margin-top:14px;
+  border:1px solid #cee3fa;
+  border-radius:10px;
+  background:#f2f8ff;
+  padding:11px 12px;
+}
+
+.fp-business-cost-sync-icon{
+  display:flex;
+  width:36px;
+  height:36px;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:#dceeff;
+  color:#3f87ed;
+  font-size:17px;
+  font-weight:760;
+}
+
+.fp-business-cost-sync-note>div{
+  display:grid;
+  gap:3px;
+}
+
+.fp-business-cost-sync-note strong{
+  color:#315c89;
+  font-size:9px;
+  font-weight:690;
+}
+
+.fp-business-cost-sync-note p{
+  color:#6d8399;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-business-fee-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+  margin-top:12px;
+}
+
+.fp-business-fee-card{
+  display:grid;
+  gap:12px;
+  border:1px solid #e0e8f0;
+  border-radius:11px;
+  background:#fbfdff;
+  padding:13px;
+}
+
+.fp-business-fee-card-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.fp-business-fee-card-heading>div{
+  display:grid;
+  gap:3px;
+}
+
+.fp-business-fee-card-heading span{
+  color:#4d89ef;
+  font-size:6.5px;
+  font-weight:760;
+  letter-spacing:.1em;
+}
+
+.fp-business-fee-card-heading strong{
+  color:#263e57;
+  font-size:10px;
+  font-weight:690;
+}
+
+.fp-business-fee-card label{
+  display:grid;
+  gap:5px;
+}
+
+.fp-business-fee-card label>span,
+.fp-fixed-expense-add label>span{
+  color:#667b90;
+  font-size:7.5px;
+  font-weight:620;
+}
+
+.fp-business-fee-card p{
+  color:#8293a4;
+  font-size:7px;
+  line-height:1.45;
+}
+
+.fp-business-money-input{
+  display:flex;
+  min-width:0;
+  height:38px;
+  align-items:center;
+  gap:5px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fff;
+  padding:0 9px;
+}
+
+.fp-business-money-input:focus-within{
+  border-color:#8bbdf5;
+  box-shadow:0 0 0 3px rgba(79,141,247,.08);
+}
+
+.fp-business-money-input b,
+.fp-business-money-input em{
+  color:#718398;
+  font-size:8px;
+  font-style:normal;
+  font-weight:620;
+  white-space:nowrap;
+}
+
+.fp-business-money-input input{
+  min-width:0;
+  width:100%;
+  border:0;
+  background:transparent;
+  outline:0;
+  color:#243c55;
+  font-size:9px;
+  font-weight:620;
+}
+
+.fp-business-money-input.suffix input{
+  text-align:right;
+}
+
+.fp-business-cost-toggle{
+  position:relative;
+  width:34px;
+  height:19px;
+  flex:0 0 34px;
+  border:0;
+  border-radius:999px;
+  background:#cbd5df;
+  padding:2px;
+  transition:background .15s ease;
+}
+
+.fp-business-cost-toggle i{
+  display:block;
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 4px rgba(26,48,72,.18);
+  transition:transform .15s ease;
+}
+
+.fp-business-cost-toggle.on{
+  background:#4f8df7;
+}
+
+.fp-business-cost-toggle.on i{
+  transform:translateX(15px);
+}
+
+.fp-business-fee-save{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:12px;
+  border-top:1px solid #edf2f6;
+  padding-top:12px;
+}
+
+.fp-business-fee-save>span{
+  color:#718399;
+  font-size:7.5px;
+}
+
+.fp-fixed-expense-presets{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  margin-top:12px;
+}
+
+.fp-fixed-expense-presets>span{
+  color:#708399;
+  font-size:7.5px;
+  font-weight:620;
+}
+
+.fp-fixed-expense-presets button{
+  height:27px;
+  border:1px solid #dbe5ef;
+  border-radius:999px;
+  background:#f8fbfe;
+  padding:0 9px;
+  color:#52708d;
+  font-size:7px;
+  font-weight:620;
+}
+
+.fp-fixed-expense-presets button:hover{
+  border-color:#b8d6f6;
+  background:#f0f7ff;
+  color:#4084e9;
+}
+
+.fp-fixed-expense-list{
+  display:grid;
+  gap:7px;
+  margin-top:12px;
+}
+
+.fp-fixed-expense-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  border:1px solid #e2eaf2;
+  border-radius:10px;
+  background:#fbfdff;
+  padding:9px 10px;
+}
+
+.fp-fixed-expense-main{
+  display:grid;
+  grid-template-columns:minmax(160px,1.15fr) minmax(145px,.85fr);
+  gap:8px;
+  min-width:0;
+}
+
+.fp-fixed-expense-main>input{
+  width:100%;
+  height:38px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fff;
+  padding:0 9px;
+  color:#304860;
+  outline:0;
+  font-size:8.5px;
+  font-weight:620;
+}
+
+.fp-fixed-expense-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.fp-fixed-save,
+.fp-fixed-delete{
+  height:31px;
+  border-radius:7px;
+  padding:0 9px;
+  font-size:7px;
+  font-weight:650;
+}
+
+.fp-fixed-save{
+  border:1px solid #bcd7f5;
+  background:#edf6ff;
+  color:#3c7fd8;
+}
+
+.fp-fixed-delete{
+  border:1px solid #f0d4d7;
+  background:#fff7f8;
+  color:#c9525c;
+}
+
+.fp-fixed-expense-empty{
+  border:1px dashed #ccd9e6;
+  border-radius:10px;
+  padding:18px;
+  color:#7f91a3;
+  text-align:center;
+  font-size:8px;
+}
+
+.fp-fixed-expense-add{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:11px;
+  border:1px dashed #cbd9e6;
+  border-radius:10px;
+  background:#f8fbfe;
+  padding:11px;
+}
+
+.fp-fixed-expense-add>div{
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) minmax(150px,.7fr);
+  gap:8px;
+  flex:1;
+}
+
+.fp-fixed-expense-add label{
+  display:grid;
+  gap:5px;
+}
+
+.fp-fixed-expense-add label>input{
+  width:100%;
+  height:38px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fff;
+  padding:0 9px;
+  color:#304860;
+  outline:0;
+  font-size:8.5px;
+}
+
+.fp-fixed-expense-add>button{
+  height:38px;
+  border:0;
+  border-radius:8px;
+  background:#4f8df7;
+  padding:0 12px;
+  color:#fff;
+  font-size:7.5px;
+  font-weight:680;
+  white-space:nowrap;
+}
+
+@media(max-width:900px){
+  .fp-business-fee-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-fixed-expense-row{
+    grid-template-columns:1fr;
+  }
+
+  .fp-fixed-expense-actions{
+    justify-content:flex-end;
+  }
+}
+
+@media(max-width:767px){
+  .fp-business-cost-sync-note{
+    grid-template-columns:34px minmax(0,1fr);
+  }
+
+  .fp-business-cost-sync-note strong{
+    font-size:12px;
+  }
+
+  .fp-business-cost-sync-note p{
+    font-size:11px;
+  }
+
+  .fp-business-fee-card-heading strong{
+    font-size:13px;
+  }
+
+  .fp-business-fee-card label>span,
+  .fp-fixed-expense-add label>span{
+    font-size:11px;
+  }
+
+  .fp-business-fee-card p,
+  .fp-business-fee-save>span{
+    font-size:10px;
+  }
+
+  .fp-business-money-input{
+    height:44px;
+  }
+
+  .fp-business-money-input b,
+  .fp-business-money-input em{
+    font-size:11px;
+  }
+
+  .fp-business-money-input input,
+  .fp-fixed-expense-main>input,
+  .fp-fixed-expense-add label>input{
+    font-size:16px !important;
+  }
+
+  .fp-business-fee-save{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .fp-business-fee-save button{
+    width:100%;
+    min-height:42px;
+  }
+
+  .fp-fixed-expense-presets{
+    gap:7px;
+  }
+
+  .fp-fixed-expense-presets>span{
+    width:100%;
+    font-size:11px;
+  }
+
+  .fp-fixed-expense-presets button{
+    min-height:34px;
+    font-size:10px;
+  }
+
+  .fp-fixed-expense-main{
+    grid-template-columns:1fr;
+  }
+
+  .fp-fixed-expense-row{
+    padding:11px;
+  }
+
+  .fp-fixed-expense-main>input{
+    height:44px;
+  }
+
+  .fp-fixed-expense-actions{
+    justify-content:space-between;
+  }
+
+  .fp-fixed-save,
+  .fp-fixed-delete{
+    min-height:36px;
+    font-size:10px;
+  }
+
+  .fp-fixed-expense-add{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .fp-fixed-expense-add>div{
+    grid-template-columns:1fr;
+  }
+
+  .fp-fixed-expense-add label>input{
+    height:44px;
+  }
+
+  .fp-fixed-expense-add>button{
+    width:100%;
+    height:43px;
+    font-size:11px;
+  }
+}
+/* === END Shared Business Costs Settings v3.5.0 === */
+
+
+/* === Security Deposit / Holdback v3.6.0 === */
+.fp-deposit-page{
+  width:100%;
+  max-width:1780px;
+  margin:0 auto;
+  padding:24px 26px 36px;
+}
+
+.fp-deposit-heading h1{
+  color:#0a1730;
+  font-size:29px;
+  line-height:1;
+  font-weight:760;
+  letter-spacing:-.045em;
+}
+
+.fp-deposit-heading p{
+  margin-top:8px;
+  color:#677b92;
+  font-size:11px;
+}
+
+.fp-deposit-warning,
+.fp-deposit-message{
+  margin-top:14px;
+  border-radius:10px;
+  padding:11px 13px;
+}
+
+.fp-deposit-warning{
+  display:grid;
+  gap:3px;
+  border:1px solid #f0d497;
+  background:#fff8e8;
+  color:#89601d;
+}
+
+.fp-deposit-warning strong{
+  font-size:9px;
+}
+
+.fp-deposit-warning span{
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-deposit-message{
+  border:1px solid #cde0f5;
+  background:#f2f8ff;
+  color:#3c638a;
+  font-size:8px;
+  font-weight:620;
+}
+
+.fp-deposit-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:16px;
+}
+
+.fp-deposit-kpi{
+  position:relative;
+  display:grid;
+  min-height:112px;
+  align-content:center;
+  gap:6px;
+  overflow:hidden;
+  border:1px solid #e0e8f0;
+  border-radius:12px;
+  background:#fff;
+  padding:14px;
+  box-shadow:0 8px 24px rgba(34,67,101,.045);
+}
+
+.fp-deposit-kpi::before{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:3px;
+}
+
+.fp-deposit-kpi.blue::before{background:#4f8df7}
+.fp-deposit-kpi.green::before{background:#55b878}
+.fp-deposit-kpi.purple::before{background:#765ce7}
+.fp-deposit-kpi.amber::before{background:#e9ab3a}
+
+.fp-deposit-kpi>span{
+  color:#65798e;
+  font-size:8px;
+  font-weight:620;
+}
+
+.fp-deposit-kpi>strong{
+  color:#132941;
+  font-size:21px;
+  font-weight:760;
+  letter-spacing:-.03em;
+}
+
+.fp-deposit-kpi>small{
+  color:#8797a7;
+  font-size:7px;
+}
+
+.fp-deposit-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 270px;
+  gap:14px;
+  align-items:start;
+  margin-top:14px;
+}
+
+.fp-deposit-card,
+.fp-deposit-side-card{
+  border:1px solid #dfe7ef;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 8px 26px rgba(34,67,101,.045);
+}
+
+.fp-deposit-card{
+  margin-bottom:14px;
+  padding:16px;
+}
+
+.fp-deposit-card-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:1px solid #edf2f6;
+  padding-bottom:11px;
+}
+
+.fp-deposit-card-heading>div:first-child{
+  display:grid;
+  gap:3px;
+}
+
+.fp-deposit-card-heading>div:first-child>span{
+  color:#4e89ef;
+  font-size:6.5px;
+  font-weight:760;
+  letter-spacing:.11em;
+}
+
+.fp-deposit-card-heading h2{
+  color:#1c324a;
+  font-size:14px;
+  font-weight:720;
+}
+
+.fp-deposit-card-heading p{
+  color:#7b8da0;
+  font-size:7.5px;
+}
+
+.fp-deposit-status{
+  border-radius:999px;
+  padding:6px 9px;
+  background:#e9f3ff;
+  color:#347ddd;
+  font-size:7px;
+  font-weight:680;
+  white-space:nowrap;
+}
+
+.fp-deposit-status.partially_returned{background:#fff4df;color:#b57b1d}
+.fp-deposit-status.fully_returned{background:#e8f7ee;color:#278553}
+.fp-deposit-status.closed{background:#eef2f6;color:#687b8e}
+
+.fp-deposit-settings-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:13px;
+}
+
+.fp-deposit-settings-grid label,
+.fp-deposit-side-card form label{
+  display:grid;
+  gap:5px;
+}
+
+.fp-deposit-settings-grid label.wide{
+  grid-column:1/-1;
+}
+
+.fp-deposit-settings-grid label>span,
+.fp-deposit-side-card form label>span{
+  color:#63778d;
+  font-size:7.5px;
+  font-weight:620;
+}
+
+.fp-deposit-settings-grid input,
+.fp-deposit-settings-grid select,
+.fp-deposit-settings-grid textarea,
+.fp-deposit-side-card form input,
+.fp-deposit-side-card form select,
+.fp-deposit-side-card form textarea{
+  width:100%;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 9px;
+  color:#304860;
+  outline:none;
+  font-size:8.5px;
+}
+
+.fp-deposit-settings-grid input,
+.fp-deposit-settings-grid select,
+.fp-deposit-side-card form input,
+.fp-deposit-side-card form select{
+  height:38px;
+}
+
+.fp-deposit-settings-grid textarea,
+.fp-deposit-side-card form textarea{
+  padding-top:8px;
+  padding-bottom:8px;
+  line-height:1.45;
+  resize:vertical;
+}
+
+.fp-deposit-money-input{
+  display:flex;
+  height:38px;
+  align-items:center;
+  gap:5px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 9px;
+}
+
+.fp-deposit-money-input:focus-within{
+  border-color:#8bbdf5;
+  box-shadow:0 0 0 3px rgba(79,141,247,.08);
+}
+
+.fp-deposit-money-input>b{
+  color:#74869a;
+  font-size:8px;
+}
+
+.fp-deposit-money-input input{
+  min-width:0;
+  height:auto!important;
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+}
+
+.fp-deposit-progress-block{
+  display:grid;
+  gap:6px;
+  margin-top:13px;
+  border:1px solid #e4ebf2;
+  border-radius:9px;
+  background:#f9fbfd;
+  padding:10px 11px;
+}
+
+.fp-deposit-progress-block>div:first-child{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.fp-deposit-progress-block span{
+  color:#677b90;
+  font-size:7.5px;
+}
+
+.fp-deposit-progress-block strong{
+  color:#263f58;
+  font-size:8px;
+}
+
+.fp-deposit-progress-track{
+  height:6px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#dfe7ef;
+}
+
+.fp-deposit-progress-track i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#4f8df7,#6a73e8);
+}
+
+.fp-deposit-save-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:12px;
+}
+
+.fp-deposit-save-row>span{
+  color:#8192a4;
+  font-size:7px;
+}
+
+.fp-deposit-save-row>button,
+.fp-deposit-side-card form>button{
+  min-height:36px;
+  border:0;
+  border-radius:8px;
+  background:#4f8df7;
+  padding:0 12px;
+  color:#fff;
+  font-size:8px;
+  font-weight:680;
+}
+
+.fp-deposit-ledger-tabs{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+  overflow-x:auto;
+}
+
+.fp-deposit-ledger-tabs button{
+  height:31px;
+  border:1px solid #dce5ee;
+  border-radius:8px;
+  background:#fbfdff;
+  padding:0 10px;
+  color:#65798e;
+  font-size:7.5px;
+  font-weight:620;
+}
+
+.fp-deposit-ledger-tabs button.active{
+  border-color:#a8cffb;
+  background:#edf6ff;
+  color:#397fdc;
+}
+
+.fp-deposit-table-wrap{
+  margin-top:10px;
+  overflow-x:auto;
+}
+
+.fp-deposit-table{
+  width:100%;
+  min-width:850px;
+  border-collapse:collapse;
+}
+
+.fp-deposit-table thead{
+  background:#f1f5fa;
+}
+
+.fp-deposit-table th{
+  height:32px;
+  padding:0 8px;
+  color:#65788f;
+  text-align:left;
+  font-size:7px;
+  font-weight:720;
+  text-transform:uppercase;
+}
+
+.fp-deposit-table td{
+  height:47px;
+  border-bottom:1px solid #edf2f6;
+  padding:0 8px;
+  color:#334b63;
+  font-size:8.5px;
+}
+
+.fp-deposit-type{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:7px;
+  font-weight:680;
+}
+
+.fp-deposit-type.hold{
+  background:#eaf3ff;
+  color:#387edb;
+}
+
+.fp-deposit-type.return{
+  background:#e9f7ee;
+  color:#278553;
+}
+
+.fp-deposit-money{
+  font-weight:680;
+  color:#1d354e!important;
+}
+
+.fp-deposit-balance-increase{
+  color:#4b7fca!important;
+  font-weight:700;
+}
+
+.fp-deposit-balance-decrease{
+  color:#299059!important;
+  font-weight:700;
+}
+
+.fp-deposit-row-delete{
+  border:0;
+  background:transparent;
+  color:#c4555f;
+  font-size:7px;
+  font-weight:620;
+}
+
+.fp-deposit-empty{
+  padding:24px;
+  color:#8394a5;
+  text-align:center;
+  font-size:8px;
+}
+
+.fp-deposit-right{
+  display:grid;
+  gap:12px;
+}
+
+.fp-deposit-side-card{
+  padding:14px;
+}
+
+.fp-deposit-side-card h2{
+  color:#10243b;
+  font-size:15px;
+  font-weight:720;
+}
+
+.fp-deposit-side-card form{
+  display:grid;
+  gap:9px;
+  margin-top:12px;
+}
+
+.fp-deposit-side-card form>button{
+  width:100%;
+  min-height:40px;
+  margin-top:2px;
+}
+
+.fp-deposit-explainer{
+  background:linear-gradient(145deg,#0c2139,#112d4b);
+  color:#fff;
+}
+
+.fp-deposit-explainer>span,
+.fp-deposit-release-card>span{
+  color:#72a9ef;
+  font-size:6.5px;
+  font-weight:760;
+  letter-spacing:.1em;
+}
+
+.fp-deposit-explainer h2{
+  margin-top:5px;
+  color:#fff;
+  font-size:16px;
+}
+
+.fp-deposit-explainer p{
+  margin-top:7px;
+  color:#aebdca;
+  font-size:7.5px;
+  line-height:1.55;
+}
+
+.fp-deposit-explainer>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:13px;
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:12px;
+}
+
+.fp-deposit-explainer>div span{
+  color:#9fb1c2;
+  font-size:7px;
+}
+
+.fp-deposit-explainer>div strong{
+  color:#fff;
+  font-size:15px;
+}
+
+.fp-deposit-release-card{
+  background:#f5f9ff;
+}
+
+.fp-deposit-release-card>strong{
+  display:block;
+  margin-top:5px;
+  color:#2d5f94;
+  font-size:15px;
+}
+
+.fp-deposit-release-card>p{
+  margin-top:5px;
+  color:#70869c;
+  font-size:7.5px;
+  line-height:1.5;
+}
+
+/* Weekly Settlement deposit card */
+.fp-settle-deposit-summary{
+  display:grid;
+  gap:7px;
+}
+
+.fp-settle-deposit-summary>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:9px;
+  border-bottom:1px solid #edf2f6;
+  padding:0 0 7px;
+}
+
+.fp-settle-deposit-summary span{
+  color:#6c8095;
+  font-size:7px;
+}
+
+.fp-settle-deposit-summary strong{
+  color:#263d55;
+  font-size:8.5px;
+  font-weight:680;
+}
+
+.fp-settle-deposit-summary strong.positive{
+  color:#278b57;
+}
+
+.fp-settle-deposit-summary>div.cash{
+  border-bottom:0;
+  border-radius:8px;
+  background:#f2f7ff;
+  padding:8px;
+}
+
+.fp-settle-deposit-summary>div.cash strong{
+  color:#3579d4;
+  font-size:10px;
+}
+
+.fp-settle-deposit-note{
+  margin-top:8px;
+  color:#8393a3;
+  font-size:6.5px;
+  line-height:1.45;
+}
+
+@media(max-width:1100px){
+  .fp-deposit-layout{
+    grid-template-columns:1fr;
+  }
+
+  .fp-deposit-right{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:767px){
+  .fp-deposit-page{
+    padding:14px 12px 18px;
+  }
+
+  .fp-deposit-heading h1{
+    font-size:25px;
+  }
+
+  .fp-deposit-heading p{
+    font-size:12px;
+    line-height:1.45;
+  }
+
+  .fp-deposit-kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+
+  .fp-deposit-kpi{
+    min-height:112px;
+    padding:12px;
+  }
+
+  .fp-deposit-kpi>span{
+    font-size:10px;
+  }
+
+  .fp-deposit-kpi>strong{
+    font-size:19px;
+  }
+
+  .fp-deposit-kpi>small{
+    font-size:9px;
+    line-height:1.35;
+  }
+
+  .fp-deposit-card{
+    padding:12px;
+  }
+
+  .fp-deposit-card-heading{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .fp-deposit-card-heading h2{
+    font-size:16px;
+  }
+
+  .fp-deposit-card-heading p{
+    font-size:10px;
+    line-height:1.45;
+  }
+
+  .fp-deposit-settings-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-deposit-settings-grid label.wide{
+    grid-column:auto;
+  }
+
+  .fp-deposit-settings-grid label>span,
+  .fp-deposit-side-card form label>span{
+    font-size:10px;
+  }
+
+  .fp-deposit-settings-grid input,
+  .fp-deposit-settings-grid select,
+  .fp-deposit-settings-grid textarea,
+  .fp-deposit-side-card form input,
+  .fp-deposit-side-card form select,
+  .fp-deposit-side-card form textarea,
+  .fp-deposit-money-input input{
+    font-size:16px!important;
+  }
+
+  .fp-deposit-settings-grid input,
+  .fp-deposit-settings-grid select,
+  .fp-deposit-side-card form input,
+  .fp-deposit-side-card form select,
+  .fp-deposit-money-input{
+    height:44px;
+  }
+
+  .fp-deposit-save-row{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .fp-deposit-save-row>span{
+    font-size:10px;
+    line-height:1.45;
+  }
+
+  .fp-deposit-save-row>button{
+    width:100%;
+    min-height:42px;
+    font-size:11px;
+  }
+
+  .fp-deposit-right{
+    grid-template-columns:1fr;
+  }
+
+  .fp-deposit-side-card h2{
+    font-size:17px;
+  }
+
+  .fp-deposit-side-card form>button{
+    min-height:44px;
+    font-size:11px;
+  }
+
+  .fp-deposit-table-wrap{
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .fp-deposit-table-wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  .fp-deposit-table th:first-child,
+  .fp-deposit-table td:first-child{
+    position:sticky;
+    left:0;
+    z-index:2;
+    background:#fff;
+  }
+
+  .fp-deposit-table thead th:first-child{
+    background:#f1f5fa;
+  }
+}
+/* === END Security Deposit / Holdback v3.6.0 === */
+
+
+/* === Security Deposit Typography Upgrade v3.6.1 === */
+
+/* Desktop / tablet readability */
+.fp-deposit-heading p{
+  font-size:12px !important;
+  line-height:1.5 !important;
+}
+
+.fp-deposit-warning strong{
+  font-size:11px !important;
+}
+
+.fp-deposit-warning span{
+  font-size:10px !important;
+  line-height:1.5 !important;
+}
+
+.fp-deposit-message{
+  font-size:10px !important;
+}
+
+.fp-deposit-kpi>span{
+  font-size:10px !important;
+}
+
+.fp-deposit-kpi>strong{
+  font-size:23px !important;
+}
+
+.fp-deposit-kpi>small{
+  font-size:9px !important;
+  line-height:1.4 !important;
+}
+
+.fp-deposit-card-heading>div:first-child>span{
+  font-size:8px !important;
+}
+
+.fp-deposit-card-heading h2{
+  font-size:17px !important;
+}
+
+.fp-deposit-card-heading p{
+  font-size:10px !important;
+  line-height:1.5 !important;
+}
+
+.fp-deposit-status{
+  font-size:9px !important;
+  padding:7px 10px !important;
+}
+
+.fp-deposit-settings-grid label>span,
+.fp-deposit-side-card form label>span{
+  font-size:10px !important;
+}
+
+.fp-deposit-settings-grid input,
+.fp-deposit-settings-grid select,
+.fp-deposit-settings-grid textarea,
+.fp-deposit-side-card form input,
+.fp-deposit-side-card form select,
+.fp-deposit-side-card form textarea{
+  font-size:11px !important;
+}
+
+.fp-deposit-money-input>b{
+  font-size:10px !important;
+}
+
+.fp-deposit-money-input input{
+  font-size:11px !important;
+}
+
+.fp-deposit-progress-block span{
+  font-size:10px !important;
+}
+
+.fp-deposit-progress-block strong{
+  font-size:10px !important;
+}
+
+.fp-deposit-save-row>span{
+  font-size:9px !important;
+  line-height:1.5 !important;
+}
+
+.fp-deposit-save-row>button,
+.fp-deposit-side-card form>button{
+  font-size:10px !important;
+}
+
+.fp-deposit-ledger-tabs button{
+  font-size:9px !important;
+  min-height:34px !important;
+}
+
+.fp-deposit-table th{
+  font-size:8.5px !important;
+}
+
+.fp-deposit-table td{
+  font-size:10px !important;
+}
+
+.fp-deposit-type{
+  font-size:8.5px !important;
+}
+
+.fp-deposit-row-delete{
+  font-size:8.5px !important;
+}
+
+.fp-deposit-empty{
+  font-size:10px !important;
+}
+
+.fp-deposit-side-card h2{
+  font-size:18px !important;
+}
+
+.fp-deposit-explainer>span,
+.fp-deposit-release-card>span{
+  font-size:8px !important;
+}
+
+.fp-deposit-explainer h2{
+  font-size:18px !important;
+}
+
+.fp-deposit-explainer p{
+  font-size:10px !important;
+  line-height:1.55 !important;
+}
+
+.fp-deposit-explainer>div span{
+  font-size:9px !important;
+}
+
+.fp-deposit-explainer>div strong{
+  font-size:17px !important;
+}
+
+.fp-deposit-release-card>strong{
+  font-size:17px !important;
+}
+
+.fp-deposit-release-card>p{
+  font-size:10px !important;
+  line-height:1.5 !important;
+}
+
+.fp-settle-deposit-summary span{
+  font-size:9px !important;
+}
+
+.fp-settle-deposit-summary strong{
+  font-size:10px !important;
+}
+
+.fp-settle-deposit-summary>div.cash strong{
+  font-size:12px !important;
+}
+
+.fp-settle-deposit-note{
+  font-size:8.5px !important;
+  line-height:1.45 !important;
+}
+
+/* Slightly more breathing room without changing structure */
+.fp-deposit-card{
+  padding:18px !important;
+}
+
+.fp-deposit-side-card{
+  padding:16px !important;
+}
+
+.fp-deposit-settings-grid{
+  gap:12px !important;
+}
+
+.fp-deposit-side-card form{
+  gap:11px !important;
+}
+
+/* Mobile remains larger and touch-friendly */
+@media(max-width:767px){
+  .fp-deposit-kpi>span{
+    font-size:11px !important;
+  }
+
+  .fp-deposit-kpi>strong{
+    font-size:21px !important;
+  }
+
+  .fp-deposit-kpi>small{
+    font-size:10px !important;
+  }
+
+  .fp-deposit-card-heading>div:first-child>span{
+    font-size:9px !important;
+  }
+
+  .fp-deposit-card-heading h2{
+    font-size:18px !important;
+  }
+
+  .fp-deposit-card-heading p{
+    font-size:11px !important;
+  }
+
+  .fp-deposit-settings-grid label>span,
+  .fp-deposit-side-card form label>span{
+    font-size:11px !important;
+  }
+
+  .fp-deposit-save-row>span{
+    font-size:10px !important;
+  }
+
+  .fp-deposit-ledger-tabs button{
+    font-size:10px !important;
+  }
+
+  .fp-deposit-table th{
+    font-size:9px !important;
+  }
+
+  .fp-deposit-table td{
+    font-size:11px !important;
+  }
+
+  .fp-deposit-type,
+  .fp-deposit-row-delete{
+    font-size:9px !important;
+  }
+
+  .fp-deposit-explainer p,
+  .fp-deposit-release-card>p{
+    font-size:11px !important;
+  }
+}
+/* === END Security Deposit Typography Upgrade v3.6.1 === */
+
+
+/* === Google + Apple Social Auth v3.7.0 === */
+.fp-social-auth{
+  display:grid;
+  gap:10px;
+}
+
+.fp-social-auth-button{
+  display:grid;
+  min-height:52px;
+  grid-template-columns:24px minmax(0,1fr) 24px;
+  align-items:center;
+  border:1px solid #dce5ee;
+  border-radius:14px;
+  background:#fff;
+  padding:0 15px;
+  color:#1f344c;
+  font-size:13px;
+  font-weight:700;
+  transition:border-color .15s ease,background .15s ease,transform .15s ease;
+}
+
+.fp-social-auth-button::after{
+  content:"";
+}
+
+.fp-social-auth-button:hover:not(:disabled){
+  transform:translateY(-1px);
+  border-color:#b9cce0;
+  background:#fbfdff;
+}
+
+.fp-social-auth-button:disabled{
+  cursor:not-allowed;
+  opacity:.62;
+}
+
+.fp-social-auth-button svg{
+  width:21px;
+  height:21px;
+}
+
+
+
+.fp-social-auth-error{
+  border:1px solid #f0c4c8;
+  border-radius:10px;
+  background:#fff4f5;
+  padding:10px 12px;
+  color:#b34f59;
+  font-size:11px;
+  line-height:1.45;
+}
+
+.fp-auth-divider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:19px 0;
+  color:#8b9bad;
+  font-size:10px;
+  font-weight:650;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.fp-auth-divider::before,
+.fp-auth-divider::after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:#e4eaf0;
+}
+
+.fp-auth-divider span{
+  white-space:nowrap;
+}
+
+/* Social onboarding */
+.fp-social-onboarding-page{
+  display:grid;
+  min-height:100dvh;
+  grid-template-columns:minmax(330px,.86fr) minmax(0,1.14fr);
+  background:#f4f7fb;
+}
+
+.fp-social-onboarding-brand{
+  position:relative;
+  display:flex;
+  min-height:100dvh;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 100% 38%,rgba(17,136,255,.18),transparent 33%),
+    linear-gradient(155deg,#07172a,#0b2039);
+  padding:44px;
+  color:#fff;
+}
+
+.fp-social-onboarding-logo{
+  color:#fff;
+  font-size:25px;
+  font-weight:820;
+  letter-spacing:-.045em;
+}
+
+.fp-social-onboarding-logo span{
+  color:#2298ff;
+}
+
+.fp-social-onboarding-brand>div{
+  max-width:520px;
+}
+
+.fp-social-onboarding-brand>div>span{
+  color:#4aa4ff;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+
+.fp-social-onboarding-brand h1{
+  margin-top:14px;
+  font-size:47px;
+  line-height:1.02;
+  font-weight:820;
+  letter-spacing:-.052em;
+}
+
+.fp-social-onboarding-brand p{
+  max-width:460px;
+  margin-top:20px;
+  color:#9aadc0;
+  font-size:14px;
+  line-height:1.75;
+}
+
+.fp-social-onboarding-brand>small{
+  color:#879aaf;
+  font-size:11px;
+  font-weight:650;
+}
+
+.fp-social-onboarding-content{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:38px 24px;
+}
+
+.fp-social-onboarding-shell{
+  width:100%;
+  max-width:520px;
+  border:1px solid #dce5ee;
+  border-radius:24px;
+  background:#fff;
+  padding:30px;
+  box-shadow:0 22px 60px rgba(33,61,92,.09);
+}
+
+.fp-social-onboarding-provider{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  border:1px solid #e0e8f0;
+  border-radius:13px;
+  background:#f8fbfe;
+  padding:10px 12px;
+}
+
+.fp-social-onboarding-provider>div:first-child{
+  display:flex;
+  width:38px;
+  height:38px;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 3px 12px rgba(34,67,101,.07);
+  font-size:16px;
+  font-weight:800;
+}
+
+.fp-social-onboarding-provider>div:first-child.google{
+  color:#4285f4;
+}
+
+
+.fp-social-onboarding-provider>div:last-child{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+.fp-social-onboarding-provider span{
+  color:#72859a;
+  font-size:10px;
+  font-weight:600;
+}
+
+.fp-social-onboarding-provider strong{
+  overflow:hidden;
+  color:#294159;
+  font-size:12px;
+  font-weight:700;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-social-onboarding-heading{
+  margin-top:24px;
+}
+
+.fp-social-onboarding-heading>span{
+  color:#438cf0;
+  font-size:9px;
+  font-weight:780;
+  letter-spacing:.13em;
+}
+
+.fp-social-onboarding-heading h2{
+  margin-top:6px;
+  color:#0f233b;
+  font-size:27px;
+  font-weight:780;
+  letter-spacing:-.04em;
+}
+
+.fp-social-onboarding-heading p{
+  margin-top:7px;
+  color:#788b9e;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.fp-social-onboarding-shell form{
+  display:grid;
+  gap:14px;
+  margin-top:21px;
+}
+
+.fp-social-onboarding-shell form label{
+  display:grid;
+  gap:6px;
+}
+
+.fp-social-onboarding-shell form label>span{
+  color:#61758b;
+  font-size:10px;
+  font-weight:700;
+}
+
+.fp-social-onboarding-shell form input{
+  width:100%;
+  height:48px;
+  border:1px solid #dce5ee;
+  border-radius:11px;
+  background:#fbfdff;
+  padding:0 13px;
+  color:#223a52;
+  outline:none;
+  font-size:13px;
+}
+
+.fp-social-onboarding-shell form input:focus{
+  border-color:#84baf4;
+  box-shadow:0 0 0 3px rgba(17,136,255,.08);
+}
+
+.fp-social-onboarding-shell form label>small{
+  color:#8a99a9;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-social-onboarding-error{
+  border:1px solid #f0c4c8;
+  border-radius:10px;
+  background:#fff4f5;
+  padding:10px 12px;
+  color:#b34f59;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.fp-social-onboarding-shell form>button{
+  min-height:48px;
+  border:0;
+  border-radius:11px;
+  background:linear-gradient(90deg,#248ff6,#3e80e8);
+  color:#fff;
+  font-size:12px;
+  font-weight:730;
+  box-shadow:0 9px 22px rgba(17,136,255,.15);
+}
+
+.fp-social-onboarding-shell form>button:disabled{
+  opacity:.55;
+}
+
+.fp-social-onboarding-cancel{
+  display:block;
+  margin:15px auto 0;
+  border:0;
+  background:transparent;
+  color:#72879c;
+  font-size:10px;
+  font-weight:620;
+}
+
+@media(max-width:850px){
+  .fp-social-onboarding-page{
+    grid-template-columns:1fr;
+  }
+
+  .fp-social-onboarding-brand{
+    min-height:auto;
+    padding:24px 20px 28px;
+  }
+
+  .fp-social-onboarding-brand>div{
+    margin-top:42px;
+  }
+
+  .fp-social-onboarding-brand h1{
+    font-size:34px;
+  }
+
+  .fp-social-onboarding-brand p{
+    font-size:12px;
+  }
+
+  .fp-social-onboarding-brand>small{
+    margin-top:38px;
+  }
+
+  .fp-social-onboarding-content{
+    padding:18px 12px 34px;
+  }
+
+  .fp-social-onboarding-shell{
+    border-radius:18px;
+    padding:20px 16px;
+  }
+}
+
+@media(max-width:767px){
+  .fp-social-auth-button{
+    min-height:54px;
+    font-size:14px;
+  }
+
+  .fp-auth-divider{
+    font-size:9px;
+  }
+
+  .fp-social-onboarding-shell form input{
+    font-size:16px;
+  }
+}
+/* === END Google + Apple Social Auth v3.7.0 === */
+
+
+/* === Premium Sidebar Typography v3.7.2 === */
+
+/* Brand */
+.fp-sidebar-fixed > div:first-child a > div > div:first-child{
+  font-size:21px !important;
+  font-weight:720 !important;
+  letter-spacing:-.035em !important;
+}
+
+.fp-sidebar-fixed > div:first-child a > div > div:last-child{
+  margin-top:2px !important;
+  color:#91a5bb !important;
+  font-size:7px !important;
+  font-weight:650 !important;
+  letter-spacing:.19em !important;
+}
+
+/* Section labels */
+.fp-sidebar-fixed .fp-scroll > div > div:first-child:not(:empty),
+.fp-sidebar-fixed .fp-scroll [class*="uppercase"][class*="tracking"]{
+  color:#6f8fae !important;
+  font-size:8.5px !important;
+  font-weight:650 !important;
+  letter-spacing:.16em !important;
+}
+
+/* Main nav rows */
+.fp-sidebar-fixed a[href^="/dashboard"],
+.fp-sidebar-fixed a[href^="/loads"],
+.fp-sidebar-fixed a[href^="/trucks"],
+.fp-sidebar-fixed a[href^="/expenses"],
+.fp-sidebar-fixed a[href^="/maintenance"],
+.fp-sidebar-fixed a[href^="/reimbursements"],
+.fp-sidebar-fixed a[href^="/settlement"],
+.fp-sidebar-fixed a[href^="/security-deposit"],
+.fp-sidebar-fixed a[href^="/fuel"],
+.fp-sidebar-fixed a[href^="/reports"],
+.fp-sidebar-fixed a[href^="/pilot-ai"],
+.fp-sidebar-fixed a[href^="/documents"],
+.fp-sidebar-fixed a[href^="/settings"]{
+  min-height:39px !important;
+  border-radius:9px !important;
+  gap:11px !important;
+  padding-right:13px !important;
+  padding-left:13px !important;
+  font-size:12px !important;
+  font-weight:520 !important;
+  letter-spacing:-.01em !important;
+}
+
+/* Inactive items */
+.fp-sidebar-fixed a[href^="/dashboard"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/loads"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/trucks"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/expenses"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/maintenance"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/reimbursements"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/settlement"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/security-deposit"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/fuel"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/reports"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/pilot-ai"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/documents"]:not([class*="bg-gradient"]),
+.fp-sidebar-fixed a[href^="/settings"]:not([class*="bg-gradient"]){
+  color:#c6d4e2 !important;
+}
+
+/* Active item */
+.fp-sidebar-fixed a[class*="bg-gradient"]{
+  font-weight:600 !important;
+  color:#fff !important;
+  box-shadow:0 10px 24px rgba(17,136,255,.16) !important;
+}
+
+/* Icons */
+.fp-sidebar-fixed a svg,
+.fp-sidebar-fixed button svg{
+  width:16px !important;
+  height:16px !important;
+  stroke-width:1.65 !important;
+  opacity:.95;
+}
+
+/* Sign out row */
+.fp-sidebar-fixed button{
+  min-height:39px !important;
+  border-radius:9px !important;
+  gap:11px !important;
+  padding-right:13px !important;
+  padding-left:13px !important;
+  color:#c6d4e2 !important;
+  font-size:12px !important;
+  font-weight:520 !important;
+  letter-spacing:-.01em !important;
+}
+
+/* Separators */
+.fp-sidebar-fixed .border-t{
+  border-color:rgba(255,255,255,.09) !important;
+}
+
+/* Improve vertical rhythm */
+.fp-sidebar-fixed .space-y-\[2px\]{
+  row-gap:3px !important;
+}
+
+.fp-sidebar-fixed .my-3{
+  margin-top:14px !important;
+  margin-bottom:14px !important;
+}
+
+/* Slightly wider sidebar for premium spacing without changing content */
+@media(min-width:1024px){
+  .fp-sidebar-fixed{
+    width:228px !important;
+  }
+
+  .fp-sidebar-fixed + section{
+    margin-left:228px !important;
+  }
+}
+/* === END Premium Sidebar Typography v3.7.2 === */

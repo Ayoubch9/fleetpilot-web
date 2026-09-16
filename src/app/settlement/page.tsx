@@ -74,6 +74,13 @@ type Odometer = {
   end_odometer: number | string | null;
 };
 
+type SecurityDepositTransaction = {
+  transaction_type: "HOLD" | "RETURN" | "ADJUSTMENT";
+  adjustment_direction: "INCREASE" | "DECREASE" | null;
+  amount: number | string | null;
+  transaction_date: string | null;
+};
+
 type Settings = {
   revenue_fee_percent?: number | string | null;
   mileage_fee_per_mile?: number | string | null;
@@ -134,6 +141,8 @@ export default async function SettlementPage({
     fixedResult,
     odometerResult,
     settingsResult,
+    weeklyDepositResult,
+    depositBalanceResult,
   ] = await Promise.all([
     supabase
       .from("loads")
@@ -163,6 +172,14 @@ export default async function SettlementPage({
       .select("start_odometer, end_odometer")
       .eq("week_start", startText),
     supabase.from("company_fee_settings").select("*").limit(1),
+    supabase
+      .from("security_deposit_transactions")
+      .select("transaction_type, adjustment_direction, amount, transaction_date")
+      .gte("transaction_date", startText)
+      .lte("transaction_date", sundayText),
+    supabase
+      .from("security_deposit_transactions")
+      .select("transaction_type, adjustment_direction, amount"),
   ]);
 
   const loads = ((loadsResult.data ?? []) as Load[]).filter((load) =>
@@ -174,6 +191,35 @@ export default async function SettlementPage({
   const fixed = (fixedResult.data ?? []) as FixedExpense[];
   const odometers = (odometerResult.data ?? []) as Odometer[];
   const settings = ((settingsResult.data ?? []) as Settings[])[0];
+  const weeklyDepositTransactions =
+    (weeklyDepositResult.data ?? []) as SecurityDepositTransaction[];
+  const allDepositTransactions =
+    (depositBalanceResult.data ?? []) as SecurityDepositTransaction[];
+
+  const depositEffect = (row: SecurityDepositTransaction) => {
+    const amount = num(row.amount);
+    if (row.transaction_type === "HOLD") return amount;
+    if (row.transaction_type === "RETURN") return -amount;
+    return row.adjustment_direction === "DECREASE"
+      ? -amount
+      : amount;
+  };
+
+  const weeklyDepositHeld = weeklyDepositTransactions
+    .map(depositEffect)
+    .filter((value) => value > 0)
+    .reduce((sum, value) => sum + value, 0);
+  const weeklyDepositReturned = weeklyDepositTransactions
+    .map(depositEffect)
+    .filter((value) => value < 0)
+    .reduce((sum, value) => sum + Math.abs(value), 0);
+  const depositOutstanding = Math.max(
+    allDepositTransactions.reduce(
+      (sum, row) => sum + depositEffect(row),
+      0
+    ),
+    0
+  );
 
   const grossRevenue = loads.reduce(
     (sum, row) => sum + num(row.rate),
@@ -246,6 +292,8 @@ export default async function SettlementPage({
   const totalExpenses =
     netVariableExpenses + fixedTotal + revenueFee + mileageFee;
   const netProfit = grossRevenue - totalExpenses;
+  const cashReceivedAfterHoldback =
+    netProfit - weeklyDepositHeld + weeklyDepositReturned;
 
   const revenuePerMile =
     totalMiles > 0 ? grossRevenue / totalMiles : 0;
@@ -265,6 +313,8 @@ export default async function SettlementPage({
     fixedResult.error,
     odometerResult.error,
     settingsResult.error,
+    weeklyDepositResult.error,
+    depositBalanceResult.error,
   ].filter(Boolean);
 
   const loadStatuses = [
@@ -617,6 +667,12 @@ export default async function SettlementPage({
                   note={`${money(mileageFeeRate)} company mileage rate`}
                   tone="blue"
                 />
+                <OverviewMetric
+                  label="Security Holdback"
+                  value={money(weeklyDepositHeld)}
+                  note={`${money(depositOutstanding)} still owed by company`}
+                  tone="purple"
+                />
               </div>
 
               <div className="fp-settle-flow">
@@ -691,6 +747,43 @@ export default async function SettlementPage({
                   amount: num(row.amount),
                 }))}
               />
+            </section>
+
+            <section className="fp-settle-side-card fp-settle-deposit-card">
+              <div className="flex items-center justify-between">
+                <h2>Security Deposit</h2>
+                <Link
+                  href="/security-deposit"
+                  className="text-[9px] font-[600] text-[#1188ff]"
+                >
+                  View Ledger →
+                </Link>
+              </div>
+
+              <div className="fp-settle-deposit-summary mt-3">
+                <div>
+                  <span>Held This Week</span>
+                  <strong>{money(weeklyDepositHeld)}</strong>
+                </div>
+                <div>
+                  <span>Returned This Week</span>
+                  <strong className="positive">
+                    {money(weeklyDepositReturned)}
+                  </strong>
+                </div>
+                <div>
+                  <span>Still Owed to You</span>
+                  <strong>{money(depositOutstanding)}</strong>
+                </div>
+                <div className="cash">
+                  <span>Est. Cash Paid This Week</span>
+                  <strong>{money(cashReceivedAfterHoldback)}</strong>
+                </div>
+              </div>
+
+              <p className="fp-settle-deposit-note">
+                Holdbacks affect cash received, not operating profit.
+              </p>
             </section>
 
             <section className="fp-settle-side-card">

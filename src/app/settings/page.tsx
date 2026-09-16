@@ -43,6 +43,31 @@ export default async function SettingsPage() {
     .eq("user_id", user.id)
     .maybeSingle();
 
+  const [companyFeeResult, fixedExpensesResult] = membership?.company_id
+    ? await Promise.all([
+        supabase
+          .from("company_fee_settings")
+          .select(
+            "id, company_id, revenue_fee_percent, mileage_fee_per_mile, is_revenue_fee_active, is_mileage_fee_active"
+          )
+          .eq("company_id", membership.company_id)
+          .maybeSingle(),
+        supabase
+          .from("weekly_fixed_expenses")
+          .select("id, company_id, name, amount, is_active")
+          .eq("company_id", membership.company_id)
+          .order("name"),
+      ])
+    : [
+        { data: null, error: null },
+        { data: [], error: null },
+      ];
+
+  const businessCostsReady = !Boolean(
+    companyFeeResult.error ||
+      fixedExpensesResult.error
+  );
+
   const deletionResult = await supabase
     .from("account_deletion_requests")
     .select("id")
@@ -122,6 +147,9 @@ export default async function SettingsPage() {
           companyProfileReady={companyProfileReady}
           initialPreferences={preferencesResult.data}
           preferencesReady={preferencesReady}
+          initialCompanyFeeSettings={companyFeeResult.data}
+          initialFixedExpenses={fixedExpensesResult.data || []}
+          businessCostsReady={businessCostsReady}
           deletionPending={Boolean(deletionResult.data?.id)}
           subscriptionInfo={subscriptionInfo}
         />

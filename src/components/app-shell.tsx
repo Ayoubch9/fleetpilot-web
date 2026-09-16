@@ -15,6 +15,7 @@ type ActivePage =
   | "reimbursements"
   | "maintenance"
   | "settlement"
+  | "deposit"
   | "fuel"
   | "reports"
   | "documents"
@@ -41,6 +42,7 @@ const operations = [
 
 const analytics = [
   ["settlement", "Weekly Settlement", "/settlement", "money"],
+  ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
 ] as const;
 
@@ -303,6 +305,7 @@ function Icon({ type }: { type: string }) {
   if (type === "wallet") return <svg {...p}><path d="M4 6h16v12H4z"/><path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z"/></svg>;
   if (type === "money") return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>;
   if (type === "fuel") return <svg {...p}><path d="M6 3h9v18H6zM8 7h5"/><path d="M15 8h2l2 3v6a2 2 0 0 0 2 2"/></svg>;
+  if (type === "deposit") return <svg {...p}><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="M9 11h6M12 8v6"/></svg>;
   if (type === "file") return <svg {...p}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg>;
   if (type === "spark") return <svg {...p}><path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z"/></svg>;
   if (type === "settings") return <svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.06.06-2.76 2.76-.06-.06a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.65V21H10v-.09A1.8 1.8 0 0 0 8.9 19.3a1.8 1.8 0 0 0-2 .36l-.06.06-2.76-2.76.06-.06a1.8 1.8 0 0 0 .36-2A1.8 1.8 0 0 0 2.85 13H2v-4h.85A1.8 1.8 0 0 0 4.5 7a1.8 1.8 0 0 0-.36-2l-.06-.06L6.84 2.2l.06.06a1.8 1.8 0 0 0 2 .36A1.8 1.8 0 0 0 10 1h4a1.8 1.8 0 0 0 1.1 1.62 1.8 1.8 0 0 0 2-.36l.06-.06 2.76 2.76-.06.06a1.8 1.8 0 0 0-.36 2A1.8 1.8 0 0 0 21.15 9H22v4h-.85A1.8 1.8 0 0 0 19.4 15Z"/></svg>;

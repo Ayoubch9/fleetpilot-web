@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 type SettingsTab =
   | "profile"
   | "company"
+  | "business-costs"
   | "preferences"
   | "notifications"
   | "subscription"
@@ -37,6 +38,23 @@ type CompanyProfile = {
   postal_code: string;
   country: string;
   timezone: string;
+};
+
+type CompanyFeeSettings = {
+  id: string | null;
+  company_id: string | null;
+  revenue_fee_percent: number;
+  mileage_fee_per_mile: number;
+  is_revenue_fee_active: boolean;
+  is_mileage_fee_active: boolean;
+};
+
+type FixedExpense = {
+  id: string;
+  company_id: string | null;
+  name: string;
+  amount: number;
+  is_active: boolean;
 };
 
 type Preferences = {
@@ -83,6 +101,9 @@ export default function SettingsCenter({
   companyProfileReady,
   initialPreferences,
   preferencesReady,
+  initialCompanyFeeSettings,
+  initialFixedExpenses,
+  businessCostsReady,
   deletionPending,
   subscriptionInfo,
 }: {
@@ -97,6 +118,9 @@ export default function SettingsCenter({
   companyProfileReady: boolean;
   initialPreferences: Partial<Preferences> | null;
   preferencesReady: boolean;
+  initialCompanyFeeSettings: Partial<CompanyFeeSettings> | null;
+  initialFixedExpenses: Array<Partial<FixedExpense>>;
+  businessCostsReady: boolean;
   deletionPending: boolean;
   subscriptionInfo: SubscriptionInfo;
 }) {
@@ -124,6 +148,38 @@ export default function SettingsCenter({
     ...defaultPreferences,
     ...(initialPreferences || {}),
   });
+  const [companyFees, setCompanyFees] = useState<CompanyFeeSettings>({
+    id: initialCompanyFeeSettings?.id || null,
+    company_id: initialCompanyFeeSettings?.company_id || companyId || null,
+    revenue_fee_percent:
+      initialCompanyFeeSettings?.revenue_fee_percent == null
+        ? 15
+        : Number(initialCompanyFeeSettings.revenue_fee_percent),
+    mileage_fee_per_mile:
+      initialCompanyFeeSettings?.mileage_fee_per_mile == null
+        ? 0.15
+        : Number(initialCompanyFeeSettings.mileage_fee_per_mile),
+    is_revenue_fee_active:
+      initialCompanyFeeSettings?.is_revenue_fee_active == null
+        ? true
+        : Boolean(initialCompanyFeeSettings.is_revenue_fee_active),
+    is_mileage_fee_active:
+      initialCompanyFeeSettings?.is_mileage_fee_active == null
+        ? true
+        : Boolean(initialCompanyFeeSettings.is_mileage_fee_active),
+  });
+  const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>(
+    initialFixedExpenses.map((row) => ({
+      id: row.id || "",
+      company_id: row.company_id || companyId || null,
+      name: row.name || "Fixed Expense",
+      amount: Number(row.amount || 0),
+      is_active:
+        row.is_active == null ? true : Boolean(row.is_active),
+    }))
+  );
+  const [newFixedName, setNewFixedName] = useState("");
+  const [newFixedAmount, setNewFixedAmount] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -355,6 +411,244 @@ async function removeAvatar() {
     setMessage(error ? error.message : "Preferences saved.");
   }
 
+  async function saveCompanyFees() {
+    if (!owner || !companyId) return;
+
+    if (!businessCostsReady) {
+      setMessage(
+        "Company fee settings could not be loaded from Supabase. Check the shared company tables before saving."
+      );
+      return;
+    }
+
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const supabase = createClient();
+      const payload = {
+        company_id: companyId,
+        revenue_fee_percent: Number(companyFees.revenue_fee_percent || 0),
+        mileage_fee_per_mile: Number(companyFees.mileage_fee_per_mile || 0),
+        is_revenue_fee_active: companyFees.is_revenue_fee_active,
+        is_mileage_fee_active: companyFees.is_mileage_fee_active,
+      };
+
+      if (companyFees.id) {
+        const { error } = await supabase
+          .from("company_fee_settings")
+          .update(payload)
+          .eq("id", companyFees.id);
+
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from("company_fee_settings")
+          .insert(payload)
+          .select("id, company_id")
+          .single();
+
+        if (error) throw error;
+
+        setCompanyFees((current) => ({
+          ...current,
+          id: data.id,
+          company_id: data.company_id || companyId,
+        }));
+      }
+
+      setMessage(
+        "Company and mileage fees saved. Mobile and web now read the same Supabase settings."
+      );
+      router.refresh();
+    } catch (caught) {
+      setMessage(
+        caught instanceof Error
+          ? caught.message
+          : "Could not save company fee settings."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function saveFixedExpense(row: FixedExpense) {
+    if (!owner || !companyId) return;
+
+    const name = row.name.trim();
+    if (!name) {
+      setMessage("Fixed expense name is required.");
+      return;
+    }
+
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const supabase = createClient();
+      const payload = {
+        company_id: companyId,
+        name,
+        amount: Number(row.amount || 0),
+        is_active: row.is_active,
+      };
+
+      if (row.id) {
+        const { error } = await supabase
+          .from("weekly_fixed_expenses")
+          .update(payload)
+          .eq("id", row.id);
+
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from("weekly_fixed_expenses")
+          .insert(payload)
+          .select("id, company_id, name, amount, is_active")
+          .single();
+
+        if (error) throw error;
+
+        setFixedExpenses((current) =>
+          current.map((item) =>
+            item === row
+              ? {
+                  id: data.id,
+                  company_id: data.company_id || companyId,
+                  name: data.name,
+                  amount: Number(data.amount || 0),
+                  is_active: Boolean(data.is_active),
+                }
+              : item
+          )
+        );
+      }
+
+      setMessage(
+        `${name} saved. This fixed weekly cost is shared with the mobile app.`
+      );
+      router.refresh();
+    } catch (caught) {
+      setMessage(
+        caught instanceof Error
+          ? caught.message
+          : "Could not save fixed expense."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function addFixedExpense() {
+    if (!owner || !companyId) return;
+
+    const name = newFixedName.trim();
+    const amount = Number(newFixedAmount || 0);
+
+    if (!name) {
+      setMessage("Enter a fixed expense name.");
+      return;
+    }
+
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("weekly_fixed_expenses")
+        .insert({
+          company_id: companyId,
+          name,
+          amount,
+          is_active: true,
+        })
+        .select("id, company_id, name, amount, is_active")
+        .single();
+
+      if (error) throw error;
+
+      setFixedExpenses((current) => [
+        ...current,
+        {
+          id: data.id,
+          company_id: data.company_id || companyId,
+          name: data.name,
+          amount: Number(data.amount || 0),
+          is_active: Boolean(data.is_active),
+        },
+      ].sort((a, b) => a.name.localeCompare(b.name)));
+
+      setNewFixedName("");
+      setNewFixedAmount("");
+      setMessage(
+        `${name} added. It is now part of the shared weekly fixed expenses.`
+      );
+      router.refresh();
+    } catch (caught) {
+      setMessage(
+        caught instanceof Error
+          ? caught.message
+          : "Could not add fixed expense."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function deleteFixedExpense(row: FixedExpense) {
+    if (!owner || !row.id) return;
+
+    if (
+      !window.confirm(
+        `Delete "${row.name}" from weekly fixed expenses?`
+      )
+    ) {
+      return;
+    }
+
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("weekly_fixed_expenses")
+        .delete()
+        .eq("id", row.id);
+
+      if (error) throw error;
+
+      setFixedExpenses((current) =>
+        current.filter((item) => item.id !== row.id)
+      );
+      setMessage(`${row.name} deleted.`);
+      router.refresh();
+    } catch (caught) {
+      setMessage(
+        caught instanceof Error
+          ? caught.message
+          : "Could not delete fixed expense."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function addPresetFixedExpense(name: string) {
+    const exists = fixedExpenses.some(
+      (row) => row.name.trim().toLowerCase() === name.toLowerCase()
+    );
+
+    if (exists) {
+      setMessage(`${name} already exists.`);
+      return;
+    }
+
+    setNewFixedName(name);
+    setNewFixedAmount("");
+  }
+
   async function resetPassword() {
     setMessage("");
     const supabase = createClient();
@@ -455,6 +749,7 @@ async function removeAvatar() {
       <div className="fp-settings-tabbar">
         <TabButton label="Profile" active={tab === "profile"} onClick={() => setTab("profile")} />
         <TabButton label="Company" active={tab === "company"} onClick={() => setTab("company")} />
+        <TabButton label="Business Costs" active={tab === "business-costs"} onClick={() => setTab("business-costs")} />
         <TabButton label="Preferences" active={tab === "preferences"} onClick={() => setTab("preferences")} />
         <TabButton label="Notifications" active={tab === "notifications"} onClick={() => setTab("notifications")} />
         <TabButton label="Subscription" active={tab === "subscription"} onClick={() => setTab("subscription")} />
@@ -756,6 +1051,367 @@ async function removeAvatar() {
                   </button>
                 </div>
               </form>
+            </section>
+          )}
+
+          {tab === "business-costs" && (
+            <section className="fp-panel fp-settings-main-card fp-business-costs-settings">
+              <div className="fp-settings-section-heading">
+                <div>
+                  <span>SHARED COMPANY ACCOUNTING</span>
+                  <h2>Business Costs & Fees</h2>
+                  <p className="fp-settings-copy">
+                    These settings are stored in the same Supabase company
+                    records used by FleetPilot mobile. Changes made here are
+                    available to both apps.
+                  </p>
+                </div>
+                <div className="fp-company-role-badge">{role}</div>
+              </div>
+
+              {!businessCostsReady && (
+                <div className="fp-settings-warning">
+                  FleetPilot could not read the shared company fee/fixed-expense
+                  tables. Verify <b>company_fee_settings</b> and{" "}
+                  <b>weekly_fixed_expenses</b> in Supabase.
+                </div>
+              )}
+
+              <div className="fp-business-cost-sync-note">
+                <span className="fp-business-cost-sync-icon">↔</span>
+                <div>
+                  <strong>Mobile + Web synchronized through Supabase</strong>
+                  <p>
+                    This page does not keep a separate web copy. Weekly
+                    Settlement, Dashboard and Load Profitability use these same
+                    company records.
+                  </p>
+                </div>
+              </div>
+
+              <div className="fp-company-form-section">
+                <div className="fp-company-section-title">
+                  <strong>Company Fees</strong>
+                  <span>
+                    Percentage and mileage fees deducted when FleetPilot
+                    calculates weekly operating profit.
+                  </span>
+                </div>
+
+                <div className="fp-business-fee-grid">
+                  <div className="fp-business-fee-card">
+                    <div className="fp-business-fee-card-heading">
+                      <div>
+                        <span>REVENUE FEE</span>
+                        <strong>Company Fee</strong>
+                      </div>
+                      <button
+                        type="button"
+                        className={`fp-business-cost-toggle ${
+                          companyFees.is_revenue_fee_active ? "on" : ""
+                        }`}
+                        disabled={!owner}
+                        onClick={() =>
+                          setCompanyFees((current) => ({
+                            ...current,
+                            is_revenue_fee_active:
+                              !current.is_revenue_fee_active,
+                          }))
+                        }
+                        aria-pressed={companyFees.is_revenue_fee_active}
+                      >
+                        <i />
+                      </button>
+                    </div>
+
+                    <label>
+                      <span>Percent of Gross Revenue</span>
+                      <div className="fp-business-money-input suffix">
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="0.01"
+                          disabled={!owner}
+                          value={companyFees.revenue_fee_percent}
+                          onChange={(event) =>
+                            setCompanyFees((current) => ({
+                              ...current,
+                              revenue_fee_percent:
+                                Number(event.target.value) || 0,
+                            }))
+                          }
+                        />
+                        <b>%</b>
+                      </div>
+                    </label>
+
+                    <p>
+                      Example: 15% deducts $1,500 from $10,000 gross weekly
+                      revenue.
+                    </p>
+                  </div>
+
+                  <div className="fp-business-fee-card">
+                    <div className="fp-business-fee-card-heading">
+                      <div>
+                        <span>MILEAGE FEE</span>
+                        <strong>Company Mileage Fee</strong>
+                      </div>
+                      <button
+                        type="button"
+                        className={`fp-business-cost-toggle ${
+                          companyFees.is_mileage_fee_active ? "on" : ""
+                        }`}
+                        disabled={!owner}
+                        onClick={() =>
+                          setCompanyFees((current) => ({
+                            ...current,
+                            is_mileage_fee_active:
+                              !current.is_mileage_fee_active,
+                          }))
+                        }
+                        aria-pressed={companyFees.is_mileage_fee_active}
+                      >
+                        <i />
+                      </button>
+                    </div>
+
+                    <label>
+                      <span>Rate Per Mile</span>
+                      <div className="fp-business-money-input">
+                        <b>$</b>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          disabled={!owner}
+                          value={companyFees.mileage_fee_per_mile}
+                          onChange={(event) =>
+                            setCompanyFees((current) => ({
+                              ...current,
+                              mileage_fee_per_mile:
+                                Number(event.target.value) || 0,
+                            }))
+                          }
+                        />
+                        <em>/ mi</em>
+                      </div>
+                    </label>
+
+                    <p>
+                      Applied to the weekly odometer miles used by FleetPilot
+                      settlement calculations.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="fp-business-fee-save">
+                  <span>
+                    Current:{" "}
+                    {companyFees.is_revenue_fee_active
+                      ? `${companyFees.revenue_fee_percent}% revenue fee`
+                      : "Revenue fee disabled"}
+                    {" · "}
+                    {companyFees.is_mileage_fee_active
+                      ? `$${companyFees.mileage_fee_per_mile.toFixed(2)}/mi`
+                      : "Mileage fee disabled"}
+                  </span>
+                  <button
+                    type="button"
+                    className="fp-primary-btn"
+                    disabled={
+                      saving ||
+                      !owner ||
+                      !companyId ||
+                      !businessCostsReady
+                    }
+                    onClick={() => void saveCompanyFees()}
+                  >
+                    {saving ? "Saving..." : "Save Company Fees"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="fp-company-form-section">
+                <div className="fp-company-section-title">
+                  <strong>Weekly Fixed Expenses</strong>
+                  <span>
+                    Recurring weekly costs deducted from gross revenue:
+                    insurance, truck rent, office expense and similar costs.
+                  </span>
+                </div>
+
+                <div className="fp-fixed-expense-presets">
+                  <span>Quick add:</span>
+                  {[
+                    "Insurance",
+                    "Bobtail Insurance",
+                    "IFTA",
+                    "OAI",
+                    "Office Expense",
+                    "Truck Rent",
+                  ].map((name) => (
+                    <button
+                      key={name}
+                      type="button"
+                      disabled={!owner}
+                      onClick={() => addPresetFixedExpense(name)}
+                    >
+                      + {name}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="fp-fixed-expense-list">
+                  {fixedExpenses.map((row, index) => (
+                    <div key={row.id || `new-${index}`} className="fp-fixed-expense-row">
+                      <div className="fp-fixed-expense-main">
+                        <input
+                          aria-label="Fixed expense name"
+                          value={row.name}
+                          disabled={!owner}
+                          onChange={(event) =>
+                            setFixedExpenses((current) =>
+                              current.map((item, itemIndex) =>
+                                itemIndex === index
+                                  ? { ...item, name: event.target.value }
+                                  : item
+                              )
+                            )
+                          }
+                        />
+
+                        <div className="fp-business-money-input">
+                          <b>$</b>
+                          <input
+                            aria-label={`${row.name} weekly amount`}
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={row.amount}
+                            disabled={!owner}
+                            onChange={(event) =>
+                              setFixedExpenses((current) =>
+                                current.map((item, itemIndex) =>
+                                  itemIndex === index
+                                    ? {
+                                        ...item,
+                                        amount:
+                                          Number(event.target.value) || 0,
+                                      }
+                                    : item
+                                )
+                              )
+                            }
+                          />
+                          <em>/ week</em>
+                        </div>
+                      </div>
+
+                      <div className="fp-fixed-expense-actions">
+                        <button
+                          type="button"
+                          className={`fp-business-cost-toggle ${
+                            row.is_active ? "on" : ""
+                          }`}
+                          disabled={!owner}
+                          aria-label={`${row.is_active ? "Disable" : "Enable"} ${row.name}`}
+                          onClick={() =>
+                            setFixedExpenses((current) =>
+                              current.map((item, itemIndex) =>
+                                itemIndex === index
+                                  ? {
+                                      ...item,
+                                      is_active: !item.is_active,
+                                    }
+                                  : item
+                              )
+                            )
+                          }
+                        >
+                          <i />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="fp-fixed-save"
+                          disabled={saving || !owner}
+                          onClick={() => void saveFixedExpense(row)}
+                        >
+                          Save
+                        </button>
+
+                        <button
+                          type="button"
+                          className="fp-fixed-delete"
+                          disabled={saving || !owner || !row.id}
+                          onClick={() => void deleteFixedExpense(row)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {fixedExpenses.length === 0 && (
+                    <div className="fp-fixed-expense-empty">
+                      No weekly fixed expenses are stored yet. Add the costs
+                      your company pays every week.
+                    </div>
+                  )}
+                </div>
+
+                <div className="fp-fixed-expense-add">
+                  <div>
+                    <label>
+                      <span>Expense Name</span>
+                      <input
+                        value={newFixedName}
+                        disabled={!owner}
+                        placeholder="e.g. Trailer Rent"
+                        onChange={(event) =>
+                          setNewFixedName(event.target.value)
+                        }
+                      />
+                    </label>
+                    <label>
+                      <span>Weekly Amount</span>
+                      <div className="fp-business-money-input">
+                        <b>$</b>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          disabled={!owner}
+                          placeholder="0.00"
+                          value={newFixedAmount}
+                          onChange={(event) =>
+                            setNewFixedAmount(event.target.value)
+                          }
+                        />
+                        <em>/ week</em>
+                      </div>
+                    </label>
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={saving || !owner || !newFixedName.trim()}
+                    onClick={() => void addFixedExpense()}
+                  >
+                    + Add Fixed Expense
+                  </button>
+                </div>
+              </div>
+
+              {!owner && (
+                <div className="fp-settings-info">
+                  Only the company owner can change company-level fees and
+                  fixed expenses. Members still see the values used in company
+                  calculations.
+                </div>
+              )}
             </section>
           )}
 
@@ -1211,6 +1867,7 @@ async function removeAvatar() {
             <StatusRow label="Authenticated" good />
             <StatusRow label="Company linked" good={Boolean(companyId)} />
             <StatusRow label="Preferences storage" good={preferencesReady} />
+            <StatusRow label="Business cost sync" good={businessCostsReady} />
             <StatusRow label="Deletion request" good={!deletionPending} />
           </section>
         </aside>

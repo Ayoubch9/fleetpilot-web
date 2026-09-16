@@ -3,12 +3,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import SocialAuthButtons from "@/components/social-auth-buttons";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [loading,setLoading]=useState(false); const [error,setError]=useState("");
   async function handleSubmit(e:FormEvent<HTMLFormElement>){e.preventDefault();setError("");setLoading(true);const supabase=createClient();const {error:err}=await supabase.auth.signInWithPassword({email,password});if(err){setError(err.message);setLoading(false);return;}router.push("/dashboard");router.refresh();}
   return <AuthLayout title="Welcome back" subtitle="Sign in to your FleetPilot control center.">
+    <SocialAuthButtons />
+    <div className="fp-auth-divider"><span>or continue with email</span></div>
     <form onSubmit={handleSubmit} className="space-y-5"><Field label="Email" type="email" value={email} set={setEmail} placeholder="you@example.com"/><Field label="Password" type="password" value={password} set={setPassword} placeholder="Your password"/>{error&&<div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</div>}<button disabled={loading} className="w-full rounded-2xl bg-[#1188ff] px-4 py-4 text-sm font-black shadow-xl shadow-blue-500/15 hover:bg-[#0f78e9] disabled:opacity-50">{loading?"Signing in...":"Sign In →"}</button></form>
     <div className="mt-6 text-center text-sm text-[#7b8da2]">New to FleetPilot? <Link href="/signup" className="font-black text-[#1188ff]">Create account</Link></div>
   </AuthLayout>

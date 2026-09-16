@@ -12,6 +12,7 @@ type ActivePage =
   | "reimbursements"
   | "maintenance"
   | "settlement"
+  | "deposit"
   | "fuel"
   | "reports"
   | "documents"
@@ -30,6 +31,7 @@ const more = [
   ["maintenance", "Maintenance", "/maintenance", "maintenance"],
   ["reimbursements", "Reimbursements", "/reimbursements", "wallet"],
   ["settlement", "Weekly Settlement", "/settlement", "settlement"],
+  ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
   ["reports", "Reports", "/reports", "report"],
   ["pilot", "Pilot AI", "/pilot-ai", "spark"],
@@ -195,6 +197,14 @@ function MobileIcon({ type }: { type: string }) {
       <svg {...common}>
         <rect x="5" y="3" width="14" height="18" rx="2" />
         <path d="M8 9h8M8 13h5" />
+      </svg>
+    );
+
+  if (type === "deposit")
+    return (
+      <svg {...common}>
+        <path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z" />
+        <path d="M9 11h6M12 8v6" />
       </svg>
     );
 
