@@ -5,6 +5,39 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+function formatSupabaseError(error: {
+  message?: string;
+  details?: string;
+  hint?: string;
+  code?: string;
+}) {
+  const parts = [error.message, error.details, error.hint]
+    .filter(Boolean)
+    .map(String);
+
+  if (error.code) parts.push(`Code: ${error.code}`);
+
+  return parts.join(" · ") || "Could not finish FleetPilot setup.";
+}
+
+function extractErrorMessage(caught: unknown) {
+  if (caught instanceof Error) return caught.message;
+
+  if (caught && typeof caught === "object") {
+    return formatSupabaseError(
+      caught as {
+        message?: string;
+        details?: string;
+        hint?: string;
+        code?: string;
+      }
+    );
+  }
+
+  return "Could not finish FleetPilot setup.";
+}
+
+
 export default function SocialOnboarding({
   email,
   provider,
@@ -35,20 +68,24 @@ export default function SocialOnboarding({
         }
       );
 
-      if (rpcError) throw rpcError;
+      if (rpcError) {
+        throw new Error(formatSupabaseError(rpcError));
+      }
 
-      if (data !== true) {
-        throw new Error("FleetPilot could not finish account setup.");
+      const result = data as
+        | { ok?: boolean; company_id?: string; profile_saved?: boolean }
+        | null;
+
+      if (!result?.ok || !result.company_id) {
+        throw new Error(
+          "FleetPilot did not receive a valid company from Supabase."
+        );
       }
 
       router.replace("/dashboard");
       router.refresh();
     } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "Could not finish FleetPilot setup."
-      );
+      setError(extractErrorMessage(caught));
       setLoading(false);
     }
   }
@@ -95,7 +132,7 @@ export default function SocialOnboarding({
             <h2>Complete your profile</h2>
             <p>
               This information belongs to your FleetPilot account, not your
-              Google or Apple account.
+              Google account.
             </p>
           </div>
 

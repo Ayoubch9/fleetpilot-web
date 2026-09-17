@@ -1,15 +1,13 @@
--- FleetPilot Web v3.7.0 — Social Auth Onboarding
--- Run once after Google/Apple providers are configured in Supabase Auth.
---
--- This function creates the FleetPilot company and owner membership for
--- authenticated social-login users who do not already belong to a company.
--- It uses auth.uid() only; callers cannot provision another user's account.
+-- FleetPilot Web v3.7.5 — Google Social Auth owner_user_id Fix
+-- Run this file in Supabase SQL Editor. It safely replaces the previous function.
 
-create or replace function public.complete_fleetpilot_social_onboarding(
+drop function if exists public.complete_fleetpilot_social_onboarding(text, text);
+
+create function public.complete_fleetpilot_social_onboarding(
   p_full_name text,
   p_company_name text
 )
-returns boolean
+returns jsonb
 language plpgsql
 security definer
 set search_path = public, auth
@@ -19,6 +17,7 @@ declare
   v_company_id uuid;
   v_name text := nullif(trim(p_full_name), '');
   v_company_name text := nullif(trim(p_company_name), '');
+  v_profile_saved boolean := false;
 begin
   if v_user_id is null then
     raise exception 'Authentication required';
@@ -32,35 +31,63 @@ begin
     raise exception 'Company name is required';
   end if;
 
-  -- Idempotency: never create a second company when onboarding is retried.
   select cm.company_id
     into v_company_id
   from public.company_members cm
   where cm.user_id = v_user_id
   limit 1;
 
-  if v_company_id is not null then
-    insert into public.profiles (id, full_name)
-    values (v_user_id, v_name)
-    on conflict (id)
-    do update set full_name = excluded.full_name;
+  if v_company_id is null then
+    insert into public.companies (
+      name,
+      owner_user_id
+    )
+    values (
+      v_company_name,
+      v_user_id
+    )
+    returning id into v_company_id;
 
-    return true;
+    insert into public.company_members (company_id, user_id, role)
+    values (v_company_id, v_user_id, 'owner');
   end if;
 
-  insert into public.profiles (id, full_name)
-  values (v_user_id, v_name)
-  on conflict (id)
-  do update set full_name = excluded.full_name;
+  begin
+    update public.profiles
+       set full_name = v_name
+     where id = v_user_id;
 
-  insert into public.companies (name)
-  values (v_company_name)
-  returning id into v_company_id;
+    if found then
+      v_profile_saved := true;
+    else
+      begin
+        insert into public.profiles (id, full_name)
+        values (v_user_id, v_name)
+        on conflict (id)
+        do update set full_name = excluded.full_name;
 
-  insert into public.company_members (company_id, user_id, role)
-  values (v_company_id, v_user_id, 'owner');
+        v_profile_saved := true;
+      exception
+        when others then
+          v_profile_saved := false;
+      end;
+    end if;
+  exception
+    when others then
+      v_profile_saved := false;
+  end;
 
-  return true;
+  return jsonb_build_object(
+    'ok', true,
+    'company_id', v_company_id,
+    'profile_saved', v_profile_saved
+  );
+exception
+  when others then
+    raise exception using
+      message = 'FleetPilot onboarding failed: ' || sqlerrm,
+      detail = 'SQLSTATE ' || sqlstate,
+      hint = 'Verify companies.owner_user_id and company_members accept the authenticated owner.';
 end;
 $$;
 
