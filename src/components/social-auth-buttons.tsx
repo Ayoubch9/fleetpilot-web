@@ -57,6 +57,13 @@ export default function SocialAuthButtons({
       </button>
 
       {error && <div className="fp-social-auth-error">{error}</div>}
+
+      <p className="fp-social-auth-legal">
+        By continuing, you agree to FleetPilot&apos;s{" "}
+        <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
+        {" "}and acknowledge the{" "}
+        <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>.
+      </p>
     </div>
   );
 }

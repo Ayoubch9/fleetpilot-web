@@ -14363,3 +14363,699 @@ body{
   }
 }
 /* === END Premium Sidebar Typography v3.7.2 === */
+
+
+/* ==========================================================================
+   FleetPilot Legal + Permanent Account Deletion v3.8.0
+   ========================================================================== */
+
+.fp-social-auth-legal,
+.fp-email-signup-legal{
+  color:#8293a5;
+  font-size:9px;
+  line-height:1.55;
+  text-align:center;
+}
+
+.fp-social-auth-legal a,
+.fp-email-signup-legal a{
+  color:#4a82c6;
+  font-weight:650;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+/* Legal pages */
+.fp-legal-page{
+  min-height:100vh;
+  background:#f4f7fb;
+  color:#19314a;
+}
+
+.fp-legal-header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  min-height:68px;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid #e0e8f0;
+  background:rgba(255,255,255,.96);
+  padding:0 max(24px,calc((100vw - 1160px)/2));
+  backdrop-filter:blur(16px);
+}
+
+.fp-legal-brand{
+  color:#0c1d34;
+  font-size:21px;
+  font-weight:780;
+  letter-spacing:-.04em;
+}
+
+.fp-legal-brand span{
+  color:#278cf2;
+}
+
+.fp-legal-header nav{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.fp-legal-header nav a{
+  color:#667c93;
+  font-size:11px;
+  font-weight:600;
+}
+
+.fp-legal-shell{
+  width:min(920px,calc(100% - 32px));
+  margin:36px auto;
+  overflow:hidden;
+  border:1px solid #dce5ee;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 18px 55px rgba(28,59,91,.06);
+}
+
+.fp-legal-hero{
+  border-bottom:1px solid #e6edf4;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(17,136,255,.08),transparent 30%),
+    #fbfdff;
+  padding:38px 42px 32px;
+}
+
+.fp-legal-hero>span{
+  color:#4b8df5;
+  font-size:9px;
+  font-weight:780;
+  letter-spacing:.16em;
+}
+
+.fp-legal-hero h1{
+  margin-top:9px;
+  color:#10243b;
+  font-size:36px;
+  line-height:1.05;
+  font-weight:770;
+  letter-spacing:-.045em;
+}
+
+.fp-legal-hero p{
+  max-width:720px;
+  margin-top:12px;
+  color:#6f8398;
+  font-size:13px;
+  line-height:1.65;
+}
+
+.fp-legal-hero small{
+  display:block;
+  margin-top:15px;
+  color:#91a0ae;
+  font-size:10px;
+}
+
+.fp-legal-body{
+  display:grid;
+  gap:0;
+  padding:10px 42px 36px;
+}
+
+.fp-legal-body section{
+  display:grid;
+  grid-template-columns:220px minmax(0,1fr);
+  gap:30px;
+  border-bottom:1px solid #edf2f6;
+  padding:24px 0;
+}
+
+.fp-legal-body section:last-child{
+  border-bottom:0;
+}
+
+.fp-legal-body h2{
+  color:#1a334d;
+  font-size:14px;
+  line-height:1.35;
+  font-weight:710;
+}
+
+.fp-legal-body section>div{
+  display:grid;
+  gap:10px;
+  color:#60768c;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.fp-legal-body ol,
+.fp-legal-body ul{
+  display:grid;
+  gap:7px;
+  padding-left:20px;
+}
+
+.fp-legal-body ol{
+  list-style:decimal;
+}
+
+.fp-legal-body ul{
+  list-style:disc;
+}
+
+.fp-legal-body a{
+  color:#337fd9;
+  font-weight:650;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+.fp-legal-footer{
+  display:flex;
+  width:min(920px,calc(100% - 32px));
+  margin:0 auto 36px;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  color:#8393a4;
+  font-size:10px;
+}
+
+.fp-legal-footer>div{
+  display:flex;
+  gap:16px;
+}
+
+.fp-legal-footer a:hover{
+  color:#3986e4;
+}
+
+/* Permanent deletion dialog */
+.fp-delete-modal-permanent{
+  max-width:560px!important;
+}
+
+.fp-delete-kicker{
+  display:inline-flex;
+  margin-bottom:7px;
+  color:#d1545d;
+  font-size:8px;
+  font-weight:780;
+  letter-spacing:.14em;
+}
+
+.fp-delete-impact{
+  display:grid;
+  gap:7px;
+  margin:13px 0;
+  border:1px solid #f1d9dc;
+  border-radius:10px;
+  background:#fff8f8;
+  padding:11px 12px;
+}
+
+.fp-delete-impact strong{
+  color:#9e4048;
+  font-size:10px;
+}
+
+.fp-delete-impact span{
+  position:relative;
+  padding-left:13px;
+  color:#79636a;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-delete-impact span::before{
+  content:"•";
+  position:absolute;
+  left:2px;
+  color:#d06670;
+}
+
+.fp-delete-legal-links{
+  display:flex;
+  gap:12px;
+  margin-top:10px;
+}
+
+.fp-delete-legal-links a{
+  color:#4b82c4;
+  font-size:9px;
+  font-weight:650;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+/* Deleted account screen */
+.fp-deleted-account-page{
+  display:flex;
+  min-height:100dvh;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 50% 15%,rgba(49,133,237,.09),transparent 32%),
+    #f3f6fa;
+  padding:28px 14px;
+}
+
+.fp-deleted-account-card{
+  width:min(640px,100%);
+  border:1px solid #dce5ee;
+  border-radius:24px;
+  background:#fff;
+  padding:34px;
+  box-shadow:0 24px 70px rgba(29,59,89,.09);
+  text-align:center;
+}
+
+.fp-deleted-account-brand{
+  display:inline-block;
+  color:#11263e;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-.045em;
+}
+
+.fp-deleted-account-brand span{
+  color:#2d8ef0;
+}
+
+.fp-deleted-account-icon{
+  display:flex;
+  width:54px;
+  height:54px;
+  margin:27px auto 16px;
+  align-items:center;
+  justify-content:center;
+  border-radius:15px;
+  background:#eaf4ff;
+  color:#3c86e4;
+  font-size:24px;
+  font-weight:800;
+}
+
+.fp-deleted-account-eyebrow{
+  color:#4d8ef0;
+  font-size:9px;
+  font-weight:780;
+  letter-spacing:.13em;
+}
+
+.fp-deleted-account-card h1{
+  margin-top:8px;
+  color:#10263e;
+  font-size:29px;
+  line-height:1.08;
+  font-weight:770;
+  letter-spacing:-.04em;
+}
+
+.fp-deleted-account-card>p{
+  max-width:530px;
+  margin:13px auto 0;
+  color:#6f8398;
+  font-size:12px;
+  line-height:1.65;
+}
+
+.fp-deleted-account-actions{
+  display:grid;
+  gap:9px;
+  margin-top:24px;
+}
+
+.fp-deleted-account-actions .primary,
+.fp-deleted-account-actions .secondary{
+  display:flex;
+  min-height:46px;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  padding:0 15px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-deleted-account-actions .primary{
+  border:0;
+  background:linear-gradient(90deg,#318ff2,#4a7de3);
+  color:#fff;
+}
+
+.fp-deleted-account-actions .secondary{
+  border:1px solid #dce5ee;
+  background:#fbfdff;
+  color:#526b83;
+}
+
+.fp-deleted-account-actions small{
+  color:#8999a8;
+  font-size:9px;
+  line-height:1.5;
+}
+
+.fp-deleted-account-error{
+  border:1px solid #efc9cd;
+  border-radius:9px;
+  background:#fff5f6;
+  padding:10px;
+  color:#b24f59;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.fp-deleted-account-links{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:22px;
+  border-top:1px solid #edf2f6;
+  padding-top:17px;
+}
+
+.fp-deleted-account-links a{
+  color:#758a9e;
+  font-size:9px;
+  font-weight:620;
+}
+
+@media(max-width:767px){
+  .fp-social-auth-legal,
+  .fp-email-signup-legal{
+    font-size:10px;
+  }
+
+  .fp-legal-header{
+    min-height:62px;
+    padding:0 14px;
+  }
+
+  .fp-legal-header nav{
+    gap:10px;
+    overflow-x:auto;
+  }
+
+  .fp-legal-header nav a{
+    font-size:9px;
+    white-space:nowrap;
+  }
+
+  .fp-legal-brand{
+    font-size:18px;
+  }
+
+  .fp-legal-shell{
+    margin:16px auto;
+    border-radius:15px;
+  }
+
+  .fp-legal-hero{
+    padding:25px 18px 22px;
+  }
+
+  .fp-legal-hero h1{
+    font-size:30px;
+  }
+
+  .fp-legal-hero p{
+    font-size:12px;
+  }
+
+  .fp-legal-body{
+    padding:4px 18px 24px;
+  }
+
+  .fp-legal-body section{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:19px 0;
+  }
+
+  .fp-legal-body h2{
+    font-size:15px;
+  }
+
+  .fp-legal-body section>div{
+    font-size:12px;
+  }
+
+  .fp-legal-footer{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .fp-legal-footer>div{
+    flex-wrap:wrap;
+  }
+
+  .fp-deleted-account-card{
+    border-radius:18px;
+    padding:24px 16px;
+  }
+
+  .fp-deleted-account-card h1{
+    font-size:25px;
+  }
+
+  .fp-deleted-account-card>p{
+    font-size:12px;
+  }
+
+  .fp-deleted-account-actions .primary,
+  .fp-deleted-account-actions .secondary{
+    min-height:48px;
+    font-size:12px;
+  }
+}
+/* === END FleetPilot Legal + Permanent Account Deletion v3.8.0 === */
+
+
+/* === Settings Legal & Privacy Center v3.8.1 === */
+.fp-legal-settings{
+  overflow:hidden;
+}
+
+.fp-legal-settings-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:11px;
+  margin-top:16px;
+}
+
+.fp-legal-settings-card{
+  display:grid;
+  min-height:150px;
+  grid-template-columns:38px minmax(0,1fr) 16px;
+  gap:11px;
+  align-items:start;
+  border:1px solid #dfe7ef;
+  border-radius:12px;
+  background:#fbfdff;
+  padding:14px;
+  transition:border-color .15s ease,background .15s ease,transform .15s ease;
+}
+
+.fp-legal-settings-card:hover{
+  transform:translateY(-1px);
+  border-color:#bfd7f1;
+  background:#fff;
+}
+
+.fp-legal-settings-icon{
+  display:flex;
+  width:38px;
+  height:38px;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#eaf4ff;
+  color:#3b84e5;
+  font-size:13px;
+  font-weight:760;
+}
+
+.fp-legal-settings-card>div:nth-child(2){
+  display:grid;
+  gap:4px;
+  min-width:0;
+}
+
+.fp-legal-settings-card span{
+  color:#4d8bed;
+  font-size:7px;
+  font-weight:760;
+  letter-spacing:.1em;
+}
+
+.fp-legal-settings-card strong{
+  color:#203950;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-legal-settings-card p{
+  color:#768a9e;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-legal-settings-card>b{
+  color:#7a91a8;
+  font-size:15px;
+  line-height:1;
+}
+
+.fp-legal-settings-section{
+  margin-top:16px;
+  border-top:1px solid #edf2f6;
+  padding-top:15px;
+}
+
+.fp-legal-data-action,
+.fp-legal-delete-action,
+.fp-google-account-note{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:11px;
+  border:1px solid #e1e9f1;
+  border-radius:11px;
+  background:#fbfdff;
+  padding:12px 13px;
+}
+
+.fp-legal-data-action>div,
+.fp-legal-delete-action>div,
+.fp-google-account-note>div:last-child{
+  display:grid;
+  gap:3px;
+}
+
+.fp-legal-data-action strong,
+.fp-legal-delete-action strong,
+.fp-google-account-note strong{
+  color:#2a425a;
+  font-size:9px;
+  font-weight:690;
+}
+
+.fp-legal-data-action span,
+.fp-legal-delete-action span,
+.fp-google-account-note span{
+  color:#7a8da0;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-legal-data-action>button{
+  min-height:35px;
+  border:0;
+  border-radius:8px;
+  background:#4f8df7;
+  padding:0 12px;
+  color:#fff;
+  font-size:7.5px;
+  font-weight:680;
+  white-space:nowrap;
+}
+
+.fp-google-account-note{
+  justify-content:flex-start;
+}
+
+.fp-google-account-mark{
+  display:flex;
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #e3e9ef;
+  border-radius:10px;
+  background:#fff;
+  color:#4285f4;
+  font-size:15px;
+  font-weight:800;
+}
+
+.fp-legal-danger-section{
+  border-top-color:#f0dfe1;
+}
+
+.fp-legal-delete-action{
+  border-color:#efd8db;
+  background:#fff9f9;
+}
+
+.fp-legal-delete-action strong{
+  color:#9e4149;
+}
+
+.fp-legal-delete-action>button{
+  min-height:35px;
+  border:1px solid #e5aeb3;
+  border-radius:8px;
+  background:#fff;
+  padding:0 12px;
+  color:#bd4b55;
+  font-size:7.5px;
+  font-weight:680;
+  white-space:nowrap;
+}
+
+@media(max-width:900px){
+  .fp-legal-settings-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:767px){
+  .fp-legal-settings-card{
+    min-height:unset;
+  }
+
+  .fp-legal-settings-card span{
+    font-size:9px;
+  }
+
+  .fp-legal-settings-card strong{
+    font-size:13px;
+  }
+
+  .fp-legal-settings-card p{
+    font-size:10px;
+  }
+
+  .fp-legal-data-action,
+  .fp-legal-delete-action{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .fp-legal-data-action strong,
+  .fp-legal-delete-action strong,
+  .fp-google-account-note strong{
+    font-size:12px;
+  }
+
+  .fp-legal-data-action span,
+  .fp-legal-delete-action span,
+  .fp-google-account-note span{
+    font-size:10px;
+  }
+
+  .fp-legal-data-action>button,
+  .fp-legal-delete-action>button{
+    width:100%;
+    min-height:42px;
+    font-size:11px;
+  }
+}
+/* === END Settings Legal & Privacy Center v3.8.1 === */

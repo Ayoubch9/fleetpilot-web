@@ -68,12 +68,6 @@ export default async function SettingsPage() {
       fixedExpensesResult.error
   );
 
-  const deletionResult = await supabase
-    .from("account_deletion_requests")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("status", "pending")
-    .maybeSingle();
 
   const billingResult = membership?.company_id
     ? await supabase
@@ -150,7 +144,7 @@ export default async function SettingsPage() {
           initialCompanyFeeSettings={companyFeeResult.data}
           initialFixedExpenses={fixedExpensesResult.data || []}
           businessCostsReady={businessCostsReady}
-          deletionPending={Boolean(deletionResult.data?.id)}
+          deletionPending={false}
           subscriptionInfo={subscriptionInfo}
         />
       </div>

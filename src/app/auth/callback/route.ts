@@ -37,6 +37,16 @@ export async function GET(request: Request) {
     );
   }
 
+  // A deleted Google identity may be recreated by the OAuth provider/Supabase.
+  // Do not silently recreate FleetPilot business data. Send the user to an
+  // explicit decision screen first.
+  const { data: previouslyDeleted, error: deletedCheckError } =
+    await supabase.rpc("is_fleetpilot_deleted_account");
+
+  if (!deletedCheckError && previouslyDeleted === true) {
+    return safeRedirect(request, requestUrl, "/account-deleted");
+  }
+
   const [{ data: profile }, { data: membership }] = await Promise.all([
     supabase
       .from("profiles")

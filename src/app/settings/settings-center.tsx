@@ -13,6 +13,7 @@ type SettingsTab =
   | "notifications"
   | "subscription"
   | "data"
+  | "legal"
   | "security";
 
 type SubscriptionInfo = {
@@ -709,12 +710,12 @@ async function removeAvatar() {
     }
   }
 
-  async function requestDeletion() {
+  async function deleteAccount() {
     setDeleteBusy(true);
     setMessage("");
 
     try {
-      const response = await fetch("/api/account/delete-request", {
+      const response = await fetch("/api/account/delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -724,22 +725,20 @@ async function removeAvatar() {
       });
 
       const payload = await response.json();
+
       if (!response.ok) {
-        throw new Error(payload?.error || "Could not submit deletion request.");
+        throw new Error(
+          payload?.error || "Could not delete the FleetPilot account."
+        );
       }
 
-      setMessage(payload.message || "Deletion request submitted.");
-      setDeleteOpen(false);
-      setDeleteConfirmation("");
-      setDeleteReason("");
-      router.refresh();
+      window.location.href = "/account-deleted?done=1";
     } catch (caught) {
       setMessage(
         caught instanceof Error
           ? caught.message
-          : "Could not submit deletion request."
+          : "Could not delete the FleetPilot account."
       );
-    } finally {
       setDeleteBusy(false);
     }
   }
@@ -754,6 +753,7 @@ async function removeAvatar() {
         <TabButton label="Notifications" active={tab === "notifications"} onClick={() => setTab("notifications")} />
         <TabButton label="Subscription" active={tab === "subscription"} onClick={() => setTab("subscription")} />
         <TabButton label="Data & Export" active={tab === "data"} onClick={() => setTab("data")} />
+        <TabButton label="Legal & Privacy" active={tab === "legal"} onClick={() => setTab("legal")} />
         <TabButton label="Security" active={tab === "security"} onClick={() => setTab("security")} />
       </div>
 
@@ -1809,6 +1809,134 @@ async function removeAvatar() {
             </section>
           )}
 
+          {tab === "legal" && (
+            <section className="fp-panel fp-settings-main-card fp-legal-settings">
+              <div className="fp-settings-section-heading">
+                <div>
+                  <span>LEGAL & PRIVACY</span>
+                  <h2>Legal & Privacy</h2>
+                  <p className="fp-settings-copy">
+                    Review FleetPilot&apos;s legal policies and manage your personal account data from one place.
+                  </p>
+                </div>
+              </div>
+
+              <div className="fp-legal-settings-grid">
+                <Link href="/privacy" className="fp-legal-settings-card">
+                  <div className="fp-legal-settings-icon">P</div>
+                  <div>
+                    <span>PRIVACY</span>
+                    <strong>Privacy Policy</strong>
+                    <p>
+                      See what FleetPilot processes, how Google sign-in works,
+                      and how account data is handled.
+                    </p>
+                  </div>
+                  <b>→</b>
+                </Link>
+
+                <Link href="/terms" className="fp-legal-settings-card">
+                  <div className="fp-legal-settings-icon">T</div>
+                  <div>
+                    <span>TERMS</span>
+                    <strong>Terms of Service</strong>
+                    <p>
+                      Review FleetPilot account, service, trial, and operational
+                      calculation terms.
+                    </p>
+                  </div>
+                  <b>→</b>
+                </Link>
+
+                <Link href="/data-deletion" className="fp-legal-settings-card">
+                  <div className="fp-legal-settings-icon">D</div>
+                  <div>
+                    <span>ACCOUNT DATA</span>
+                    <strong>Data Deletion</strong>
+                    <p>
+                      Understand what is deleted, what minimal information is
+                      retained, and what happens if you sign in again with Google.
+                    </p>
+                  </div>
+                  <b>→</b>
+                </Link>
+              </div>
+
+              <div className="fp-legal-settings-section">
+                <div className="fp-company-section-title">
+                  <strong>Your Data</strong>
+                  <span>
+                    Download supported FleetPilot account and business information before making account changes.
+                  </span>
+                </div>
+
+                <div className="fp-legal-data-action">
+                  <div>
+                    <strong>Export My FleetPilot Data</strong>
+                    <span>
+                      Creates a structured JSON export of the account and business
+                      data currently available through FleetPilot.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void exportAccount()}
+                    disabled={saving}
+                  >
+                    {saving ? "Preparing..." : "Export My Data"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="fp-legal-settings-section">
+                <div className="fp-company-section-title">
+                  <strong>Google Sign-In</strong>
+                  <span>
+                    FleetPilot uses Google only for authentication when you choose
+                    Continue with Google.
+                  </span>
+                </div>
+
+                <div className="fp-google-account-note">
+                  <div className="fp-google-account-mark">G</div>
+                  <div>
+                    <strong>{email}</strong>
+                    <span>
+                      Google sign-in does not give FleetPilot access to your Gmail
+                      inbox, Google Drive, or your Google password.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="fp-legal-settings-section fp-legal-danger-section">
+                <div className="fp-company-section-title">
+                  <strong>Delete Account</strong>
+                  <span>
+                    Permanently remove your FleetPilot account. If you are the sole
+                    owner/member, eligible company-scoped data is removed too.
+                  </span>
+                </div>
+
+                <div className="fp-legal-delete-action">
+                  <div>
+                    <strong>Delete FleetPilot Account</strong>
+                    <span>
+                      This action is permanent. Export anything you want to keep
+                      before continuing.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteOpen(true)}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+
           {tab === "security" && (
             <section className="fp-panel fp-settings-main-card">
               <h2>Security</h2>
@@ -1832,17 +1960,19 @@ async function removeAvatar() {
               />
 
               <SecurityAction
-                title="Request account deletion"
-                description={
-                  deletionPending
-                    ? "A deletion request is already pending."
-                    : "Submit a reviewed deletion request instead of immediately destroying business data."
-                }
-                action={deletionPending ? "Request Pending" : "Request Deletion"}
+                title="Delete FleetPilot account"
+                description="Permanently delete this user account. If you are the sole company owner, company-scoped FleetPilot data is deleted with it."
+                action="Delete Account"
                 onClick={() => setDeleteOpen(true)}
-                disabled={deletionPending}
                 danger
               />
+
+              <div className="fp-settings-info">
+                Before deleting, you can download your account data from the
+                Data &amp; Export tab. See the{" "}
+                <Link href="/data-deletion">Data Deletion page</Link> for the
+                deletion and deleted-Google-account behavior.
+              </div>
             </section>
           )}
         </main>
@@ -1868,18 +1998,35 @@ async function removeAvatar() {
             <StatusRow label="Company linked" good={Boolean(companyId)} />
             <StatusRow label="Preferences storage" good={preferencesReady} />
             <StatusRow label="Business cost sync" good={businessCostsReady} />
-            <StatusRow label="Deletion request" good={!deletionPending} />
+            <StatusRow label="Account access" good />
           </section>
         </aside>
       </div>
 
       {deleteOpen && (
         <div className="fp-delete-overlay" role="dialog" aria-modal="true">
-          <div className="fp-delete-modal">
-            <h2>Request Account Deletion</h2>
+          <div className="fp-delete-modal fp-delete-modal-permanent">
+            <span className="fp-delete-kicker">PERMANENT ACTION</span>
+            <h2>Delete FleetPilot Account</h2>
             <p>
-              This creates a deletion request for review. It does not immediately remove your account or company data.
+              This deletes your FleetPilot login. If you are the only member
+              and owner of the company, the company workspace and eligible
+              company-scoped records are deleted too. This cannot restore your
+              old FleetPilot business data later.
             </p>
+
+            <div className="fp-delete-impact">
+              <strong>Before you continue</strong>
+              <span>Export anything you want to keep from Data &amp; Export.</span>
+              <span>
+                If your company has other members, FleetPilot will block owner
+                deletion until ownership/member access is resolved.
+              </span>
+              <span>
+                A minimal deletion marker is retained so Google sign-in does
+                not silently recreate the deleted account.
+              </span>
+            </div>
 
             <label>
               Optional reason
@@ -1887,18 +2034,24 @@ async function removeAvatar() {
                 rows={3}
                 value={deleteReason}
                 onChange={(event) => setDeleteReason(event.target.value)}
-                placeholder="Why are you leaving?"
+                placeholder="Optional feedback"
               />
             </label>
 
             <label>
               Type DELETE to confirm
               <input
+                autoComplete="off"
                 value={deleteConfirmation}
                 onChange={(event) => setDeleteConfirmation(event.target.value)}
                 placeholder="DELETE"
               />
             </label>
+
+            <div className="fp-delete-legal-links">
+              <Link href="/privacy" target="_blank">Privacy Policy</Link>
+              <Link href="/data-deletion" target="_blank">Data Deletion</Link>
+            </div>
 
             <div className="fp-delete-actions">
               <button
@@ -1911,9 +2064,9 @@ async function removeAvatar() {
               <button
                 type="button"
                 disabled={deleteBusy || deleteConfirmation !== "DELETE"}
-                onClick={requestDeletion}
+                onClick={() => void deleteAccount()}
               >
-                {deleteBusy ? "Submitting..." : "Submit Deletion Request"}
+                {deleteBusy ? "Deleting..." : "Delete My Account"}
               </button>
             </div>
           </div>

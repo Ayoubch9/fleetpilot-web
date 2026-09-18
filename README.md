@@ -1,16 +1,23 @@
-# FleetPilot Web v3.7.5 — Google Onboarding owner_user_id Fix
+# FleetPilot Web v3.8.1 — Settings Legal & Privacy Center
 
-Fixes first-time Google signup against the existing FleetPilot companies schema.
+Adds a dedicated logged-in Settings tab:
 
-Observed Supabase error:
+**Settings -> Legal & Privacy**
 
-`null value in column "owner_user_id" of relation "companies" violates not-null constraint`
+Includes:
+- Privacy Policy
+- Terms of Service
+- Data Deletion
+- Export My Data
+- Google Sign-In account information
+- Delete FleetPilot Account
 
-The onboarding RPC now creates a company with:
-- `name`
-- `owner_user_id = auth.uid()`
+The existing Security tab remains available for password/sign-out/security actions.
 
-Then it creates the matching `company_members` owner row.
+The legal pages remain public:
+- `/privacy`
+- `/terms`
+- `/data-deletion`
 
-Run the updated `supabase_social_auth_onboarding_setup.sql` once in Supabase SQL Editor.
-The function is dropped and recreated safely.
+No new Supabase migration is required beyond the v3.8.0
+`supabase_account_deletion_setup.sql`.

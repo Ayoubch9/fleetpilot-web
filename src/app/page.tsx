@@ -339,6 +339,9 @@ export default function HomePage() {
           <a href="#features">Features</a>
           <Link href="/pricing">Pricing</Link>
           <a href="#about">About</a>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/data-deletion">Data Deletion</Link>
           <Link href="/login">Sign In</Link>
         </div>
         <span>© 2026 FleetPilot</span>
