@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getFleetPilotAlerts } from "@/lib/fleetpilot-alerts";
+import { getMileVoxaAlerts } from "@/lib/fleetpilot-alerts";
 import WeekSelector from "@/components/week-selector";
 import GlobalSearch from "@/components/global-search";
 import { getAvatarUrl } from "@/lib/fleetpilot-account";
 import SidebarSignOut from "@/components/sidebar-sign-out";
 import MobileAppNavigation from "@/components/mobile-app-navigation";
+import MileVoxaBrand, { MileVoxaMark } from "@/components/milevoxa-brand";
 
 type ActivePage =
   | "overview"
@@ -73,7 +74,7 @@ export default async function AppShell({
         data: { user },
       },
     ] = await Promise.all([
-      getFleetPilotAlerts(supabase),
+      getMileVoxaAlerts(supabase),
       supabase.auth.getUser(),
     ]);
 
@@ -97,20 +98,14 @@ export default async function AppShell({
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb]">
-      <aside className="fp-sidebar-fixed fixed inset-y-0 left-0 z-40 hidden bg-gradient-to-b from-[#07172a] to-[#0a1c33] text-white lg:flex lg:flex-col">
+    <main className="min-h-screen bg-[#F7F9F8]">
+      <aside className="fp-sidebar-fixed fixed inset-y-0 left-0 z-40 hidden bg-gradient-to-b from-[#102238] to-[#0D1E31] text-white lg:flex lg:flex-col">
         <div className="px-5 py-[16px]">
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <Logo />
-            <div>
-              <div className="text-[20px] font-[780] tracking-[-.045em]">
-                Fleet<span className="text-[#2298ff]">Pilot</span>
-              </div>
-              <div className="mt-.5 text-[6.5px] font-black uppercase tracking-[.18em] text-[#9db1c6]">
-                Drive smarter. Earn more.
-              </div>
-            </div>
-          </Link>
+          <MileVoxaBrand
+            href="/dashboard"
+            onDark
+            className="mv-sidebar-brand"
+          />
         </div>
 
         <div className="fp-scroll flex-1 overflow-y-auto px-3 pb-3">
@@ -142,12 +137,16 @@ export default async function AppShell({
             <Link
               href="/dashboard"
               className="fp-mobile-header-brand"
-              aria-label="FleetPilot dashboard"
+              aria-label="MileVoxa dashboard"
             >
-              <Logo />
-              <span>
-                Fleet<span> Pilot</span>
-              </span>
+              <MileVoxaMark className="h-7 w-7" />
+              <img
+                src="/branding/milevoxa-logo-horizontal.png"
+                width={2000}
+                height={445}
+                className="mv-mobile-lockup"
+                alt="MileVoxa"
+              />
             </Link>
           </div>
 
@@ -161,16 +160,16 @@ export default async function AppShell({
             </div>
             <Link
               href="/notifications"
-              aria-label={`${alertCount} FleetPilot notifications`}
+              aria-label={`${alertCount} MileVoxa notifications`}
               className={`relative flex h-9 w-9 items-center justify-center rounded-full transition ${
-                active === "notifications" ? "bg-[#edf6ff]" : "hover:bg-[#f4f8fc]"
+                active === "notifications" ? "bg-[#EAF6EC]" : "hover:bg-[#f4f8fc]"
               }`}
             >
               <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-none stroke-[#263a53]" strokeWidth="1.8">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>
               </svg>
               {alertCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#1188ff] px-[3px] text-[7px] font-black text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#16853B] px-[3px] text-[7px] font-black text-white">
                   {alertCount > 99 ? "99+" : alertCount}
                 </span>
               )}
@@ -246,15 +245,6 @@ function NavSection({
   );
 }
 
-function Logo() {
-  return (
-    <svg viewBox="0 0 28 28" className="h-8 w-8">
-      <path d="M2 14.8 26 2 18.2 26l-4.7-9.2L2 14.8Z" fill="#1188ff" />
-      <path d="m13.5 16.8 5.2-7.1" fill="none" stroke="#9fd2ff" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 function SideItem({
   href,
   label,
@@ -271,7 +261,7 @@ function SideItem({
       href={href}
       className={`flex h-[36px] items-center gap-3 rounded-[8px] px-3.5 text-[11px] font-[500] transition ${
         active
-          ? "bg-gradient-to-r from-[#178fff] to-[#0b79e8] text-white shadow-[0_9px_24px_rgba(17,136,255,.18)]"
+          ? "bg-gradient-to-r from-[#16853B] to-[#126F32] text-white shadow-[0_9px_24px_rgba(22,133,59,.20)]"
           : "text-[#d2deea] hover:bg-white/[.05] hover:text-white"
       }`}
     >

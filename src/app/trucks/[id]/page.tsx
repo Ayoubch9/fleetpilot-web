@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import { money, num } from "@/lib/fleetpilot-week";
 
 type Props = {
@@ -30,7 +30,7 @@ export default async function TruckProfilePage({
   const { id } = await params;
   const query = await searchParams;
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     truckResult,

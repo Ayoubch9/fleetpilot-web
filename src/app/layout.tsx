@@ -1,37 +1,36 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://milevoxa.com"),
   title: {
-    default: "FleetPilot",
-    template: "%s | FleetPilot",
+    default: "MileVoxa",
+    template: "%s | MileVoxa",
   },
-  description: "Run your trucking business smarter with FleetPilot.",
-  applicationName: "FleetPilot",
-  robots: {
-    index: true,
-    follow: true,
+  description: "Run your trucking business with clarity.",
+  applicationName: "MileVoxa",
+  icons: {
+    icon: "/branding/milevoxa-app-icon.png",
+    shortcut: "/branding/milevoxa-app-icon.png",
+    apple: "/branding/milevoxa-app-icon.png",
+  },
+  openGraph: {
+    title: "MileVoxa",
+    description: "Run your trucking business with clarity.",
+    url: "https://milevoxa.com",
+    siteName: "MileVoxa",
+    type: "website",
   },
 };
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: "#07172a",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en">
       <body>
-        <a className="fp-skip-link" href="#fleetpilot-content">
+        <a className="fp-skip-link" href="#milevoxa-content">
           Skip to content
         </a>
-        <div id="fleetpilot-content">{children}</div>
+        <div id="milevoxa-content">{children}</div>
       </body>
     </html>
   );

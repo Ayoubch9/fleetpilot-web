@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddReimbursementForm from "./add-reimbursement-form";
 import ReimbursementFilters from "./reimbursement-filters";
 import ReimbursementQuickActions from "./reimbursement-quick-actions";
@@ -67,7 +67,7 @@ export default async function ReimbursementsPage({
   const maxAmount = params.maxAmount ? Number(params.maxAmount) : null;
 
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     { data: reimbursementData, error },
@@ -382,14 +382,14 @@ export default async function ReimbursementsPage({
               <div className="fp-reimb-stat-list mt-4">
                 <ReimbStatRow label="Full Recovery" amount={fullAmount} total={total} color="#58bd69" />
                 <ReimbStatRow label="Partial Recovery" amount={partialAmount} total={total} color="#f4b53e" />
-                <ReimbStatRow label="Standalone" amount={standaloneAmount} total={total} color="#4f8df7" />
+                <ReimbStatRow label="Standalone" amount={standaloneAmount} total={total} color="#16853B" />
               </div>
             </section>
 
             <section className="fp-reimb-side-card">
               <div className="flex items-center justify-between">
                 <h2>Top Recovered Categories</h2>
-                <span className="text-[9px] font-[600] text-[#1188ff]">View All →</span>
+                <span className="text-[9px] font-[600] text-[#16853B]">View All →</span>
               </div>
               <div className="fp-reimb-ranking mt-3">
                 {topCategories.map(([label, amount], index) => (
@@ -482,7 +482,7 @@ function ReimbDonut({
       ? `conic-gradient(
           #58bd69 0 ${fullPct}%,
           #f4b53e ${fullPct}% ${partialEnd}%,
-          #4f8df7 ${partialEnd}% ${standaloneEnd}%,
+          #16853B ${partialEnd}% ${standaloneEnd}%,
           #e7edf3 ${standaloneEnd}% 100%
         )`
       : "conic-gradient(#e7edf3 0 100%)";

@@ -23,7 +23,7 @@ const pageItems: SearchItem[] = [
   { id: "page-fuel", type: "page", title: "Fuel Analytics", subtitle: "Fuel costs, gallons and MPG", href: "/fuel" },
   { id: "page-reports", type: "page", title: "Reports", subtitle: "Fleet reports and exports", href: "/reports" },
   { id: "page-documents", type: "page", title: "Documents", subtitle: "Fleet and company documents", href: "/documents" },
-  { id: "page-pilot", type: "page", title: "Pilot AI", subtitle: "Ask FleetPilot about your business", href: "/pilot-ai" },
+  { id: "page-pilot", type: "page", title: "Pilot AI", subtitle: "Ask MileVoxa about your business", href: "/pilot-ai" },
   { id: "page-settings", type: "page", title: "Settings", subtitle: "Account, company and preferences", href: "/settings" },
 ];
 
@@ -206,7 +206,7 @@ export default function GlobalSearch() {
             }
           }}
           placeholder="Search loads, trucks, expenses..."
-          aria-label="Search FleetPilot"
+          aria-label="Search MileVoxa"
           autoComplete="off"
         />
         {query && (

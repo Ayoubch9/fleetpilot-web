@@ -1,23 +1,16 @@
-# FleetPilot Web v3.8.1 — Settings Legal & Privacy Center
+# MileVoxa Web v4.0.6 — Tools Selector Blue Restore
 
-Adds a dedicated logged-in Settings tab:
+Built on v4.0.5.
 
-**Settings -> Legal & Privacy**
+Keeps the overall Tools page on the MileVoxa navy/green brand system while
+restoring the calculator selector list to a premium navy/blue interaction style.
 
-Includes:
-- Privacy Policy
-- Terms of Service
-- Data Deletion
-- Export My Data
-- Google Sign-In account information
-- Delete FleetPilot Account
+The selected calculator now uses:
+- dark navy/blue card
+- brighter blue border/accent
+- white title
+- soft blue description
+- left blue active indicator
 
-The existing Security tab remains available for password/sign-out/security actions.
-
-The legal pages remain public:
-- `/privacy`
-- `/terms`
-- `/data-deletion`
-
-No new Supabase migration is required beyond the v3.8.0
-`supabase_account_deletion_setup.sql`.
+All calculator buttons, results, focus states, and other page accents remain
+MileVoxa green.

@@ -1,4 +1,4 @@
--- FleetPilot Web v3.0.2 — Mobile-style reimbursement model
+-- MileVoxa Web v3.0.2 — Mobile-style reimbursement model
 -- Run once in Supabase SQL Editor BEFORE using standalone reimbursements.
 
 alter table public.reimbursements

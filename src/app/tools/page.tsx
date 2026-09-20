@@ -2,23 +2,23 @@ import Link from "next/link";
 import FreeTools from "./free-tools";
 
 export const metadata = {
-  title: "Free Trucking Calculators | FleetPilot",
+  title: "Free Trucking Calculators | MileVoxa",
   description:
     "Free trucking calculators for cost per mile, load profit, owner-operator profit, lease-operator take-home, fuel cost and rate per mile.",
 };
 
 export default function ToolsPage() {
   return (
-    <main className="fp-marketing min-h-screen bg-[#f7f9fc] text-[#0b1730]">
+    <main className="mv-tools-page fp-marketing min-h-screen bg-[#f7f9fc] text-[#0b1730]">
       <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand">
-          <Logo />
-          <div>
-            <div className="fp-marketing-brand-name">
-              Fleet<span>Pilot</span>
-            </div>
-            <div className="fp-marketing-tagline">Drive smarter. Earn more.</div>
-          </div>
+        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
+          <img
+            src="/branding/milevoxa-logo-full.png"
+            width={2000}
+            height={612}
+            className="mv-marketing-logo"
+            alt="MileVoxa — Run your trucking business with clarity."
+          />
         </Link>
         <nav className="fp-marketing-nav">
           <Link href="/#features">Features</Link>
@@ -50,7 +50,7 @@ export default function ToolsPage() {
         <span>FROM CALCULATOR TO CONTROL CENTER</span>
         <h2>Stop re-entering the same numbers every week.</h2>
         <p>
-          FleetPilot stores the loads, trucks, fuel, maintenance and expenses
+          MileVoxa stores the loads, trucks, fuel, maintenance and expenses
           behind these calculations so profitability stays available whenever
           you need it.
         </p>
@@ -60,11 +60,3 @@ export default function ToolsPage() {
   );
 }
 
-function Logo() {
-  return (
-    <svg viewBox="0 0 28 28" className="h-8 w-8">
-      <path d="M2 14.8 26 2 18.2 26l-4.7-9.2L2 14.8Z" fill="#1188ff" />
-      <path d="m13.5 16.8 5.2-7.1" fill="none" stroke="#9fd2ff" strokeWidth="1.5" />
-    </svg>
-  );
-}

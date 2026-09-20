@@ -128,7 +128,7 @@ export default function MaintenanceQuickActions({
     );
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `fleetpilot-maintenance-${new Date()
+    anchor.download = `milevoxa-maintenance-${new Date()
       .toISOString()
       .slice(0, 10)}.csv`;
     document.body.appendChild(anchor);

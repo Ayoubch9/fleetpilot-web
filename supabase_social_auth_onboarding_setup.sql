@@ -1,4 +1,4 @@
--- FleetPilot Web v3.7.5 — Google Social Auth owner_user_id Fix
+-- MileVoxa Web v3.7.5 — Google Social Auth owner_user_id Fix
 -- Run this file in Supabase SQL Editor. It safely replaces the previous function.
 
 drop function if exists public.complete_fleetpilot_social_onboarding(text, text);
@@ -85,7 +85,7 @@ begin
 exception
   when others then
     raise exception using
-      message = 'FleetPilot onboarding failed: ' || sqlerrm,
+      message = 'MileVoxa onboarding failed: ' || sqlerrm,
       detail = 'SQLSTATE ' || sqlstate,
       hint = 'Verify companies.owner_user_id and company_members accept the authenticated owner.';
 end;

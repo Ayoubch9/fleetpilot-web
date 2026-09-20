@@ -23,7 +23,7 @@ export async function GET() {
 
     if (!membership?.company_id) {
       return NextResponse.json(
-        { error: "No FleetPilot company is linked to this account." },
+        { error: "No MileVoxa company is linked to this account." },
         { status: 403 }
       );
     }
@@ -61,7 +61,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        format: "fleetpilot-account-export-v1",
+        format: "milevoxa-account-export-v1",
         exportedAt: new Date().toISOString(),
         account: {
           id: user.id,
@@ -87,14 +87,14 @@ export async function GET() {
         headers: {
           "Cache-Control": "no-store",
           "Content-Disposition":
-            'attachment; filename="fleetpilot-account-export.json"',
+            'attachment; filename="milevoxa-account-export.json"',
         },
       }
     );
   } catch (error) {
-    console.error("FleetPilot export error:", error);
+    console.error("MileVoxa export error:", error);
     return NextResponse.json(
-      { error: "Could not export FleetPilot account data." },
+      { error: "Could not export MileVoxa account data." },
       { status: 500 }
     );
   }

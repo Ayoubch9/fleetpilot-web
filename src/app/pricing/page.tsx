@@ -16,14 +16,16 @@ const included = [
 
 export default function PricingPage() {
   return (
-    <main className="fp-marketing fp-pricing-page min-h-screen bg-[#f7f9fc] text-[#0b1730]">
+    <main className="mv-pricing-page fp-marketing fp-pricing-page min-h-screen bg-[#f7f9fc] text-[#0b1730]">
       <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand">
-          <Logo />
-          <div>
-            <div className="fp-marketing-brand-name">Fleet<span>Pilot</span></div>
-            <div className="fp-marketing-tagline">Drive smarter. Earn more.</div>
-          </div>
+        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
+          <img
+            src="/branding/milevoxa-logo-full.png"
+            width={2000}
+            height={612}
+            className="mv-marketing-logo"
+            alt="MileVoxa — Run your trucking business with clarity."
+          />
         </Link>
 
         <nav className="fp-marketing-nav">
@@ -39,10 +41,10 @@ export default function PricingPage() {
       </header>
 
       <section className="fp-pricing-hero">
-        <span>Simple FleetPilot pricing</span>
+        <span>Simple MileVoxa pricing</span>
         <h1>Start with the product.<br />Decide with your own numbers.</h1>
         <p>
-          Every new FleetPilot account starts with a 14-day free trial. No card is
+          Every new MileVoxa account starts with a 14-day free trial. No card is
           required to test the workflow with your own loads, costs and fleet data.
         </p>
       </section>
@@ -52,7 +54,7 @@ export default function PricingPage() {
           <div className="fp-pricing-popular">14-DAY FREE TRIAL</div>
           <div className="fp-pricing-card-head">
             <div>
-              <span>FleetPilot Pro</span>
+              <span>MileVoxa Pro</span>
               <h2>$29<span>/month</span></h2>
               <p>Planned launch pricing after the free trial.</p>
             </div>
@@ -80,7 +82,7 @@ export default function PricingPage() {
         <aside className="fp-pricing-side">
           <div className="fp-pricing-side-card">
             <span>THE TRIAL</span>
-            <h3>Use FleetPilot like a real operating week.</h3>
+            <h3>Use MileVoxa like a real operating week.</h3>
             <ol>
               <li><b>01</b><div><strong>Add your trucks</strong><span>Set up the fleet you actually run.</span></div></li>
               <li><b>02</b><div><strong>Track real loads</strong><span>Use manual entry or Telegram load import.</span></div></li>
@@ -93,7 +95,7 @@ export default function PricingPage() {
             <span>WHY ONE PLAN?</span>
             <h3>No feature maze.</h3>
             <p>
-              FleetPilot is built as one connected operating system. Loads are more
+              MileVoxa is built as one connected operating system. Loads are more
               useful when expenses, maintenance, fuel and settlement live beside them,
               so the core product stays together.
             </p>
@@ -108,7 +110,7 @@ export default function PricingPage() {
             <h2>More than a load tracker.</h2>
           </div>
           <p>
-            FleetPilot is meant to replace the disconnected process around the load—not
+            MileVoxa is meant to replace the disconnected process around the load—not
             just store load numbers.
           </p>
         </div>
@@ -123,7 +125,7 @@ export default function PricingPage() {
       <section className="fp-marketing-final-cta">
         <div>
           <span>Start without a card</span>
-          <h2>Give FleetPilot one real week of your data.</h2>
+          <h2>Give MileVoxa one real week of your data.</h2>
           <p>You will know quickly whether having the operation in one place changes the way you run it.</p>
         </div>
         <div>
@@ -139,11 +141,3 @@ function ValueCard({ title, text }: { title: string; text: string }) {
   return <article><span>✓</span><h3>{title}</h3><p>{text}</p></article>;
 }
 
-function Logo() {
-  return (
-    <svg viewBox="0 0 28 28" className="h-8 w-8">
-      <path d="M2 14.8 26 2 18.2 26l-4.7-9.2L2 14.8Z" fill="#1188ff" />
-      <path d="m13.5 16.8 5.2-7.1" fill="none" stroke="#9fd2ff" strokeWidth="1.5" />
-    </svg>
-  );
-}

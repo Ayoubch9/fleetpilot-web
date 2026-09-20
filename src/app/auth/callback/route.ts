@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   }
 
   // A deleted Google identity may be recreated by the OAuth provider/Supabase.
-  // Do not silently recreate FleetPilot business data. Send the user to an
+  // Do not silently recreate MileVoxa business data. Send the user to an
   // explicit decision screen first.
   const { data: previouslyDeleted, error: deletedCheckError } =
     await supabase.rpc("is_fleetpilot_deleted_account");
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
       .maybeSingle(),
   ]);
 
-  // Existing FleetPilot user: continue directly into the requested page.
+  // Existing MileVoxa user: continue directly into the requested page.
   if (membership?.company_id) {
     // Backfill a missing profile name when Google supplied one.
     if (!profile?.full_name) {

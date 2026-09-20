@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddTruckForm from "./add-truck-form";
 import TruckActions from "./truck-actions";
 import TrucksQuickActions from "./trucks-quick-actions";
@@ -49,7 +49,7 @@ export default async function TrucksPage({
   const requestedPage = Math.max(1, Number(params.page || "1") || 1);
 
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     { data: truckData, error: truckError },
@@ -345,7 +345,7 @@ export default async function TrucksPage({
             <section className="fp-truck-side-card">
               <div className="flex items-center justify-between">
                 <h2>Top Trucks by Mileage</h2>
-                <span className="text-[9px] font-[600] text-[#1188ff]">View All →</span>
+                <span className="text-[9px] font-[600] text-[#16853B]">View All →</span>
               </div>
 
               <div className="fp-truck-ranking mt-3">

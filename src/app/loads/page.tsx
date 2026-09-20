@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddLoadForm from "./add-load-form";
 import LoadsQuickActions from "./loads-quick-actions";
 import LoadActions from "./load-actions";
@@ -97,7 +97,7 @@ export default async function LoadsPage({
   const selectedWeekEnd = weekEnd(selectedWeekStart);
 
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     { data: loadData, error: loadError },
@@ -691,7 +691,7 @@ export default async function LoadsPage({
             <section className="fp-load-side-card">
               <div className="flex items-center justify-between">
                 <h2>Top Lanes</h2>
-                <span className="text-[8px] font-[600] text-[#1188ff]">
+                <span className="text-[8px] font-[600] text-[#16853B]">
                   View All →
                 </span>
               </div>
@@ -714,7 +714,7 @@ export default async function LoadsPage({
             </section>
 
             <div className="fp-load-promo">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#07172a]/80 via-[#07172a]/28 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#102238]/80 via-[#102238]/28 to-transparent" />
               <div className="relative z-10">
                 <div className="text-[15px] font-[740] leading-[1.15] text-white">
                   Every mile<br />builds your tomorrow.
@@ -872,7 +872,7 @@ function LoadDonut({
 
   const items = [
     { label: "Completed", value: counts.completed, color: "#58c98a" },
-    { label: "Active", value: counts.active, color: "#4f8df7" },
+    { label: "Active", value: counts.active, color: "#16853B" },
     { label: "Dispatched", value: counts.dispatched, color: "#b8836c" },
     { label: "Cancelled", value: counts.cancelled, color: "#e16e69" },
   ];

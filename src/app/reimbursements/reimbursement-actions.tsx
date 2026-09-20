@@ -213,7 +213,7 @@ export default function ReimbursementActions({
                 <div>
                   <span>REIMBURSEMENT DETAILS</span>
                   <h2>Edit Reimbursement</h2>
-                  <p>Update the recovery record saved in FleetPilot.</p>
+                  <p>Update the recovery record saved in MileVoxa.</p>
                 </div>
                 <button
                   type="button"

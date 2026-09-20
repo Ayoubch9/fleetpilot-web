@@ -10,14 +10,14 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("FleetPilot page error:", error);
+    console.error("MileVoxa page error:", error);
   }, [error]);
 
   return (
     <main className="fp-state-page">
       <div className="fp-state-card">
         <div className="fp-state-icon">!</div>
-        <h1>FleetPilot hit a temporary problem</h1>
+        <h1>MileVoxa hit a temporary problem</h1>
         <p>
           Your data has not been changed. Try loading the page again. If the
           problem continues, check the development console or deployment logs.

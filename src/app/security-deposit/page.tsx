@@ -1,5 +1,5 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SecurityDepositManager, {
   type DepositSettings,
   type DepositTransaction,
@@ -12,7 +12,7 @@ export default async function SecurityDepositPage() {
     fullName,
     companyName,
     role,
-  } = await getFleetPilotAccount();
+  } = await getMileVoxaAccount();
 
   const { data: membership } = await supabase
     .from("company_members")

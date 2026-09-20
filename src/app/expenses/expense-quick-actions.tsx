@@ -36,7 +36,7 @@ export default function ExpenseQuickActions({ expenses }: { expenses: Expense[] 
       ...expenses.map(e=>[e.expense_date||"",e.category||"",String(Number(e.amount||0)),e.vendor||"",e.description||"",e.truck_id||"",e.load_id||"",String(Number(e.gallons||0)||""),String(Number(e.fuel_price_per_gallon||0)||"")])];
     const csv=data.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\r\n");
     const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"})); const a=document.createElement("a");
-    a.href=url;a.download=`fleetpilot-expenses-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    a.href=url;a.download=`milevoxa-expenses-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
   }
   return <>
     <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden" onChange={choose}/>

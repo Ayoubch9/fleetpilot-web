@@ -1,4 +1,4 @@
--- FleetPilot Web Documents setup
+-- MileVoxa Web Documents setup
 -- Run once in Supabase SQL Editor.
 
 create table if not exists public.documents (

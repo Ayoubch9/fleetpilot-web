@@ -1,5 +1,5 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import PilotChat from "./pilot-chat";
 
 const n=(v:unknown)=>Number(v||0)||0;
@@ -13,7 +13,7 @@ export default async function PilotAIPage({
  searchParams: SearchParams;
 }){
  const params = await searchParams;
- const {supabase,fullName,companyName,role}=await getFleetPilotAccount();
+ const {supabase,fullName,companyName,role}=await getMileVoxaAccount();
  const [{data:loads},{data:expenses},{data:trucks},{data:maintenance}] = await Promise.all([
   supabase.from("loads").select("rate, loaded_miles, deadhead_miles, truck_id").limit(500),
   supabase.from("expenses").select("amount, category, truck_id").limit(1000),

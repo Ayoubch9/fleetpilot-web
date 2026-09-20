@@ -140,7 +140,7 @@ export default function LoadsQuickActions({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `fleetpilot-loads-${new Date()
+    anchor.download = `milevoxa-loads-${new Date()
       .toISOString()
       .slice(0, 10)}.csv`;
     document.body.appendChild(anchor);
@@ -203,7 +203,7 @@ export default function LoadsQuickActions({
                   <span>Quick Action</span>
                   <h2>Duplicate Load</h2>
                   <p>
-                    Choose an existing load. FleetPilot will create a new
+                    Choose an existing load. MileVoxa will create a new
                     Upcoming copy that you can edit afterward.
                   </p>
                 </div>

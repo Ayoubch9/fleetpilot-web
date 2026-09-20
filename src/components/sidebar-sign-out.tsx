@@ -28,7 +28,7 @@ export default function SidebarSignOut() {
       onClick={signOut}
       disabled={busy}
       className="fp-sidebar-signout"
-      aria-label="Sign out of FleetPilot"
+      aria-label="Sign out of MileVoxa"
     >
       <SignOutIcon />
       <span>{busy ? "Signing Out..." : "Sign Out"}</span>

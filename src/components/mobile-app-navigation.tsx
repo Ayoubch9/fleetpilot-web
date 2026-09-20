@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { MileVoxaMark } from "@/components/milevoxa-brand";
 
 type ActivePage =
   | "overview"
@@ -76,7 +77,7 @@ export default function MobileAppNavigation({
           type="button"
           className={moreActive ? "active" : ""}
           onClick={() => setOpen(true)}
-          aria-label="More FleetPilot pages"
+          aria-label="More MileVoxa pages"
         >
           <MobileIcon type="more" />
           <span>More</span>
@@ -98,9 +99,12 @@ export default function MobileAppNavigation({
               <div className="fp-mobile-sheet-handle" />
 
               <header>
-                <div>
-                  <span>FLEETPILOT</span>
-                  <h2>More</h2>
+                <div className="mv-mobile-more-brand">
+                  <MileVoxaMark className="h-7 w-7" />
+                  <div>
+                    <span>MILEVOXA</span>
+                    <h2>More</h2>
+                  </div>
                 </div>
                 <button
                   type="button"

@@ -163,7 +163,7 @@ export default function LoadActions({
                 <header>
                   <div>
                     <h2>Edit Load #{load.load_number || "—"}</h2>
-                    <p>Update the load details and save them directly to FleetPilot.</p>
+                    <p>Update the load details and save them directly to MileVoxa.</p>
                   </div>
                   <button
                     type="button"

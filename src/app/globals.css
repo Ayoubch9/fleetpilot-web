@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --fp-navy: #07172a;
+  --fp-navy: #102238;
   --fp-navy-2: #0b2038;
-  --fp-blue: #1188ff;
+  --fp-blue: #16853B;
   --fp-blue-dark: #086ed8;
-  --fp-sky: #eaf4ff;
-  --fp-page: #f4f7fb;
+  --fp-sky: #EAF6EC;
+  --fp-page: #F7F9F8;
   --fp-card: #ffffff;
   --fp-card-2: #f9fbfe;
   --fp-text: #0b1730;
@@ -170,7 +170,7 @@ button { cursor: pointer; }
   overflow: hidden;
   background-image:
     linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.91) 32%, rgba(255,255,255,.14) 58%, rgba(255,255,255,.03) 100%),
-    url('/fleetpilot-hero-banner.jpg');
+    url('/milevoxa-hero-banner.jpg');
   background-size: cover;
   background-position: center right;
 }
@@ -237,7 +237,7 @@ button { cursor: pointer; }
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.96) 26%, rgba(255,255,255,.55) 42%, rgba(255,255,255,.05) 70%),
-    url('/fleetpilot-hero-clean.jpg');
+    url('/milevoxa-hero-clean.jpg');
   background-size: cover;
   background-position: center right;
 }
@@ -384,7 +384,7 @@ body {
 .fp-accent-line {
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1188ff, #71baff);
+  background: linear-gradient(90deg, #16853B, #71baff);
 }
 /* === END PREMIUM UI POLISH v0.8.3 === */
 
@@ -848,7 +848,7 @@ body {
   justify-content: center;
   border-radius: 7px;
   background: #edf5ff;
-  color: #1188ff;
+  color: #16853B;
 }
 
 .fp-quick-icon-primary {
@@ -1914,7 +1914,7 @@ body {
   overflow: hidden;
   border-radius: 12px;
   border: 1px solid #d7e2ec;
-  background-image: url('/fleetpilot-hero-clean.jpg');
+  background-image: url('/milevoxa-hero-clean.jpg');
   background-position: center;
   background-size: cover;
   padding: 17px;
@@ -2521,7 +2521,7 @@ body {
   border-radius: 7px;
   background-image:
     linear-gradient(rgba(7,23,42,.06), rgba(7,23,42,.06)),
-    url('/fleetpilot-hero-clean.jpg');
+    url('/milevoxa-hero-clean.jpg');
   background-size: 130px auto;
   background-repeat: no-repeat;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
@@ -2782,7 +2782,7 @@ body {
   overflow: hidden;
   border-radius: 12px;
   border: 1px solid #d7e2ec;
-  background-image: url('/fleetpilot-hero-clean.jpg');
+  background-image: url('/milevoxa-hero-clean.jpg');
   background-position: 64% center;
   background-size: cover;
   padding: 17px;
@@ -3419,7 +3419,7 @@ body {
   overflow: hidden;
   border-radius: 12px;
   border: 1px solid #d7e2ec;
-  background-image: url('/fleetpilot-hero-clean.jpg');
+  background-image: url('/milevoxa-hero-clean.jpg');
   background-position: 64% center;
   background-size: cover;
   padding: 17px;
@@ -3792,7 +3792,7 @@ body {
 .fp-reimb-rank{display:flex;width:20px;height:20px;align-items:center;justify-content:center;border-radius:50%;background:#f1f4f8;color:#344a64;font-size:8.5px;font-weight:680}
 .fp-reimb-ranking-row>span:last-child{color:#71839a;text-align:right}
 
-.fp-maint-promo,.fp-reimb-promo{position:relative;min-height:155px;overflow:hidden;border-radius:12px;border:1px solid #d7e2ec;background-image:url('/fleetpilot-hero-clean.jpg');background-position:64% center;background-size:cover;padding:17px;box-shadow:0 8px 24px rgba(34,67,101,.06)}
+.fp-maint-promo,.fp-reimb-promo{position:relative;min-height:155px;overflow:hidden;border-radius:12px;border:1px solid #d7e2ec;background-image:url('/milevoxa-hero-clean.jpg');background-position:64% center;background-size:cover;padding:17px;box-shadow:0 8px 24px rgba(34,67,101,.06)}
 
 @media(max-width:1360px){
   .fp-maint-layout,.fp-reimb-layout{grid-template-columns:minmax(0,1fr) 230px}
@@ -3884,13 +3884,13 @@ body {
 .fp-settle-mini-group{display:flex;flex:1;flex-direction:column;align-items:center}
 .fp-settle-mini-bars{display:flex;height:105px;align-items:flex-end;gap:3px}
 .fp-settle-mini-bars span{display:block;width:14px;border-radius:3px 3px 0 0}
-.fp-settle-mini-bars .gross{background:#c9e1ff}.fp-settle-mini-bars .net{background:#4f8df7}
+.fp-settle-mini-bars .gross{background:#c9e1ff}.fp-settle-mini-bars .net{background:#16853B}
 .fp-settle-mini-group small{margin-top:7px;color:#8192a6;font-size:8px}
 .fp-settle-cost-list{display:grid;gap:11px}
 .fp-settle-cost-row{display:grid;grid-template-columns:22px minmax(0,1fr) 82px;align-items:center;gap:7px;color:#42576f;font-size:9px}
 .fp-settle-cost-row strong{text-align:right;color:#e15a62;font-size:9px}.fp-settle-cost-row strong.positive{color:#2da35d}
 .fp-settle-rank{display:flex;width:19px;height:19px;align-items:center;justify-content:center;border-radius:50%;background:#f1f4f8;color:#344a64;font-size:8px;font-weight:680}
-.fp-settle-promo,.fp-fuel-promo{position:relative;min-height:155px;overflow:hidden;border-radius:12px;border:1px solid #d7e2ec;background-image:url('/fleetpilot-hero-clean.jpg');background-position:64% center;background-size:cover;padding:17px;box-shadow:0 8px 24px rgba(34,67,101,.06)}
+.fp-settle-promo,.fp-fuel-promo{position:relative;min-height:155px;overflow:hidden;border-radius:12px;border:1px solid #d7e2ec;background-image:url('/milevoxa-hero-clean.jpg');background-position:64% center;background-size:cover;padding:17px;box-shadow:0 8px 24px rgba(34,67,101,.06)}
 
 /* Fuel */
 .fp-fuel-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -3904,7 +3904,7 @@ body {
 .fp-fuel-truck-cost-panel{padding:16px}
 .fp-fuel-legend{display:flex;gap:15px;color:#71839a;font-size:8px}
 .fp-fuel-legend span{display:flex;align-items:center;gap:5px}
-.fp-fuel-legend i{width:8px;height:8px;border-radius:2px}.fp-fuel-legend .cost{background:#4f8df7}.fp-fuel-legend .revenue{background:#dbeafc}
+.fp-fuel-legend i{width:8px;height:8px;border-radius:2px}.fp-fuel-legend .cost{background:#16853B}.fp-fuel-legend .revenue{background:#dbeafc}
 .fp-fuel-donut{display:flex;width:150px;height:150px;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 10px 22px rgba(40,74,107,.06)}
 .fp-fuel-donut>div{display:flex;width:92px;height:92px;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;background:#fff;box-shadow:0 5px 18px rgba(36,68,100,.08),inset 0 0 0 1px #edf2f7}
 .fp-fuel-donut strong{max-width:82px;overflow:hidden;color:#0b1930;font-size:15px;line-height:1;font-weight:760;text-overflow:ellipsis;white-space:nowrap}.fp-fuel-donut span{margin-top:6px;color:#71849b;font-size:9px}
@@ -3987,7 +3987,7 @@ body {
 .fp-compact-table{width:100%;border-collapse:collapse}.fp-compact-table th{height:32px;background:#f0f5fb;padding:0 10px;text-align:left;color:#62758e;font-size:8px;text-transform:uppercase}.fp-compact-table td{height:42px;border-bottom:1px solid #edf2f6;padding:0 10px;color:#2f435b;font-size:9.5px}.fp-compact-table td.good{color:#2ca45d;font-weight:700}
 
 .fp-side-action{display:grid;width:100%;min-height:42px;grid-template-columns:22px minmax(0,1fr) 12px;align-items:center;gap:7px;margin-top:8px;border:1px solid #dfe7ef;border-radius:8px;background:#fbfdff;padding:0 9px;color:#263a53;text-align:left;font-size:10px}.fp-side-action b{text-align:right;color:#7890a7}
-.fp-tool-promo{min-height:200px;border-radius:12px;border:1px solid #d7e2ec;background:linear-gradient(90deg,rgba(6,24,45,.8),rgba(6,24,45,.1)),url('/fleetpilot-hero-clean.jpg') 64% center/cover;padding:18px;color:#fff;box-shadow:0 8px 24px rgba(34,67,101,.06)}
+.fp-tool-promo{min-height:200px;border-radius:12px;border:1px solid #d7e2ec;background:linear-gradient(90deg,rgba(6,24,45,.8),rgba(6,24,45,.1)),url('/milevoxa-hero-clean.jpg') 64% center/cover;padding:18px;color:#fff;box-shadow:0 8px 24px rgba(34,67,101,.06)}
 .fp-tool-promo>div{font-size:18px;font-weight:760;line-height:1.2}.fp-tool-promo small{display:block;margin-top:8px;color:#dbe7f5;font-size:9px}
 
 .fp-empty-docs{display:flex;min-height:420px;flex-direction:column;align-items:center;justify-content:center;color:#6f8197}.fp-empty-docs strong{font-size:15px}.fp-empty-docs span{margin-top:6px;font-size:9px}.fp-empty-donut{display:flex;width:150px;height:150px;margin:18px auto 0;flex-direction:column;align-items:center;justify-content:center;border:24px solid #e7edf3;border-radius:50%}.fp-empty-donut strong{font-size:24px}.fp-empty-donut span{margin-top:4px;color:#7d8ea1;font-size:8px}.fp-muted-center{text-align:center;color:#8091a4;font-size:9px}
@@ -4037,7 +4037,7 @@ body {
   top: -60px;
   z-index: 9999;
   border-radius: 8px;
-  background: #07172a;
+  background: #102238;
   padding: 10px 14px;
   color: white;
   font-size: 12px;
@@ -4047,7 +4047,7 @@ body {
 .fp-skip-link:focus { top: 12px; }
 
 :focus-visible {
-  outline: 2px solid #1188ff;
+  outline: 2px solid #16853B;
   outline-offset: 2px;
 }
 
@@ -4122,7 +4122,7 @@ input:disabled {
   justify-content: center;
   background:
     radial-gradient(circle at 80% 0%, rgba(17,136,255,.12), transparent 28%),
-    #f4f7fb;
+    #F7F9F8;
   padding: 24px;
 }
 .fp-state-card {
@@ -4686,7 +4686,7 @@ input:disabled {
   justify-content:center;
   overflow:hidden;
   border-radius:50%;
-  background:#07172a;
+  background:#102238;
   color:#fff;
   font-size:11px;
   font-weight:800;
@@ -5397,7 +5397,7 @@ body > .fp-quick-modal-backdrop .fp-quick-modal{
   border-radius:8px;
 }
 .fp-global-search-result-icon.page{background:#eef4fb;color:#536d87}
-.fp-global-search-result-icon.load{background:#eaf4ff;color:#3689df}
+.fp-global-search-result-icon.load{background:#EAF6EC;color:#3689df}
 .fp-global-search-result-icon.truck{background:#eaf8f0;color:#3b9a61}
 .fp-global-search-result-icon.expense{background:#fff1f2;color:#d75a64}
 .fp-global-search-result-icon.maintenance{background:#f0edff;color:#7059d9}
@@ -6194,7 +6194,7 @@ body > .fp-quick-modal-backdrop .fp-quick-modal{
   height:30px;
   align-items:center;
   border-radius:6px;
-  background:#eaf4ff;
+  background:#EAF6EC;
   padding:0 9px;
   color:#247fce;
   font-size:7.5px;
@@ -6858,7 +6858,7 @@ html{scroll-behavior:smooth}
 .fp-marketing-feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .fp-marketing-feature-card{min-height:205px;border:1px solid #e0e8f0;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfdff);padding:21px;box-shadow:0 8px 28px rgba(30,64,99,.045);transition:.17s ease}
 .fp-marketing-feature-card:hover{transform:translateY(-2px);border-color:#c7d9ea;box-shadow:0 15px 36px rgba(30,64,99,.08)}
-.fp-marketing-feature-icon{display:flex;width:38px;height:38px;align-items:center;justify-content:center;border-radius:10px;background:#eaf4ff;color:#3c86df}
+.fp-marketing-feature-icon{display:flex;width:38px;height:38px;align-items:center;justify-content:center;border-radius:10px;background:#EAF6EC;color:#3c86df}
 .fp-marketing-feature-icon.expense{background:#fff0f1;color:#d85c66}.fp-marketing-feature-icon.tool{background:#eaf8ef;color:#3a9c61}.fp-marketing-feature-icon.settlement{background:#f0edff;color:#6b59d5}.fp-marketing-feature-icon.fuel{background:#fff5df;color:#b87b16}.fp-marketing-feature-icon.ai{background:#eeeaff;color:#684fe0}.fp-marketing-feature-icon.document{background:#eaf7f8;color:#388c98}.fp-marketing-feature-icon.report{background:#edf2ff;color:#4e6ed5}
 .fp-marketing-feature-card h3{margin-top:17px;color:#21364d;font-size:11.5px;font-weight:710}
 .fp-marketing-feature-card p{margin-top:7px;color:#74869a;font-size:8.5px;line-height:1.6}
@@ -6915,7 +6915,7 @@ html{scroll-behavior:smooth}
 .fp-pricing-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.fp-pricing-card-head>div:first-child>span{color:#536980;font-size:8px;font-weight:700}.fp-pricing-card-head h2{margin-top:6px;color:#10253d;font-size:38px;font-weight:770;letter-spacing:-.045em}.fp-pricing-card-head h2 span{font-size:10px;font-weight:600;color:#71859a}.fp-pricing-card-head p{margin-top:5px;color:#8393a4;font-size:7.5px}
 .fp-pricing-trial-badge{display:grid;gap:2px;border:1px solid #d6e8d9;border-radius:10px;background:#effaf2;padding:10px 12px;text-align:right}.fp-pricing-trial-badge strong{color:#328b55;font-size:10px}.fp-pricing-trial-badge span{color:#6d987b;font-size:6.5px}
 .fp-pricing-included{margin-top:23px;border-top:1px solid #edf2f6;padding-top:20px}.fp-pricing-included>span{color:#435a72;font-size:8px;font-weight:680}.fp-pricing-included>div{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin-top:13px}.fp-pricing-included p{display:flex;gap:7px;color:#687d92;font-size:7.5px}.fp-pricing-included i{color:#2e9c5c;font-style:normal;font-weight:800}.fp-marketing-button.pricing{width:100%;height:46px;margin-top:22px;font-size:9px}.fp-pricing-card>small{display:block;margin-top:10px;color:#8998a7;font-size:6.5px;line-height:1.45;text-align:center}
-.fp-pricing-side{display:grid;gap:14px}.fp-pricing-side-card{border:1px solid #dfe7ef;border-radius:16px;background:#fff;padding:22px}.fp-pricing-side-card>span{color:#4f88ef;font-size:6.5px;font-weight:800;letter-spacing:.1em}.fp-pricing-side-card h3{margin-top:8px;color:#20364e;font-size:15px;font-weight:720;letter-spacing:-.025em}.fp-pricing-side-card>p{margin-top:9px;color:#75889b;font-size:8px;line-height:1.6}.fp-pricing-side-card ol{display:grid;gap:13px;margin-top:18px}.fp-pricing-side-card li{display:grid;grid-template-columns:25px 1fr;gap:9px}.fp-pricing-side-card li>b{display:flex;width:23px;height:23px;align-items:center;justify-content:center;border-radius:7px;background:#eaf4ff;color:#3b83da;font-size:6.5px}.fp-pricing-side-card li div{display:grid;gap:2px}.fp-pricing-side-card li strong{color:#435970;font-size:8px}.fp-pricing-side-card li span{color:#8292a3;font-size:7px}.fp-pricing-side-card.dark{background:#0c223d;border-color:#163858}.fp-pricing-side-card.dark h3{color:#fff}.fp-pricing-side-card.dark p{color:#92a7bb}
+.fp-pricing-side{display:grid;gap:14px}.fp-pricing-side-card{border:1px solid #dfe7ef;border-radius:16px;background:#fff;padding:22px}.fp-pricing-side-card>span{color:#4f88ef;font-size:6.5px;font-weight:800;letter-spacing:.1em}.fp-pricing-side-card h3{margin-top:8px;color:#20364e;font-size:15px;font-weight:720;letter-spacing:-.025em}.fp-pricing-side-card>p{margin-top:9px;color:#75889b;font-size:8px;line-height:1.6}.fp-pricing-side-card ol{display:grid;gap:13px;margin-top:18px}.fp-pricing-side-card li{display:grid;grid-template-columns:25px 1fr;gap:9px}.fp-pricing-side-card li>b{display:flex;width:23px;height:23px;align-items:center;justify-content:center;border-radius:7px;background:#EAF6EC;color:#3b83da;font-size:6.5px}.fp-pricing-side-card li div{display:grid;gap:2px}.fp-pricing-side-card li strong{color:#435970;font-size:8px}.fp-pricing-side-card li span{color:#8292a3;font-size:7px}.fp-pricing-side-card.dark{background:#0c223d;border-color:#163858}.fp-pricing-side-card.dark h3{color:#fff}.fp-pricing-side-card.dark p{color:#92a7bb}
 .fp-pricing-compare{width:min(1040px,calc(100% - 40px));margin:0 auto 70px}.fp-pricing-value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.fp-pricing-value-grid article{border:1px solid #dfe7ef;border-radius:13px;background:#fff;padding:19px}.fp-pricing-value-grid article>span{display:flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:8px;background:#eaf7ef;color:#38975d;font-size:8px;font-weight:800}.fp-pricing-value-grid h3{margin-top:12px;color:#2a4058;font-size:9.5px}.fp-pricing-value-grid p{margin-top:5px;color:#7a8d9f;font-size:7.5px;line-height:1.55}
 
 @media(max-width:1000px){
@@ -7530,7 +7530,7 @@ html{scroll-behavior:smooth}
 }
 
 .fp-subscription-status.trial{
-  background:#eaf4ff;
+  background:#EAF6EC;
   color:#267fce;
 }
 
@@ -10394,7 +10394,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
   width:3px;
 }
 
-.fp-settle-overview-metric.blue::before{background:#4f8df7}
+.fp-settle-overview-metric.blue::before{background:#16853B}
 .fp-settle-overview-metric.green::before{background:#55b878}
 .fp-settle-overview-metric.red::before{background:#e55d66}
 .fp-settle-overview-metric.amber::before{background:#eeb044}
@@ -10733,7 +10733,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 
 /* === Weekly Settlement Quick Action Polish v3.1.2 === */
 
-/* Match the normal FleetPilot right-rail typography. */
+/* Match the normal MileVoxa right-rail typography. */
 .fp-settle-week-action{
   min-height:54px !important;
 }
@@ -10864,7 +10864,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 }
 
 .fp-settle-issue-row.info .fp-settle-issue-dot{
-  background:#4f8df7;
+  background:#16853B;
 }
 
 .fp-settle-issue-row strong{
@@ -11032,7 +11032,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
   left:0;
   height:2px;
   border-radius:999px 999px 0 0;
-  background:#4f8df7;
+  background:#16853B;
 }
 
 .fp-fuel-filterbar-operational{
@@ -11337,7 +11337,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 /* === END Fuel Analytics Operational Pass v3.2.0 === */
 
 
-/* === FleetPilot Profitability + Profiles + Public Tools v3.3.0 === */
+/* === MileVoxa Profitability + Profiles + Public Tools v3.3.0 === */
 .fp-table-profile-link{
   color:inherit;
   font-weight:680;
@@ -11349,7 +11349,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 .fp-detail-breadcrumb{display:flex;align-items:center;gap:7px;color:#8293a6;font-size:8.5px;margin-bottom:12px}
 .fp-detail-breadcrumb a{color:#4d89ef;font-weight:620}
 .fp-detail-hero,.fp-truck-profile-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #dfe7ef;border-radius:14px;background:#fff;padding:20px;box-shadow:0 9px 26px rgba(32,64,96,.045)}
-.fp-detail-eyebrow{color:#4f8df7;font-size:7px;font-weight:780;letter-spacing:.12em}
+.fp-detail-eyebrow{color:#16853B;font-size:7px;font-weight:780;letter-spacing:.12em}
 .fp-detail-hero h1,.fp-truck-profile-copy h1{margin-top:4px;color:#13273f;font-size:25px;font-weight:760;letter-spacing:-.035em}
 .fp-detail-hero p,.fp-truck-profile-copy p{margin-top:5px;color:#718398;font-size:10px}
 .fp-detail-hero-meta{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
@@ -11357,7 +11357,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 .fp-detail-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .fp-detail-kpi{position:relative;display:grid;gap:6px;overflow:hidden;border:1px solid #e0e8f0;border-radius:12px;background:#fff;padding:16px}
 .fp-detail-kpi::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
-.fp-detail-kpi.blue::before{background:#4f8df7}.fp-detail-kpi.red::before{background:#e35c65}.fp-detail-kpi.amber::before{background:#eeb044}.fp-detail-kpi.green::before{background:#55b878}
+.fp-detail-kpi.blue::before{background:#16853B}.fp-detail-kpi.red::before{background:#e35c65}.fp-detail-kpi.amber::before{background:#eeb044}.fp-detail-kpi.green::before{background:#55b878}
 .fp-detail-kpi span{color:#6d8094;font-size:8px;font-weight:620}
 .fp-detail-kpi strong{color:#142943;font-size:20px;font-weight:760;letter-spacing:-.025em}
 .fp-detail-two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
@@ -11373,22 +11373,22 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 .fp-detail-note{margin-top:14px;border:1px solid #d9e7f6;border-radius:10px;background:#f4f9ff;padding:13px}.fp-detail-note strong{color:#355f8d;font-size:8.5px}.fp-detail-note p{margin-top:4px;max-width:1000px;color:#72869a;font-size:7.5px;line-height:1.5}
 
 .fp-truck-profile-hero{justify-content:flex-start}.fp-truck-profile-avatar{display:flex;width:64px;height:64px;align-items:center;justify-content:center;border-radius:16px;background:linear-gradient(135deg,#4e94fb,#3977db);color:#fff;font-size:17px;font-weight:760}.fp-truck-profile-copy{flex:1}.fp-truck-profile-status{display:grid;justify-items:end;gap:6px}.fp-truck-profile-status small{color:#8495a6;font-size:8px}
-.fp-truck-profile-tabs{display:flex;gap:24px;margin-top:14px;border:1px solid #dfe7ef;border-radius:12px;background:#fff;padding:0 16px}.fp-truck-profile-tabs a{position:relative;display:flex;height:45px;align-items:center;color:#677b91;font-size:8.5px;font-weight:580}.fp-truck-profile-tabs a.active{color:#4484ec;font-weight:660}.fp-truck-profile-tabs a.active::after{content:"";position:absolute;right:0;bottom:0;left:0;height:2px;background:#4f8df7}
+.fp-truck-profile-tabs{display:flex;gap:24px;margin-top:14px;border:1px solid #dfe7ef;border-radius:12px;background:#fff;padding:0 16px}.fp-truck-profile-tabs a{position:relative;display:flex;height:45px;align-items:center;color:#677b91;font-size:8.5px;font-weight:580}.fp-truck-profile-tabs a.active{color:#4484ec;font-weight:660}.fp-truck-profile-tabs a.active::after{content:"";position:absolute;right:0;bottom:0;left:0;height:2px;background:#16853B}
 .fp-truck-info-list{display:grid;margin-top:8px}.fp-truck-info-list>div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2f6;padding:9px 0}.fp-truck-info-list span{color:#788a9e;font-size:7.5px}.fp-truck-info-list strong{color:#334b63;font-size:8px;font-weight:650;text-align:right}
-.fp-truck-history{display:grid;margin-top:12px}.fp-truck-history>div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;border-bottom:1px solid #edf2f6;padding:10px 0}.fp-truck-history i{width:9px;height:9px;margin-top:4px;border-radius:50%;background:#8296aa}.fp-truck-history i.load{background:#4f8df7}.fp-truck-history i.expense{background:#e8a63e}.fp-truck-history i.maintenance{background:#765ce7}.fp-truck-history>div>div{display:grid;gap:2px}.fp-truck-history span{color:#8a9aaa;font-size:6.5px}.fp-truck-history strong{color:#334b63;font-size:8.5px}.fp-truck-history p{color:#708398;font-size:7.5px}
+.fp-truck-history{display:grid;margin-top:12px}.fp-truck-history>div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;border-bottom:1px solid #edf2f6;padding:10px 0}.fp-truck-history i{width:9px;height:9px;margin-top:4px;border-radius:50%;background:#8296aa}.fp-truck-history i.load{background:#16853B}.fp-truck-history i.expense{background:#e8a63e}.fp-truck-history i.maintenance{background:#765ce7}.fp-truck-history>div>div{display:grid;gap:2px}.fp-truck-history span{color:#8a9aaa;font-size:6.5px}.fp-truck-history strong{color:#334b63;font-size:8.5px}.fp-truck-history p{color:#708398;font-size:7.5px}
 
 .fp-tools-public-hero{max-width:1100px;margin:0 auto;padding:78px 24px 34px;text-align:center}.fp-tools-public-hero>span{color:#4c8cf2;font-size:8px;font-weight:780;letter-spacing:.14em}.fp-tools-public-hero h1{max-width:800px;margin:10px auto 0;color:#0c1d35;font-size:43px;font-weight:790;line-height:1.03;letter-spacing:-.045em}.fp-tools-public-hero p{max-width:650px;margin:14px auto 0;color:#708297;font-size:14px;line-height:1.65}
 .fp-tools-public-section{max-width:1240px;margin:0 auto;padding:20px 24px 72px}.fp-free-tools-shell{display:grid;grid-template-columns:330px minmax(0,1fr);overflow:hidden;border:1px solid #dce5ee;border-radius:18px;background:#fff;box-shadow:0 20px 60px rgba(31,62,94,.08)}
 .fp-free-tools-menu{background:#0a1b31;padding:28px;color:#fff}.fp-free-tools-menu>span{color:#74adff;font-size:8px;font-weight:760;letter-spacing:.12em}.fp-free-tools-menu h2{margin-top:10px;font-size:23px;line-height:1.08;font-weight:740;letter-spacing:-.03em}.fp-free-tools-menu>p{margin-top:10px;color:#9fb2c8;font-size:10px;line-height:1.6}.fp-free-tools-menu>div{display:grid;gap:7px;margin-top:22px}.fp-free-tools-menu button{display:grid;gap:3px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);padding:11px 12px;color:#dbe6f1;text-align:left}.fp-free-tools-menu button.active{border-color:#348df2;background:#147fe8;color:#fff}.fp-free-tools-menu button strong{font-size:9px}.fp-free-tools-menu button small{color:#91a6bc;font-size:7px;line-height:1.4}.fp-free-tools-menu button.active small{color:#dcebff}
 .fp-free-tool-workspace{padding:28px}.fp-tool-frame-heading>span{color:#4b8bf1;font-size:7px;font-weight:760;letter-spacing:.12em}.fp-tool-frame-heading h1{margin-top:5px;color:#10233b;font-size:24px;font-weight:760;letter-spacing:-.035em}.fp-tool-frame-heading p{margin-top:5px;color:#75879a;font-size:9.5px}.fp-tool-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.fp-tool-field{display:grid;gap:5px}.fp-tool-field>span{color:#5f748a;font-size:8px;font-weight:620}.fp-tool-input{display:flex;height:43px;align-items:center;border:1px solid #dce6ef;border-radius:9px;background:#fbfdff;padding:0 11px}.fp-tool-input b{margin-right:5px;color:#718398;font-size:10px}.fp-tool-input input{width:100%;border:0;background:transparent;outline:0;color:#193049;font-size:11px}
 .fp-tool-results{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:5px;border-top:1px solid #edf2f6;padding-top:14px}.fp-tool-results>div{display:grid;gap:5px;border:1px solid #e3eaf2;border-radius:10px;background:#f8fbfe;padding:12px}.fp-tool-results>div.primary{border-color:#cfe3ff;background:#eef6ff}.fp-tool-results span{color:#6f8296;font-size:7.5px}.fp-tool-results strong{color:#18314b;font-size:16px;font-weight:740}
-.fp-tool-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;border-radius:12px;background:#eef6ff;padding:14px 16px}.fp-tool-cta>div{display:grid;gap:3px}.fp-tool-cta span{color:#66809a;font-size:7.5px}.fp-tool-cta strong{color:#244b73;font-size:9px}.fp-tool-cta>a{border-radius:8px;background:#4f8df7;padding:10px 12px;color:#fff;font-size:8px;font-weight:680}
-.fp-tools-public-bottom{max-width:1190px;margin:0 auto 80px;border-radius:18px;background:#0b1c31;padding:38px;color:#fff;text-align:center}.fp-tools-public-bottom>span{color:#72aafa;font-size:7px;font-weight:760;letter-spacing:.12em}.fp-tools-public-bottom h2{margin-top:8px;font-size:28px;font-weight:750;letter-spacing:-.03em}.fp-tools-public-bottom p{max-width:700px;margin:10px auto 0;color:#a9b9c9;font-size:10px;line-height:1.65}.fp-tools-public-bottom a{display:inline-flex;margin-top:18px;border-radius:9px;background:#4f8df7;padding:11px 15px;color:#fff;font-size:9px;font-weight:690}
+.fp-tool-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;border-radius:12px;background:#eef6ff;padding:14px 16px}.fp-tool-cta>div{display:grid;gap:3px}.fp-tool-cta span{color:#66809a;font-size:7.5px}.fp-tool-cta strong{color:#244b73;font-size:9px}.fp-tool-cta>a{border-radius:8px;background:#16853B;padding:10px 12px;color:#fff;font-size:8px;font-weight:680}
+.fp-tools-public-bottom{max-width:1190px;margin:0 auto 80px;border-radius:18px;background:#0b1c31;padding:38px;color:#fff;text-align:center}.fp-tools-public-bottom>span{color:#72aafa;font-size:7px;font-weight:760;letter-spacing:.12em}.fp-tools-public-bottom h2{margin-top:8px;font-size:28px;font-weight:750;letter-spacing:-.03em}.fp-tools-public-bottom p{max-width:700px;margin:10px auto 0;color:#a9b9c9;font-size:10px;line-height:1.65}.fp-tools-public-bottom a{display:inline-flex;margin-top:18px;border-radius:9px;background:#16853B;padding:11px 15px;color:#fff;font-size:9px;font-weight:690}
 .fp-marketing-free-tools-preview{display:flex;max-width:1180px;margin:0 auto 70px;align-items:center;justify-content:space-between;gap:24px;border:1px solid #dce6ef;border-radius:18px;background:#f5f9ff;padding:26px 30px}.fp-marketing-free-tools-preview>div{max-width:700px}.fp-marketing-free-tools-preview span{color:#4d8ef3;font-size:8px;font-weight:760;text-transform:uppercase;letter-spacing:.12em}.fp-marketing-free-tools-preview h2{margin-top:7px;font-size:27px;font-weight:750;letter-spacing:-.035em}.fp-marketing-free-tools-preview p{margin-top:7px;color:#718398;font-size:10px;line-height:1.6}
 
 @media(max-width:980px){.fp-detail-two-col{grid-template-columns:1fr}.fp-load-economics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fp-free-tools-shell{grid-template-columns:1fr}.fp-free-tools-menu>div{grid-template-columns:repeat(2,minmax(0,1fr))}.fp-detail-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.fp-detail-page{padding:16px}.fp-detail-hero,.fp-truck-profile-hero{align-items:flex-start;flex-direction:column}.fp-detail-hero-meta{justify-content:flex-start}.fp-detail-kpi-grid,.fp-load-economics-grid,.fp-tool-form-grid,.fp-tool-results{grid-template-columns:1fr}.fp-truck-profile-tabs{gap:16px;overflow-x:auto}.fp-free-tools-menu>div{grid-template-columns:1fr}.fp-free-tool-workspace{padding:20px}.fp-tools-public-hero h1{font-size:34px}.fp-marketing-free-tools-preview{align-items:flex-start;flex-direction:column}}
-/* === END FleetPilot Profitability + Profiles + Public Tools v3.3.0 === */
+/* === END MileVoxa Profitability + Profiles + Public Tools v3.3.0 === */
 
 
 /* === Lease Operator / Contractor Tool v3.3.1 === */
@@ -11451,7 +11451,7 @@ textarea.fp-add-reimb-control{min-height:72px;padding:9px 10px;resize:none}
 
 
 /* ==========================================================================
-   FleetPilot Full Mobile App Pass v3.4.0
+   MileVoxa Full Mobile App Pass v3.4.0
    Desktop behavior remains unchanged. These rules intentionally sit last.
    ========================================================================== */
 
@@ -11480,7 +11480,7 @@ body{
 }
 
 .fp-mobile-header-brand>span>span{
-  color:#1188ff;
+  color:#16853B;
 }
 
 .fp-mobile-control-zone{
@@ -11662,7 +11662,7 @@ body{
 
 .fp-mobile-more-grid>a.active{
   border-color:#b9d9ff;
-  background:#edf6ff;
+  background:#EAF6EC;
   color:#247fe7;
 }
 
@@ -11683,7 +11683,7 @@ body{
     padding-bottom:calc(68px + env(safe-area-inset-bottom));
   }
 
-  .min-h-screen.bg-\[\#f4f7fb\] > section{
+  .min-h-screen.bg-\[\#F7F9F8\] > section{
     padding-bottom:0;
   }
 
@@ -12217,7 +12217,7 @@ body{
     display:none !important;
   }
 }
-/* === END FleetPilot Full Mobile App Pass v3.4.0 === */
+/* === END MileVoxa Full Mobile App Pass v3.4.0 === */
 
 
 /* === Mobile Free Tools Typography v3.4.1 === */
@@ -12430,7 +12430,7 @@ body{
   }
 }
 
-/* Desktop explicitly keeps the standard FleetPilot header/sidebar only. */
+/* Desktop explicitly keeps the standard MileVoxa header/sidebar only. */
 @media(min-width:1024px){
   .fp-mobile-control-zone,
   .fp-mobile-bottom-nav,
@@ -12615,7 +12615,7 @@ body{
 }
 
 .fp-business-cost-toggle.on{
-  background:#4f8df7;
+  background:#16853B;
 }
 
 .fp-business-cost-toggle.on i{
@@ -12722,7 +12722,7 @@ body{
 
 .fp-fixed-save{
   border:1px solid #bcd7f5;
-  background:#edf6ff;
+  background:#EAF6EC;
   color:#3c7fd8;
 }
 
@@ -12781,7 +12781,7 @@ body{
   height:38px;
   border:0;
   border-radius:8px;
-  background:#4f8df7;
+  background:#16853B;
   padding:0 12px;
   color:#fff;
   font-size:7.5px;
@@ -12997,7 +12997,7 @@ body{
   width:3px;
 }
 
-.fp-deposit-kpi.blue::before{background:#4f8df7}
+.fp-deposit-kpi.blue::before{background:#16853B}
 .fp-deposit-kpi.green::before{background:#55b878}
 .fp-deposit-kpi.purple::before{background:#765ce7}
 .fp-deposit-kpi.amber::before{background:#e9ab3a}
@@ -13209,7 +13209,7 @@ body{
   display:block;
   height:100%;
   border-radius:999px;
-  background:linear-gradient(90deg,#4f8df7,#6a73e8);
+  background:linear-gradient(90deg,#16853B,#6a73e8);
 }
 
 .fp-deposit-save-row{
@@ -13230,7 +13230,7 @@ body{
   min-height:36px;
   border:0;
   border-radius:8px;
-  background:#4f8df7;
+  background:#16853B;
   padding:0 12px;
   color:#fff;
   font-size:8px;
@@ -13257,7 +13257,7 @@ body{
 
 .fp-deposit-ledger-tabs button.active{
   border-color:#a8cffb;
-  background:#edf6ff;
+  background:#EAF6EC;
   color:#397fdc;
 }
 
@@ -13960,7 +13960,7 @@ body{
   display:grid;
   min-height:100dvh;
   grid-template-columns:minmax(330px,.86fr) minmax(0,1.14fr);
-  background:#f4f7fb;
+  background:#F7F9F8;
 }
 
 .fp-social-onboarding-brand{
@@ -13972,7 +13972,7 @@ body{
   overflow:hidden;
   background:
     radial-gradient(circle at 100% 38%,rgba(17,136,255,.18),transparent 33%),
-    linear-gradient(155deg,#07172a,#0b2039);
+    linear-gradient(155deg,#102238,#0b2039);
   padding:44px;
   color:#fff;
 }
@@ -13985,7 +13985,7 @@ body{
 }
 
 .fp-social-onboarding-logo span{
-  color:#2298ff;
+  color:#16853B;
 }
 
 .fp-social-onboarding-brand>div{
@@ -14062,7 +14062,7 @@ body{
 }
 
 .fp-social-onboarding-provider>div:first-child.google{
-  color:#4285f4;
+  color:#4285F4;
 }
 
 
@@ -14366,7 +14366,7 @@ body{
 
 
 /* ==========================================================================
-   FleetPilot Legal + Permanent Account Deletion v3.8.0
+   MileVoxa Legal + Permanent Account Deletion v3.8.0
    ========================================================================== */
 
 .fp-social-auth-legal,
@@ -14379,7 +14379,7 @@ body{
 
 .fp-social-auth-legal a,
 .fp-email-signup-legal a{
-  color:#4a82c6;
+  color:#16853B;
   font-weight:650;
   text-decoration:underline;
   text-underline-offset:2px;
@@ -14388,7 +14388,7 @@ body{
 /* Legal pages */
 .fp-legal-page{
   min-height:100vh;
-  background:#f4f7fb;
+  background:#F7F9F8;
   color:#19314a;
 }
 
@@ -14415,7 +14415,7 @@ body{
 }
 
 .fp-legal-brand span{
-  color:#278cf2;
+  color:#16853B;
 }
 
 .fp-legal-header nav{
@@ -14449,7 +14449,7 @@ body{
 }
 
 .fp-legal-hero>span{
-  color:#4b8df5;
+  color:#16853B;
   font-size:9px;
   font-weight:780;
   letter-spacing:.16em;
@@ -14528,7 +14528,7 @@ body{
 }
 
 .fp-legal-body a{
-  color:#337fd9;
+  color:#16853B;
   font-weight:650;
   text-decoration:underline;
   text-underline-offset:2px;
@@ -14551,7 +14551,7 @@ body{
 }
 
 .fp-legal-footer a:hover{
-  color:#3986e4;
+  color:#16853B;
 }
 
 /* Permanent deletion dialog */
@@ -14605,7 +14605,7 @@ body{
 }
 
 .fp-delete-legal-links a{
-  color:#4b82c4;
+  color:#16853B;
   font-size:9px;
   font-weight:650;
   text-decoration:underline;
@@ -14643,7 +14643,7 @@ body{
 }
 
 .fp-deleted-account-brand span{
-  color:#2d8ef0;
+  color:#16853B;
 }
 
 .fp-deleted-account-icon{
@@ -14654,14 +14654,14 @@ body{
   align-items:center;
   justify-content:center;
   border-radius:15px;
-  background:#eaf4ff;
-  color:#3c86e4;
+  background:#EAF6EC;
+  color:#16853B;
   font-size:24px;
   font-weight:800;
 }
 
 .fp-deleted-account-eyebrow{
-  color:#4d8ef0;
+  color:#16853B;
   font-size:9px;
   font-weight:780;
   letter-spacing:.13em;
@@ -14704,7 +14704,7 @@ body{
 
 .fp-deleted-account-actions .primary{
   border:0;
-  background:linear-gradient(90deg,#318ff2,#4a7de3);
+  background:linear-gradient(90deg,#16853B,#126F32);
   color:#fff;
 }
 
@@ -14833,7 +14833,7 @@ body{
     font-size:12px;
   }
 }
-/* === END FleetPilot Legal + Permanent Account Deletion v3.8.0 === */
+/* === END MileVoxa Legal + Permanent Account Deletion v3.8.0 === */
 
 
 /* === Settings Legal & Privacy Center v3.8.1 === */
@@ -14874,7 +14874,7 @@ body{
   align-items:center;
   justify-content:center;
   border-radius:10px;
-  background:#eaf4ff;
+  background:#EAF6EC;
   color:#3b84e5;
   font-size:13px;
   font-weight:760;
@@ -14887,7 +14887,7 @@ body{
 }
 
 .fp-legal-settings-card span{
-  color:#4d8bed;
+  color:#16853B;
   font-size:7px;
   font-weight:760;
   letter-spacing:.1em;
@@ -14958,7 +14958,7 @@ body{
   min-height:35px;
   border:0;
   border-radius:8px;
-  background:#4f8df7;
+  background:#16853B;
   padding:0 12px;
   color:#fff;
   font-size:7.5px;
@@ -14980,7 +14980,7 @@ body{
   border:1px solid #e3e9ef;
   border-radius:10px;
   background:#fff;
-  color:#4285f4;
+  color:#4285F4;
   font-size:15px;
   font-weight:800;
 }
@@ -15059,3 +15059,473 @@ body{
   }
 }
 /* === END Settings Legal & Privacy Center v3.8.1 === */
+
+
+/* ==========================================================================
+   MileVoxa Brand System — Web Rebrand v4.0.0
+   ========================================================================== */
+:root{
+  --mv-navy:#102238;
+  --mv-green:#16853B;
+  --mv-green-dark:#126F32;
+  --mv-green-light:#EAF6EC;
+  --mv-bg:#F7F9F8;
+}
+
+.mv-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  text-decoration:none;
+}
+
+.mv-brand-copy{
+  display:flex;
+  min-width:0;
+  flex-direction:column;
+}
+
+.mv-brand-wordmark{
+  color:var(--mv-navy);
+  font-size:20px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.045em;
+  white-space:nowrap;
+}
+
+.mv-brand-wordmark span{color:var(--mv-green)}
+.mv-brand-wordmark.on-dark{color:#fff}
+.mv-brand-tagline{
+  margin-top:4px;
+  color:#6d8194;
+  font-size:6.7px;
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:.055em;
+  white-space:nowrap;
+}
+.mv-brand-tagline.on-dark{color:#9fb0bf}
+.mv-sidebar-brand{width:100%}
+.mv-sidebar-brand .mv-brand-wordmark{font-size:20px}
+.mv-sidebar-brand .mv-brand-tagline{font-size:6.1px;color:#9db1c6}
+.mv-mobile-wordmark{color:#102238;font-size:16px;font-weight:800;letter-spacing:-.04em}
+.mv-mobile-wordmark span{color:#16853B}
+
+.mv-auth-primary{
+  width:100%;
+  border:0;
+  border-radius:16px;
+  background:#16853B;
+  padding:16px;
+  color:#fff;
+  font-size:14px;
+  font-weight:850;
+  box-shadow:0 16px 34px rgba(22,133,59,.15);
+  transition:background .15s ease,transform .15s ease;
+}
+.mv-auth-primary:hover{background:#126F32}
+.mv-auth-primary:disabled{opacity:.5}
+.mv-auth-input{
+  width:100%;
+  border:1px solid #dfe7ef;
+  border-radius:16px;
+  background:#fff;
+  padding:14px 16px;
+  color:#102238;
+  outline:none;
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.mv-auth-input:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.10);
+}
+
+.fp-marketing-brand-name span,
+.fp-legal-brand span,
+.fp-deleted-account-brand span{color:#16853B!important}
+.fp-marketing-tagline{color:#748899}
+.fp-legal-brand .mv-brand-wordmark,
+.fp-deleted-account-brand .mv-brand-wordmark{font-size:20px}
+.fp-legal-brand .mv-brand-copy,
+.fp-deleted-account-brand .mv-brand-copy{display:block}
+
+@media(max-width:767px){
+  .mv-brand-wordmark{font-size:18px}
+  .mv-brand-tagline{font-size:6px}
+}
+/* === END MileVoxa Brand System v4.0.0 === */
+
+.mv-mobile-more-brand{display:flex;align-items:center;gap:9px}.mv-mobile-more-brand>div{display:grid;gap:1px}
+
+
+/* ==========================================================================
+   MileVoxa Exact App Brand Assets v4.0.1
+   Uses the same source logo files as the mobile application.
+   ========================================================================== */
+.mv-brand{display:inline-flex;align-items:center;text-decoration:none;line-height:0}
+.mv-brand-lockup{display:block;width:190px;height:auto;object-fit:contain}
+.mv-brand.compact .mv-brand-lockup{width:148px}
+.mv-brand-mark{display:block;object-fit:contain}
+.mv-sidebar-brand{display:flex;width:100%;justify-content:flex-start}
+.mv-sidebar-brand .mv-brand-lockup{width:172px;max-width:100%}
+.mv-mobile-lockup{display:block;width:86px;height:auto;object-fit:contain}
+.mv-marketing-logo{display:block;width:188px;height:auto;object-fit:contain}
+.mv-marketing-logo.footer{width:176px}
+.fp-marketing-brand{line-height:0}
+.fp-social-onboarding-logo .mv-brand-lockup{width:178px}
+.fp-legal-brand .mv-brand-lockup,.fp-deleted-account-brand .mv-brand-lockup{width:142px}
+
+@media(min-width:1024px){
+  .mv-auth-side .mv-brand-lockup{width:220px}
+}
+
+@media(max-width:767px){
+  .mv-brand-lockup{width:165px}
+  .mv-brand.compact .mv-brand-lockup{width:136px}
+  .mv-marketing-logo{width:160px}
+  .mv-marketing-logo.footer{width:154px}
+  .fp-social-onboarding-logo .mv-brand-lockup{width:155px}
+}
+/* === END MileVoxa Exact App Brand Assets v4.0.1 === */
+
+
+/* ==========================================================================
+   MileVoxa Home Brand Green v4.0.4
+   Homepage-only brand accent migration from legacy blue to MileVoxa green.
+   ========================================================================== */
+
+.fp-marketing-page{
+  --mv-home-green:#16853B;
+  --mv-home-green-dark:#116C31;
+  --mv-home-green-deep:#0D5A29;
+  --mv-home-green-light:#EAF6EC;
+  --mv-home-green-soft:#F3FAF4;
+  --mv-home-green-border:#CBE8D2;
+  --mv-home-navy:#102238;
+}
+
+/* Header / nav */
+.fp-marketing-page .fp-marketing-brand-name span,
+.fp-marketing-page .fp-marketing-eyebrow,
+.fp-marketing-page .fp-marketing-section-heading > div > span,
+.fp-marketing-page .fp-marketing-free-tools-preview > div > span,
+.fp-marketing-page .fp-marketing-pricing-preview > div > span,
+.fp-marketing-page .fp-marketing-final-cta > div > span{
+  color:var(--mv-home-green)!important;
+}
+
+/* Primary CTAs */
+.fp-marketing-page .fp-marketing-button.primary{
+  border-color:var(--mv-home-green)!important;
+  background:var(--mv-home-green)!important;
+  color:#fff!important;
+  box-shadow:0 12px 28px rgba(22,133,59,.18)!important;
+}
+
+.fp-marketing-page .fp-marketing-button.primary:hover{
+  border-color:var(--mv-home-green-dark)!important;
+  background:var(--mv-home-green-dark)!important;
+  box-shadow:0 15px 34px rgba(22,133,59,.23)!important;
+}
+
+/* Secondary / selected accents */
+.fp-marketing-page .fp-marketing-button.secondary:hover,
+.fp-marketing-page .fp-marketing-button.ghost:hover{
+  border-color:var(--mv-home-green-border)!important;
+  background:var(--mv-home-green-soft)!important;
+  color:var(--mv-home-green-dark)!important;
+}
+
+/* Hero emphasis */
+.fp-marketing-page .fp-marketing-hero h1 span,
+.fp-marketing-page .fp-marketing-hero-copy h1 span{
+  color:var(--mv-home-green)!important;
+}
+
+/* Small badges and icon containers */
+.fp-marketing-page .fp-marketing-feature-icon,
+.fp-marketing-page .fp-marketing-feature-card .icon,
+.fp-marketing-page .fp-marketing-benefit-icon{
+  border-color:var(--mv-home-green-border)!important;
+  background:var(--mv-home-green-light)!important;
+  color:var(--mv-home-green)!important;
+}
+
+/* Dashboard/product preview accents */
+.fp-marketing-page .fp-preview-metric.green strong,
+.fp-marketing-page .fp-preview-metric.positive strong,
+.fp-marketing-page .fp-preview-metric.profit strong,
+.fp-marketing-page .fp-marketing-preview-card .positive,
+.fp-marketing-page .fp-marketing-preview-card .profit{
+  color:var(--mv-home-green)!important;
+}
+
+/* Decorative dots, checks, active accents */
+.fp-marketing-page .fp-marketing-check,
+.fp-marketing-page .fp-marketing-feature-list i,
+.fp-marketing-page .fp-marketing-pricing-preview-card li::marker{
+  color:var(--mv-home-green)!important;
+}
+
+/* Pricing card */
+.fp-marketing-page .fp-marketing-pricing-preview-card{
+  border-color:var(--mv-home-green-border)!important;
+  box-shadow:0 22px 55px rgba(16,34,56,.08),0 0 0 1px rgba(22,133,59,.025)!important;
+}
+
+.fp-marketing-page .fp-marketing-pricing-preview-card small{
+  color:var(--mv-home-green)!important;
+}
+
+/* FAQ / links */
+.fp-marketing-page .fp-marketing-faq-item summary span,
+.fp-marketing-page .fp-marketing-footer a:hover,
+.fp-marketing-page a.fp-marketing-text-link{
+  color:var(--mv-home-green)!important;
+}
+
+/* Hero / section glows: green instead of blue */
+.fp-marketing-page .fp-marketing-hero::before,
+.fp-marketing-page .fp-marketing-hero::after{
+  background:radial-gradient(circle,rgba(22,133,59,.13),rgba(22,133,59,0) 68%)!important;
+}
+
+/* Generic old marketing blue backgrounds/borders that survived previous styles */
+.fp-marketing-page [class*="blue-accent"],
+.fp-marketing-page [class*="primary-accent"]{
+  color:var(--mv-home-green)!important;
+}
+
+/* Focus states */
+.fp-marketing-page a:focus-visible,
+.fp-marketing-page button:focus-visible{
+  outline-color:var(--mv-home-green)!important;
+}
+
+/* Mobile */
+@media(max-width:767px){
+  .fp-marketing-page .fp-marketing-button.primary{
+    box-shadow:0 8px 20px rgba(22,133,59,.16)!important;
+  }
+}
+/* === END MileVoxa Home Brand Green v4.0.4 === */
+
+
+/* ==========================================================================
+   MileVoxa Pricing + Tools Green Brand v4.0.5
+   ========================================================================== */
+
+.mv-pricing-page,
+.mv-tools-page{
+  --mv-green:#16853B;
+  --mv-green-dark:#116C31;
+  --mv-green-deep:#0D5A29;
+  --mv-green-light:#EAF6EC;
+  --mv-green-soft:#F4FAF5;
+  --mv-green-border:#CBE8D2;
+  --mv-navy:#102238;
+}
+
+/* --------------------------------------------------------------------------
+   Pricing
+   -------------------------------------------------------------------------- */
+
+.mv-pricing-page [class*="eyebrow"],
+.mv-pricing-page [class*="kicker"],
+.mv-pricing-page [class*="badge"],
+.mv-pricing-page [class*="label"]{
+  color:var(--mv-green)!important;
+}
+
+.mv-pricing-page a[class*="primary"],
+.mv-pricing-page button[class*="primary"],
+.mv-pricing-page .fp-pricing-button.primary,
+.mv-pricing-page .fp-marketing-button.primary{
+  border-color:var(--mv-green)!important;
+  background:var(--mv-green)!important;
+  color:#fff!important;
+  box-shadow:0 12px 28px rgba(22,133,59,.17)!important;
+}
+
+.mv-pricing-page a[class*="primary"]:hover,
+.mv-pricing-page button[class*="primary"]:hover,
+.mv-pricing-page .fp-pricing-button.primary:hover,
+.mv-pricing-page .fp-marketing-button.primary:hover{
+  border-color:var(--mv-green-dark)!important;
+  background:var(--mv-green-dark)!important;
+}
+
+.mv-pricing-page [class*="price"] strong,
+.mv-pricing-page [class*="price"] b,
+.mv-pricing-page [class*="plan"] small,
+.mv-pricing-page li::marker{
+  color:var(--mv-green)!important;
+}
+
+.mv-pricing-page [class*="pricing-card"],
+.mv-pricing-page [class*="plan-card"]{
+  border-color:var(--mv-green-border)!important;
+}
+
+.mv-pricing-page [class*="pricing-card"]:hover,
+.mv-pricing-page [class*="plan-card"]:hover{
+  box-shadow:0 18px 44px rgba(22,133,59,.08)!important;
+}
+
+.mv-pricing-page [class*="check"],
+.mv-pricing-page [class*="included"] i,
+.mv-pricing-page [class*="feature"] i{
+  color:var(--mv-green)!important;
+}
+
+.mv-pricing-page a:hover{
+  text-decoration-color:var(--mv-green)!important;
+}
+
+/* --------------------------------------------------------------------------
+   Free Tools
+   -------------------------------------------------------------------------- */
+
+.mv-tools-page [class*="eyebrow"],
+.mv-tools-page [class*="tool-kicker"],
+.mv-tools-page [class*="tool-label"],
+.mv-tools-page [class*="category-label"]{
+  color:var(--mv-green)!important;
+}
+
+.mv-tools-page button[class*="active"],
+.mv-tools-page [class*="tool-tab"].active,
+.mv-tools-page [aria-selected="true"]{
+  border-color:var(--mv-green)!important;
+  background:var(--mv-green-light)!important;
+  color:var(--mv-green-dark)!important;
+}
+
+.mv-tools-page button[class*="primary"],
+.mv-tools-page .fp-primary-btn,
+.mv-tools-page [class*="calculate"]{
+  border-color:var(--mv-green)!important;
+  background:var(--mv-green)!important;
+  color:#fff!important;
+  box-shadow:0 10px 24px rgba(22,133,59,.15)!important;
+}
+
+.mv-tools-page button[class*="primary"]:hover,
+.mv-tools-page .fp-primary-btn:hover,
+.mv-tools-page [class*="calculate"]:hover{
+  border-color:var(--mv-green-dark)!important;
+  background:var(--mv-green-dark)!important;
+}
+
+.mv-tools-page [class*="tool-card"]:hover,
+.mv-tools-page [class*="calculator-card"]:hover{
+  border-color:var(--mv-green-border)!important;
+}
+
+.mv-tools-page [class*="result"] strong,
+.mv-tools-page [class*="result"] b,
+.mv-tools-page [class*="profit"] strong,
+.mv-tools-page [class*="positive"]{
+  color:var(--mv-green)!important;
+}
+
+.mv-tools-page input:focus,
+.mv-tools-page select:focus,
+.mv-tools-page textarea:focus{
+  border-color:var(--mv-green)!important;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08)!important;
+  outline:none!important;
+}
+
+.mv-tools-page a:hover,
+.mv-tools-page summary span{
+  color:var(--mv-green)!important;
+}
+
+/* Shared secondary hover */
+.mv-pricing-page a[class*="secondary"]:hover,
+.mv-tools-page a[class*="secondary"]:hover,
+.mv-tools-page button[class*="secondary"]:hover{
+  border-color:var(--mv-green-border)!important;
+  background:var(--mv-green-soft)!important;
+  color:var(--mv-green-dark)!important;
+}
+
+@media(max-width:767px){
+  .mv-pricing-page a[class*="primary"],
+  .mv-pricing-page button[class*="primary"],
+  .mv-tools-page button[class*="primary"],
+  .mv-tools-page .fp-primary-btn{
+    box-shadow:0 8px 20px rgba(22,133,59,.14)!important;
+  }
+}
+/* === END MileVoxa Pricing + Tools Green Brand v4.0.5 === */
+
+
+/* ==========================================================================
+   MileVoxa Tools Selector Blue Restore v4.0.6
+   Keep the calculator selector list navy/blue for stronger contrast.
+   ========================================================================== */
+
+.mv-tools-page .fp-tools-selector button,
+.mv-tools-page .fp-tools-selector-card,
+.mv-tools-page .fp-tool-selector,
+.mv-tools-page [class*="tool-selector"] button{
+  border-color:#29445F!important;
+  background:#142A42!important;
+  color:#F7FAFC!important;
+  box-shadow:none!important;
+}
+
+.mv-tools-page .fp-tools-selector button:hover,
+.mv-tools-page .fp-tools-selector-card:hover,
+.mv-tools-page .fp-tool-selector:hover,
+.mv-tools-page [class*="tool-selector"] button:hover{
+  border-color:#3A5C7D!important;
+  background:#18324D!important;
+}
+
+.mv-tools-page .fp-tools-selector button.active,
+.mv-tools-page .fp-tools-selector-card.active,
+.mv-tools-page .fp-tool-selector.active,
+.mv-tools-page [class*="tool-selector"] button.active,
+.mv-tools-page [class*="tool-selector"] button[aria-selected="true"]{
+  border-color:#4D9EFF!important;
+  background:#173B60!important;
+  color:#FFFFFF!important;
+  box-shadow:inset 3px 0 0 #4D9EFF!important;
+}
+
+.mv-tools-page .fp-tools-selector button.active strong,
+.mv-tools-page .fp-tools-selector-card.active strong,
+.mv-tools-page .fp-tool-selector.active strong,
+.mv-tools-page [class*="tool-selector"] button.active strong,
+.mv-tools-page [class*="tool-selector"] button[aria-selected="true"] strong{
+  color:#FFFFFF!important;
+}
+
+.mv-tools-page .fp-tools-selector button.active p,
+.mv-tools-page .fp-tools-selector-card.active p,
+.mv-tools-page .fp-tool-selector.active p,
+.mv-tools-page [class*="tool-selector"] button.active p,
+.mv-tools-page [class*="tool-selector"] button[aria-selected="true"] p{
+  color:#BFD6EE!important;
+}
+
+/* Broad fallback for the existing card implementation on /tools */
+.mv-tools-page aside button[class*="active"],
+.mv-tools-page aside [aria-selected="true"]{
+  border-color:#4D9EFF!important;
+  background:#173B60!important;
+  color:#FFFFFF!important;
+  box-shadow:inset 3px 0 0 #4D9EFF!important;
+}
+
+.mv-tools-page aside button[class*="active"] *,
+.mv-tools-page aside [aria-selected="true"] *{
+  color:inherit!important;
+}
+
+/* Preserve MileVoxa green everywhere else on the Tools page. */
+/* === END MileVoxa Tools Selector Blue Restore v4.0.6 === */

@@ -41,7 +41,7 @@ export default function ReportActions({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `fleetpilot-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.download = `milevoxa-report-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();

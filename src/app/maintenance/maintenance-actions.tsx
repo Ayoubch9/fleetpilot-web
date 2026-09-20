@@ -375,7 +375,7 @@ export default function MaintenanceActions({
               <h2>Delete this service?</h2>
               <p>
                 This permanently removes the maintenance record. If it
-                created a linked Maintenance expense, FleetPilot will remove
+                created a linked Maintenance expense, MileVoxa will remove
                 that expense too.
               </p>
 

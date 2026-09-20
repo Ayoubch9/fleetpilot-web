@@ -1,5 +1,5 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SettingsCenter from "./settings-center";
 
 export default async function SettingsPage() {
@@ -10,7 +10,7 @@ export default async function SettingsPage() {
     avatarUrl,
     companyName,
     role,
-  } = await getFleetPilotAccount();
+  } = await getMileVoxaAccount();
 
   const { data: membership } = await supabase
     .from("company_members")
@@ -92,7 +92,7 @@ export default async function SettingsPage() {
   ).toISOString();
 
   const subscriptionInfo = {
-    planName: billingResult.data?.plan_name || "FleetPilot Pro",
+    planName: billingResult.data?.plan_name || "MileVoxa Pro",
     status: billingResult.data?.subscription_status || "trialing",
     trialStartedAt:
       billingResult.data?.trial_started_at ||
@@ -123,7 +123,7 @@ export default async function SettingsPage() {
         <div className="fp-tool-heading">
           <div>
             <h1>Settings</h1>
-            <p>Manage your FleetPilot account, company, preferences and security.</p>
+            <p>Manage your MileVoxa account, company, preferences and security.</p>
           </div>
         </div>
 

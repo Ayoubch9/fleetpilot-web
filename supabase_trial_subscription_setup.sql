@@ -1,10 +1,10 @@
--- FleetPilot Web v2.5.0 — company-level trial/subscription storage
+-- MileVoxa Web v2.5.0 — company-level trial/subscription storage
 -- Run once in Supabase SQL Editor.
 -- Existing companies receive a 14-day trial beginning when this migration is run.
 -- New companies automatically receive a 14-day trial.
 
 alter table public.billing_customers
-  add column if not exists plan_name text not null default 'FleetPilot Pro',
+  add column if not exists plan_name text not null default 'MileVoxa Pro',
   add column if not exists trial_started_at timestamptz null,
   add column if not exists trial_ends_at timestamptz null;
 
@@ -18,7 +18,7 @@ insert into public.billing_customers (
 select
   c.id,
   'trialing',
-  'FleetPilot Pro',
+  'MileVoxa Pro',
   now(),
   now() + interval '14 days'
 from public.companies c
@@ -30,7 +30,7 @@ where not exists (
 
 update public.billing_customers
 set
-  plan_name = coalesce(plan_name, 'FleetPilot Pro'),
+  plan_name = coalesce(plan_name, 'MileVoxa Pro'),
   trial_started_at = coalesce(trial_started_at, created_at, now()),
   trial_ends_at = coalesce(
     trial_ends_at,
@@ -62,7 +62,7 @@ begin
   values (
     new.id,
     'trialing',
-    'FleetPilot Pro',
+    'MileVoxa Pro',
     now(),
     now() + interval '14 days'
   )

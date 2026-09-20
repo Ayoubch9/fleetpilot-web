@@ -1,5 +1,5 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import DocumentManager from "./document-manager";
 import DocumentCenter from "./document-center";
 
@@ -17,7 +17,7 @@ type DocumentRow = {
 type Truck = { id: string; unit_number: string };
 
 export default async function DocumentsPage() {
-  const { supabase, fullName, companyName, role } = await getFleetPilotAccount();
+  const { supabase, fullName, companyName, role } = await getMileVoxaAccount();
 
   const { data: membership } = await supabase
     .from("company_members")

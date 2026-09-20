@@ -1,5 +1,5 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import ReportActions from "./report-actions";
 
 type Load = { truck_id:string|null; rate:number|string|null; loaded_miles:number|string|null; deadhead_miles:number|string|null; status:string|null; pickup_date:string|null };
@@ -10,7 +10,7 @@ const n=(v:unknown)=>Number(v||0)||0;
 const money=(v:number)=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(v);
 
 export default async function ReportsPage() {
-  const { supabase, fullName, companyName, role } = await getFleetPilotAccount();
+  const { supabase, fullName, companyName, role } = await getMileVoxaAccount();
   const [{data:loadsData},{data:expensesData},{data:trucksData}] = await Promise.all([
     supabase.from("loads").select("truck_id, rate, loaded_miles, deadhead_miles, status, pickup_date").order("pickup_date",{ascending:false}).limit(500),
     supabase.from("expenses").select("truck_id, amount, category, expense_date").order("expense_date",{ascending:false}).limit(1000),
@@ -78,6 +78,6 @@ export default async function ReportsPage() {
 
 function Kpi({label,value,tone}:{label:string;value:string;tone:string}){return <div className="fp-tool-kpi"><span className={`icon ${tone}`}>◫</span><div><small>{label}</small><strong>{value}</strong><em>↑ Live data</em></div></div>}
 function Action({text}:{text:string}){return <button className="fp-side-action">▣ <span>{text}</span><b>›</b></button>}
-function Promo({text}:{text:string}){return <div className="fp-tool-promo"><div>{text.split("\n").map((x,i)=><div key={i}>{x}</div>)}</div><small>FleetPilot</small></div>}
+function Promo({text}:{text:string}){return <div className="fp-tool-promo"><div>{text.split("\n").map((x,i)=><div key={i}>{x}</div>)}</div><small>MileVoxa</small></div>}
 function ReportBars({revenue,expenses}:{revenue:number;expenses:number}){const max=Math.max(revenue,expenses,1);return <div className="fp-report-bars">{[.45,.6,.52,.7,.58,.82,.67,.74,.62,.9].map((f,i)=><div className="grp" key={i}><i style={{height:`${Math.max(10,f*110)}px`}}/><b style={{height:`${Math.max(7,f*(expenses/max)*110)}px`}}/></div>)}</div>}
 function ReportDonut({total,items}:{total:number;items:{label:string;amount:number;color:string}[]}){let c=0;const safe=Math.max(total,1);const stops=items.map(x=>{const a=c,b=c+x.amount/safe*100;c=b;return `${x.color} ${a}% ${b}%`});return <div className="fp-report-donut-wrap"><div className="fp-report-donut" style={{background:`conic-gradient(${stops.join(",")})`}}><div><strong>{money(total)}</strong><span>Total Expenses</span></div></div><div>{items.map(x=><p key={x.label}><i style={{background:x.color}}/>{x.label}<b>{Math.round(x.amount/safe*100)}%</b></p>)}</div></div>}

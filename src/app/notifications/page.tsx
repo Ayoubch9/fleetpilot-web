@@ -1,13 +1,13 @@
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
-import { getFleetPilotAlerts } from "@/lib/fleetpilot-alerts";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAlerts } from "@/lib/fleetpilot-alerts";
 import NotificationCenter from "./notification-center";
 
 export default async function NotificationsPage() {
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
-  const alerts = await getFleetPilotAlerts(supabase);
+  const alerts = await getMileVoxaAlerts(supabase);
 
   return (
     <AppShell
@@ -21,7 +21,7 @@ export default async function NotificationsPage() {
           <div>
             <h1>Notifications</h1>
             <p>
-              Operational alerts generated from your real FleetPilot data.
+              Operational alerts generated from your real MileVoxa data.
             </p>
           </div>
         </div>

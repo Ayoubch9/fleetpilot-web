@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-[#f4f7fb]">
-      <aside className="fixed inset-y-0 left-0 hidden w-[222px] bg-gradient-to-b from-[#07172a] to-[#0a1c33] lg:block">
+    <main className="min-h-screen bg-[#F7F9F8]">
+      <aside className="fixed inset-y-0 left-0 hidden w-[222px] bg-gradient-to-b from-[#102238] to-[#0D1E31] lg:block">
         <div className="p-5">
           <div className="h-8 w-32 animate-pulse rounded bg-white/10" />
         </div>

@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import MileVoxaBrand from "@/components/milevoxa-brand";
 
 function formatSupabaseError(error: {
   message?: string;
@@ -17,7 +17,7 @@ function formatSupabaseError(error: {
 
   if (error.code) parts.push(`Code: ${error.code}`);
 
-  return parts.join(" · ") || "Could not finish FleetPilot setup.";
+  return parts.join(" · ") || "Could not finish MileVoxa setup.";
 }
 
 function extractErrorMessage(caught: unknown) {
@@ -34,7 +34,7 @@ function extractErrorMessage(caught: unknown) {
     );
   }
 
-  return "Could not finish FleetPilot setup.";
+  return "Could not finish MileVoxa setup.";
 }
 
 
@@ -78,7 +78,7 @@ export default function SocialOnboarding({
 
       if (!result?.ok || !result.company_id) {
         throw new Error(
-          "FleetPilot did not receive a valid company from Supabase."
+          "MileVoxa did not receive a valid company from Supabase."
         );
       }
 
@@ -100,21 +100,19 @@ export default function SocialOnboarding({
   return (
     <main className="fp-social-onboarding-page">
       <section className="fp-social-onboarding-brand">
-        <Link href="/" className="fp-social-onboarding-logo">
-          Fleet<span>Pilot</span>
-        </Link>
+        <MileVoxaBrand onDark showTagline={false} className="fp-social-onboarding-logo" />
 
         <div>
           <span>ONE LAST STEP</span>
-          <h1>Set up your FleetPilot company.</h1>
+          <h1>Set up your MileVoxa company.</h1>
           <p>
             Your {provider} account is connected. Now create the trucking
-            company workspace that will be shared across FleetPilot web and
+            company workspace that will be shared across MileVoxa web and
             mobile.
           </p>
         </div>
 
-        <small>Know what your truck actually makes.</small>
+        <small>Run your trucking business with clarity.</small>
       </section>
 
       <section className="fp-social-onboarding-content">
@@ -128,10 +126,10 @@ export default function SocialOnboarding({
           </div>
 
           <div className="fp-social-onboarding-heading">
-            <span>FLEETPILOT ACCOUNT</span>
+            <span>MILEVOXA ACCOUNT</span>
             <h2>Complete your profile</h2>
             <p>
-              This information belongs to your FleetPilot account, not your
+              This information belongs to your MileVoxa account, not your
               Google account.
             </p>
           </div>
@@ -167,7 +165,7 @@ export default function SocialOnboarding({
                 loading || !fullName.trim() || !companyName.trim()
               }
             >
-              {loading ? "Creating your company..." : "Open FleetPilot →"}
+              {loading ? "Creating your company..." : "Open MileVoxa →"}
             </button>
           </form>
 

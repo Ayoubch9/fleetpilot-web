@@ -235,7 +235,7 @@ export default function TruckActions({ truck }: { truck: Truck }) {
                 <div>
                   <span>TRUCK DETAILS</span>
                   <h2>Edit Truck #{truck.unit_number}</h2>
-                  <p>Update the truck information saved in FleetPilot.</p>
+                  <p>Update the truck information saved in MileVoxa.</p>
                 </div>
                 <button
                   type="button"
@@ -334,7 +334,7 @@ export default function TruckActions({ truck }: { truck: Truck }) {
               <h2>Delete Truck #{truck.unit_number}?</h2>
               <p>
                 This permanently removes the truck. If it has historical loads,
-                expenses or maintenance records, FleetPilot may require you to
+                expenses or maintenance records, MileVoxa may require you to
                 mark it Inactive instead.
               </p>
 

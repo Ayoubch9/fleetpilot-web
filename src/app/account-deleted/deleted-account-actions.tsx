@@ -38,7 +38,7 @@ export default function DeletedAccountActions({
 
       if (data !== true) {
         throw new Error(
-          "FleetPilot could not prepare a new blank account."
+          "MileVoxa could not prepare a new blank account."
         );
       }
 
@@ -48,7 +48,7 @@ export default function DeletedAccountActions({
       setError(
         caught instanceof Error
           ? caught.message
-          : "Could not start a new FleetPilot account."
+          : "Could not start a new MileVoxa account."
       );
       setBusy(false);
     }
@@ -74,7 +74,7 @@ export default function DeletedAccountActions({
           >
             {busy
               ? "Preparing new account..."
-              : "Create a New Blank FleetPilot Account"}
+              : "Create a New Blank MileVoxa Account"}
           </button>
           <button
             type="button"
@@ -99,7 +99,7 @@ export default function DeletedAccountActions({
       {justDeleted && (
         <small>
           Signing in again with the same Google address will not restore the
-          deleted data. FleetPilot will ask before creating a new blank account.
+          deleted data. MileVoxa will ask before creating a new blank account.
         </small>
       )}
 

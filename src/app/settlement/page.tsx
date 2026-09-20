@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SettlementControls, {
   type SettlementTab,
 } from "./settlement-controls";
@@ -101,7 +101,7 @@ export default async function SettlementPage({
 }) {
   const params = await searchParams;
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const currentStart = selectedWeek(undefined);
   const cookieStore = await cookies();
@@ -754,7 +754,7 @@ export default async function SettlementPage({
                 <h2>Security Deposit</h2>
                 <Link
                   href="/security-deposit"
-                  className="text-[9px] font-[600] text-[#1188ff]"
+                  className="text-[9px] font-[600] text-[#16853B]"
                 >
                   View Ledger →
                 </Link>
@@ -809,7 +809,7 @@ export default async function SettlementPage({
                 <h2>Cost Breakdown</h2>
                 <Link
                   href={`/settlement?week=${startText}&tab=costs`}
-                  className="text-[9px] font-[600] text-[#1188ff]"
+                  className="text-[9px] font-[600] text-[#16853B]"
                 >
                   View All →
                 </Link>

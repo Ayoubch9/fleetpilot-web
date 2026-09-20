@@ -154,7 +154,7 @@ export default function SmartLoadImport({
       {open && (
         <div className="fp-smart-load-panel">
           <div className="fp-telegram-import-help">
-            Paste the dispatcher load message from Telegram. FleetPilot will extract the load ID, route, dates, customer and rate automatically.
+            Paste the dispatcher load message from Telegram. MileVoxa will extract the load ID, route, dates, customer and rate automatically.
           </div>
           <textarea
             rows={8}

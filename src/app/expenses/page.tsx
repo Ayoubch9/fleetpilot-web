@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
 import { EmptyState } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddExpenseForm from "./add-expense-form";
 import ExpenseActions from "./expense-actions";
 import ExpenseFilters from "./expense-filters";
@@ -76,7 +76,7 @@ export default async function ExpensesPage({
   const maxAmount = params.maxAmount ? Number(params.maxAmount) : null;
 
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     { data: expenseData, error: expenseError },
@@ -475,7 +475,7 @@ export default async function ExpensesPage({
             <section className="fp-expense-side-card">
               <div className="flex items-center justify-between">
                 <h2>Top Expenses</h2>
-                <span className="text-[9px] font-[600] text-[#1188ff]">
+                <span className="text-[9px] font-[600] text-[#16853B]">
                   View All →
                 </span>
               </div>

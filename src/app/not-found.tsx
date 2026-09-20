@@ -7,7 +7,7 @@ export default function NotFound() {
         <div className="fp-state-icon">404</div>
         <h1>Page not found</h1>
         <p>
-          This FleetPilot page does not exist or the address has changed.
+          This MileVoxa page does not exist or the address has changed.
         </p>
         <div className="fp-state-actions">
           <Link href="/dashboard">Back to Dashboard</Link>

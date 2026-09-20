@@ -17,7 +17,7 @@ export default function PilotChat({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      text: "I’m connected to your FleetPilot business data. Ask me about loads, revenue, expenses, trucks, fuel, routes, maintenance, or profitability.",
+      text: "I’m connected to your MileVoxa business data. Ask me about loads, revenue, expenses, trucks, fuel, routes, maintenance, or profitability.",
     },
   ]);
   const [question, setQuestion] = useState(initialQuestion);
@@ -99,7 +99,7 @@ export default function PilotChat({
           <div className="fp-ai-message assistant fp-ai-thinking">
             <span className="fp-ai-message-icon">✦</span>
             <p>
-              Analyzing your FleetPilot data
+              Analyzing your MileVoxa data
               <span className="fp-ai-dots" aria-hidden="true">•••</span>
             </p>
           </div>
@@ -135,7 +135,7 @@ export default function PilotChat({
       </div>
 
       <small className="fp-ai-note">
-        Pilot AI analyzes the FleetPilot data available to your signed-in company account. Review important business decisions before acting.
+        Pilot AI analyzes the MileVoxa data available to your signed-in company account. Review important business decisions before acting.
       </small>
     </>
   );

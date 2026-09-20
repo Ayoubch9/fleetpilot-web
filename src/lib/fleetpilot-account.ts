@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function getFleetPilotAccount() {
+export async function getMileVoxaAccount() {
   const supabase = await createClient();
 
   const {
@@ -42,7 +42,7 @@ export async function getFleetPilotAccount() {
   return {
     supabase,
     user,
-    fullName: profile?.full_name || "FleetPilot User",
+    fullName: profile?.full_name || "MileVoxa User",
     avatarPath: profile?.avatar_path || null,
     avatarUrl,
     companyName,

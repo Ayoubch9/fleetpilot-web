@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import FuelControls, { type FuelView } from "./fuel-controls";
 import {
   dbDate,
@@ -61,7 +61,7 @@ export default async function FuelPage({
 }) {
   const params = await searchParams;
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const currentStart = selectedWeek(undefined);
   const cookieStore = await cookies();
@@ -642,7 +642,7 @@ function groupFuel(
 
   const colors = [
     "#58bd69",
-    "#4f8df7",
+    "#16853B",
     "#ef6b5e",
     "#f2b33f",
     "#7356d8",
@@ -865,7 +865,7 @@ function FuelTrendChart({
       <polyline
         points={points}
         fill="none"
-        stroke="#4f8df7"
+        stroke="#16853B"
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -883,7 +883,7 @@ function FuelTrendChart({
             cy={y}
             r="3"
             fill="#fff"
-            stroke="#4f8df7"
+            stroke="#16853B"
             strokeWidth="2"
           />
         );

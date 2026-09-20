@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     if (!membership?.company_id) {
       return NextResponse.json(
-        { error: "No FleetPilot company is linked to this account." },
+        { error: "No MileVoxa company is linked to this account." },
         { status: 403 }
       );
     }
@@ -289,8 +289,8 @@ export async function POST(request: NextRequest) {
 
     const context = {
       account: {
-        userName: profile?.full_name || "FleetPilot User",
-        company: company?.name || "FleetPilot Company",
+        userName: profile?.full_name || "MileVoxa User",
+        company: company?.name || "MileVoxa Company",
         role: membership.role || "Member",
       },
       totals: {
@@ -343,8 +343,8 @@ export async function POST(request: NextRequest) {
       .join("\n\n");
 
     const instructions = [
-      "You are Pilot AI inside FleetPilot, a trucking business management application.",
-      "Give concise, practical business answers grounded ONLY in the supplied FleetPilot company data.",
+      "You are Pilot AI inside MileVoxa, a trucking business management application.",
+      "Give concise, practical business answers grounded ONLY in the supplied MileVoxa company data.",
       "Never invent loads, trucks, costs, dates, rates, vendors, routes, maintenance items, or financial values.",
       "If the data does not support a requested conclusion, say that clearly and explain what additional data would be needed.",
       "Reimbursements offset expenses; do not treat them as revenue.",
@@ -357,7 +357,7 @@ export async function POST(request: NextRequest) {
 
     const input = [
       conversation ? `Recent conversation:\n${conversation}\n\n` : "",
-      `Current FleetPilot company data:\n${JSON.stringify(context)}`,
+      `Current MileVoxa company data:\n${JSON.stringify(context)}`,
       `\n\nUser question:\n${question}`,
     ].join("");
 

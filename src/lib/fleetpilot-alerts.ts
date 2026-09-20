@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export type FleetPilotAlert = {
+export type MileVoxaAlert = {
   id: string;
   category: "maintenance" | "documents" | "loads";
   severity: "critical" | "warning" | "info";
@@ -19,9 +19,9 @@ type Truck = {
 
 const n = (value: unknown) => Number(value || 0) || 0;
 
-export async function getFleetPilotAlerts(
+export async function getMileVoxaAlerts(
   supabase: SupabaseClient
-): Promise<FleetPilotAlert[]> {
+): Promise<MileVoxaAlert[]> {
   const today = startOfDay(new Date());
   const thirtyDays = addDays(today, 30);
   const twoDays = addDays(today, 2);
@@ -67,7 +67,7 @@ export async function getFleetPilotAlerts(
   const notifyLoads =
     preferenceResult.data?.notify_load_updates !== false;
 
-  const alerts: FleetPilotAlert[] = [];
+  const alerts: MileVoxaAlert[] = [];
 
   if (notifyMaintenance) {
     for (const record of maintenanceResult.data ?? []) {

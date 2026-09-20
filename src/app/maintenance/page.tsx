@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import { num, parseDate, money } from "@/lib/fleetpilot-week";
 import AddMaintenanceForm from "./add-maintenance-form";
 import MaintenanceFilters from "./maintenance-filters";
@@ -73,7 +73,7 @@ export default async function MaintenancePage({
   const maxMileage = params.maxMileage ? Number(params.maxMileage) : null;
 
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const [
     { data: truckData, error: truckError },
@@ -394,7 +394,7 @@ export default async function MaintenancePage({
               </div>
               <div className="fp-maint-stat-list mt-4">
                 <MaintStatRow label="Completed" value={completed} total={filteredBase.length} color="#58bd69" />
-                <MaintStatRow label="Upcoming" value={upcoming} total={filteredBase.length} color="#4f8df7" />
+                <MaintStatRow label="Upcoming" value={upcoming} total={filteredBase.length} color="#16853B" />
                 <MaintStatRow label="Overdue" value={overdue} total={filteredBase.length} color="#ef5755" />
               </div>
             </section>
@@ -402,7 +402,7 @@ export default async function MaintenancePage({
             <section className="fp-maint-side-card">
               <div className="flex items-center justify-between">
                 <h2>Upcoming Services</h2>
-                <span className="text-[9px] font-[600] text-[#1188ff]">View All →</span>
+                <span className="text-[9px] font-[600] text-[#16853B]">View All →</span>
               </div>
               <div className="fp-maint-upcoming-list mt-3">
                 {upcomingServices.length > 0 ? upcomingServices.map((record) => {
@@ -486,7 +486,7 @@ function MaintDonut({ total, completed, upcoming, overdue }: { total: number; co
   const s2 = c + u;
   const s3 = Math.min(100, s2 + o);
   const background = total > 0
-    ? `conic-gradient(#58bd69 0 ${c}%, #4f8df7 ${c}% ${s2}%, #ef5755 ${s2}% ${s3}%, #e7edf3 ${s3}% 100%)`
+    ? `conic-gradient(#58bd69 0 ${c}%, #16853B ${c}% ${s2}%, #ef5755 ${s2}% ${s3}%, #e7edf3 ${s3}% 100%)`
     : "conic-gradient(#e7edf3 0 100%)";
   return (
     <div className="fp-maint-donut" style={{ background }}>

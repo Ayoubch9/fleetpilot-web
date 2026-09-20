@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { FleetPilotAlert } from "@/lib/fleetpilot-alerts";
+import type { MileVoxaAlert } from "@/lib/fleetpilot-alerts";
 
 type Filter = "all" | "critical" | "warning" | "info";
 
 export default function NotificationCenter({
   alerts,
 }: {
-  alerts: FleetPilotAlert[];
+  alerts: MileVoxaAlert[];
 }) {
   const [filter, setFilter] = useState<Filter>("all");
 
@@ -121,7 +121,7 @@ export default function NotificationCenter({
             <div>✓</div>
             <strong>No alerts in this category.</strong>
             <span>
-              FleetPilot will surface operational items here when they need
+              MileVoxa will surface operational items here when they need
               attention.
             </span>
           </div>
@@ -166,7 +166,7 @@ function FilterButton({
   );
 }
 
-function categoryLabel(category: FleetPilotAlert["category"]) {
+function categoryLabel(category: MileVoxaAlert["category"]) {
   if (category === "maintenance") return "Maintenance";
   if (category === "documents") return "Documents";
   return "Loads";

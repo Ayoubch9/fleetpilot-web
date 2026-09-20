@@ -29,7 +29,7 @@ const features = [
   {
     icon: "ai",
     title: "Pilot AI",
-    text: "Ask questions about loads, fuel, expenses and profitability using the operational data already inside FleetPilot.",
+    text: "Ask questions about loads, fuel, expenses and profitability using the operational data already inside MileVoxa.",
   },
   {
     icon: "document",
@@ -51,16 +51,16 @@ const outcomes = [
 
 export default function HomePage() {
   return (
-    <main className="fp-marketing min-h-screen bg-white text-[#0b1730]">
+    <main className="fp-marketing-page fp-marketing min-h-screen bg-white text-[#0b1730]">
       <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand" aria-label="FleetPilot home">
-          <Logo />
-          <div>
-            <div className="fp-marketing-brand-name">
-              Fleet<span>Pilot</span>
-            </div>
-            <div className="fp-marketing-tagline">Drive smarter. Earn more.</div>
-          </div>
+        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
+          <img
+            src="/branding/milevoxa-logo-full.png"
+            width={2000}
+            height={612}
+            className="mv-marketing-logo"
+            alt="MileVoxa — Run your trucking business with clarity."
+          />
         </Link>
 
         <nav className="fp-marketing-nav" aria-label="Main navigation">
@@ -78,7 +78,7 @@ export default function HomePage() {
 
       <section className="fp-marketing-hero">
         <div className="fp-marketing-hero-copy">
-          <div className="fp-marketing-eyebrow">FleetPilot Control Center</div>
+          <div className="fp-marketing-eyebrow">MileVoxa Control Center</div>
 
           <h1>
             Control Your Miles.
@@ -129,7 +129,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="fp-marketing-trust-strip" aria-label="FleetPilot value">
+      <section className="fp-marketing-trust-strip" aria-label="MileVoxa value">
         <div>
           <strong>One place</strong>
           <span>for the operating numbers that matter</span>
@@ -155,7 +155,7 @@ export default function HomePage() {
             <h2>Run the business behind the truck.</h2>
           </div>
           <p>
-            FleetPilot is designed around the work owner-operators and small fleets
+            MileVoxa is designed around the work owner-operators and small fleets
             already do every week—then connects it so profitability becomes easier to
             see and easier to act on.
           </p>
@@ -180,7 +180,7 @@ export default function HomePage() {
           <h2>Know what the truck actually makes.</h2>
           <p>
             Gross revenue can look good while fuel, maintenance, reimbursements,
-            company fees and fixed weekly costs quietly reduce the result. FleetPilot
+            company fees and fixed weekly costs quietly reduce the result. MileVoxa
             puts those pieces into the same operating view.
           </p>
 
@@ -224,7 +224,7 @@ export default function HomePage() {
 
       <section id="about" className="fp-marketing-section fp-marketing-about">
         <div className="fp-marketing-about-card">
-          <div className="fp-marketing-eyebrow">Why FleetPilot</div>
+          <div className="fp-marketing-eyebrow">Why MileVoxa</div>
           <h2>Built around a simple problem: trucking data is everywhere.</h2>
           <p>
             Loads arrive through dispatch messages. Fuel lives in receipts. Maintenance
@@ -233,7 +233,7 @@ export default function HomePage() {
             <strong> what did the truck actually make?</strong>
           </p>
           <p>
-            FleetPilot brings those operating pieces together for owner-operators and
+            MileVoxa brings those operating pieces together for owner-operators and
             small fleets that want a clearer way to run the business—not just move the truck.
           </p>
         </div>
@@ -252,7 +252,7 @@ export default function HomePage() {
           <p>
             Calculate load profit, rate per mile, cost per mile, fuel spend,
             owner-operator profit and lease-operator take-home with
-            FleetPilot&apos;s free tools.
+            MileVoxa&apos;s free tools.
           </p>
         </div>
         <Link href="/tools" className="fp-marketing-button primary large">
@@ -263,16 +263,16 @@ export default function HomePage() {
       <section className="fp-marketing-pricing-preview">
         <div>
           <span>Simple subscription</span>
-          <h2>Try the full FleetPilot workflow for 14 days.</h2>
+          <h2>Try the full MileVoxa workflow for 14 days.</h2>
           <p>
             Start with the product, add your own loads and costs, and decide whether
-            FleetPilot earns a place in your weekly operation.
+            MileVoxa earns a place in your weekly operation.
           </p>
         </div>
 
         <div className="fp-marketing-pricing-preview-card">
           <div>
-            <small>FLEETPILOT PRO</small>
+            <small>MILEVOXA PRO</small>
             <strong>14 days free</strong>
             <span>No card required during the trial</span>
           </div>
@@ -302,12 +302,12 @@ export default function HomePage() {
         </div>
 
         <div className="fp-marketing-faq-grid">
-          <Faq q="Do I need a credit card for the trial?" a="No. You can create your FleetPilot account and use the 14-day trial without entering card details." />
-          <Faq q="Is FleetPilot only for large fleets?" a="No. The product is designed around owner-operators and small fleets that need clear operating and profitability data without enterprise complexity." />
-          <Faq q="Can I use the same account on web and mobile?" a="Yes. FleetPilot is designed around the same account and Supabase company data so the web and mobile experiences can stay connected." />
-          <Faq q="Can FleetPilot track more than revenue?" a="Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views." />
-          <Faq q="What happens after the trial?" a="You can choose the FleetPilot subscription when paid billing is activated. Your operating data remains tied to your account." />
-          <Faq q="Can I import dispatcher load information?" a="Yes. FleetPilot includes a Telegram-style load importer that can read common dispatch message fields and prefill a new load." />
+          <Faq q="Do I need a credit card for the trial?" a="No. You can create your MileVoxa account and use the 14-day trial without entering card details." />
+          <Faq q="Is MileVoxa only for large fleets?" a="No. The product is designed around owner-operators and small fleets that need clear operating and profitability data without enterprise complexity." />
+          <Faq q="Can I use the same account on web and mobile?" a="Yes. MileVoxa is designed around the same account and Supabase company data so the web and mobile experiences can stay connected." />
+          <Faq q="Can MileVoxa track more than revenue?" a="Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views." />
+          <Faq q="What happens after the trial?" a="You can choose the MileVoxa subscription when paid billing is activated. Your operating data remains tied to your account." />
+          <Faq q="Can I import dispatcher load information?" a="Yes. MileVoxa includes a Telegram-style load importer that can read common dispatch message fields and prefill a new load." />
         </div>
       </section>
 
@@ -328,12 +328,14 @@ export default function HomePage() {
       </section>
 
       <footer className="fp-marketing-footer">
-        <Link href="/" className="fp-marketing-brand">
-          <Logo />
-          <div>
-            <div className="fp-marketing-brand-name">Fleet<span>Pilot</span></div>
-            <div className="fp-marketing-tagline">Drive smarter. Earn more.</div>
-          </div>
+        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
+          <img
+            src="/branding/milevoxa-logo-full.png"
+            width={2000}
+            height={612}
+            className="mv-marketing-logo"
+            alt="MileVoxa — Run your trucking business with clarity."
+          />
         </Link>
         <div>
           <a href="#features">Features</a>
@@ -344,7 +346,7 @@ export default function HomePage() {
           <Link href="/data-deletion">Data Deletion</Link>
           <Link href="/login">Sign In</Link>
         </div>
-        <span>© 2026 FleetPilot</span>
+        <span>© 2026 MileVoxa</span>
       </footer>
     </main>
   );
@@ -378,14 +380,6 @@ function Faq({ q, a }: { q: string; a: string }) {
   );
 }
 
-function Logo() {
-  return (
-    <svg viewBox="0 0 28 28" className="h-8 w-8">
-      <path d="M2 14.8 26 2 18.2 26l-4.7-9.2L2 14.8Z" fill="#1188ff" />
-      <path d="m13.5 16.8 5.2-7.1" fill="none" stroke="#9fd2ff" strokeWidth="1.5" />
-    </svg>
-  );
-}
 
 function MarketingIcon({ type }: { type: string }) {
   const p = {

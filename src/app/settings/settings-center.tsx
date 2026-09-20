@@ -693,14 +693,14 @@ async function removeAvatar() {
       const url = URL.createObjectURL(payload);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = `fleetpilot-export-${new Date()
+      anchor.download = `milevoxa-export-${new Date()
         .toISOString()
         .slice(0, 10)}.json`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(url);
-      setMessage("FleetPilot data export created.");
+      setMessage("MileVoxa data export created.");
     } catch (caught) {
       setMessage(
         caught instanceof Error ? caught.message : "Could not export account data."
@@ -728,7 +728,7 @@ async function removeAvatar() {
 
       if (!response.ok) {
         throw new Error(
-          payload?.error || "Could not delete the FleetPilot account."
+          payload?.error || "Could not delete the MileVoxa account."
         );
       }
 
@@ -737,7 +737,7 @@ async function removeAvatar() {
       setMessage(
         caught instanceof Error
           ? caught.message
-          : "Could not delete the FleetPilot account."
+          : "Could not delete the MileVoxa account."
       );
       setDeleteBusy(false);
     }
@@ -765,7 +765,7 @@ async function removeAvatar() {
             <section className="fp-panel fp-settings-main-card">
               <h2>Profile Information</h2>
               <p className="fp-settings-copy">
-                Manage the personal information attached to your FleetPilot account.
+                Manage the personal information attached to your MileVoxa account.
               </p>
 
               <div className="fp-settings-profile">
@@ -850,7 +850,7 @@ async function removeAvatar() {
                   <span>BUSINESS PROFILE</span>
                   <h2>Company</h2>
                   <p className="fp-settings-copy">
-                    Business and operating information used across FleetPilot.
+                    Business and operating information used across MileVoxa.
                   </p>
                 </div>
                 <div className="fp-company-role-badge">{role}</div>
@@ -1042,7 +1042,7 @@ async function removeAvatar() {
                 )}
 
                 <div className="fp-company-save-row">
-                  <span>Changes apply to this FleetPilot company account.</span>
+                  <span>Changes apply to this MileVoxa company account.</span>
                   <button
                     className="fp-primary-btn settings-save"
                     disabled={saving || !owner || !companyProfileReady}
@@ -1062,7 +1062,7 @@ async function removeAvatar() {
                   <h2>Business Costs & Fees</h2>
                   <p className="fp-settings-copy">
                     These settings are stored in the same Supabase company
-                    records used by FleetPilot mobile. Changes made here are
+                    records used by MileVoxa mobile. Changes made here are
                     available to both apps.
                   </p>
                 </div>
@@ -1071,7 +1071,7 @@ async function removeAvatar() {
 
               {!businessCostsReady && (
                 <div className="fp-settings-warning">
-                  FleetPilot could not read the shared company fee/fixed-expense
+                  MileVoxa could not read the shared company fee/fixed-expense
                   tables. Verify <b>company_fee_settings</b> and{" "}
                   <b>weekly_fixed_expenses</b> in Supabase.
                 </div>
@@ -1093,7 +1093,7 @@ async function removeAvatar() {
                 <div className="fp-company-section-title">
                   <strong>Company Fees</strong>
                   <span>
-                    Percentage and mileage fees deducted when FleetPilot
+                    Percentage and mileage fees deducted when MileVoxa
                     calculates weekly operating profit.
                   </span>
                 </div>
@@ -1200,7 +1200,7 @@ async function removeAvatar() {
                     </label>
 
                     <p>
-                      Applied to the weekly odometer miles used by FleetPilot
+                      Applied to the weekly odometer miles used by MileVoxa
                       settlement calculations.
                     </p>
                   </div>
@@ -1422,7 +1422,7 @@ async function removeAvatar() {
                   <span>APP EXPERIENCE</span>
                   <h2>Preferences</h2>
                   <p className="fp-settings-copy">
-                    Control how FleetPilot formats dates, weeks and common operating views.
+                    Control how MileVoxa formats dates, weeks and common operating views.
                   </p>
                 </div>
               </div>
@@ -1436,7 +1436,7 @@ async function removeAvatar() {
               <div className="fp-preference-section">
                 <div className="fp-company-section-title">
                   <strong>Regional & Formatting</strong>
-                  <span>How FleetPilot displays business information.</span>
+                  <span>How MileVoxa displays business information.</span>
                 </div>
 
                 <div className="fp-settings-select-grid">
@@ -1512,12 +1512,12 @@ async function removeAvatar() {
                   <LockedPreference
                     label="Currency"
                     value="USD ($)"
-                    note="FleetPilot accounting currently runs in USD."
+                    note="MileVoxa accounting currently runs in USD."
                   />
                   <LockedPreference
                     label="Distance Unit"
                     value="Miles"
-                    note="FleetPilot mileage/IFTA workflows currently use miles."
+                    note="MileVoxa mileage/IFTA workflows currently use miles."
                   />
                 </div>
               </div>
@@ -1542,7 +1542,7 @@ async function removeAvatar() {
               </div>
 
               <div className="fp-company-save-row">
-                <span>Preferences are saved to your FleetPilot user account.</span>
+                <span>Preferences are saved to your MileVoxa user account.</span>
                 <button
                   className="fp-primary-btn settings-save"
                   type="button"
@@ -1559,7 +1559,7 @@ async function removeAvatar() {
             <section className="fp-panel fp-settings-main-card">
               <h2>Notifications</h2>
               <p className="fp-settings-copy">
-                Choose which FleetPilot events should be eligible for notifications.
+                Choose which MileVoxa events should be eligible for notifications.
               </p>
 
               {!preferencesReady && (
@@ -1606,7 +1606,7 @@ async function removeAvatar() {
 
               <ToggleSetting
                 label="Product updates"
-                description="Important FleetPilot product and feature announcements."
+                description="Important MileVoxa product and feature announcements."
                 checked={preferences.notify_product_updates}
                 onChange={(value) =>
                   setPreferences((current) => ({
@@ -1634,7 +1634,7 @@ async function removeAvatar() {
                   <span>PLAN & BILLING</span>
                   <h2>Subscription</h2>
                   <p className="fp-settings-copy">
-                    See your FleetPilot plan, trial status and what happens next.
+                    See your MileVoxa plan, trial status and what happens next.
                   </p>
                 </div>
                 <div className={`fp-subscription-status ${trialActive ? "trial" : paidActive ? "active" : "ended"}`}>
@@ -1647,9 +1647,9 @@ async function removeAvatar() {
                   <span>{subscriptionInfo.planName}</span>
                   {paidActive ? (
                     <>
-                      <h3>Your FleetPilot Pro subscription is active.</h3>
+                      <h3>Your MileVoxa Pro subscription is active.</h3>
                       <p>
-                        You have access to the complete FleetPilot operating system.
+                        You have access to the complete MileVoxa operating system.
                       </p>
                     </>
                   ) : trialActive ? (
@@ -1658,7 +1658,7 @@ async function removeAvatar() {
                         {trialDaysRemaining} day{trialDaysRemaining === 1 ? "" : "s"} remaining
                       </h3>
                       <p>
-                        Your 14-day FleetPilot Pro trial ends on{" "}
+                        Your 14-day MileVoxa Pro trial ends on{" "}
                         <strong>{formatSubscriptionDate(trialEnd)}</strong>.
                       </p>
                     </>
@@ -1666,7 +1666,7 @@ async function removeAvatar() {
                     <>
                       <h3>Your free trial has ended.</h3>
                       <p>
-                        Choose a FleetPilot Pro plan when you are ready to continue with Pro access.
+                        Choose a MileVoxa Pro plan when you are ready to continue with Pro access.
                       </p>
                     </>
                   )}
@@ -1723,7 +1723,7 @@ async function removeAvatar() {
               <div className="fp-subscription-included">
                 <div>
                   <span>WHAT YOU HAVE ACCESS TO</span>
-                  <h3>Full FleetPilot Pro during your trial</h3>
+                  <h3>Full MileVoxa Pro during your trial</h3>
                 </div>
                 <div className="fp-subscription-feature-grid">
                   {[
@@ -1748,7 +1748,7 @@ async function removeAvatar() {
                 <div className="fp-subscription-storage-note">
                   <strong>Trial storage setup recommended</strong>
                   <span>
-                    FleetPilot is currently calculating this trial from the account creation date. Run <b>supabase_trial_subscription_setup.sql</b> once so trial dates are stored permanently at company level.
+                    MileVoxa is currently calculating this trial from the account creation date. Run <b>supabase_trial_subscription_setup.sql</b> once so trial dates are stored permanently at company level.
                   </span>
                 </div>
               )}
@@ -1760,7 +1760,7 @@ async function removeAvatar() {
                       ? "Enjoy the full product during your trial."
                       : paidActive
                         ? "Your subscription is active."
-                        : "Ready to continue with FleetPilot Pro?"}
+                        : "Ready to continue with MileVoxa Pro?"}
                   </strong>
                   <span>
                     Stripe checkout remains disabled until billing/legal setup is completed.
@@ -1788,12 +1788,12 @@ async function removeAvatar() {
             <section className="fp-panel fp-settings-main-card">
               <h2>Data & Export</h2>
               <p className="fp-settings-copy">
-                Download a structured JSON export of the FleetPilot business data accessible to your account.
+                Download a structured JSON export of the MileVoxa business data accessible to your account.
               </p>
 
               <div className="fp-data-export-card">
                 <div>
-                  <strong>FleetPilot Account Export</strong>
+                  <strong>MileVoxa Account Export</strong>
                   <span>
                     Includes trucks, loads, expenses, reimbursements, maintenance, settlements-related data, document metadata and account settings.
                   </span>
@@ -1816,7 +1816,7 @@ async function removeAvatar() {
                   <span>LEGAL & PRIVACY</span>
                   <h2>Legal & Privacy</h2>
                   <p className="fp-settings-copy">
-                    Review FleetPilot&apos;s legal policies and manage your personal account data from one place.
+                    Review MileVoxa&apos;s legal policies and manage your personal account data from one place.
                   </p>
                 </div>
               </div>
@@ -1828,7 +1828,7 @@ async function removeAvatar() {
                     <span>PRIVACY</span>
                     <strong>Privacy Policy</strong>
                     <p>
-                      See what FleetPilot processes, how Google sign-in works,
+                      See what MileVoxa processes, how Google sign-in works,
                       and how account data is handled.
                     </p>
                   </div>
@@ -1841,7 +1841,7 @@ async function removeAvatar() {
                     <span>TERMS</span>
                     <strong>Terms of Service</strong>
                     <p>
-                      Review FleetPilot account, service, trial, and operational
+                      Review MileVoxa account, service, trial, and operational
                       calculation terms.
                     </p>
                   </div>
@@ -1866,16 +1866,16 @@ async function removeAvatar() {
                 <div className="fp-company-section-title">
                   <strong>Your Data</strong>
                   <span>
-                    Download supported FleetPilot account and business information before making account changes.
+                    Download supported MileVoxa account and business information before making account changes.
                   </span>
                 </div>
 
                 <div className="fp-legal-data-action">
                   <div>
-                    <strong>Export My FleetPilot Data</strong>
+                    <strong>Export My MileVoxa Data</strong>
                     <span>
                       Creates a structured JSON export of the account and business
-                      data currently available through FleetPilot.
+                      data currently available through MileVoxa.
                     </span>
                   </div>
                   <button
@@ -1892,7 +1892,7 @@ async function removeAvatar() {
                 <div className="fp-company-section-title">
                   <strong>Google Sign-In</strong>
                   <span>
-                    FleetPilot uses Google only for authentication when you choose
+                    MileVoxa uses Google only for authentication when you choose
                     Continue with Google.
                   </span>
                 </div>
@@ -1902,7 +1902,7 @@ async function removeAvatar() {
                   <div>
                     <strong>{email}</strong>
                     <span>
-                      Google sign-in does not give FleetPilot access to your Gmail
+                      Google sign-in does not give MileVoxa access to your Gmail
                       inbox, Google Drive, or your Google password.
                     </span>
                   </div>
@@ -1913,14 +1913,14 @@ async function removeAvatar() {
                 <div className="fp-company-section-title">
                   <strong>Delete Account</strong>
                   <span>
-                    Permanently remove your FleetPilot account. If you are the sole
+                    Permanently remove your MileVoxa account. If you are the sole
                     owner/member, eligible company-scoped data is removed too.
                   </span>
                 </div>
 
                 <div className="fp-legal-delete-action">
                   <div>
-                    <strong>Delete FleetPilot Account</strong>
+                    <strong>Delete MileVoxa Account</strong>
                     <span>
                       This action is permanent. Export anything you want to keep
                       before continuing.
@@ -1941,7 +1941,7 @@ async function removeAvatar() {
             <section className="fp-panel fp-settings-main-card">
               <h2>Security</h2>
               <p className="fp-settings-copy">
-                Manage access to your FleetPilot account.
+                Manage access to your MileVoxa account.
               </p>
 
               <SecurityAction
@@ -1953,15 +1953,15 @@ async function removeAvatar() {
 
               <SecurityAction
                 title="Sign out everywhere"
-                description="End FleetPilot sessions across devices for this account."
+                description="End MileVoxa sessions across devices for this account."
                 action="Sign Out Everywhere"
                 onClick={signOutEverywhere}
                 danger
               />
 
               <SecurityAction
-                title="Delete FleetPilot account"
-                description="Permanently delete this user account. If you are the sole company owner, company-scoped FleetPilot data is deleted with it."
+                title="Delete MileVoxa account"
+                description="Permanently delete this user account. If you are the sole company owner, company-scoped MileVoxa data is deleted with it."
                 action="Delete Account"
                 onClick={() => setDeleteOpen(true)}
                 danger
@@ -2007,19 +2007,19 @@ async function removeAvatar() {
         <div className="fp-delete-overlay" role="dialog" aria-modal="true">
           <div className="fp-delete-modal fp-delete-modal-permanent">
             <span className="fp-delete-kicker">PERMANENT ACTION</span>
-            <h2>Delete FleetPilot Account</h2>
+            <h2>Delete MileVoxa Account</h2>
             <p>
-              This deletes your FleetPilot login. If you are the only member
+              This deletes your MileVoxa login. If you are the only member
               and owner of the company, the company workspace and eligible
               company-scoped records are deleted too. This cannot restore your
-              old FleetPilot business data later.
+              old MileVoxa business data later.
             </p>
 
             <div className="fp-delete-impact">
               <strong>Before you continue</strong>
               <span>Export anything you want to keep from Data &amp; Export.</span>
               <span>
-                If your company has other members, FleetPilot will block owner
+                If your company has other members, MileVoxa will block owner
                 deletion until ownership/member access is resolved.
               </span>
               <span>

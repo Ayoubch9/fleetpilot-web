@@ -1,4 +1,4 @@
--- FleetPilot Web v3.8.0
+-- MileVoxa Web v3.8.0
 -- Legal/account deletion + deleted Google account handling
 --
 -- Run once in Supabase SQL Editor.
@@ -6,9 +6,9 @@
 -- Important behavior:
 -- 1. A self-deleted account is removed from auth.users.
 -- 2. A small tombstone containing the normalized email is retained so a
---    later Google OAuth sign-in does NOT silently recreate FleetPilot data.
+--    later Google OAuth sign-in does NOT silently recreate MileVoxa data.
 -- 3. The returning user may explicitly choose to create a brand-new blank
---    FleetPilot account, which removes the tombstone and sends them through
+--    MileVoxa account, which removes the tombstone and sends them through
 --    onboarding again.
 --
 -- The tombstone is intentionally NOT exposed with normal table RLS.
@@ -36,7 +36,7 @@ create index if not exists fleetpilot_deleted_accounts_deleted_at_idx
 
 
 -- Returns true when the currently authenticated email belongs to a
--- previously deleted FleetPilot account.
+-- previously deleted MileVoxa account.
 create or replace function public.is_fleetpilot_deleted_account()
 returns boolean
 language plpgsql
@@ -73,7 +73,7 @@ grant execute on function public.is_fleetpilot_deleted_account()
 
 
 -- Explicitly lets a returning deleted user start a completely new,
--- blank FleetPilot account. Old business data is not restored.
+-- blank MileVoxa account. Old business data is not restored.
 create or replace function public.reactivate_fleetpilot_deleted_account()
 returns boolean
 language plpgsql
@@ -245,7 +245,7 @@ begin
 exception
   when others then
     raise exception using
-      message = 'FleetPilot account deletion failed: ' || sqlerrm,
+      message = 'MileVoxa account deletion failed: ' || sqlerrm,
       detail = 'SQLSTATE ' || sqlstate,
       hint = 'Review company ownership/member dependencies or foreign-key constraints before retrying.';
 end;

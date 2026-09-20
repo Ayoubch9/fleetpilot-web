@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import DeletedAccountActions from "./deleted-account-actions";
+import MileVoxaBrand from "@/components/milevoxa-brand";
 
 export const metadata = {
   title: "Account Deleted",
   description:
-    "FleetPilot account deletion and deleted-account sign-in handling.",
+    "MileVoxa account deletion and deleted-account sign-in handling.",
 };
 
 export default async function AccountDeletedPage({
@@ -33,9 +34,7 @@ export default async function AccountDeletedPage({
   return (
     <main className="fp-deleted-account-page">
       <section className="fp-deleted-account-card">
-        <Link href="/" className="fp-deleted-account-brand">
-          Fleet<span>Pilot</span>
-        </Link>
+        <MileVoxaBrand showTagline={false} className="fp-deleted-account-brand" />
 
         <div className="fp-deleted-account-icon">✓</div>
 
@@ -44,10 +43,10 @@ export default async function AccountDeletedPage({
             <span className="fp-deleted-account-eyebrow">
               ACCOUNT DELETED
             </span>
-            <h1>Your FleetPilot account has been deleted.</h1>
+            <h1>Your MileVoxa account has been deleted.</h1>
             <p>
-              Your active FleetPilot account and its eligible company data were
-              removed. A minimal deletion record is retained so FleetPilot does
+              Your active MileVoxa account and its eligible company data were
+              removed. A minimal deletion record is retained so MileVoxa does
               not silently recreate the old account if the same Google address
               signs in again.
             </p>
@@ -59,7 +58,7 @@ export default async function AccountDeletedPage({
             </span>
             <h1>This Google account was used before.</h1>
             <p>
-              The previous FleetPilot account was deleted. We have not restored
+              The previous MileVoxa account was deleted. We have not restored
               the old business data or automatically created a new company.
             </p>
           </>
@@ -68,9 +67,9 @@ export default async function AccountDeletedPage({
             <span className="fp-deleted-account-eyebrow">
               ACCOUNT STATUS
             </span>
-            <h1>No active FleetPilot account is connected.</h1>
+            <h1>No active MileVoxa account is connected.</h1>
             <p>
-              You can return to sign in or create a new FleetPilot account.
+              You can return to sign in or create a new MileVoxa account.
             </p>
           </>
         )}

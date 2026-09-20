@@ -1,4 +1,4 @@
--- FleetPilot Web v2.6.0 — company profile + richer user preferences
+-- MileVoxa Web v2.6.0 — company profile + richer user preferences
 -- Run once in Supabase SQL Editor.
 
 alter table public.companies

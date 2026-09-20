@@ -148,7 +148,7 @@ export default function TrucksQuickActions({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `fleetpilot-trucks-${new Date()
+    anchor.download = `milevoxa-trucks-${new Date()
       .toISOString()
       .slice(0, 10)}.csv`;
     document.body.appendChild(anchor);
@@ -219,7 +219,7 @@ export default function TrucksQuickActions({
                   <span>CSV IMPORT</span>
                   <h2>Import Trucks</h2>
                   <p>
-                    Review the file before adding these trucks to FleetPilot.
+                    Review the file before adding these trucks to MileVoxa.
                   </p>
                 </div>
                 <button

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
-import { getFleetPilotAccount } from "@/lib/fleetpilot-account";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import {
   dbDate,
   money,
@@ -41,7 +41,7 @@ type Expense = {
 export default async function LoadProfitabilityPage({ params }: Props) {
   const { id } = await params;
   const { supabase, fullName, companyName, role } =
-    await getFleetPilotAccount();
+    await getMileVoxaAccount();
 
   const { data: loadData } = await supabase
     .from("loads")

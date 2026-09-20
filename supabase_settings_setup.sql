@@ -1,4 +1,4 @@
--- FleetPilot Web v1.6.0 Settings setup
+-- MileVoxa Web v1.6.0 Settings setup
 -- Run once in Supabase SQL Editor.
 
 create table if not exists public.user_preferences (

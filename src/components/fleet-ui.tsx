@@ -15,7 +15,7 @@ export function PageHeading({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
         {eyebrow && (
-          <div className="fp-overline text-[#1188ff]">
+          <div className="fp-overline text-[#16853B]">
             {eyebrow}
           </div>
         )}
@@ -296,7 +296,7 @@ export function TinyBar({
   tone?: "blue" | "green" | "red" | "orange";
 }) {
   const color = {
-    blue: "bg-[#1188ff]",
+    blue: "bg-[#16853B]",
     green: "bg-[#17c978]",
     red: "bg-[#ff4e5b]",
     orange: "bg-[#ffae35]",

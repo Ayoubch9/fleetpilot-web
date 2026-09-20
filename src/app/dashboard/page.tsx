@@ -572,7 +572,7 @@ export default async function DashboardPage({
   }
 
 
-  const fullName = profile?.full_name || "FleetPilot User";
+  const fullName = profile?.full_name || "MileVoxa User";
   const firstName = fullName.split(/\s+/)[0] || "Driver";
 
 
@@ -628,7 +628,7 @@ export default async function DashboardPage({
     {
       label: "Fuel",
       value: rawExpenseCategoryMap.get("Fuel") || 0,
-      color: "#1188ff",
+      color: "#16853B",
     },
     {
       label: "Maintenance",
@@ -679,18 +679,18 @@ export default async function DashboardPage({
         <section className="fp-hero-exact min-h-[138px] rounded-[14px] border border-[#dfe7ef] px-7 py-6">
           <div className="relative z-10 max-w-[620px]">
             <h1 className="text-[30px] font-[760] tracking-[-.05em] text-[#0b1730] sm:text-[37px]">
-              Good evening, <span className="text-[#1188ff]">{firstName}</span> 👋
+              Good evening, <span className="text-[#16853B]">{firstName}</span> 👋
             </h1>
             <p className="mt-1.5 text-[13px] font-[450] text-[#64778f]">
               Keep moving forward. Every mile counts.
             </p>
             <div className="mt-3 fp-overline">
-              FleetPilot Control Center
+              MileVoxa Control Center
             </div>
           </div>
           <div className="absolute bottom-5 right-8 z-10 hidden text-right text-[10px] font-[650] uppercase tracking-[.27em] text-white drop-shadow-lg xl:block">
             Drive<br />Smarter.<br />Earn More.
-            <div className="ml-auto mt-2 h-[3px] w-9 bg-[#1188ff]" />
+            <div className="ml-auto mt-2 h-[3px] w-9 bg-[#16853B]" />
           </div>
         </section>
 
@@ -746,7 +746,7 @@ export default async function DashboardPage({
       <SectionPanel
         className="fp-breakdown-card"
         title="Expense Breakdown"
-        right={<Link href="/expenses" className="text-[9px] font-[700] text-[#1188ff]">View Details →</Link>}
+        right={<Link href="/expenses" className="text-[9px] font-[700] text-[#16853B]">View Details →</Link>}
       >
         <div className="grid h-[250px] items-center gap-4 px-4 pb-4 md:grid-cols-[145px_minmax(0,1fr)]">
           <ExpenseDonut
@@ -803,7 +803,7 @@ export default async function DashboardPage({
                 right={
                   <Link
                     href="/loads"
-                    className="flex items-center gap-1 text-[9px] font-[600] text-[#1188ff]"
+                    className="flex items-center gap-1 text-[9px] font-[600] text-[#16853B]"
                   >
                     View All <span className="text-[11px]">→</span>
                   </Link>
@@ -832,7 +832,7 @@ export default async function DashboardPage({
 
                           // Dashboard doesn't yet have complete load-level allocated
                           // cost data. Use the weekly net margin as the display signal
-                          // so the visual column is still consistent with FleetPilot's
+                          // so the visual column is still consistent with MileVoxa's
                           // real accounting instead of inventing a random number.
                           const marginRatio =
                             grossRevenue > 0
@@ -879,7 +879,7 @@ export default async function DashboardPage({
         className="fp-activity-card"
         title="Recent Activity"
         right={
-          <span className="flex items-center gap-1 text-[9px] font-[600] text-[#1188ff]">
+          <span className="flex items-center gap-1 text-[9px] font-[600] text-[#16853B]">
             View All <span className="text-[11px]">→</span>
           </span>
         }
@@ -922,7 +922,7 @@ export default async function DashboardPage({
     <div className="fp-dashboard-left-footer mt-3">
       <SectionPanel
                   title="Fleet Status"
-                  right={<Link href="/trucks" className="text-[9px] font-[700] text-[#1188ff]">View Fleet →</Link>}
+                  right={<Link href="/trucks" className="text-[9px] font-[700] text-[#16853B]">View Fleet →</Link>}
                 >
                   <div className="fp-fleet-status-grid px-4 pb-4">
                     <FleetKpi label="Active Truck" value={`${activeTrucks.length}`} icon="truck" />
@@ -932,14 +932,14 @@ export default async function DashboardPage({
                   </div>
                 </SectionPanel>
 
-                <div className="fp-quote-card relative overflow-hidden rounded-[13px] border border-[#d7e2ec] bg-[url('/fleetpilot-hero-clean.jpg')] bg-cover bg-center shadow-[0_8px_28px_rgba(29,65,102,.08)]">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#07172a]/95 via-[#07172a]/55 to-transparent" />
+                <div className="fp-quote-card relative overflow-hidden rounded-[13px] border border-[#d7e2ec] bg-[url('/milevoxa-hero-clean.jpg')] bg-cover bg-center shadow-[0_8px_28px_rgba(29,65,102,.08)]">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#102238]/95 via-[#102238]/55 to-transparent" />
                   <div className="relative z-10 max-w-[390px] p-5 text-white">
                     <div className="text-[17px] font-[720] leading-6 tracking-[-.02em]">
                       “Success is a long haul<br />built on daily discipline.”
                     </div>
                     <div className="mt-2 text-[10px] text-white/75">Keep pushing forward.</div>
-                    <div className="mt-4 h-[3px] w-10 bg-[#1188ff]" />
+                    <div className="mt-4 h-[3px] w-10 bg-[#16853B]" />
                   </div>
     </div>
 
@@ -993,7 +993,7 @@ export default async function DashboardPage({
       title={
         <span className="flex items-center gap-2">
           <span>Pilot AI</span>
-          <span className="rounded-full border border-[#8bc7ff] bg-[#edf7ff] px-2 py-[2px] text-[7px] font-[650] text-[#1188ff]">
+          <span className="rounded-full border border-[#8bc7ff] bg-[#edf7ff] px-2 py-[2px] text-[7px] font-[650] text-[#16853B]">
             Beta
           </span>
         </span>
@@ -1010,7 +1010,7 @@ export default async function DashboardPage({
 
           <div className="min-w-0">
             <div className="text-[11px] font-[720] text-[#10203a]">
-              Ask FleetPilot
+              Ask MileVoxa
             </div>
             <div className="mt-1 text-[8px] leading-[1.35] text-[#6a7d93]">
               Get insights about your business, find opportunities, and make smarter decisions.
@@ -1608,7 +1608,7 @@ function FleetKpiIcon({
 }) {
   const common = {
     viewBox: "0 0 24 24",
-    className: "h-[16px] w-[16px] fill-none stroke-[#1188ff]",
+    className: "h-[16px] w-[16px] fill-none stroke-[#16853B]",
     strokeWidth: 1.8,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
@@ -1652,7 +1652,7 @@ function FleetKpiIcon({
 }
 
 function dot(index: number) {
-  return ["bg-[#1188ff]","bg-[#ff4e5b]","bg-[#43d89b]","bg-[#f23f95]","bg-[#6857cc]","bg-[#ffae35]"][index % 6];
+  return ["bg-[#16853B]","bg-[#ff4e5b]","bg-[#43d89b]","bg-[#f23f95]","bg-[#6857cc]","bg-[#ffae35]"][index % 6];
 }
 
 function compactLocation(value?: string | null) {

@@ -52,17 +52,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       result: data,
-      message: "Your FleetPilot account has been deleted.",
+      message: "Your MileVoxa account has been deleted.",
     });
   } catch (error) {
-    console.error("FleetPilot account deletion error:", error);
+    console.error("MileVoxa account deletion error:", error);
 
     return NextResponse.json(
       {
         error:
           error instanceof Error
             ? error.message
-            : "Could not delete the FleetPilot account.",
+            : "Could not delete the MileVoxa account.",
       },
       { status: 500 }
     );

@@ -1,4 +1,4 @@
--- FleetPilot Web v1.5.0 product-layer setup
+-- MileVoxa Web v1.5.0 product-layer setup
 -- Run once in Supabase SQL Editor.
 
 create table if not exists public.billing_customers (

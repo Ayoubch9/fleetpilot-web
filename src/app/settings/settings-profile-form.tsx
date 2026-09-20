@@ -73,7 +73,7 @@ export default function SettingsProfileForm({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "fleetpilot-account-export.json";
+    anchor.download = "milevoxa-account-export.json";
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -144,7 +144,7 @@ async function requestDeletion() {
 
         <div className="fp-settings-profile">
           <div className="fp-settings-avatar">{name?.[0]?.toUpperCase() || "F"}</div>
-          <span className="fp-settings-avatar-note">FleetPilot account</span>
+          <span className="fp-settings-avatar-note">MileVoxa account</span>
         </div>
 
         <form onSubmit={save}>

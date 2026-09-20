@@ -223,9 +223,9 @@ export default function SecurityDepositManager({
       setNotes("");
       setMessage(
         type === "HOLD"
-          ? "Hold recorded. FleetPilot increased the amount the company owes you."
+          ? "Hold recorded. MileVoxa increased the amount the company owes you."
           : type === "RETURN"
-            ? "Return recorded. FleetPilot reduced the amount still owed to you."
+            ? "Return recorded. MileVoxa reduced the amount still owed to you."
             : "Deposit adjustment recorded."
       );
       router.refresh();
@@ -483,7 +483,7 @@ export default function SecurityDepositManager({
             <div className="fp-deposit-save-row">
               <span>
                 Settings are company-level and will later be shared with the
-                FleetPilot mobile app through the same Supabase records.
+                MileVoxa mobile app through the same Supabase records.
               </span>
               <button
                 type="button"
@@ -756,7 +756,7 @@ export default function SecurityDepositManager({
             <span>ACCOUNTING RULE</span>
             <h2>Holdback is not an expense.</h2>
             <p>
-              The company still owes this money to you. FleetPilot tracks it
+              The company still owes this money to you. MileVoxa tracks it
               separately so operating profit stays accurate while cash received
               reflects what was actually paid.
             </p>

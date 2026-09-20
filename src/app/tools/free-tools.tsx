@@ -49,7 +49,7 @@ export default function FreeTools() {
         <div className="fp-tool-cta">
           <div>
             <span>Want these numbers saved automatically?</span>
-            <strong>FleetPilot connects loads, trucks and costs for you.</strong>
+            <strong>MileVoxa connects loads, trucks and costs for you.</strong>
           </div>
           <Link href="/signup">Start 14-Day Free Trial →</Link>
         </div>
