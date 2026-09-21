@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.3.19",
+  "version": "4.3.28",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -36,7 +36,15 @@
     "test:load-data-quality-profit": "node scripts/load-data-quality-profit.test.cjs",
     "test:launch-pricing": "node scripts/launch-pricing-content.test.cjs",
     "test:home-pricing-preview": "node scripts/home-pricing-preview-alignment.test.cjs",
-    "test:home-marketing-proof": "node scripts/home-marketing-proof.test.cjs"
+    "test:home-marketing-proof": "node scripts/home-marketing-proof.test.cjs",
+    "test:home-hero-concept": "node scripts/home-hero-concept.test.cjs",
+    "test:home-exact-hero": "node scripts/home-exact-hero.test.cjs",
+    "test:home-hero-visual-only": "node scripts/home-hero-visual-only.test.cjs",
+    "test:hero-finish": "node scripts/hero-finish.test.cjs",
+    "test:hero-frame-removal": "node scripts/hero-frame-removal.test.cjs",
+    "test:hero-clean-scene": "node scripts/hero-clean-scene.test.cjs",
+    "test:hero-full-height": "node scripts/hero-full-height.test.cjs",
+    "test:hero-responsive-scale": "node scripts/hero-responsive-scale.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

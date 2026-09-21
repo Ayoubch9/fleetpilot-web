@@ -142,7 +142,7 @@ export default function HomePage() {
       />
       
 
-      <section className="fp-marketing-hero">
+      <section className="fp-marketing-hero mv-live-copy-hero">
         <div className="fp-marketing-hero-copy">
           <div className="fp-marketing-eyebrow">MileVoxa Control Center</div>
 
@@ -166,8 +166,8 @@ export default function HomePage() {
             <Link href="/signup" className="fp-marketing-button primary large">
               Start 14-Day Free Trial <span>→</span>
             </Link>
-            <Link href="/tools" className="fp-marketing-button secondary large">
-              See how it works
+            <Link href="/pricing" className="fp-marketing-button secondary large">
+              See Pricing
             </Link>
           </div>
 
@@ -178,16 +178,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="fp-marketing-hero-visual">
+        <div className="fp-marketing-hero-visual mv-concept-image-only">
           <Image
-            src="https://images.pexels.com/photos/27099095/pexels-photo-27099095.jpeg?auto=compress&cs=tinysrgb&w=2400"
-            alt="Semi truck on the road"
+            src="/milevoxa-home-hero-visual.jpg"
+            alt="MileVoxa web dashboard and mobile app for trucking operations"
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 52vw"
           />
-          <div className="fp-marketing-hero-fade" />
-
+          <div className="mv-concept-image-only-fade" aria-hidden="true" />
         </div>
       </section>
 
