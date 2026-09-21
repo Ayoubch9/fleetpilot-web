@@ -17,7 +17,7 @@ export default function PilotChat({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      text: "I’m connected to your MileVoxa business data. Ask me about loads, revenue, expenses, trucks, fuel, routes, maintenance, or profitability.",
+      text: "I’m connected to your MileVoxa business data. Ask me about loads, revenue, expenses, trucks, fuel, routes, maintenance, profitability, or your settlement history.",
     },
   ]);
   const [question, setQuestion] = useState(initialQuestion);

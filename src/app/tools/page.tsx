@@ -1,36 +1,20 @@
+import type { Metadata } from "next";
+import PublicLayout from "@/components/public-layout";
 import Link from "next/link";
 import FreeTools from "./free-tools";
+import { publicPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Free Trucking Calculators | MileVoxa",
+export const metadata: Metadata = publicPageMetadata({
+  title: "Free Trucking Calculators",
   description:
     "Free trucking calculators for cost per mile, load profit, owner-operator profit, lease-operator take-home, fuel cost and rate per mile.",
-};
+  path: "/tools",
+});
 
 export default function ToolsPage() {
   return (
-    <main className="mv-tools-page fp-marketing min-h-screen bg-[#f7f9fc] text-[#0b1730]">
-      <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-          <img
-            src="/branding/milevoxa-logo-full.png"
-            width={2000}
-            height={612}
-            className="mv-marketing-logo"
-            alt="MileVoxa — Run your trucking business with clarity."
-          />
-        </Link>
-        <nav className="fp-marketing-nav">
-          <Link href="/#features">Features</Link>
-          <Link href="/tools">Free Tools</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/#about">About</Link>
-        </nav>
-        <div className="fp-marketing-header-actions">
-          <Link href="/login" className="fp-marketing-button secondary">Sign In</Link>
-          <Link href="/signup" className="fp-marketing-button primary">Start Free</Link>
-        </div>
-      </header>
+    <PublicLayout mainClassName="mv-tools-page fp-marketing min-h-screen bg-[#f7f9fc] text-[#0b1730]">
+      
 
       <section className="fp-tools-public-hero">
         <span>FREE TOOLS FOR TRUCKERS</span>
@@ -56,7 +40,7 @@ export default function ToolsPage() {
         </p>
         <Link href="/signup">Start Your 14-Day Free Trial →</Link>
       </section>
-    </main>
+    </PublicLayout>
   );
 }
 

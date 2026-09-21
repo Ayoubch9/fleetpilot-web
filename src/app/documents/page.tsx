@@ -1,3 +1,5 @@
+import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
+import KpiTile from "@/components/kpi-tile";
 import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import DocumentManager from "./document-manager";
@@ -84,6 +86,12 @@ export default async function DocumentsPage() {
           </div>
         )}
 
+        <div className="mv-kpi-grid mt-4">
+          <KpiTile label="Total Documents" value={docs.length} note="Stored in MileVoxa" />
+          <KpiTile label="Expiring Soon" value={expiring.length} note="Next 30 days" />
+          <KpiTile label="Expired" value={expired.length} note="Needs attention" />
+        </div>
+
         <div className="fp-doc-layout">
           <DocumentCenter docs={docs} trucks={trucks} setupMissing={setupMissing} />
 
@@ -98,11 +106,26 @@ export default async function DocumentsPage() {
 
             <section className="fp-panel side">
               <h2>Documents by Type</h2>
-              <div className="fp-empty-donut"><strong>{docs.length}</strong><span>Total Documents</span></div>
+              <DocumentTypeDonut
+                total={docs.length}
+                items={[...typeCounts.entries()].slice(0, 7)}
+              />
               <div className="fp-doc-type-list">
-                {[...typeCounts.entries()].slice(0, 7).map(([name, count]) => (
-                  <p key={name}><span>{name}</span><b>{count}</b></p>
-                ))}
+                {[...typeCounts.entries()].slice(0, 7).map(([name, count], index, entries) => {
+                  const color =
+                    entries.length === 1
+                      ? CHART_PALETTE.green
+                      : chartCategoryColor(index);
+                  return (
+                    <p key={name}>
+                      <span className="fp-doc-type-label">
+                        <i style={{ backgroundColor: color }} />
+                        {name}
+                      </span>
+                      <b>{count}</b>
+                    </p>
+                  );
+                })}
                 {docs.length === 0 && <p className="fp-muted-center">No document types yet.</p>}
               </div>
             </section>
@@ -112,6 +135,51 @@ export default async function DocumentsPage() {
         </div>
       </div>
     </AppShell>
+  );
+}
+
+
+function DocumentTypeDonut({
+  total,
+  items,
+}: {
+  total: number;
+  items: Array<[string, number]>;
+}) {
+  if (total <= 0 || items.length === 0) {
+    return (
+      <div className="fp-document-type-donut empty">
+        <div>
+          <strong>0</strong>
+          <span>Total Documents</span>
+        </div>
+      </div>
+    );
+  }
+
+  let cursor = 0;
+  const stops = items.map(([, count], index) => {
+    const share = (count / total) * 100;
+    const start = cursor;
+    const end = cursor + share;
+    cursor = end;
+    const color =
+      items.length === 1
+        ? CHART_PALETTE.green
+        : chartCategoryColor(index);
+    return `${color} ${start}% ${end}%`;
+  });
+
+  return (
+    <div
+      className="fp-document-type-donut"
+      style={{ background: `conic-gradient(${stops.join(", ")})` }}
+    >
+      <div>
+        <strong>{total}</strong>
+        <span>Total Documents</span>
+      </div>
+    </div>
   );
 }
 

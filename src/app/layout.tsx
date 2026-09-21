@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://milevoxa.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "MileVoxa",
     template: "%s | MileVoxa",
@@ -15,11 +16,11 @@ export const metadata: Metadata = {
     apple: "/branding/milevoxa-app-icon.png",
   },
   openGraph: {
-    title: "MileVoxa",
-    description: "Run your trucking business with clarity.",
-    url: "https://milevoxa.com",
     siteName: "MileVoxa",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

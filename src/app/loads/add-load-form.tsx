@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SmartLoadImport from "./smart-load-import";
+import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type Truck = {
   id: string;
@@ -71,10 +72,39 @@ useEffect(() => {
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
     const rate = Number(form.get("rate")) || 0;
-    const loadedMiles = Number(form.get("loaded_miles")) || 0;
+    const mileage = validateLoadMiles(
+      form.get("loaded_miles"),
+      form.get("deadhead_miles")
+    );
+    const pickup = normalizeUsLocation(String(form.get("pickup") || ""));
+    const delivery = normalizeUsLocation(String(form.get("delivery") || ""));
 
-    if (!form.get("truck_id") || !form.get("load_number") || !form.get("pickup") || !form.get("delivery") || !form.get("pickup_date") || !form.get("delivery_date") || rate <= 0 || loadedMiles <= 0) {
+    if (
+      !form.get("truck_id") ||
+      !form.get("load_number") ||
+      !form.get("pickup_date") ||
+      !form.get("delivery_date") ||
+      rate <= 0
+    ) {
       setError("Complete the required load fields.");
+      setSaving(false);
+      return;
+    }
+
+    if (!mileage.ok) {
+      setError(mileage.error);
+      setSaving(false);
+      return;
+    }
+
+    if (!pickup.ok) {
+      setError(`Pickup: ${pickup.error}`);
+      setSaving(false);
+      return;
+    }
+
+    if (!delivery.ok) {
+      setError(`Delivery: ${delivery.error}`);
       setSaving(false);
       return;
     }
@@ -84,13 +114,13 @@ useEffect(() => {
       truck_id: String(form.get("truck_id")),
       load_number: String(form.get("load_number")).trim(),
       broker: String(form.get("broker") || "").trim(),
-      pickup: String(form.get("pickup")).trim(),
-      delivery: String(form.get("delivery")).trim(),
+      pickup: pickup.value,
+      delivery: delivery.value,
       pickup_date: String(form.get("pickup_date")),
       delivery_date: String(form.get("delivery_date")),
       rate,
-      loaded_miles: loadedMiles,
-      deadhead_miles: Number(form.get("deadhead_miles")) || 0,
+      loaded_miles: mileage.loadedMiles,
+      deadhead_miles: mileage.deadheadMiles,
       status: "UPCOMING",
     });
 
@@ -170,8 +200,8 @@ useEffect(() => {
           <ControlledField name="pickup_date" label="Pickup Date *" type="date" value={draft.pickupDate} setValue={(v) => patchDraft({ pickupDate: v })} />
           <ControlledField name="delivery_date" label="Delivery Date *" type="date" value={draft.deliveryDate} setValue={(v) => patchDraft({ deliveryDate: v })} />
           <ControlledField name="rate" label="Rate *" type="number" step="0.01" value={draft.rate} setValue={(v) => patchDraft({ rate: v })} />
-          <Field name="loaded_miles" label="Loaded Miles *" type="number" step="0.1" />
-          <Field name="deadhead_miles" label="Deadhead Miles" type="number" step="0.1" />
+          <Field name="loaded_miles" label="Loaded Miles *" type="number" step="1" min="0" />
+          <Field name="deadhead_miles" label="Deadhead Miles" type="number" step="1" min="0" />
 
           {error && (
             <div className="fp-add-load-error md:col-span-2">
@@ -267,11 +297,13 @@ function Field({
   label,
   type = "text",
   step,
+  min,
 }: {
   name: string;
   label: string;
   type?: string;
   step?: string;
+  min?: string;
 }) {
   return (
     <label className="fp-add-load-field">
@@ -282,6 +314,7 @@ function Field({
         name={name}
         type={type}
         step={step}
+        min={min}
         className="fp-add-load-control"
       />
     </label>

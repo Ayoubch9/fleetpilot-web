@@ -1,3 +1,11 @@
+import {
+  EXPENSE_TAXONOMY,
+  expenseCategoryKey,
+  summarizeExpenseCategories,
+} from "@/lib/expense-taxonomy";
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
+import { formatMoney } from "@/lib/format";
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
 import { EmptyState } from "@/components/fleet-ui";
@@ -51,11 +59,7 @@ const PAGE_SIZE = 10;
 
 const TAB_CATEGORIES = [
   { key: "all", label: "All Expenses" },
-  { key: "fuel", label: "Fuel" },
-  { key: "maintenance", label: "Maintenance" },
-  { key: "tolls", label: "Tolls" },
-  { key: "insurance", label: "Insurance" },
-  { key: "other", label: "Other" },
+  ...EXPENSE_TAXONOMY.map(({ key, label }) => ({ key, label })),
 ] as const;
 
 export default async function ExpensesPage({
@@ -169,17 +173,17 @@ export default async function ExpensesPage({
   }
 
   const total = totalOf(filteredExpenses);
-  const fuel = totalOf(
-    filteredExpenses.filter(
-      (expense) => categoryKey(expense.category) === "fuel"
-    )
+  const categorySummary = summarizeExpenseCategories(
+    filteredExpenses,
+    (expense) => expense.category,
+    (expense) => numberValue(expense.amount)
   );
-  const maintenance = totalOf(
-    filteredExpenses.filter(
-      (expense) => categoryKey(expense.category) === "maintenance"
-    )
-  );
-  const otherExpenses = Math.max(0, total - fuel - maintenance);
+  const categoryAmounts = Object.fromEntries(
+    categorySummary.map((item) => [item.key, item.amount])
+  ) as Record<string, number>;
+  const fuel = categoryAmounts.fuel || 0;
+  const maintenance = categoryAmounts.maintenance || 0;
+  const otherExpenses = categoryAmounts.other || 0;
 
   const categoryCounts = Object.fromEntries(
     TAB_CATEGORIES.map((tab) => [
@@ -219,7 +223,11 @@ export default async function ExpensesPage({
     page * PAGE_SIZE
   );
 
-  const breakdown = expenseBreakdown(filteredExpenses);
+  const breakdown = categorySummary.map((item) => ({
+    label: item.label,
+    amount: item.amount,
+    color: item.color,
+  }));
   const rankedCategories = [...breakdown]
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
@@ -272,57 +280,43 @@ export default async function ExpensesPage({
         <div className="fp-expenses-layout mt-4">
           <div className="min-w-0">
             <div className="fp-expense-kpi-grid">
-              <ExpenseKpi
+              <KpiTile
                 label="Total Expenses"
-                value={money(total)}
-                change={dateFrom || dateTo ? "Selected range" : "All time"}
-                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded expenses"}
-                tone="blue"
-                icon="card"
+                                value={money(total)}
+                                delta={dateFrom || dateTo ? "Selected range" : "All time"}
+                                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded expenses"}
               />
-              <ExpenseKpi
+              <KpiTile
                 label="Fuel Expenses"
-                value={money(fuel)}
-                change={dateFrom || dateTo ? "Selected range" : "All time"}
-                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded fuel"}
-                tone="green"
-                icon="fuel"
+                                value={money(fuel)}
+                                delta={dateFrom || dateTo ? "Selected range" : "All time"}
+                                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded fuel"}
               />
-              <ExpenseKpi
+              <KpiTile
                 label="Maintenance"
-                value={money(maintenance)}
-                change={dateFrom || dateTo ? "Selected range" : "All time"}
-                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded maintenance"}
-                tone="purple"
-                icon="maintenance"
+                                value={money(maintenance)}
+                                delta={dateFrom || dateTo ? "Selected range" : "All time"}
+                                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded maintenance"}
               />
-              <ExpenseKpi
-                label="Other Expenses"
-                value={money(otherExpenses)}
-                change={dateFrom || dateTo ? "Selected range" : "All time"}
-                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "other recorded costs"}
-                tone="blue"
-                icon="other"
+              <KpiTile
+                label="Other"
+                                value={money(otherExpenses)}
+                                delta={dateFrom || dateTo ? "Selected range" : "All time"}
+                                note={dateFrom || dateTo ? expenseRangeLabel(dateFrom, dateTo) : "recorded Other expenses"}
               />
             </div>
 
             <section className="fp-expenses-table-card mt-4">
-              <div className="fp-expense-tabs">
-                {TAB_CATEGORIES.map((tab) => (
-                  <ExpenseTab
-                    key={tab.key}
-                    href={filterHref(
-                      tab.key,
-                      q,
-                      truckFilter,
-                      sort
-                    )}
-                    label={tab.label}
-                    count={categoryCounts[tab.key]}
-                    active={categoryFilter === tab.key}
-                  />
-                ))}
-              </div>
+              <AppTabs
+                activeKey={categoryFilter}
+                ariaLabel="Expense categories"
+                items={TAB_CATEGORIES.map((tab) => ({
+                  key: tab.key,
+                  label: tab.label,
+                  count: categoryCounts[tab.key],
+                  href: filterHref(tab.key, q, truckFilter, sort),
+                }))}
+              />
 
               <ExpenseFilters trucks={trucks} />
 
@@ -494,10 +488,10 @@ export default async function ExpensesPage({
             <div className="fp-expense-promo">
               <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/30 to-transparent" />
               <div className="relative z-10">
-                <div className="text-[16px] font-[740] leading-[1.15] text-white">
+                <div className="text-[16px] font-[700] leading-[1.15] text-white">
                   Lower Costs.<br />Higher Miles.
                 </div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
+                <div className="mt-4 h-[3px] w-10 bg-[#16853B]" />
               </div>
             </div>
           </aside>
@@ -507,124 +501,8 @@ export default async function ExpensesPage({
   );
 }
 
-function ExpenseKpi({
-  label,
-  value,
-  change,
-  note,
-  tone,
-  icon,
-}: {
-  label: string;
-  value: string;
-  change: string;
-  note: string;
-  tone: "blue" | "green" | "purple";
-  icon: "card" | "fuel" | "maintenance" | "other";
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-    purple: { color: "#765ce7", soft: "#f0edff" },
-  }[tone];
 
-  return (
-    <div className="fp-expense-kpi">
-      <div
-        className="fp-expense-kpi-icon"
-        style={{ color: palette.color, backgroundColor: palette.soft }}
-      >
-        <ExpenseKpiIcon type={icon} />
-      </div>
 
-      <div className="min-w-0">
-        <div className="fp-expense-kpi-label">{label}</div>
-        <div className="fp-number fp-expense-kpi-value">{value}</div>
-        <div
-          className={`fp-expense-kpi-change ${
-            change.startsWith("↓")
-              ? "positive"
-              : change === "Selected range" || change === "All time"
-                ? "neutral"
-                : ""
-          }`}
-        >
-          {change}
-        </div>
-        <div className="fp-expense-kpi-note">{note}</div>
-      </div>
-
-    </div>
-  );
-}
-
-function ExpenseKpiIcon({
-  type,
-}: {
-  type: "card" | "fuel" | "maintenance" | "other";
-}) {
-  const common = {
-    viewBox: "0 0 24 24",
-    className: "h-[17px] w-[17px] fill-none stroke-current",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (type === "card") {
-    return (
-      <svg {...common}>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M3 9h18M7 14h5" />
-      </svg>
-    );
-  }
-
-  if (type === "fuel") {
-    return (
-      <svg {...common}>
-        <path d="M6 3h9v18H6z" />
-        <path d="M8 7h5" />
-        <path d="M15 8h2l2 3v6a2 2 0 0 0 2 2" />
-      </svg>
-    );
-  }
-
-  if (type === "maintenance") {
-    return (
-      <svg {...common}>
-        <path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...common}>
-      <circle cx="6" cy="12" r="1.5" />
-      <circle cx="12" cy="12" r="1.5" />
-      <circle cx="18" cy="12" r="1.5" />
-    </svg>
-  );
-}
-
-function ExpenseTab({
-  href,
-  label,
-  count,
-  active,
-}: {
-  href: string;
-  label: string;
-  count: number;
-  active: boolean;
-}) {
-  return (
-    <Link href={href} className={`fp-expense-tab ${active ? "active" : ""}`}>
-      <span>{label}</span>
-      <span className="fp-expense-tab-count">{count}</span>
-    </Link>
-  );
-}
 
 function CategoryBadge({ category }: { category?: string | null }) {
   const meta = categoryMeta(category);
@@ -704,34 +582,6 @@ type ExpenseCategory = {
   color: string;
 };
 
-function expenseBreakdown(expenses: Expense[]): ExpenseCategory[] {
-  const bucket = {
-    Fuel: 0,
-    Maintenance: 0,
-    Tolls: 0,
-    Insurance: 0,
-    Other: 0,
-  };
-
-  for (const expense of expenses) {
-    const key = categoryKey(expense.category);
-    const amount = numberValue(expense.amount);
-
-    if (key === "fuel") bucket.Fuel += amount;
-    else if (key === "maintenance") bucket.Maintenance += amount;
-    else if (key === "tolls") bucket.Tolls += amount;
-    else if (key === "insurance") bucket.Insurance += amount;
-    else bucket.Other += amount;
-  }
-
-  return [
-    { label: "Fuel", amount: bucket.Fuel, color: "#62bd70" },
-    { label: "Maintenance", amount: bucket.Maintenance, color: "#7a55e7" },
-    { label: "Tolls", amount: bucket.Tolls, color: "#f2b33f" },
-    { label: "Insurance", amount: bucket.Insurance, color: "#e85f58" },
-    { label: "Other", amount: bucket.Other, color: "#aab8cb" },
-  ];
-}
 
 function categoryMeta(category?: string | null) {
   const key = categoryKey(category);
@@ -755,21 +605,12 @@ function categoryMeta(category?: string | null) {
 }
 
 function matchesCategoryTab(category: string | null, tab: string) {
-  const key = categoryKey(category);
   if (tab === "all") return true;
-  if (tab === "other") {
-    return !["fuel", "maintenance", "tolls", "insurance"].includes(key);
-  }
-  return key === tab;
+  return expenseCategoryKey(category) === tab;
 }
 
 function categoryKey(category?: string | null) {
-  const key = (category || "Other").trim().toLowerCase();
-  if (key.includes("fuel")) return "fuel";
-  if (key.includes("maintenance")) return "maintenance";
-  if (key.includes("toll")) return "tolls";
-  if (key.includes("insurance")) return "insurance";
-  return key;
+  return expenseCategoryKey(category);
 }
 
 function filterHref(
@@ -863,12 +704,7 @@ function numberValue(value: number | string | null | undefined) {
 }
 
 function money(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  return formatMoney(value);
 }
 
 function SearchIcon() {

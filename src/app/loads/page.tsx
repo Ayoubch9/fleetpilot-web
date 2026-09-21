@@ -1,12 +1,22 @@
+import {
+  calculateLoadProfitabilityMap,
+  effectiveLoadStatus,
+  normalizeLoadStatus,
+  normalizeUsLocation,
+} from "@/lib/load-domain";
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
+import { formatMoney, formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
-import { EmptyState, StatusBadge } from "@/components/fleet-ui";
+import { StatusBadge } from "@/components/fleet-ui";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddLoadForm from "./add-load-form";
 import LoadsQuickActions from "./loads-quick-actions";
 import LoadActions from "./load-actions";
 import LoadFilters from "./load-filters";
+import LoadEmptyState from "./load-empty-state";
 import LoadPeriodSelector from "./load-period-selector";
 import {
   dbDate,
@@ -42,6 +52,14 @@ type Truck = {
 type Expense = {
   load_id: string | null;
   amount: number | string | null;
+  category: string | null;
+  expense_date: string | null;
+};
+
+type FixedExpense = {
+  amount: number | string | null;
+  is_active?: boolean | null;
+  active?: boolean | null;
 };
 
 type Params = {
@@ -103,6 +121,7 @@ export default async function LoadsPage({
     { data: loadData, error: loadError },
     { data: truckData, error: truckError },
     { data: expenseData, error: expenseError },
+    { data: fixedExpenseData, error: fixedExpenseError },
   ] = await Promise.all([
     supabase
       .from("loads")
@@ -114,27 +133,33 @@ export default async function LoadsPage({
       .from("trucks")
       .select("id, unit_number, make, model, status")
       .order("unit_number"),
-    supabase.from("expenses").select("load_id, amount"),
+    supabase
+      .from("expenses")
+      .select("load_id, amount, category, expense_date"),
+    supabase.from("weekly_fixed_expenses").select("*"),
   ]);
 
-  const allLoads = (loadData ?? []) as Load[];
+  const lifecycleNow = new Date();
+  const allLoads = ((loadData ?? []) as Load[]).map((load) => ({
+    ...load,
+    status: effectiveLoadStatus(load.status, load.pickup_date, lifecycleNow),
+  }));
   const trucks = ((truckData ?? []) as Truck[]).filter(
     (truck) => (truck.status || "").toUpperCase() !== "INACTIVE"
   );
   const expenses = (expenseData ?? []) as Expense[];
+  const fixedExpenses = (fixedExpenseData ?? []) as FixedExpense[];
 
-  const directExpenseByLoad = new Map<string, number>();
-  for (const expense of expenses) {
-    if (!expense.load_id) continue;
-    directExpenseByLoad.set(
-      expense.load_id,
-      (directExpenseByLoad.get(expense.load_id) || 0) +
-        numberValue(expense.amount)
-    );
-  }
+  const profitability = calculateLoadProfitabilityMap({
+    loads: allLoads,
+    expenses,
+    fixedExpenses,
+    expenseSourceAvailable: !expenseError,
+    fixedExpenseSourceAvailable: !fixedExpenseError,
+  });
 
   const loadProfit = (load: Load) =>
-    numberValue(load.rate) - (directExpenseByLoad.get(load.id) || 0);
+    profitability.get(load.id)?.profit ?? null;
 
   const selectedWeekMidpoint = plusDays(selectedWeekStart, 3);
   const monthStart = new Date(
@@ -213,31 +238,45 @@ export default async function LoadsPage({
     cancelled: periodLoads.filter(
       (load) => normalizedStatus(load.status) === "CANCELLED"
     ).length,
+    expired: periodLoads.filter(
+      (load) => normalizedStatus(load.status) === "EXPIRED"
+    ).length,
   };
 
   const totalRevenue = periodLoads.reduce(
     (sum, load) => sum + numberValue(load.rate),
     0
   );
-  const totalProfit = periodLoads.reduce(
-    (sum, load) => sum + loadProfit(load),
-    0
+  const periodProfitValues = periodLoads.map((load) => loadProfit(load));
+  const profitAllocationComplete = periodProfitValues.every(
+    (value) => value != null
   );
+  const totalProfit = profitAllocationComplete
+    ? periodProfitValues.reduce((sum, value) => sum + (value ?? 0), 0)
+    : null;
   const avgProfit =
-    periodLoads.length > 0 ? totalProfit / periodLoads.length : 0;
+    profitAllocationComplete && periodLoads.length > 0 && totalProfit != null
+      ? totalProfit / periodLoads.length
+      : totalProfit == null
+        ? null
+        : 0;
 
   const previousRevenue = previousPeriodLoads?.reduce(
     (sum, load) => sum + numberValue(load.rate),
     0
   );
-  const previousProfit = previousPeriodLoads?.reduce(
-    (sum, load) => sum + loadProfit(load),
-    0
+  const previousProfitValues = previousPeriodLoads?.map((load) =>
+    loadProfit(load)
   );
+  const previousProfit =
+    previousProfitValues &&
+    previousProfitValues.every((value) => value != null)
+      ? previousProfitValues.reduce((sum, value) => sum + (value ?? 0), 0)
+      : undefined;
   const previousAvgProfit =
-    previousPeriodLoads && previousPeriodLoads.length > 0
-      ? (previousProfit || 0) / previousPeriodLoads.length
-      : previousPeriodLoads
+    previousPeriodLoads && previousPeriodLoads.length > 0 && previousProfit != null
+      ? previousProfit / previousPeriodLoads.length
+      : previousPeriodLoads && previousPeriodLoads.length === 0
         ? 0
         : undefined;
 
@@ -255,20 +294,26 @@ export default async function LoadsPage({
     period,
     periodLabel
   );
-  const profitChange = metricChange(
-    totalProfit,
-    previousProfit,
-    comparisonLabel,
-    period,
-    periodLabel
-  );
-  const avgProfitChange = metricChange(
-    avgProfit,
-    previousAvgProfit,
-    comparisonLabel,
-    period,
-    periodLabel
-  );
+  const profitChange =
+    totalProfit == null
+      ? { change: "—", note: "cost allocation incomplete" }
+      : metricChange(
+          totalProfit,
+          previousProfit,
+          comparisonLabel,
+          period,
+          periodLabel
+        );
+  const avgProfitChange =
+    avgProfit == null
+      ? { change: "—", note: "cost allocation incomplete" }
+      : metricChange(
+          avgProfit,
+          previousAvgProfit,
+          comparisonLabel,
+          period,
+          periodLabel
+        );
 
   let filteredLoads = periodLoads.filter((load) => {
     if (!q) return true;
@@ -351,11 +396,13 @@ export default async function LoadsPage({
     if (sort === "rate-low") {
       return numberValue(a.rate) - numberValue(b.rate);
     }
-    if (sort === "profit") {
-      return loadProfit(b) - loadProfit(a);
-    }
-    if (sort === "profit-low") {
-      return loadProfit(a) - loadProfit(b);
+    if (sort === "profit" || sort === "profit-low") {
+      const aProfit = loadProfit(a);
+      const bProfit = loadProfit(b);
+      if (aProfit == null && bProfit == null) return 0;
+      if (aProfit == null) return 1;
+      if (bProfit == null) return -1;
+      return sort === "profit" ? bProfit - aProfit : aProfit - bProfit;
     }
     if (sort === "miles") {
       return bMiles - aMiles;
@@ -405,7 +452,12 @@ export default async function LoadsPage({
     profit: loadProfit(load),
   }));
 
-  const errors = [loadError, truckError, expenseError].filter(Boolean);
+  const errors = [
+    loadError,
+    truckError,
+    expenseError,
+    fixedExpenseError,
+  ].filter(Boolean);
 
   return (
     <AppShell
@@ -443,73 +495,44 @@ export default async function LoadsPage({
             />
 
             <div className="fp-load-kpi-grid mt-3">
-              <LoadKpi
+              <KpiTile
                 label="Total Loads"
-                value={`${counts.all}`}
-                change={loadChange.change}
-                note={loadChange.note}
-                tone="blue"
-                icon="truck"
+                                value={`${counts.all}`}
+                                delta={loadChange.change}
+                                note={loadChange.note}
               />
-              <LoadKpi
+              <KpiTile
                 label="Total Revenue"
-                value={money(totalRevenue)}
-                change={revenueChange.change}
-                note={revenueChange.note}
-                tone="green"
-                icon="money"
+                                value={money(totalRevenue)}
+                                delta={revenueChange.change}
+                                note={revenueChange.note}
               />
-              <LoadKpi
+              <KpiTile
                 label="Total Profit"
-                value={money(totalProfit)}
-                change={profitChange.change}
-                note={profitChange.note}
-                tone="purple"
-                icon="profit"
+                                value={totalProfit == null ? "—" : money(totalProfit)}
+                                delta={profitChange.change}
+                                note={profitChange.note}
               />
-              <LoadKpi
+              <KpiTile
                 label="Avg. Profit per Load"
-                value={money(avgProfit)}
-                change={avgProfitChange.change}
-                note={avgProfitChange.note}
-                tone="blue"
-                icon="pie"
+                                value={avgProfit == null ? "—" : money(avgProfit)}
+                                delta={avgProfitChange.change}
+                                note={avgProfitChange.note}
               />
             </div>
 
             <section className="fp-loads-table-card mt-4">
-              <div className="fp-load-tabs">
-                <LoadTab
-                  href={statusHref(query, "all")}
-                  label="All Loads"
-                  count={counts.all}
-                  active={filter === "all"}
-                />
-                <LoadTab
-                  href={statusHref(query, "active")}
-                  label="Active"
-                  count={counts.active}
-                  active={filter === "active"}
-                />
-                <LoadTab
-                  href={statusHref(query, "completed")}
-                  label="Completed"
-                  count={counts.completed}
-                  active={filter === "completed"}
-                />
-                <LoadTab
-                  href={statusHref(query, "dispatched")}
-                  label="Dispatched"
-                  count={counts.dispatched}
-                  active={filter === "dispatched"}
-                />
-                <LoadTab
-                  href={statusHref(query, "cancelled")}
-                  label="Cancelled"
-                  count={counts.cancelled}
-                  active={filter === "cancelled"}
-                />
-              </div>
+              <AppTabs
+                activeKey={filter}
+                ariaLabel="Load status"
+                items={[
+                  { key: "all", label: "All Loads", count: counts.all, href: statusHref(query, "all") },
+                  { key: "active", label: "Active", count: counts.active, href: statusHref(query, "active") },
+                  { key: "completed", label: "Completed", count: counts.completed, href: statusHref(query, "completed") },
+                  { key: "dispatched", label: "Dispatched", count: counts.dispatched, href: statusHref(query, "dispatched") },
+                  { key: "expired", label: "Expired", count: counts.expired, href: statusHref(query, "expired") },
+                ]}
+              />
 
               <LoadFilters
                 trucks={trucks.map((truck) => ({
@@ -536,11 +559,13 @@ export default async function LoadsPage({
 
                   <tbody>
                     {pageLoads.map((load) => {
-                      const miles =
+                      const miles = Math.round(
                         numberValue(load.loaded_miles) +
-                        numberValue(load.deadhead_miles);
+                          numberValue(load.deadhead_miles)
+                      );
                       const rate = numberValue(load.rate);
-                      const profit = loadProfit(load);
+                      const profitResult = profitability.get(load.id);
+                      const profit = profitResult?.profit ?? null;
 
                       return (
                         <tr key={load.id}>
@@ -566,14 +591,22 @@ export default async function LoadsPage({
                           <td>{miles.toLocaleString()}</td>
                           <td className="fp-load-rate">{money(rate)}</td>
                           <td
-                            className={
-                              profit >= 0
-                                ? "fp-load-profit-positive"
-                                : "fp-load-profit-negative"
-                            }
-                          >
-                            {money(profit)}
-                          </td>
+                             className={
+                               profit == null
+                                 ? "fp-load-profit-unavailable"
+                                 : profit >= 0
+                                   ? "fp-load-profit-positive"
+                                   : "fp-load-profit-negative"
+                             }
+                             title={
+                               profit == null
+                                 ? profitResult?.reason ||
+                                   "Profit unavailable until costs can be allocated."
+                                 : "Rate less linked fuel/tolls and allocated weekly fixed costs."
+                             }
+                           >
+                             {profit == null ? "—" : money(profit)}
+                           </td>
                           <td>
                             <StatusBadge tone={tone(load.status)}>
                               {displayStatus(load.status)}
@@ -594,9 +627,7 @@ export default async function LoadsPage({
                   </tbody>
                 </table>
 
-                {pageLoads.length === 0 && (
-                  <EmptyState text="No loads match these filters." />
-                )}
+                {pageLoads.length === 0 && <LoadEmptyState />}
               </div>
 
               <div className="fp-load-pagination">
@@ -716,10 +747,10 @@ export default async function LoadsPage({
             <div className="fp-load-promo">
               <div className="absolute inset-0 bg-gradient-to-r from-[#102238]/80 via-[#102238]/28 to-transparent" />
               <div className="relative z-10">
-                <div className="text-[15px] font-[740] leading-[1.15] text-white">
+                <div className="text-[15px] font-[700] leading-[1.15] text-white">
                   Every mile<br />builds your tomorrow.
                 </div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
+                <div className="mt-4 h-[3px] w-10 bg-[#16853B]" />
               </div>
             </div>
           </aside>
@@ -729,122 +760,8 @@ export default async function LoadsPage({
   );
 }
 
-function LoadKpi({
-  label,
-  value,
-  change,
-  note,
-  tone,
-  icon,
-}: {
-  label: string;
-  value: string;
-  change: string;
-  note: string;
-  tone: "blue" | "green" | "purple";
-  icon: "truck" | "money" | "profit" | "pie";
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#42aa63", soft: "#e9f7ee" },
-    purple: { color: "#7b5be7", soft: "#f0ecff" },
-  }[tone];
 
-  return (
-    <div className="fp-load-kpi">
-      <div
-        className="fp-load-kpi-icon"
-        style={{ color: palette.color, backgroundColor: palette.soft }}
-      >
-        <LoadKpiIcon type={icon} />
-      </div>
 
-      <div className="min-w-0">
-        <div className="fp-load-kpi-label">{label}</div>
-        <div className="fp-load-kpi-value fp-number">{value}</div>
-        <div
-          className={`fp-load-kpi-change ${
-            change.startsWith("↓")
-              ? "negative"
-              : change.startsWith("—")
-                ? "neutral"
-                : ""
-          }`}
-        >
-          {change}
-        </div>
-        <div className="fp-load-kpi-note">{note}</div>
-      </div>
-
-    </div>
-  );
-}
-
-function LoadKpiIcon({
-  type,
-}: {
-  type: "truck" | "money" | "profit" | "pie";
-}) {
-  const common = {
-    viewBox: "0 0 24 24",
-    className: "h-[17px] w-[17px] fill-none stroke-current",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (type === "truck") {
-    return (
-      <svg {...common}>
-        <path d="M3 7h11v9H3z" />
-        <path d="M14 10h4l3 3v3h-7z" />
-        <circle cx="7" cy="18" r="2" />
-        <circle cx="18" cy="18" r="2" />
-      </svg>
-    );
-  }
-
-  if (type === "money") {
-    return <span className="text-[18px] font-[760]">$</span>;
-  }
-
-  if (type === "profit") {
-    return (
-      <svg {...common}>
-        <path d="M5 19V11M10 19V7M15 19V13M20 19V4" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...common}>
-      <path d="M12 3v9h9A9 9 0 1 1 12 3Z" />
-      <path d="M15 3.6A9 9 0 0 1 20.4 9H15Z" />
-    </svg>
-  );
-}
-
-function LoadTab({
-  href,
-  label,
-  count,
-  active,
-}: {
-  href: string;
-  label: string;
-  count: number;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`fp-load-tab ${active ? "active" : ""}`}
-    >
-      <span>{label}</span>
-      <span className="fp-load-tab-count">{count}</span>
-    </Link>
-  );
-}
 
 function DateCell({ value }: { value?: string | null }) {
   if (!value) return <span>—</span>;
@@ -866,6 +783,7 @@ function LoadDonut({
     completed: number;
     dispatched: number;
     cancelled: number;
+    expired: number;
   };
 }) {
   const total = Math.max(1, counts.all);
@@ -977,7 +895,7 @@ function pageHref(baseQuery: URLSearchParams, page: number) {
 }
 
 function normalizedStatus(value?: string | null) {
-  return (value || "UPCOMING").trim().toUpperCase();
+  return normalizeLoadStatus(value);
 }
 
 function isActive(value?: string | null) {
@@ -1007,11 +925,21 @@ function tone(
 
 function compactLocation(value?: string | null) {
   if (!value) return "—";
+
+  const normalized = normalizeUsLocation(value);
+  if (normalized.ok) return normalized.value;
+
   const parts = value
     .split(",")
     .map((part) => part.trim())
     .filter(Boolean);
-  return parts.slice(0, 2).join(", ");
+
+  const city = (parts[0] || "")
+    .toLowerCase()
+    .replace(/\b([a-z])/g, (letter) => letter.toUpperCase());
+  const state = (parts[1] || "").toUpperCase();
+
+  return [city, state].filter(Boolean).join(", ") || "—";
 }
 
 function dateValue(value?: string | null) {
@@ -1089,7 +1017,7 @@ function metricChange(
   const arrow = pct > 0.05 ? "↑" : pct < -0.05 ? "↓" : "→";
 
   return {
-    change: `${arrow} ${Math.abs(pct).toFixed(0)}%`,
+    change: `${arrow} ${formatPercent(Math.abs(pct))}`,
     note: comparisonLabel,
   };
 }
@@ -1106,11 +1034,7 @@ function numberValue(value: number | string | null | undefined) {
 }
 
 function money(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
+  return formatMoney(value);
 }
 
 function SearchIcon() {

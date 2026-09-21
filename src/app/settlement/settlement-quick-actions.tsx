@@ -1,4 +1,5 @@
 "use client";
+import { formatMoney, formatPercent } from "@/lib/format";
 
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -44,7 +45,7 @@ type Summary = {
   revenuePerMile: number;
   costPerMile: number;
   profitPerMile: number;
-  profitMargin: number;
+  profitMargin: number | null;
   deadheadPercent: number;
   fuelCost: number;
 };
@@ -109,7 +110,7 @@ export default function SettlementQuickActions({
       issues.push({
         tone: "warning",
         title: "Deadhead is above 20%",
-        detail: `${summary.deadheadPercent.toFixed(1)}% of weekly load miles are deadhead.`,
+        detail: `${formatPercent(summary.deadheadPercent)} of weekly load miles are deadhead.`,
       });
     }
 
@@ -120,7 +121,7 @@ export default function SettlementQuickActions({
       issues.push({
         tone: "warning",
         title: "Costs are consuming most revenue",
-        detail: `${((summary.totalExpenses / summary.grossRevenue) * 100).toFixed(0)}% of gross revenue is going to weekly costs.`,
+        detail: `${formatPercent((summary.totalExpenses / summary.grossRevenue) * 100)} of gross revenue is going to weekly costs.`,
       });
     }
 
@@ -131,7 +132,7 @@ export default function SettlementQuickActions({
       issues.push({
         tone: "info",
         title: "Fuel dominates variable expenses",
-        detail: `${((summary.fuelCost / summary.variableExpenses) * 100).toFixed(0)}% of variable costs are fuel-related.`,
+        detail: `${formatPercent((summary.fuelCost / summary.variableExpenses) * 100)} of variable costs are fuel-related.`,
       });
     }
 
@@ -189,11 +190,11 @@ export default function SettlementQuickActions({
         `Mileage Fee: ${usd(summary.mileageFee)}`,
         `Total Expenses: ${usd(summary.totalExpenses)}`,
         `Net Profit: ${usd(summary.netProfit)}`,
-        `Revenue / Mile: ${usd(summary.revenuePerMile)}`,
-        `Cost / Mile: ${usd(summary.costPerMile)}`,
-        `Profit / Mile: ${usd(summary.profitPerMile)}`,
-        `Profit Margin: ${summary.profitMargin.toFixed(1)}%`,
-        `Deadhead: ${summary.deadheadPercent.toFixed(1)}%`,
+        `Revenue / Mile: ${summary.totalMiles > 0 ? usd(summary.revenuePerMile) : "n/a"}`,
+        `Cost / Mile: ${summary.totalMiles > 0 ? usd(summary.costPerMile) : "n/a"}`,
+        `Profit / Mile: ${summary.totalMiles > 0 ? usd(summary.profitPerMile) : "n/a"}`,
+        `Profit Margin: ${summary.profitMargin == null ? "n/a" : formatPercent(summary.profitMargin)}`,
+        `Deadhead: ${formatPercent(summary.deadheadPercent)}`,
         `Fuel Cost: ${usd(summary.fuelCost)}`,
         "",
         `LOADS (${loads.length})`,
@@ -315,11 +316,11 @@ export default function SettlementQuickActions({
                 <SummaryLine label="Reimbursements" value={usd(summary.reimbursements)} positive />
                 <SummaryLine label="Fixed Expenses" value={usd(summary.fixedExpenses)} />
                 <SummaryLine label="Company Fees" value={usd(summary.revenueFee + summary.mileageFee)} />
-                <SummaryLine label="Revenue / Mile" value={usd(summary.revenuePerMile)} />
-                <SummaryLine label="Cost / Mile" value={usd(summary.costPerMile)} />
-                <SummaryLine label="Profit / Mile" value={usd(summary.profitPerMile)} positive={summary.profitPerMile >= 0} />
-                <SummaryLine label="Profit Margin" value={`${summary.profitMargin.toFixed(1)}%`} positive={summary.profitMargin >= 0} />
-                <SummaryLine label="Deadhead" value={`${summary.deadheadPercent.toFixed(1)}%`} />
+                <SummaryLine label="Revenue / Mile" value={summary.totalMiles > 0 ? usd(summary.revenuePerMile) : "n/a"} />
+                <SummaryLine label="Cost / Mile" value={summary.totalMiles > 0 ? usd(summary.costPerMile) : "n/a"} />
+                <SummaryLine label="Profit / Mile" value={summary.totalMiles > 0 ? usd(summary.profitPerMile) : "n/a"} positive={summary.totalMiles > 0 && summary.profitPerMile >= 0} />
+                <SummaryLine label="Profit Margin" value={summary.profitMargin == null ? "n/a" : formatPercent(summary.profitMargin)} positive={summary.profitMargin != null && summary.profitMargin >= 0} />
+                <SummaryLine label="Deadhead" value={formatPercent(summary.deadheadPercent)} />
                 <SummaryLine label="Loads" value={`${loads.length}`} />
               </div>
 
@@ -511,11 +512,7 @@ function ActionIcon({
 }
 
 function usd(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(value || 0);
+  return formatMoney(value);
 }
 
 function integer(value: number) {

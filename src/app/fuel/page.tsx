@@ -1,3 +1,6 @@
+import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
+import KpiTile from "@/components/kpi-tile";
+import { formatPercent } from "@/lib/format";
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { EmptyState } from "@/components/fleet-ui";
@@ -327,33 +330,25 @@ export default async function FuelPage({
         ) : (
           <>
             <div className="fp-fuel-kpi-grid mt-4">
-              <FuelKpi
+              <KpiTile
                 label="Total Fuel Cost"
-                value={money(totalFuelSpend)}
-                tone="blue"
-                icon="cost"
-                note={`${fuelExpenses.length} filtered transactions`}
+                                value={money(totalFuelSpend)}
+                                note={`${fuelExpenses.length} filtered transactions`}
               />
-              <FuelKpi
+              <KpiTile
                 label="Total Gallons"
-                value={`${totalGallons.toFixed(1)} gal`}
-                tone="green"
-                icon="gallons"
-                note={`${loadMiles.toLocaleString()} load miles`}
+                                value={`${totalGallons.toFixed(1)} gal`}
+                                note={`${loadMiles.toLocaleString()} load miles`}
               />
-              <FuelKpi
+              <KpiTile
                 label="Avg. Price/Gallon"
-                value={money(averagePrice)}
-                tone="amber"
-                icon="price"
-                note={`${shortDate(dateFrom)} – ${shortDate(dateTo)}`}
+                                value={money(averagePrice)}
+                                note={`${shortDate(dateFrom)} – ${shortDate(dateTo)}`}
               />
-              <FuelKpi
+              <KpiTile
                 label="Avg. MPG"
-                value={estimatedMpg.toFixed(2)}
-                tone="teal"
-                icon="mpg"
-                note="Based on filtered load miles"
+                                value={estimatedMpg.toFixed(2)}
+                                note="Based on filtered load miles"
               />
             </div>
 
@@ -375,11 +370,17 @@ export default async function FuelPage({
                       <h2>Fuel Cost Trend</h2>
                       <div className="fp-fuel-legend">
                         <span>
-                          <i className="cost" />
+                          <i
+                            className="cost"
+                            style={{ backgroundColor: CHART_PALETTE.green }}
+                          />
                           Fuel Cost
                         </span>
                         <span>
-                          <i className="revenue" />
+                          <i
+                            className="revenue"
+                            style={{ backgroundColor: CHART_PALETTE.navy }}
+                          />
                           Gross Revenue
                         </span>
                       </div>
@@ -504,7 +505,7 @@ export default async function FuelPage({
                               {String(index + 1).padStart(4, "0")}
                             </td>
                             <td>{shortDate(expense.expense_date)}</td>
-                            <td className="font-[650]">
+                            <td className="font-[700]">
                               {truck ? `#${truck.unit_number}` : "—"}
                             </td>
                             <td>
@@ -589,12 +590,12 @@ export default async function FuelPage({
                 <div className="fp-fuel-promo">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/25 to-transparent" />
                   <div className="relative z-10">
-                    <div className="text-[16px] font-[740] leading-[1.18] text-white">
+                    <div className="text-[16px] font-[700] leading-[1.18] text-white">
                       Lower Fuel Costs.
                       <br />
                       Higher Profits.
                     </div>
-                    <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
+                    <div className="mt-4 h-[3px] w-10 bg-[#16853B]" />
                   </div>
                 </div>
               </aside>
@@ -641,12 +642,11 @@ function groupFuel(
   }
 
   const colors = [
-    "#58bd69",
-    "#16853B",
-    "#ef6b5e",
-    "#f2b33f",
-    "#7356d8",
-    "#9aa9bc",
+    chartCategoryColor(0),
+    chartCategoryColor(1),
+    chartCategoryColor(2),
+    chartCategoryColor(3),
+    chartCategoryColor(4),
   ];
 
   return [...map.entries()]
@@ -717,7 +717,7 @@ function FuelBreakdownView({
                   </td>
                   <td>
                     {total > 0
-                      ? `${((row.amount / total) * 100).toFixed(1)}%`
+                      ? formatPercent((row.amount / total) * 100)
                       : "0.0%"}
                   </td>
                 </tr>
@@ -732,56 +732,7 @@ function FuelBreakdownView({
   );
 }
 
-function FuelKpi({
-  label,
-  value,
-  tone,
-  icon,
-  note,
-}: {
-  label: string;
-  value: string;
-  tone: "blue" | "green" | "amber" | "teal";
-  icon: "cost" | "gallons" | "price" | "mpg";
-  note: string;
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-    amber: { color: "#d99d2f", soft: "#fff4de" },
-    teal: { color: "#2f9b8c", soft: "#e8f7f4" },
-  }[tone];
 
-  return (
-    <div className="fp-fuel-kpi">
-      <div
-        className="fp-fuel-kpi-icon"
-        style={{
-          color: palette.color,
-          backgroundColor: palette.soft,
-        }}
-      >
-        <FuelKpiIcon type={icon} />
-      </div>
-      <div>
-        <div className="fp-fuel-kpi-label">{label}</div>
-        <div className="fp-number fp-fuel-kpi-value">{value}</div>
-        <div className="fp-fuel-kpi-note">{note}</div>
-      </div>
-    </div>
-  );
-}
-
-function FuelKpiIcon({
-  type,
-}: {
-  type: "cost" | "gallons" | "price" | "mpg";
-}) {
-  if (type === "gallons") return <FuelPumpIcon />;
-  if (type === "price") return <TagIcon />;
-  if (type === "mpg") return <MileageIcon />;
-  return <WalletIcon />;
-}
 
 function FuelTrendChart({
   data,
@@ -847,7 +798,7 @@ function FuelTrendChart({
               width="22"
               height={Math.max(2, barHeight)}
               rx="2"
-              fill="#dbeafc"
+              fill={CHART_PALETTE.navy}
             />
             <text
               x={x}
@@ -865,7 +816,7 @@ function FuelTrendChart({
       <polyline
         points={points}
         fill="none"
-        stroke="#16853B"
+        stroke={CHART_PALETTE.green}
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -883,7 +834,7 @@ function FuelTrendChart({
             cy={y}
             r="3"
             fill="#fff"
-            stroke="#16853B"
+            stroke={CHART_PALETTE.green}
             strokeWidth="2"
           />
         );

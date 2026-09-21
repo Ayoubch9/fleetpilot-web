@@ -1,11 +1,13 @@
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/legal-page";
+import { publicPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = publicPageMetadata({
   title: "Data Deletion",
   description:
-    "How to permanently delete a MileVoxa account and what happens afterward.",
-};
+    "Learn how to permanently delete a MileVoxa account, export supported data, and understand what is retained afterward.",
+  path: "/data-deletion",
+});
 
 export default function DataDeletionPage() {
   return (

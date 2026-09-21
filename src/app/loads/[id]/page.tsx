@@ -1,3 +1,4 @@
+import { formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
@@ -205,7 +206,7 @@ export default async function LoadProfitabilityPage({ params }: Props) {
       type: "Allocated",
     },
     {
-      label: `Company Revenue Fee (${revenueFeePercent.toFixed(1)}%)`,
+      label: `Company Revenue Fee (${formatPercent(revenueFeePercent)})`,
       amount: allocatedRevenueFee,
       type: "Allocated",
     },
@@ -277,7 +278,7 @@ export default async function LoadProfitabilityPage({ params }: Props) {
               <Metric label="Loaded RPM" value={money(loadedRpm)} />
               <Metric label="True RPM" value={money(trueRpm)} />
               <Metric label="Profit / Mile" value={money(profitPerMile)} />
-              <Metric label="Profit Margin" value={`${margin.toFixed(1)}%`} />
+              <Metric label="Profit Margin" value={formatPercent(margin)} />
               <Metric
                 label="Cost / Mile"
                 value={money(

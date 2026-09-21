@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type Load = {
   id: string;
@@ -21,7 +22,7 @@ type Load = {
 };
 
 type ExportLoad = Load & {
-  profit: number;
+  profit: number | null;
 };
 
 export default function LoadsQuickActions({
@@ -65,17 +66,28 @@ export default function LoadsQuickActions({
         selectedLoad.load_number || "LOAD"
       );
 
+      const mileage = validateLoadMiles(
+        selectedLoad.loaded_miles,
+        selectedLoad.deadhead_miles
+      );
+      const pickup = normalizeUsLocation(selectedLoad.pickup || "");
+      const delivery = normalizeUsLocation(selectedLoad.delivery || "");
+
+      if (!mileage.ok) throw new Error(mileage.error);
+      if (!pickup.ok) throw new Error(`Pickup: ${pickup.error}`);
+      if (!delivery.ok) throw new Error(`Delivery: ${delivery.error}`);
+
       const { error } = await supabase.from("loads").insert({
         truck_id: selectedLoad.truck_id,
         load_number: copyNumber,
         broker: selectedLoad.broker,
-        pickup: selectedLoad.pickup,
-        delivery: selectedLoad.delivery,
+        pickup: pickup.value,
+        delivery: delivery.value,
         pickup_date: selectedLoad.pickup_date,
         delivery_date: selectedLoad.delivery_date,
         rate: Number(selectedLoad.rate || 0),
-        loaded_miles: Number(selectedLoad.loaded_miles || 0),
-        deadhead_miles: Number(selectedLoad.deadhead_miles || 0),
+        loaded_miles: mileage.loadedMiles,
+        deadhead_miles: mileage.deadheadMiles,
         status: "UPCOMING",
       });
 
@@ -125,7 +137,7 @@ export default function LoadsQuickActions({
         String(Number(load.rate || 0)),
         String(Number(load.loaded_miles || 0)),
         String(Number(load.deadhead_miles || 0)),
-        String(load.profit),
+        load.profit == null ? "" : String(load.profit),
         load.status || "",
       ]),
     ];

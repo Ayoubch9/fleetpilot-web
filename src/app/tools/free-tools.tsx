@@ -1,21 +1,22 @@
 "use client";
+import { formatMoney, formatPercent } from "@/lib/format";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
-type ToolKey = "cpm" | "load" | "owner" | "lease" | "fuel" | "rpm";
+import {
+  TOOL_DEFINITIONS,
+  type ToolKey,
+} from "@/lib/free-tools";
 
-const tools: { key: ToolKey; title: string; text: string }[] = [
-  { key: "cpm", title: "Trucking Cost Per Mile", text: "Know what every operating mile really costs." },
-  { key: "load", title: "Load Profit Calculator", text: "Estimate profit before you accept the load." },
-  { key: "owner", title: "Owner-Operator Profit", text: "Turn weekly revenue and expenses into real take-home profit." },
-  { key: "lease", title: "Lease Operator / Contractor", text: "Estimate weekly take-home for a driver leasing a truck." },
-  { key: "fuel", title: "Fuel Cost Calculator", text: "Estimate fuel gallons, spend and fuel cost per mile." },
-  { key: "rpm", title: "Rate Per Mile Calculator", text: "Compare loaded RPM and true RPM including deadhead." },
-];
-
-export default function FreeTools() {
-  const [active, setActive] = useState<ToolKey>("load");
+export default function FreeTools({
+  initialActive = "load",
+  navigationMode = "tabs",
+}: {
+  initialActive?: ToolKey;
+  navigationMode?: "tabs" | "routes";
+}) {
+  const [active, setActive] = useState<ToolKey>(initialActive);
 
   return (
     <div className="fp-free-tools-shell">
@@ -24,17 +25,30 @@ export default function FreeTools() {
         <h2>Run the numbers before the road.</h2>
         <p>No account required. Use these calculators as often as you want.</p>
         <div>
-          {tools.map((tool) => (
-            <button
-              type="button"
-              key={tool.key}
-              className={active === tool.key ? "active" : ""}
-              onClick={() => setActive(tool.key)}
-            >
-              <strong>{tool.title}</strong>
-              <small>{tool.text}</small>
-            </button>
-          ))}
+          {TOOL_DEFINITIONS.map((tool) =>
+            navigationMode === "routes" ? (
+              <Link
+                key={tool.key}
+                href={`/tools/${tool.slug}`}
+                className={active === tool.key ? "active" : ""}
+                aria-current={active === tool.key ? "page" : undefined}
+              >
+                <strong>{tool.title}</strong>
+                <small>{tool.text}</small>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                key={tool.key}
+                className={active === tool.key ? "active" : ""}
+                aria-pressed={active === tool.key}
+                onClick={() => setActive(tool.key)}
+              >
+                <strong>{tool.title}</strong>
+                <small>{tool.text}</small>
+              </button>
+            )
+          )}
         </div>
       </aside>
 
@@ -102,7 +116,7 @@ function LoadProfit() {
       ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
       ["True RPM",usd(miles>0?rate/miles:0)],
       ["Profit / Mile",usd(miles>0?profit/miles:0)],
-      ["Margin",`${rate>0?(profit/rate*100).toFixed(1):"0.0"}%`],
+      ["Margin",formatPercent(rate>0?(profit/rate*100):0)],
     ]}/>
   </ToolFrame>;
 }
@@ -124,7 +138,7 @@ function OwnerProfit() {
     <Results rows={[
       ["Total Costs",usd(cost)],
       ["Weekly Net Profit",usd(profit)],
-      ["Profit Margin",`${revenue>0?(profit/revenue*100).toFixed(1):"0.0"}%`],
+      ["Profit Margin",formatPercent(revenue>0?(profit/revenue*100):0)],
       ["Monthly Run Rate",usd(profit*4.33)],
     ]}/>
   </ToolFrame>;
@@ -170,7 +184,7 @@ function LeaseOperatorProfit() {
       ["Maintenance Reserve",usd(maintenanceReserve)],
       ["Gross / Mile",usd(grossPerMile)],
       ["Take-Home / Mile",usd(profitPerMile)],
-      ["Deductions",`${deductionPercent.toFixed(1)}%`],
+      ["Deductions",formatPercent(deductionPercent)],
     ]}/>
 
     <div className="fp-tool-lease-breakdown">
@@ -243,14 +257,14 @@ function RatePerMile() {
       ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
       ["True RPM",usd(total>0?rate/total:0)],
       ["Total Miles",`${total.toLocaleString()} mi`],
-      ["Deadhead",`${total>0?(deadhead/total*100).toFixed(1):"0.0"}%`],
+      ["Deadhead",formatPercent(total>0?(deadhead/total*100):0)],
     ]}/>
   </ToolFrame>;
 }
 
 function ToolFrame({title,text,children}:{title:string;text:string;children:React.ReactNode}) {
   return <div className="fp-tool-frame">
-    <div className="fp-tool-frame-heading"><span>FREE CALCULATOR</span><h1>{title}</h1><p>{text}</p></div>
+    <div className="fp-tool-frame-heading"><span>FREE CALCULATOR</span><h2>{title}</h2><p>{text}</p></div>
     <div className="fp-tool-form-grid">{children}</div>
   </div>;
 }
@@ -264,5 +278,5 @@ function Results({rows}:{rows:[string,string][]}) {
 }
 
 function usd(value:number) {
-  return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(value||0);
+  return formatMoney(value);
 }

@@ -1,4 +1,6 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -33,55 +35,24 @@ export default function NotificationCenter({
   return (
     <>
       <div className="fp-alert-kpis">
-        <AlertKpi
-          label="Needs Attention"
-          value={counts.critical}
-          tone="critical"
-        />
-        <AlertKpi
-          label="Due Soon"
-          value={counts.warning}
-          tone="warning"
-        />
-        <AlertKpi
-          label="Upcoming"
-          value={counts.info}
-          tone="info"
-        />
-        <AlertKpi
-          label="Total Alerts"
-          value={counts.all}
-          tone="all"
-        />
+        <KpiTile label="Needs Attention" value={counts.critical} />
+        <KpiTile label="Due Soon" value={counts.warning} />
+        <KpiTile label="Upcoming" value={counts.info} />
+        <KpiTile label="Total Alerts" value={counts.all} />
       </div>
 
       <section className="fp-panel fp-alert-center">
-        <div className="fp-alert-filterbar">
-          <FilterButton
-            label="All"
-            count={counts.all}
-            active={filter === "all"}
-            onClick={() => setFilter("all")}
-          />
-          <FilterButton
-            label="Critical"
-            count={counts.critical}
-            active={filter === "critical"}
-            onClick={() => setFilter("critical")}
-          />
-          <FilterButton
-            label="Due Soon"
-            count={counts.warning}
-            active={filter === "warning"}
-            onClick={() => setFilter("warning")}
-          />
-          <FilterButton
-            label="Upcoming"
-            count={counts.info}
-            active={filter === "info"}
-            onClick={() => setFilter("info")}
-          />
-        </div>
+        <AppTabs
+          activeKey={filter}
+          ariaLabel="Notification severity"
+          items={[
+            { key: "all", label: "All", count: counts.all },
+            { key: "critical", label: "Critical", count: counts.critical },
+            { key: "warning", label: "Due Soon", count: counts.warning },
+            { key: "info", label: "Upcoming", count: counts.info },
+          ]}
+          onChange={(key) => setFilter(key as Filter)}
+        />
 
         <div className="fp-alert-list">
           {visible.map((alert) => (
@@ -131,40 +102,7 @@ export default function NotificationCenter({
   );
 }
 
-function AlertKpi({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number;
-  tone: string;
-}) {
-  return (
-    <div className={`fp-alert-kpi ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
 
-function FilterButton({
-  label,
-  count,
-  active,
-  onClick,
-}: {
-  label: string;
-  count: number;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button className={active ? "active" : ""} onClick={onClick}>
-      {label} <b>{count}</b>
-    </button>
-  );
-}
 
 function categoryLabel(category: MileVoxaAlert["category"]) {
   if (category === "maintenance") return "Maintenance";

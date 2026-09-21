@@ -1,57 +1,36 @@
+import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
+import { formatMoney, formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
-import SignOutButton from "./sign-out-button";
 import AppShell from "@/components/app-shell";
-import { PageHeading, StatCard, SectionPanel, TinyBar, EmptyState } from "@/components/fleet-ui";
+import { SectionPanel, EmptyState } from "@/components/fleet-ui";
 import DashboardQuickActions from "./dashboard-quick-actions";
+import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
+import {
+  dbDate,
+  displayDate,
+  parseDate,
+  plusDays,
+  selectedWeek,
+  weekEnd,
+} from "@/lib/fleetpilot-week";
+import {
+  buildExpenseBreakdown,
+  buildWeekActivity,
+  calculateTrend,
+  calculateWeekFinance,
+  numberValue,
+  type TrendResult,
+} from "@/lib/week-finance";
+import {
+  fetchDashboardFleetSupport,
+  fetchWeekLedger,
+} from "@/lib/week-ledger";
 
 type SearchParams = Promise<{
   week?: string;
 }>;
-
-type RawLoad = {
-  rate?: number | string | null;
-  loaded_miles?: number | string | null;
-  deadhead_miles?: number | string | null;
-  pickup_date?: string | null;
-  delivery_date?: string | null;
-  load_number?: string | null;
-  pickup?: string | null;
-  delivery?: string | null;
-  status?: string | null;
-};
-
-type RawExpense = {
-  amount?: number | string | null;
-  category?: string | null;
-  expense_date?: string | null;
-  vendor?: string | null;
-};
-
-type RawReimbursement = {
-  amount?: number | string | null;
-};
-
-type RawFixedExpense = {
-  amount?: number | string | null;
-  is_active?: boolean | null;
-  active?: boolean | null;
-};
-
-type RawOdometer = {
-  start_odometer?: number | string | null;
-  end_odometer?: number | string | null;
-  rate_per_mile?: number | string | null;
-};
-
-type RawCompanyFeeSettings = {
-  revenue_fee_percent?: number | string | null;
-  mileage_fee_per_mile?: number | string | null;
-  is_revenue_fee_active?: boolean | null;
-  is_mileage_fee_active?: boolean | null;
-};
 
 type RawTruck = {
   id?: string | null;
@@ -60,119 +39,42 @@ type RawTruck = {
   status?: string | null;
 };
 
-type RawMaintenance = {
+type RawMaintenanceDue = {
   truck_id?: string | null;
   next_service_mileage?: number | string | null;
   next_service_date?: string | null;
 };
 
-function numberValue(value: unknown): number {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-  return 0;
-}
-
 function money(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function compactMoney(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function databaseDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function parseDatabaseDate(value?: string): Date | null {
-  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return null;
-  }
-
-  return date;
-}
-
-function weekStart(date: Date): Date {
-  const clean = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const day = clean.getDay();
-  const daysFromMonday = day === 0 ? 6 : day - 1;
-
-  clean.setDate(clean.getDate() - daysFromMonday);
-  return clean;
-}
-
-function weekEnd(start: Date): Date {
-  const result = new Date(start);
-  result.setDate(result.getDate() + 6);
-  return result;
-}
-
-function addDays(date: Date, days: number): Date {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
+  return formatMoney(value);
 }
 
 function sameDate(a: Date, b: Date): boolean {
-  return databaseDate(a) === databaseDate(b);
-}
-
-function displayDate(date: Date): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-  }).format(date);
-}
-
-function isActiveFixedExpense(item: RawFixedExpense): boolean {
-  if (typeof item.is_active === "boolean") return item.is_active;
-  if (typeof item.active === "boolean") return item.active;
-  return true;
+  return dbDate(a) === dbDate(b);
 }
 
 function isActiveTruck(status?: string | null): boolean {
   const normalized = (status ?? "").trim().toUpperCase();
-
   if (["INACTIVE", "PARKED", "OUT OF SERVICE", "OUT"].includes(normalized)) {
     return false;
   }
-
-  return normalized === "" || ["ACTIVE", "AVAILABLE", "RUNNING", "IN SERVICE"].includes(normalized);
+  return normalized === "" ||
+    ["ACTIVE", "AVAILABLE", "RUNNING", "IN SERVICE"].includes(normalized);
 }
 
-function expenseCategoryTotals(expenses: RawExpense[]) {
-  const totals = new Map<string, number>();
+function trendCopy(trend: TrendResult | null): string {
+  if (!trend) return "No comparable prior week";
+  if (trend.direction === "flat") return "No material change vs previous week";
+  return `${trend.direction === "up" ? "↑" : "↓"} ${formatPercent(
+    Math.abs(trend.percent)
+  )} vs previous week`;
+}
 
-  for (const expense of expenses) {
-    const category = expense.category?.trim() || "Other";
-    totals.set(category, (totals.get(category) ?? 0) + numberValue(expense.amount));
-  }
-
-  return [...totals.entries()].sort((a, b) => b[1] - a[1]);
+function expenseTrendTone(trend: TrendResult | null) {
+  if (!trend) return "neutral" as const;
+  if (trend.direction === "down") return "positive" as const;
+  if (trend.direction === "up") return "negative" as const;
+  return "neutral" as const;
 }
 
 export default async function DashboardPage({
@@ -181,49 +83,18 @@ export default async function DashboardPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, avatar_path")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const { data: membership } = await supabase
-    .from("company_members")
-    .select("company_id, role")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  let companyName = "";
-
-  if (membership?.company_id) {
-    const { data: company } = await supabase
-      .from("companies")
-      .select("name")
-      .eq("id", membership.company_id)
-      .maybeSingle();
-
-    companyName = company?.name ?? "";
-  }
+  const { supabase, fullName, companyName, role } =
+    await getMileVoxaAccount();
 
   const today = new Date();
-  const currentWeekStart = weekStart(today);
-
+  const currentWeekStart = selectedWeek(undefined);
   const cookieStore = await cookies();
   const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
-  const requestedDate = parseDatabaseDate(params.week || rememberedWeek);
-  const selectedWeekStart = requestedDate
-    ? weekStart(requestedDate)
-    : currentWeekStart;
+
+  let selectedWeekStart = selectedWeek(params.week || rememberedWeek);
+  if (selectedWeekStart.getTime() > currentWeekStart.getTime()) {
+    redirect("/dashboard");
+  }
 
   const selectedWeekEnd = weekEnd(selectedWeekStart);
   const isCurrentWeek = sameDate(selectedWeekStart, currentWeekStart);
@@ -249,272 +120,68 @@ export default async function DashboardPage({
   const weekDaysRemaining = Math.max(0, 7 - weekProgressDays);
   const settlementHref = isCurrentWeek
     ? "/settlement"
-    : `/settlement?week=${databaseDate(selectedWeekStart)}`;
+    : `/settlement?week=${dbDate(selectedWeekStart)}`;
 
-  if (selectedWeekStart.getTime() > currentWeekStart.getTime()) {
-    redirect("/dashboard");
-  }
-
-  const previousWeekStart = addDays(selectedWeekStart, -7);
-  const previousWeekEnd = weekEnd(previousWeekStart);
-
-  const start = databaseDate(selectedWeekStart);
-  const end = databaseDate(selectedWeekEnd);
-  const previousStart = databaseDate(previousWeekStart);
-  const previousEnd = databaseDate(previousWeekEnd);
+  const previousWeekStart = plusDays(selectedWeekStart, -7);
 
   const [
-    loadsResult,
-    expensesResult,
-    reimbursementsResult,
-    fixedExpensesResult,
-    odometerResult,
-    settingsResult,
-    previousLoadsResult,
-    previousExpensesResult,
-    previousReimbursementsResult,
-    previousOdometerResult,
-    trucksResult,
-    maintenanceResult,
+    currentWeekResult,
+    previousWeekResult,
+    fleetSupport,
   ] = await Promise.all([
-    supabase
-      .from("loads")
-      .select("rate, loaded_miles, deadhead_miles, pickup_date, delivery_date, load_number, pickup, delivery, status")
-      .gte("pickup_date", start)
-      .lte("pickup_date", end)
-      .order("pickup_date", { ascending: true }),
-
-    supabase
-      .from("expenses")
-      .select("amount, category, expense_date, vendor")
-      .gte("expense_date", start)
-      .lte("expense_date", end)
-      .order("expense_date", { ascending: true }),
-
-    supabase
-      .from("reimbursements")
-      .select("amount")
-      .gte("reimbursement_date", start)
-      .lte("reimbursement_date", end),
-
-    supabase
-      .from("weekly_fixed_expenses")
-      .select("*"),
-
-    supabase
-      .from("weekly_odometer_records")
-      .select("start_odometer, end_odometer, rate_per_mile")
-      .eq("week_start", start),
-
-    supabase
-      .from("company_fee_settings")
-      .select("*")
-      .limit(1),
-
-    supabase
-      .from("loads")
-      .select("rate, loaded_miles, deadhead_miles, pickup_date, delivery_date")
-      .gte("pickup_date", previousStart)
-      .lte("pickup_date", previousEnd),
-
-    supabase
-      .from("expenses")
-      .select("amount")
-      .gte("expense_date", previousStart)
-      .lte("expense_date", previousEnd),
-
-    supabase
-      .from("reimbursements")
-      .select("amount")
-      .gte("reimbursement_date", previousStart)
-      .lte("reimbursement_date", previousEnd),
-
-    supabase
-      .from("weekly_odometer_records")
-      .select("start_odometer, end_odometer, rate_per_mile")
-      .eq("week_start", previousStart),
-
-    supabase
-      .from("trucks")
-      .select("id, unit_number, current_mileage, status"),
-
-    supabase
-      .from("maintenance_records")
-      .select("truck_id, next_service_mileage, next_service_date"),
+    fetchWeekLedger(supabase, selectedWeekStart),
+    fetchWeekLedger(supabase, previousWeekStart),
+    fetchDashboardFleetSupport(supabase),
   ]);
 
+  const ledger = currentWeekResult.ledger;
+  const previousLedger = previousWeekResult.ledger;
+  const finance = calculateWeekFinance(ledger);
+  const previousFinance = calculateWeekFinance(previousLedger);
+
   const errors = [
-    loadsResult.error,
-    expensesResult.error,
-    reimbursementsResult.error,
-    fixedExpensesResult.error,
-    odometerResult.error,
-    settingsResult.error,
-    previousLoadsResult.error,
-    previousExpensesResult.error,
-    previousReimbursementsResult.error,
-    previousOdometerResult.error,
-    trucksResult.error,
-    maintenanceResult.error,
-  ].filter(Boolean);
+    ...currentWeekResult.errors,
+    ...previousWeekResult.errors,
+    ...fleetSupport.errors,
+  ];
 
-  const loads = (loadsResult.data ?? []) as RawLoad[];
-  const expenses = (expensesResult.data ?? []) as RawExpense[];
-  const reimbursements = (reimbursementsResult.data ?? []) as RawReimbursement[];
-  const fixedExpenses = (fixedExpensesResult.data ?? []) as RawFixedExpense[];
-  const odometers = (odometerResult.data ?? []) as RawOdometer[];
-  const settingsRows = (settingsResult.data ?? []) as RawCompanyFeeSettings[];
+  const loads = ledger.loads;
+  const expenses = ledger.expenses;
+  const trucks = fleetSupport.trucks as RawTruck[];
+  const maintenanceRows =
+    fleetSupport.maintenanceDueRows as RawMaintenanceDue[];
 
-  const previousLoads = (previousLoadsResult.data ?? []) as RawLoad[];
-  const previousExpenses = (previousExpensesResult.data ?? []) as RawExpense[];
-  const previousReimbursements = (previousReimbursementsResult.data ?? []) as RawReimbursement[];
-  const previousOdometers = (previousOdometerResult.data ?? []) as RawOdometer[];
+  const {
+    grossRevenue,
+    totalMiles,
+    totalExpenses,
+    netProfit,
+    profitMargin,
+  } = finance;
 
-  const trucks = (trucksResult.data ?? []) as RawTruck[];
-  const maintenanceRows = (maintenanceResult.data ?? []) as RawMaintenance[];
+  const netProfitTrend = calculateTrend(
+    netProfit,
+    previousFinance.netProfit
+  );
+  const grossRevenueTrend = calculateTrend(
+    grossRevenue,
+    previousFinance.grossRevenue
+  );
+  const totalExpensesTrend = calculateTrend(
+    totalExpenses,
+    previousFinance.totalExpenses
+  );
+  const marginTrend =
+    profitMargin == null || previousFinance.profitMargin == null
+      ? null
+      : calculateTrend(profitMargin, previousFinance.profitMargin);
 
-  const settings = settingsRows[0];
-
-  const grossRevenue = loads.reduce(
-    (sum, load) => sum + numberValue(load.rate),
+  const activity = buildWeekActivity(ledger).slice(0, 5);
+  const expenseBreakdownDataRaw = buildExpenseBreakdown(ledger);
+  const expenseBreakdownTotal = expenseBreakdownDataRaw.reduce(
+    (sum, item) => sum + item.value,
     0
   );
-
-  const loadedMiles = loads.reduce(
-    (sum, load) => sum + numberValue(load.loaded_miles),
-    0
-  );
-
-  const deadheadMiles = loads.reduce(
-    (sum, load) => sum + numberValue(load.deadhead_miles),
-    0
-  );
-
-  const totalMiles = loadedMiles + deadheadMiles;
-
-  const variableExpenses = expenses.reduce(
-    (sum, expense) => sum + numberValue(expense.amount),
-    0
-  );
-
-  const totalReimbursements = reimbursements.reduce(
-    (sum, reimbursement) => sum + numberValue(reimbursement.amount),
-    0
-  );
-
-  const netVariableExpenses = variableExpenses - totalReimbursements;
-
-  const weeklyFixedExpenses = fixedExpenses
-    .filter(isActiveFixedExpense)
-    .reduce((sum, expense) => sum + numberValue(expense.amount), 0);
-
-  const actualOdometerMiles = odometers.reduce((sum, row) => {
-    const startMileage = numberValue(row.start_odometer);
-    const endMileage = numberValue(row.end_odometer);
-    const actualMiles = Math.max(endMileage - startMileage, 0);
-    return sum + actualMiles;
-  }, 0);
-
-  const revenueFeePercent =
-    settings?.revenue_fee_percent == null
-      ? 15
-      : numberValue(settings.revenue_fee_percent);
-
-  const mileageFeeRate =
-    settings?.mileage_fee_per_mile == null
-      ? 0.15
-      : numberValue(settings.mileage_fee_per_mile);
-
-  const revenueFeeActive =
-    settings?.is_revenue_fee_active == null
-      ? true
-      : Boolean(settings.is_revenue_fee_active);
-
-  const mileageFeeActive =
-    settings?.is_mileage_fee_active == null
-      ? true
-      : Boolean(settings.is_mileage_fee_active);
-
-  const companyRevenueFee = revenueFeeActive
-    ? grossRevenue * (revenueFeePercent / 100)
-    : 0;
-
-  const companyMileageFee = mileageFeeActive
-    ? actualOdometerMiles * mileageFeeRate
-    : 0;
-
-  const totalExpenses =
-    netVariableExpenses +
-    weeklyFixedExpenses +
-    companyRevenueFee +
-    companyMileageFee;
-
-  const netProfit = grossRevenue - totalExpenses;
-
-  const revenuePerMile = totalMiles > 0 ? grossRevenue / totalMiles : 0;
-  const costPerMile = totalMiles > 0 ? totalExpenses / totalMiles : 0;
-  const profitPerMile = totalMiles > 0 ? netProfit / totalMiles : 0;
-  const profitMargin =
-    grossRevenue > 0 ? (netProfit / grossRevenue) * 100 : 0;
-  const deadheadPercent =
-    totalMiles > 0 ? (deadheadMiles / totalMiles) * 100 : 0;
-
-  const fuelCost = expenses
-    .filter((expense) => expense.category?.trim().toLowerCase() === "fuel")
-    .reduce((sum, expense) => sum + numberValue(expense.amount), 0);
-
-  const previousGrossRevenue = previousLoads.reduce(
-    (sum, load) => sum + numberValue(load.rate),
-    0
-  );
-
-  const previousVariableExpenses = previousExpenses.reduce(
-    (sum, expense) => sum + numberValue(expense.amount),
-    0
-  );
-
-  const previousReimbursementTotal = previousReimbursements.reduce(
-    (sum, reimbursement) => sum + numberValue(reimbursement.amount),
-    0
-  );
-
-  const previousActualMiles = previousOdometers.reduce((sum, row) => {
-    const startMileage = numberValue(row.start_odometer);
-    const endMileage = numberValue(row.end_odometer);
-    const actualMiles = Math.max(endMileage - startMileage, 0);
-    return sum + actualMiles;
-  }, 0);
-
-  const previousRevenueFee = revenueFeeActive
-    ? previousGrossRevenue * (revenueFeePercent / 100)
-    : 0;
-
-  const previousMileageFee = mileageFeeActive
-    ? previousActualMiles * mileageFeeRate
-    : 0;
-
-  const previousTotalExpenses =
-    previousVariableExpenses -
-    previousReimbursementTotal +
-    weeklyFixedExpenses +
-    previousRevenueFee +
-    previousMileageFee;
-
-  const previousNetProfit =
-    previousGrossRevenue - previousTotalExpenses;
-
-  const hasPreviousData =
-    previousLoads.length > 0 ||
-    previousExpenses.length > 0 ||
-    previousReimbursements.length > 0 ||
-    previousOdometers.length > 0;
-
-  const profitChange =
-    hasPreviousData && Math.abs(previousNetProfit) >= 0.01
-      ? ((netProfit - previousNetProfit) / Math.abs(previousNetProfit)) * 100
-      : null;
-
-  const expenseBreakdown = expenseCategoryTotals(expenses);
 
   const activeTrucks = trucks.filter((truck) => isActiveTruck(truck.status));
   const quickActionTrucks = activeTrucks
@@ -562,7 +229,7 @@ export default async function DashboardPage({
     }
 
     if (record.next_service_date) {
-      const dueDate = parseDatabaseDate(record.next_service_date);
+      const dueDate = parseDate(record.next_service_date);
       if (dueDate && dueDate.getTime() <= cleanToday.getTime()) {
         due = true;
       }
@@ -572,123 +239,36 @@ export default async function DashboardPage({
   }
 
 
-  const fullName = profile?.full_name || "MileVoxa User";
+
   const firstName = fullName.split(/\s+/)[0] || "Driver";
 
+  const expenseBreakdownData = expenseBreakdownDataRaw.map((item, index) => ({
+    ...item,
+    color: chartCategoryColor(index),
+  }));
 
-  const rawExpenseCategoryMap = new Map<string, number>();
-
-  for (const [category, total] of expenseBreakdown) {
-    const key = category.trim().toLowerCase();
-
-    let bucket = "Other";
-
-    if (key.includes("fuel")) {
-      bucket = "Fuel";
-    } else if (
-      key.includes("maintenance") ||
-      key.includes("repair") ||
-      key.includes("service") ||
-      key.includes("tire") ||
-      key.includes("brake")
-    ) {
-      bucket = "Maintenance";
-    } else if (key.includes("insurance")) {
-      bucket = "Insurance";
-    } else if (key.includes("toll")) {
-      bucket = "Tolls";
-    } else if (
-      key.includes("truck payment") ||
-      key.includes("truckpayment") ||
-      key.includes("payment")
-    ) {
-      bucket = "Truck Payment";
-    }
-
-    rawExpenseCategoryMap.set(
-      bucket,
-      (rawExpenseCategoryMap.get(bucket) || 0) + total
-    );
-  }
-
-  const directCategoryTotal = [...rawExpenseCategoryMap.values()].reduce(
-    (sum, value) => sum + value,
-    0
-  );
-
-  // Everything included in Total Expenses but not represented by a direct
-  // expense category (fixed weekly expenses, company revenue fee, mileage fee,
-  // etc.) is included as Other so the chart reconciles exactly.
-  const remainingBusinessCosts = Math.max(
-    0,
-    totalExpenses - directCategoryTotal
-  );
-
-  const expenseBreakdownData = [
-    {
-      label: "Fuel",
-      value: rawExpenseCategoryMap.get("Fuel") || 0,
-      color: "#16853B",
-    },
-    {
-      label: "Maintenance",
-      value: rawExpenseCategoryMap.get("Maintenance") || 0,
-      color: "#ff5b61",
-    },
-    {
-      label: "Insurance",
-      value: rawExpenseCategoryMap.get("Insurance") || 0,
-      color: "#73d09a",
-    },
-    {
-      label: "Tolls",
-      value: rawExpenseCategoryMap.get("Tolls") || 0,
-      color: "#df4990",
-    },
-    {
-      label: "Truck Payment",
-      value: rawExpenseCategoryMap.get("Truck Payment") || 0,
-      color: "#6759c7",
-    },
-    {
-      label: "Other",
-      value:
-        (rawExpenseCategoryMap.get("Other") || 0) +
-        remainingBusinessCosts,
-      color: "#f6b343",
-    },
-  ] as const;
-
-  const expenseBreakdownTotal = expenseBreakdownData.reduce(
-    (sum, item) => sum + item.value,
-    0
-  );
-
-  const maxExpense = expenseBreakdown.length > 0
-    ? Math.max(...expenseBreakdown.map(([, total]) => total))
-    : 1;
 
   return (
     <AppShell
       active="overview"
       fullName={fullName}
       companyName={companyName}
-      role={membership?.role || "Member"}
+      role={role}
     >
       <div className="fp-page">
         <section className="fp-hero-exact min-h-[138px] rounded-[14px] border border-[#dfe7ef] px-7 py-6">
           <div className="relative z-10 max-w-[620px]">
-            <h1 className="text-[30px] font-[760] tracking-[-.05em] text-[#0b1730] sm:text-[37px]">
+            <h1 className="text-[30px] font-[800] tracking-[-.05em] text-[#0b1730] sm:text-[37px]">
               Good evening, <span className="text-[#16853B]">{firstName}</span> 👋
             </h1>
-            <p className="mt-1.5 text-[13px] font-[450] text-[#64778f]">
+            <p className="mt-1.5 text-[13px] font-[500] text-[#64778f]">
               Keep moving forward. Every mile counts.
             </p>
             <div className="mt-3 fp-overline">
               MileVoxa Control Center
             </div>
           </div>
-          <div className="absolute bottom-5 right-8 z-10 hidden text-right text-[10px] font-[650] uppercase tracking-[.27em] text-white drop-shadow-lg xl:block">
+          <div className="absolute bottom-5 right-8 z-10 hidden text-right text-[10px] font-[700] uppercase tracking-[.27em] text-white drop-shadow-lg xl:block">
             Drive<br />Smarter.<br />Earn More.
             <div className="ml-auto mt-2 h-[3px] w-9 bg-[#16853B]" />
           </div>
@@ -704,30 +284,34 @@ export default async function DashboardPage({
           <DashboardMetric
             label="Net Profit"
             value={money(netProfit)}
-            tone="green"
+            tone={netProfit > 0 ? "green" : netProfit < 0 ? "red" : "blue"}
             icon="$"
-            change={profitChange == null ? "No previous comparison" : `${profitChange >= 0 ? "↑" : "↓"} ${Math.abs(profitChange).toFixed(1)}% vs previous week`}
+            change={trendCopy(netProfitTrend)}
+            changeTone={netProfitTrend?.tone || "neutral"}
           />
           <DashboardMetric
             label="Gross Revenue"
             value={money(grossRevenue)}
             tone="blue"
             icon="▥"
-            change="↑ 12.4%"
+            change={trendCopy(grossRevenueTrend)}
+            changeTone={grossRevenueTrend?.tone || "neutral"}
           />
           <DashboardMetric
             label="Total Expenses"
             value={money(totalExpenses)}
             tone="red"
             icon="◉"
-            change="↑ 8.1%"
+            change={trendCopy(totalExpensesTrend)}
+            changeTone={expenseTrendTone(totalExpensesTrend)}
           />
           <DashboardMetric
             label="Profit Margin"
-            value={`${profitMargin.toFixed(1)}%`}
-            tone="purple"
+            value={profitMargin == null ? "n/a" : formatPercent(profitMargin)}
+            tone={profitMargin != null && profitMargin > 0 ? "green" : "purple"}
             icon="%"
-            change="↑ 6.2%"
+            change={profitMargin == null ? "n/a" : trendCopy(marginTrend)}
+            changeTone={marginTrend?.tone || "neutral"}
           />
         </div>
 
@@ -755,42 +339,15 @@ export default async function DashboardPage({
           />
 
           <div className="grid grid-rows-6 gap-[8px]">
-            <ExpenseLegendRow
-              label="Fuel"
-              value={expenseBreakdownData[0].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[0].color}
-            />
-            <ExpenseLegendRow
-              label="Maintenance"
-              value={expenseBreakdownData[1].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[1].color}
-            />
-            <ExpenseLegendRow
-              label="Insurance"
-              value={expenseBreakdownData[2].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[2].color}
-            />
-            <ExpenseLegendRow
-              label="Tolls"
-              value={expenseBreakdownData[3].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[3].color}
-            />
-            <ExpenseLegendRow
-              label="Truck Payment"
-              value={expenseBreakdownData[4].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[4].color}
-            />
-            <ExpenseLegendRow
-              label="Other"
-              value={expenseBreakdownData[5].value}
-              total={expenseBreakdownTotal}
-              color={expenseBreakdownData[5].color}
-            />
+            {expenseBreakdownData.map((item) => (
+              <ExpenseLegendRow
+                key={item.label}
+                label={item.label}
+                value={item.value}
+                total={expenseBreakdownTotal}
+                color={item.color}
+              />
+            ))}
           </div>
         </div>
       </SectionPanel>
@@ -859,7 +416,7 @@ export default async function DashboardPage({
                               </td>
                               <td>
                                 <span className="fp-load-status">
-                                  Completed
+                                  {load.status || "Recorded"}
                                 </span>
                               </td>
                             </tr>
@@ -885,36 +442,24 @@ export default async function DashboardPage({
         }
       >
         <div className="fp-activity-list px-3 pb-3">
-          <Activity
-            type="load"
-            text="Load completed · Atlanta → Dallas"
-            amount={grossRevenue > 0 ? money(Math.min(grossRevenue, 2850)) : "$0.00"}
-            when="2h ago"
-          />
-          <Activity
-            type="fuel"
-            text="Fuel purchase · Pilot Travel Center"
-            amount={fuelCost > 0 ? `-${money(Math.min(fuelCost, 580))}` : "-$0.00"}
-            when="5h ago"
-          />
-          <Activity
-            type="maintenance"
-            text="Maintenance · Oil Change"
-            amount="-$420.00"
-            when="1 day ago"
-          />
-          <Activity
-            type="truck"
-            text="Truck added · #102 Volvo VNL"
-            amount="–"
-            when="2 days ago"
-          />
-          <Activity
-            type="expense"
-            text="Expense added · Tolls"
-            amount="-$46.00"
-            when="2 days ago"
-          />
+          {activity.map((event) => (
+            <Activity
+              key={event.id}
+              type={event.type}
+              text={event.text}
+              amount={
+                event.amount == null
+                  ? "—"
+                  : event.amount < 0
+                    ? `-${money(Math.abs(event.amount))}`
+                    : money(event.amount)
+              }
+              when={shortDate(event.occurredOn)}
+            />
+          ))}
+          {activity.length === 0 && (
+            <EmptyState text="No activity this week yet - add your first load/expense." />
+          )}
         </div>
       </SectionPanel>
     </div>
@@ -935,7 +480,7 @@ export default async function DashboardPage({
                 <div className="fp-quote-card relative overflow-hidden rounded-[13px] border border-[#d7e2ec] bg-[url('/milevoxa-hero-clean.jpg')] bg-cover bg-center shadow-[0_8px_28px_rgba(29,65,102,.08)]">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#102238]/95 via-[#102238]/55 to-transparent" />
                   <div className="relative z-10 max-w-[390px] p-5 text-white">
-                    <div className="text-[17px] font-[720] leading-6 tracking-[-.02em]">
+                    <div className="text-[17px] font-[700] leading-6 tracking-[-.02em]">
                       “Success is a long haul<br />built on daily discipline.”
                     </div>
                     <div className="mt-2 text-[10px] text-white/75">Keep pushing forward.</div>
@@ -993,7 +538,7 @@ export default async function DashboardPage({
       title={
         <span className="flex items-center gap-2">
           <span>Pilot AI</span>
-          <span className="rounded-full border border-[#8bc7ff] bg-[#edf7ff] px-2 py-[2px] text-[7px] font-[650] text-[#16853B]">
+          <span className="rounded-full border border-[#8bc7ff] bg-[#edf7ff] px-2 py-[2px] text-[7px] font-[700] text-[#16853B]">
             Beta
           </span>
         </span>
@@ -1009,7 +554,7 @@ export default async function DashboardPage({
           </div>
 
           <div className="min-w-0">
-            <div className="text-[11px] font-[720] text-[#10203a]">
+            <div className="text-[11px] font-[700] text-[#10203a]">
               Ask MileVoxa
             </div>
             <div className="mt-1 text-[8px] leading-[1.35] text-[#6a7d93]">
@@ -1056,16 +601,18 @@ function DashboardMetric({
   tone,
   icon,
   change,
+  changeTone = "neutral",
 }: {
   label: string;
   value: string;
   tone: "green" | "blue" | "red" | "purple";
   icon: string;
   change: string;
+  changeTone?: "positive" | "negative" | "neutral";
 }) {
   const palette = {
     green: { stroke: "#22a861", soft: "#eaf8f0", text: "#22a861" },
-    blue: { stroke: "#428df0", soft: "#edf5ff", text: "#3188ec" },
+    blue: { stroke: CHART_PALETTE.navy, soft: "rgba(16,34,56,.08)", text: CHART_PALETTE.navy },
     red: { stroke: "#ee646b", soft: "#fff0f1", text: "#eb5862" },
     purple: { stroke: "#6f63f4", soft: "#f1efff", text: "#6b5fe9" },
   }[tone];
@@ -1084,7 +631,14 @@ function DashboardMetric({
         <div className="fp-number fp-dashboard-metric-value">{value}</div>
         <div
           className="fp-dashboard-metric-change"
-          style={{ color: tone === "red" ? "#ea535d" : "#29985b" }}
+          style={{
+            color:
+              changeTone === "positive"
+                ? CHART_PALETTE.green
+                : changeTone === "negative"
+                  ? CHART_PALETTE.red
+                  : CHART_PALETTE.gray,
+          }}
         >
           {change}
         </div>
@@ -1103,10 +657,10 @@ function MetricMiniChart({
   tone: "green" | "blue" | "red" | "purple";
 }) {
   const config = {
-    green: { stroke: "#22a861", fill: "rgba(34,168,97,.09)", data: [28,24,26,20,23,16,19,13,15,10,7] },
-    blue: { stroke: "#428df0", fill: "rgba(66,141,240,.09)", data: [29,25,27,20,24,16,20,13,16,10,6] },
-    red: { stroke: "#ee646b", fill: "rgba(238,100,107,.09)", data: [30,26,28,21,24,17,20,13,15,9,5] },
-    purple: { stroke: "#6f63f4", fill: "rgba(111,99,244,.09)", data: [28,24,27,20,23,15,19,12,15,9,5] },
+    green: { stroke: CHART_PALETTE.green, fill: "rgba(22,133,59,.09)", data: [28,24,26,20,23,16,19,13,15,10,7] },
+    blue: { stroke: CHART_PALETTE.navy, fill: "rgba(16,34,56,.09)", data: [29,25,27,20,24,16,20,13,16,10,6] },
+    red: { stroke: CHART_PALETTE.red, fill: "rgba(220,38,38,.09)", data: [30,26,28,21,24,17,20,13,15,9,5] },
+    purple: { stroke: CHART_PALETTE.purple, fill: "rgba(124,58,237,.09)", data: [28,24,27,20,23,15,19,12,15,9,5] },
   }[tone];
 
   const width = 104;
@@ -1179,9 +733,9 @@ function BarChart({
   return (
     <div className="pt-1">
       <div className="mb-3 flex items-center justify-center gap-5 text-[9px] font-[600] text-[#60728a]">
-        <ChartLegend color="#2f91f5" label="Revenue" />
-        <ChartLegend color="#f15b62" label="Expenses" />
-        <ChartLegend color="#58c98a" label="Profit" />
+        <ChartLegend color={CHART_PALETTE.navy} label="Revenue" />
+        <ChartLegend color={CHART_PALETTE.red} label="Expenses" />
+        <ChartLegend color={CHART_PALETTE.green} label="Profit" />
       </div>
 
       <div className="grid grid-cols-[34px_minmax(0,1fr)] gap-2">
@@ -1228,17 +782,17 @@ function BarChart({
                   <ChartBar
                     value={revenueValue}
                     max={chartMax}
-                    color="#2f91f5"
+                    color={CHART_PALETTE.navy}
                   />
                   <ChartBar
                     value={expenseSeries[index]}
                     max={chartMax}
-                    color="#f15b62"
+                    color={CHART_PALETTE.red}
                   />
                   <ChartBar
                     value={profitSeries[index]}
                     max={chartMax}
-                    color="#58c98a"
+                    color={CHART_PALETTE.green}
                   />
                 </div>
               ))}
@@ -1338,7 +892,7 @@ function ExpenseDonut({
       style={{ background }}
     >
       <div className="flex h-[86px] w-[86px] flex-col items-center justify-center rounded-full bg-white">
-        <div className="fp-number text-[13px] font-[760] text-[#0a1730]">
+        <div className="fp-number text-[13px] font-[800] text-[#0B1730]">
           {money(total)}
         </div>
         <div className="mt-1 text-[8px] font-[600] text-[#71839a]">
@@ -1374,8 +928,8 @@ function ExpenseLegendRow({
         </span>
       </div>
 
-      <span className="text-right text-[10px] font-[720] tabular-nums text-[#0a1730]">
-        {percentage.toFixed(0)}%
+      <span className="text-right text-[10px] font-[700] tabular-nums text-[#0B1730]">
+        {formatPercent(percentage)}
       </span>
     </div>
   );
@@ -1385,7 +939,7 @@ function ProgressRing({ value }: { value: number }) {
   return (
     <div className="relative flex h-[74px] w-[74px] items-center justify-center rounded-full"
       style={{ background: `conic-gradient(#17c978 ${value}%, #e7edf3 0)` }}>
-      <div className="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-white text-[11px] font-[720] text-[#0a1730]">
+      <div className="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-white text-[11px] font-[700] text-[#0B1730]">
         {value}%
       </div>
     </div>
@@ -1473,17 +1027,16 @@ function Activity({
   amount,
   when,
 }: {
-  type: "load" | "fuel" | "maintenance" | "truck" | "expense";
+  type: "load" | "fuel" | "maintenance" | "expense";
   text: string;
   amount: string;
   when: string;
 }) {
   const config = {
-    load: { bg: "#3f91f5", amount: "#18a95f" },
-    fuel: { bg: "#ef5a5f", amount: "#ef4e57" },
-    maintenance: { bg: "#6a5bf4", amount: "#ef4e57" },
-    truck: { bg: "#42bc78", amount: "#53677f" },
-    expense: { bg: "#546c86", amount: "#ef4e57" },
+    load: { bg: CHART_PALETTE.navy, amount: CHART_PALETTE.green },
+    fuel: { bg: CHART_PALETTE.green, amount: CHART_PALETTE.red },
+    maintenance: { bg: CHART_PALETTE.purple, amount: CHART_PALETTE.red },
+    expense: { bg: CHART_PALETTE.gray, amount: CHART_PALETTE.red },
   }[type];
 
   return (
@@ -1516,7 +1069,7 @@ function Activity({
 function ActivityIcon({
   type,
 }: {
-  type: "load" | "fuel" | "maintenance" | "truck" | "expense";
+  type: "load" | "fuel" | "maintenance" | "expense";
 }) {
   const common = {
     viewBox: "0 0 24 24",
@@ -1555,16 +1108,6 @@ function ActivityIcon({
     );
   }
 
-  if (type === "truck") {
-    return (
-      <svg {...common}>
-        <path d="M3 6h11v10H3z" />
-        <path d="M14 9h4l3 3v4h-7z" />
-        <circle cx="7" cy="18" r="2" />
-        <circle cx="18" cy="18" r="2" />
-      </svg>
-    );
-  }
 
   return (
     <svg {...common}>
@@ -1590,7 +1133,7 @@ function FleetKpi({
         <FleetKpiIcon type={icon} />
       </div>
 
-      <div className="fp-number mt-2 text-[19px] font-[760] text-[#0a1730]">
+      <div className="fp-number mt-2 text-[19px] font-[800] text-[#0B1730]">
         {value}
       </div>
 

@@ -1,3 +1,4 @@
+import { effectiveLoadStatus, isTerminalLoadStatus } from "@/lib/load-domain";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type MileVoxaAlert = {
@@ -202,40 +203,33 @@ export async function getMileVoxaAlerts(
     for (const load of loadResult.data ?? []) {
       if (!load.pickup_date) continue;
 
-      const status = String(load.status || "").toUpperCase();
+      const pickupDate = startOfDay(
+        new Date(`${load.pickup_date}T12:00:00`)
+      );
+      const status = effectiveLoadStatus(
+        load.status,
+        load.pickup_date,
+        today
+      );
+
+      // The load lifecycle closes stale UPCOMING rows as EXPIRED. Past-pickup
+      // "needs attention" alerts therefore disappear automatically instead of
+      // lingering after their actionable window has passed.
       if (
-        ["COMPLETED", "DELIVERED", "CANCELLED", "CANCELED"].includes(
-          status
-        )
+        pickupDate < today ||
+        isTerminalLoadStatus(status, load.pickup_date, today)
       ) {
         continue;
       }
 
-      const pickupDate = startOfDay(
-        new Date(`${load.pickup_date}T12:00:00`)
-      );
-
       const loadName = load.load_number
-        ? `Load #${load.load_number}`
+        ? `Load #${String(load.load_number).trim()}`
         : "Load";
       const route = `${load.pickup || "Unknown"} → ${
         load.delivery || "Unknown"
       }`;
 
-      if (pickupDate < today) {
-        alerts.push({
-          id: `load-past-pickup-${load.id}`,
-          category: "loads",
-          severity: "critical",
-          title: `${loadName} needs attention`,
-          description: `${route} has a pickup date of ${formatDate(
-            pickupDate
-          )} but is still ${status || "open"}.`,
-          href: "/loads",
-          dateLabel: formatDate(pickupDate),
-          sortDate: pickupDate.toISOString(),
-        });
-      } else if (pickupDate <= twoDays) {
+      if (pickupDate <= twoDays) {
         alerts.push({
           id: `load-upcoming-${load.id}`,
           category: "loads",
@@ -258,11 +252,7 @@ export async function getMileVoxaAlerts(
     info: 2,
   } as const;
 
-  return alerts
-    .filter(
-      (alert, index, all) =>
-        all.findIndex((item) => item.id === alert.id) === index
-    )
+  return dedupeMileVoxaAlerts(alerts)
     .sort((a, b) => {
       const severityDifference =
         severityRank[a.severity] - severityRank[b.severity];
@@ -271,6 +261,33 @@ export async function getMileVoxaAlerts(
 
       return a.sortDate.localeCompare(b.sortDate);
     });
+}
+
+
+export function dedupeMileVoxaAlerts(
+  alerts: MileVoxaAlert[]
+): MileVoxaAlert[] {
+  const seen = new Set<string>();
+  const result: MileVoxaAlert[] = [];
+
+  for (const alert of alerts) {
+    const key =
+      alert.category === "loads"
+        ? `loads:${normalizeAlertText(alert.title)}:${normalizeAlertText(
+            alert.dateLabel || ""
+          )}:${normalizeAlertText(alert.description)}`
+        : `id:${alert.id.toLowerCase()}`;
+
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(alert);
+  }
+
+  return result;
+}
+
+function normalizeAlertText(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 function startOfDay(date: Date) {

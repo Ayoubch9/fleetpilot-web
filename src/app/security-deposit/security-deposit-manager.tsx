@@ -1,4 +1,8 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
+import PromoBanner from "@/components/promo-banner";
+import KpiTile from "@/components/kpi-tile";
+import { formatMoney, formatPercent } from "@/lib/format";
 
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -298,37 +302,33 @@ export default function SecurityDepositManager({
       )}
 
       <div className="fp-deposit-kpis">
-        <DepositKpi
+        <KpiTile
           label="Held to Date"
-          value={usd(totals.heldToDate)}
-          note={`${totals.holdCount} hold transaction${
-            totals.holdCount === 1 ? "" : "s"
-          }`}
-          tone="blue"
+                    value={usd(totals.heldToDate)}
+                    note={`${totals.holdCount} hold transaction${
+                      totals.holdCount === 1 ? "" : "s"
+                    }`}
         />
-        <DepositKpi
+        <KpiTile
           label="Returned"
-          value={usd(totals.returned)}
-          note={`${totals.returnCount} repayment${
-            totals.returnCount === 1 ? "" : "s"
-          } recorded`}
-          tone="green"
+                    value={usd(totals.returned)}
+                    note={`${totals.returnCount} repayment${
+                      totals.returnCount === 1 ? "" : "s"
+                    } recorded`}
         />
-        <DepositKpi
+        <KpiTile
           label="Still Owed to You"
-          value={usd(totals.outstanding)}
-          note="Money still held by the company"
-          tone="purple"
+                    value={usd(totals.outstanding)}
+                    note="Money still held by the company"
         />
-        <DepositKpi
+        <KpiTile
           label="Target Remaining"
-          value={usd(targetRemaining)}
-          note={
-            settings.target_amount > 0
-              ? `${targetProgress.toFixed(0)}% of target collected`
-              : "No target amount configured"
-          }
-          tone="amber"
+                    value={usd(targetRemaining)}
+                    note={
+                      settings.target_amount > 0
+                        ? `${formatPercent(targetProgress)} of target collected`
+                        : "No target amount configured"
+                    }
         />
       </div>
 
@@ -509,26 +509,21 @@ export default function SecurityDepositManager({
               </div>
             </div>
 
-            <div className="fp-deposit-ledger-tabs">
-              {(["ALL", "HOLD", "RETURN", "ADJUSTMENT"] as const).map(
-                (filter) => (
-                  <button
-                    key={filter}
-                    type="button"
-                    className={historyFilter === filter ? "active" : ""}
-                    onClick={() => setHistoryFilter(filter)}
-                  >
-                    {filter === "ALL"
-                      ? "All"
-                      : filter === "HOLD"
-                        ? "Holds"
-                        : filter === "RETURN"
-                          ? "Returns"
-                          : "Adjustments"}
-                  </button>
+            <AppTabs
+              activeKey={historyFilter}
+              ariaLabel="Security deposit ledger"
+              items={[
+                { key: "ALL", label: "All" },
+                { key: "HOLD", label: "Holds" },
+                { key: "RETURN", label: "Returns" },
+                { key: "ADJUSTMENT", label: "Adjustments" },
+              ]}
+              onChange={(key) =>
+                setHistoryFilter(
+                  key as "ALL" | "HOLD" | "RETURN" | "ADJUSTMENT"
                 )
-              )}
-            </div>
+              }
+            />
 
             <div className="fp-deposit-table-wrap">
               <table className="fp-deposit-table">
@@ -752,6 +747,12 @@ export default function SecurityDepositManager({
             </form>
           </section>
 
+          <PromoBanner
+            headline="Protect cash flow without distorting profit."
+            subtext="Track money held and returned separately from operating expenses."
+            cta={{ label: "Review settlement", href: "/settlement" }}
+          />
+
           <section className="fp-deposit-side-card fp-deposit-explainer">
             <span>ACCOUNTING RULE</span>
             <h2>Holdback is not an expense.</h2>
@@ -785,25 +786,6 @@ export default function SecurityDepositManager({
   );
 }
 
-function DepositKpi({
-  label,
-  value,
-  note,
-  tone,
-}: {
-  label: string;
-  value: string;
-  note: string;
-  tone: "blue" | "green" | "purple" | "amber";
-}) {
-  return (
-    <div className={`fp-deposit-kpi ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{note}</small>
-    </div>
-  );
-}
 
 function MoneyInput({
   value,
@@ -905,9 +887,5 @@ function today() {
 }
 
 function usd(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(value || 0);
+  return formatMoney(value);
 }

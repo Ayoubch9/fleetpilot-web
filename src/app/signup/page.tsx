@@ -11,6 +11,7 @@ export default function SignupPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [companyNameEdited, setCompanyNameEdited] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,11 +22,21 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
 
+    const normalizedName = fullName.trim();
+    const resolvedCompanyName =
+      companyName.trim() ||
+      (normalizedName ? `${normalizedName} Trucking` : "My Trucking Business");
+
     const supabase = createClient();
     const { data, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, company_name: companyName } },
+      options: {
+        data: {
+          full_name: normalizedName,
+          company_name: resolvedCompanyName,
+        },
+      },
     });
 
     if (authError) {
@@ -44,14 +55,14 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
+    <main className="mv-signup-page grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
       <section className="relative hidden overflow-hidden border-r border-[#24364a] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <MileVoxaBrand onDark />
         <div>
           <div className="text-[10px] font-black uppercase tracking-[.2em] text-[#55b772]">Start your control center</div>
-          <h2 className="mt-5 max-w-lg text-5xl font-black leading-[1.02] tracking-[-.05em]">
+          <div className="mt-5 max-w-lg text-5xl font-black leading-[1.02] tracking-[-.05em]">
             Run the truck like a <span className="text-[#55b772]">business.</span>
-          </h2>
+          </div>
           <p className="mt-6 max-w-md leading-7 text-[#9fb0bf]">
             Create one account for your loads, costs, fleet, maintenance and weekly profit — shared across MileVoxa web and mobile.
           </p>
@@ -73,8 +84,32 @@ export default function SignupPage() {
             <SocialAuthButtons />
             <div className="fp-auth-divider"><span>or create account with email</span></div>
             <form onSubmit={submit} className="space-y-5">
-              <Field label="Your name" value={fullName} set={setFullName} placeholder="Full name" />
-              <Field label="Company name" value={companyName} set={setCompanyName} placeholder="Your trucking company" />
+              <Field
+                label="Your name"
+                value={fullName}
+                set={(value) => {
+                  setFullName(value);
+                  if (!companyNameEdited) {
+                    const clean = value.trim();
+                    setCompanyName(clean ? `${clean} Trucking` : "");
+                  }
+                }}
+                placeholder="Full name"
+              />
+              <Field
+                label="Company name (optional)"
+                value={companyName}
+                set={(value) => {
+                  setCompanyNameEdited(true);
+                  setCompanyName(value);
+                }}
+                placeholder={
+                  fullName.trim()
+                    ? `${fullName.trim()} Trucking`
+                    : "My Trucking Business"
+                }
+                required={false}
+              />
               <Field label="Email" type="email" value={email} set={setEmail} placeholder="you@example.com" />
               <Field label="Password" type="password" value={password} set={setPassword} placeholder="Create a password" />
               {error && <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-600">{error}</div>}
@@ -95,11 +130,25 @@ export default function SignupPage() {
   );
 }
 
-function Field({ label, type = "text", value, set, placeholder }: { label: string; type?: string; value: string; set: (value: string) => void; placeholder: string }) {
+function Field({
+  label,
+  type = "text",
+  value,
+  set,
+  placeholder,
+  required = true,
+}: {
+  label: string;
+  type?: string;
+  value: string;
+  set: (value: string) => void;
+  placeholder: string;
+  required?: boolean;
+}) {
   return (
     <label className="block">
       <span className="mb-2 block text-[10px] font-black uppercase tracking-[.12em] text-[#7b8da2]">{label}</span>
-      <input required type={type} value={value} onChange={(event) => set(event.target.value)} placeholder={placeholder} className="mv-auth-input" />
+      <input required={required} type={type} value={value} onChange={(event) => set(event.target.value)} placeholder={placeholder} className="mv-auth-input" />
     </label>
   );
 }

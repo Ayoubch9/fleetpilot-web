@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/format";
 export function num(value: unknown): number {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string") {
@@ -50,12 +51,7 @@ export function displayDate(date: Date): string {
 }
 
 export function money(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  return formatMoney(value);
 }
 
 export function selectedWeek(value?: string): Date {

@@ -1,5 +1,8 @@
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
+import PromoBanner from "@/components/promo-banner";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddTruckForm from "./add-truck-form";
@@ -162,19 +165,31 @@ export default async function TrucksPage({
         <div className="fp-trucks-layout mt-4">
           <div className="min-w-0">
             <div className="fp-truck-kpi-grid">
-              <TruckKpi label="Total Trucks" value={allTrucks.length} note="↑ 2 vs last month" tone="blue" icon="truck" />
-              <TruckKpi label="Active Trucks" value={activeCount} note="↑ 20% vs last month" tone="green" icon="active" />
-              <TruckKpi label="In Service" value={inServiceCount} note="↓ 50% vs last month" tone="purple" icon="service" />
-              <TruckKpi label="Inactive Trucks" value={inactiveCount} note="— 0% vs last month" tone="red" icon="inactive" />
+              <KpiTile
+                label="Total Trucks" value={allTrucks.length} note="—"
+              />
+              <KpiTile
+                label="Active Trucks" value={activeCount} note="—"
+              />
+              <KpiTile
+                label="In Service" value={inServiceCount} note="—"
+              />
+              <KpiTile
+                label="Inactive Trucks" value={inactiveCount} note="—"
+              />
             </div>
 
             <section className="fp-trucks-table-card mt-4">
-              <div className="fp-truck-tabs">
-                <TruckTab href={filterHref("all", q, makeFilter, sort)} label="All Trucks" count={allTrucks.length} active={statusFilter === "all"} />
-                <TruckTab href={filterHref("active", q, makeFilter, sort)} label="Active" count={activeCount} active={statusFilter === "active"} />
-                <TruckTab href={filterHref("service", q, makeFilter, sort)} label="In Service" count={inServiceCount} active={statusFilter === "service"} />
-                <TruckTab href={filterHref("inactive", q, makeFilter, sort)} label="Inactive" count={inactiveCount} active={statusFilter === "inactive"} />
-              </div>
+              <AppTabs
+                activeKey={statusFilter}
+                ariaLabel="Truck status"
+                items={[
+                  { key: "all", label: "All Trucks", count: allTrucks.length, href: filterHref("all", q, makeFilter, sort) },
+                  { key: "active", label: "Active", count: activeCount, href: filterHref("active", q, makeFilter, sort) },
+                  { key: "service", label: "In Service", count: inServiceCount, href: filterHref("service", q, makeFilter, sort) },
+                  { key: "inactive", label: "Inactive", count: inactiveCount, href: filterHref("inactive", q, makeFilter, sort) },
+                ]}
+              />
 
               <form action="/trucks" className="fp-truck-filterbar">
                 <label className="fp-truck-search">
@@ -361,15 +376,11 @@ export default async function TrucksPage({
               </div>
             </section>
 
-            <div className="fp-truck-promo">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/28 to-transparent" />
-              <div className="relative z-10">
-                <div className="text-[16px] font-[740] leading-[1.2] text-white">
-                  Well maintained<br />trucks drive<br />greater profits.
-                </div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
-              </div>
-            </div>
+            <PromoBanner
+              headline="Well-maintained trucks drive greater profits."
+              subtext="Keep fleet condition, mileage, and service visibility connected."
+              cta={{ label: "Review maintenance", href: "/maintenance" }}
+            />
           </aside>
         </div>
       </div>
@@ -377,103 +388,8 @@ export default async function TrucksPage({
   );
 }
 
-function TruckKpi({
-  label,
-  value,
-  note,
-  tone,
-  icon,
-}: {
-  label: string;
-  value: number;
-  note: string;
-  tone: "blue" | "green" | "purple" | "red";
-  icon: "truck" | "active" | "service" | "inactive";
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-    purple: { color: "#765ce7", soft: "#f0edff" },
-    red: { color: "#e75b63", soft: "#fff0f1" },
-  }[tone];
 
-  return (
-    <div className="fp-truck-kpi">
-      <div className="fp-truck-kpi-icon" style={{ color: palette.color, backgroundColor: palette.soft }}>
-        <TruckKpiIcon type={icon} />
-      </div>
-      <div>
-        <div className="fp-truck-kpi-label">{label}</div>
-        <div className="fp-number fp-truck-kpi-value">{value}</div>
-        <div className={`fp-truck-kpi-note ${tone === "red" ? "negative" : ""}`}>{note}</div>
-      </div>
-    </div>
-  );
-}
 
-function TruckKpiIcon({ type }: { type: "truck" | "active" | "service" | "inactive" }) {
-  const common = {
-    viewBox: "0 0 24 24",
-    className: "h-[17px] w-[17px] fill-none stroke-current",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (type === "truck") {
-    return (
-      <svg {...common}>
-        <path d="M3 7h11v9H3z" />
-        <path d="M14 10h4l3 3v3h-7z" />
-        <circle cx="7" cy="18" r="2" />
-        <circle cx="18" cy="18" r="2" />
-      </svg>
-    );
-  }
-
-  if (type === "active") {
-    return (
-      <svg {...common}>
-        <circle cx="12" cy="12" r="8" />
-        <path d="m8 12 2.6 2.6L16 9" />
-      </svg>
-    );
-  }
-
-  if (type === "service") {
-    return (
-      <svg {...common}>
-        <path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...common}>
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 7v10" />
-    </svg>
-  );
-}
-
-function TruckTab({
-  href,
-  label,
-  count,
-  active,
-}: {
-  href: string;
-  label: string;
-  count: number;
-  active: boolean;
-}) {
-  return (
-    <Link href={href} className={`fp-truck-tab ${active ? "active" : ""}`}>
-      <span>{label}</span>
-      <span className="fp-truck-tab-count">{count}</span>
-    </Link>
-  );
-}
 
 function TruckDonut({
   total,

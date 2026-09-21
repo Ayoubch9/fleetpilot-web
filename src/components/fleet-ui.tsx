@@ -248,7 +248,7 @@ export function SectionPanel({
   return (
     <section className={`fp-card fp-subtle-card overflow-hidden rounded-[14px] ${className}`}>
       <div className="flex items-center justify-between gap-4 px-[18px] py-[14px]">
-        <h2 className="text-[14.5px] font-[740] tracking-[-.02em] text-[#0a1730]">{title}</h2>
+        <h2 className="text-[14.5px] font-[700] tracking-[-.02em] text-[#0B1730]">{title}</h2>
         {right}
       </div>
       {children}
@@ -264,7 +264,7 @@ export function StatusBadge({
   tone?: "blue" | "green" | "red" | "orange" | "gray";
 }) {
   const colors = {
-    blue: "bg-[#e4f1ff] text-[#147cdc]",
+    blue: "bg-[#e4f1ff] text-[#16853B]",
     green: "bg-[#e0f7eb] text-[#12955a]",
     red: "bg-[#fde8ea] text-[#d94754]",
     orange: "bg-[#fff1dc] text-[#cc8116]",

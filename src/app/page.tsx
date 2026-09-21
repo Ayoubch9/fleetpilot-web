@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import PublicLayout from "@/components/public-layout";
 import Link from "next/link";
+import { publicPageMetadata, SITE_URL } from "@/lib/seo";
+
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "MileVoxa | Trucking Profit, Expenses & Fleet Management",
+  description:
+    "Track loads, fuel, expenses, maintenance, settlements, and real weekly trucking profit in one connected system for owner-operators and small fleets.",
+  path: "/",
+});
 
 const features = [
   {
@@ -49,32 +61,86 @@ const outcomes = [
   ["Run one system", "Loads, trucks, fuel, expenses, maintenance and settlement data stay connected instead of being spread across spreadsheets."],
 ];
 
+const homepageFaqs = [
+  {
+    question: "Do I need a credit card for the trial?",
+    answer:
+      "No. You can create your MileVoxa account and use the 14-day trial without entering card details.",
+  },
+  {
+    question: "Is MileVoxa only for large fleets?",
+    answer:
+      "No. The product is designed around owner-operators and small fleets that need clear operating and profitability data without enterprise complexity.",
+  },
+  {
+    question: "Can I use the same account on web and mobile?",
+    answer:
+      "Yes. Web and mobile use the same MileVoxa account and company data, so your operation stays connected across both.",
+  },
+  {
+    question: "Can MileVoxa track more than revenue?",
+    answer:
+      "Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views.",
+  },
+  {
+    question: "What happens after the trial?",
+    answer:
+      "On day 15, the free trial ends and there is no automatic charge because no card is required to start. The current published MileVoxa Pro price is $29/month per company, not per truck. Paid billing begins only when the company owner actively completes Stripe checkout, and cancellation is handled through the Stripe billing portal. If checkout is not yet visible in the current UI when your trial ends, you are not charged and your company data remains tied to your MileVoxa account.",
+  },
+  {
+    question: "Can I import dispatcher load information?",
+    answer:
+      "Yes. MileVoxa includes a Telegram-style load importer that can read common dispatch message fields and prefill a new load.",
+  },
+];
+
+
+
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "MileVoxa",
+  url: SITE_URL,
+  logo: `${SITE_URL}/branding/milevoxa-logo-full.png`,
+  email: "Support@MileVoxa.com",
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "MileVoxa",
+  url: SITE_URL,
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homepageFaqs.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+};
 export default function HomePage() {
   return (
-    <main className="fp-marketing-page fp-marketing min-h-screen bg-white text-[#0b1730]">
-      <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-          <img
-            src="/branding/milevoxa-logo-full.png"
-            width={2000}
-            height={612}
-            className="mv-marketing-logo"
-            alt="MileVoxa — Run your trucking business with clarity."
-          />
-        </Link>
-
-        <nav className="fp-marketing-nav" aria-label="Main navigation">
-          <a href="#features">Features</a>
-          <Link href="/tools">Free Tools</Link>
-          <Link href="/pricing">Pricing</Link>
-          <a href="#about">About</a>
-        </nav>
-
-        <div className="fp-marketing-header-actions">
-          <Link href="/login" className="fp-marketing-button secondary">Sign In</Link>
-          <Link href="/signup" className="fp-marketing-button primary">Start Free</Link>
-        </div>
-      </header>
+    <PublicLayout mainClassName="fp-marketing-page fp-marketing min-h-screen bg-white text-[#0b1730]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      
 
       <section className="fp-marketing-hero">
         <div className="fp-marketing-hero-copy">
@@ -100,8 +166,8 @@ export default function HomePage() {
             <Link href="/signup" className="fp-marketing-button primary large">
               Start 14-Day Free Trial <span>→</span>
             </Link>
-            <Link href="/login" className="fp-marketing-button secondary large">
-              Open Web App
+            <Link href="/tools" className="fp-marketing-button secondary large">
+              See how it works
             </Link>
           </div>
 
@@ -113,18 +179,14 @@ export default function HomePage() {
         </div>
 
         <div className="fp-marketing-hero-visual">
-          <img
+          <Image
             src="https://images.pexels.com/photos/27099095/pexels-photo-27099095.jpeg?auto=compress&cs=tinysrgb&w=2400"
             alt="Semi truck on the road"
-            loading="eager"
-            fetchPriority="high"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 52vw"
           />
           <div className="fp-marketing-hero-fade" />
-          <div className="fp-marketing-road-copy">
-            <strong>DRIVE SMARTER.</strong>
-            <strong>EARN MORE.</strong>
-            <span />
-          </div>
 
         </div>
       </section>
@@ -260,6 +322,55 @@ export default function HomePage() {
         </Link>
       </section>
 
+      <section className="fp-marketing-social-proof" aria-labelledby="social-proof-heading">
+        <div className="fp-marketing-section-heading compact">
+          <div>
+            <span>Built for real trucking operations</span>
+            <h2 id="social-proof-heading">Clarity that should show up in the numbers.</h2>
+          </div>
+          <p>
+            These placeholders show the proof structure we want here. Replace them
+            with verified customer quotes and real aggregate usage numbers before
+            treating this section as published social proof.
+          </p>
+        </div>
+
+        <div className="fp-marketing-testimonial-grid">
+          <Testimonial
+            quote="I stopped rebuilding the same weekly numbers in three different places. MileVoxa gives me one view of the load, the costs and what is actually left."
+            name="TODO — Owner-operator customer"
+            detail="TODO — City / operation type"
+          />
+          <Testimonial
+            quote="The weekly settlement view makes it easier to see which costs are changing before they turn into a month-end surprise."
+            name="TODO — Small-fleet customer"
+            detail="TODO — Fleet size / region"
+          />
+          <Testimonial
+            quote="I can check loads, fuel, maintenance and profit without jumping between a spreadsheet, receipts and messages."
+            name="TODO — Fleet owner customer"
+            detail="TODO — Company / market"
+          />
+        </div>
+
+        <div className="fp-marketing-proof-stats">
+          <ProofStat value="TODO" label="Trucks tracked" />
+          <ProofStat value="TODO" label="Miles logged" />
+          <ProofStat value="TODO" label="Loads managed" />
+          <ProofStat value="TODO" label="Operating weeks reviewed" />
+        </div>
+
+        <div className="fp-marketing-social-proof-trial">
+          <div className="fp-marketing-trial-pill">
+            <span>14 DAYS FREE</span>
+            <strong>No card required to start</strong>
+          </div>
+          <Link href="/signup" className="fp-marketing-button primary">
+            Start 14-Day Free Trial <span>→</span>
+          </Link>
+        </div>
+      </section>
+
       <section className="fp-marketing-pricing-preview">
         <div>
           <span>Simple subscription</span>
@@ -302,12 +413,9 @@ export default function HomePage() {
         </div>
 
         <div className="fp-marketing-faq-grid">
-          <Faq q="Do I need a credit card for the trial?" a="No. You can create your MileVoxa account and use the 14-day trial without entering card details." />
-          <Faq q="Is MileVoxa only for large fleets?" a="No. The product is designed around owner-operators and small fleets that need clear operating and profitability data without enterprise complexity." />
-          <Faq q="Can I use the same account on web and mobile?" a="Yes. MileVoxa is designed around the same account and Supabase company data so the web and mobile experiences can stay connected." />
-          <Faq q="Can MileVoxa track more than revenue?" a="Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views." />
-          <Faq q="What happens after the trial?" a="You can choose the MileVoxa subscription when paid billing is activated. Your operating data remains tied to your account." />
-          <Faq q="Can I import dispatcher load information?" a="Yes. MileVoxa includes a Telegram-style load importer that can read common dispatch message fields and prefill a new load." />
+          {homepageFaqs.map((item) => (
+            <Faq key={item.question} q={item.question} a={item.answer} />
+          ))}
         </div>
       </section>
 
@@ -327,28 +435,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="fp-marketing-footer">
-        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-          <img
-            src="/branding/milevoxa-logo-full.png"
-            width={2000}
-            height={612}
-            className="mv-marketing-logo"
-            alt="MileVoxa — Run your trucking business with clarity."
-          />
-        </Link>
-        <div>
-          <a href="#features">Features</a>
-          <Link href="/pricing">Pricing</Link>
-          <a href="#about">About</a>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/data-deletion">Data Deletion</Link>
-          <Link href="/login">Sign In</Link>
-        </div>
-        <span>© 2026 MileVoxa</span>
-      </footer>
-    </main>
+      
+    </PublicLayout>
   );
 }
 
@@ -368,6 +456,37 @@ function AboutPoint({ number, title, text }: { number: string; title: string; te
       <h3>{title}</h3>
       <p>{text}</p>
     </article>
+  );
+}
+
+function Testimonial({
+  quote,
+  name,
+  detail,
+}: {
+  quote: string;
+  name: string;
+  detail: string;
+}) {
+  return (
+    <article className="fp-marketing-testimonial">
+      <span className="fp-marketing-placeholder-badge">TODO PLACEHOLDER</span>
+      <blockquote>“{quote}”</blockquote>
+      <div>
+        <strong>{name}</strong>
+        <span>{detail}</span>
+      </div>
+    </article>
+  );
+}
+
+function ProofStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="fp-marketing-proof-stat">
+      <strong>{value}</strong>
+      <span>{label}</span>
+      <small>TODO — replace with verified aggregate</small>
+    </div>
   );
 }
 

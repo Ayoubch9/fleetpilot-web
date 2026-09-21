@@ -5,7 +5,7 @@ type TruckRow = {
   revenue: number;
   expenses: number;
   profit: number;
-  loads: number;
+  completedLoads: number;
 };
 
 export default function ReportActions({
@@ -19,13 +19,13 @@ export default function ReportActions({
 
   function exportCsv() {
     const rows = [
-      ["Truck", "Revenue", "Expenses", "Net Profit", "Loads"],
+      ["Truck", "Revenue", "Expenses", "Net Profit", "Completed Loads"],
       ...truckRows.map((row) => [
         `#${row.unit}`,
         row.revenue.toFixed(2),
         row.expenses.toFixed(2),
         row.profit.toFixed(2),
-        String(row.loads),
+        String(row.completedLoads),
       ]),
     ];
 

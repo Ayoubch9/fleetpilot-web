@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.0.6",
+  "version": "4.3.9",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,7 +8,27 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run build"
+    "check": "npm run typecheck && npm run build",
+    "test:dashboard-domain": "node scripts/dashboard-domain.test.cjs",
+    "test:load-domain": "node scripts/load-domain.test.cjs",
+    "test:expense-taxonomy": "node scripts/expense-taxonomy.test.cjs",
+    "test:report-freshness": "node scripts/report-freshness.test.cjs",
+    "test:settlement-history": "node scripts/settlement-history.test.cjs",
+    "test:auth-recovery": "node scripts/auth-recovery.test.cjs",
+    "test:homepage-conversion": "node scripts/homepage-conversion.test.cjs",
+    "test:pricing-accuracy": "node scripts/pricing-accuracy.test.cjs",
+    "test:tools-routing": "node scripts/tools-routing.test.cjs",
+    "test:contact-legal-404": "node scripts/contact-legal-404.test.cjs",
+    "test:support-legal-final": "node scripts/support-legal-final.test.cjs",
+    "test:seo-foundation": "node scripts/seo-foundation.test.cjs",
+    "test:homepage-visual-polish": "node scripts/homepage-visual-polish.test.cjs",
+    "test:pricing-visual-contract": "node scripts/pricing-visual-contract.test.cjs",
+    "test:tools-visual-contract": "node scripts/tools-visual-contract.test.cjs",
+    "test:signup-visual-polish": "node scripts/signup-visual-polish.test.cjs",
+    "test:login-visual-polish": "node scripts/login-visual-polish.test.cjs",
+    "test:legal-readability": "node scripts/legal-shared-chrome-readability.test.cjs",
+    "test:branded-404": "node scripts/branded-404.test.cjs",
+    "test:loads-trucks-promo": "node scripts/loads-trucks-promo.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

@@ -1,9 +1,13 @@
+import { SUPPORT_EMAIL } from "@/lib/support";
 import LegalPage, { LegalSection } from "@/components/legal-page";
+import { publicPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = publicPageMetadata({
   title: "Privacy Policy",
-  description: "How MileVoxa handles account and trucking-business data.",
-};
+  description:
+    "Learn how MileVoxa collects, uses, protects, and retains account and trucking-business data.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
@@ -126,6 +130,11 @@ export default function PrivacyPage() {
           Signed-in users can manage privacy-related actions through MileVoxa
           Settings. Account deletion instructions are also available on the
           public Data Deletion page.
+        </p>
+        <p>
+          For privacy, deletion, or support questions, contact MileVoxa at{" "}
+          <strong>{SUPPORT_EMAIL}</strong>. We aim to respond to support
+          inquiries within 48 hours.
         </p>
       </LegalSection>
     </LegalPage>

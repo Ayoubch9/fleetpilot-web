@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type Load = {
   id: string;
@@ -32,6 +33,7 @@ const statuses = [
   "DELIVERED",
   "COMPLETED",
   "CANCELLED",
+  "EXPIRED",
 ];
 
 export default function LoadActions({
@@ -74,22 +76,40 @@ export default function LoadActions({
 
     const form = new FormData(event.currentTarget);
     const rate = Number(form.get("rate") || 0);
-    const loadedMiles = Number(form.get("loaded_miles") || 0);
-    const deadheadMiles = Number(form.get("deadhead_miles") || 0);
+    const mileage = validateLoadMiles(
+      form.get("loaded_miles"),
+      form.get("deadhead_miles")
+    );
+    const pickup = normalizeUsLocation(String(form.get("pickup") || ""));
+    const delivery = normalizeUsLocation(String(form.get("delivery") || ""));
 
     if (
       !form.get("truck_id") ||
       !form.get("load_number") ||
-      !form.get("pickup") ||
-      !form.get("delivery") ||
       !form.get("pickup_date") ||
       !form.get("delivery_date") ||
-      rate <= 0 ||
-      loadedMiles < 0 ||
-      deadheadMiles < 0
+      rate <= 0
     ) {
       setSaving(false);
       setError("Complete the required fields with valid values.");
+      return;
+    }
+
+    if (!mileage.ok) {
+      setSaving(false);
+      setError(mileage.error);
+      return;
+    }
+
+    if (!pickup.ok) {
+      setSaving(false);
+      setError(`Pickup: ${pickup.error}`);
+      return;
+    }
+
+    if (!delivery.ok) {
+      setSaving(false);
+      setError(`Delivery: ${delivery.error}`);
       return;
     }
 
@@ -100,13 +120,13 @@ export default function LoadActions({
         truck_id: String(form.get("truck_id")),
         load_number: String(form.get("load_number")).trim(),
         broker: String(form.get("broker") || "").trim(),
-        pickup: String(form.get("pickup")).trim(),
-        delivery: String(form.get("delivery")).trim(),
+        pickup: pickup.value,
+        delivery: delivery.value,
         pickup_date: String(form.get("pickup_date")),
         delivery_date: String(form.get("delivery_date")),
         rate,
-        loaded_miles: loadedMiles,
-        deadhead_miles: deadheadMiles,
+        loaded_miles: mileage.loadedMiles,
+        deadhead_miles: mileage.deadheadMiles,
         status: String(form.get("status") || "UPCOMING"),
       })
       .eq("id", load.id);
@@ -385,6 +405,7 @@ function Field({
   label,
   type = "text",
   step,
+  min,
   defaultValue,
   required = false,
 }: {
@@ -392,6 +413,7 @@ function Field({
   label: string;
   type?: string;
   step?: string;
+  min?: string;
   defaultValue?: string;
   required?: boolean;
 }) {
@@ -402,6 +424,7 @@ function Field({
         name={name}
         type={type}
         step={step}
+        min={min}
         defaultValue={defaultValue}
         required={required}
       />

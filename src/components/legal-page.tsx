@@ -1,6 +1,5 @@
-import Link from "next/link";
+import PublicLayout from "@/components/public-layout";
 import type { ReactNode } from "react";
-import MileVoxaBrand from "@/components/milevoxa-brand";
 
 export default function LegalPage({
   eyebrow,
@@ -14,17 +13,7 @@ export default function LegalPage({
   children: ReactNode;
 }) {
   return (
-    <main className="fp-legal-page">
-      <header className="fp-legal-header">
-        <MileVoxaBrand showTagline={false} className="fp-legal-brand" />
-        <nav>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/data-deletion">Data Deletion</Link>
-          <Link href="/login">Sign In</Link>
-        </nav>
-      </header>
-
+    <PublicLayout mainClassName="fp-legal-page">
       <article className="fp-legal-shell">
         <div className="fp-legal-hero">
           <span>{eyebrow}</span>
@@ -35,17 +24,7 @@ export default function LegalPage({
 
         <div className="fp-legal-body">{children}</div>
       </article>
-
-      <footer className="fp-legal-footer">
-        <span>© 2026 MileVoxa</span>
-        <div>
-          <Link href="/">Home</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/data-deletion">Data Deletion</Link>
-        </div>
-      </footer>
-    </main>
+    </PublicLayout>
   );
 }
 

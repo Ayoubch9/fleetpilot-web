@@ -1,4 +1,5 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
 
 import { useMemo, useState } from "react";
 import DocumentActions from "./document-actions";
@@ -140,26 +141,16 @@ export default function DocumentCenter({
 
   return (
     <section className="fp-panel">
-      <div className="fp-tabs-row fp-doc-live-tabs">
-        <button
-          className={tab === "all" ? "active" : ""}
-          onClick={() => setTab("all")}
-        >
-          All Documents <b>{counts.all}</b>
-        </button>
-        <button
-          className={tab === "expiring" ? "active" : ""}
-          onClick={() => setTab("expiring")}
-        >
-          Expiring Soon <b>{counts.expiring}</b>
-        </button>
-        <button
-          className={tab === "expired" ? "active" : ""}
-          onClick={() => setTab("expired")}
-        >
-          Expired <b>{counts.expired}</b>
-        </button>
-      </div>
+      <AppTabs
+        activeKey={tab}
+        ariaLabel="Document status"
+        items={[
+          { key: "all", label: "All Documents", count: counts.all },
+          { key: "expiring", label: "Expiring Soon", count: counts.expiring },
+          { key: "expired", label: "Expired", count: counts.expired },
+        ]}
+        onChange={(key) => setTab(key as Tab)}
+      />
 
       <div className="fp-doc-live-filters">
         <div className="fp-doc-search">

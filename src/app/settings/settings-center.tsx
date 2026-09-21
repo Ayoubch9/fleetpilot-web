@@ -1,4 +1,6 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
+import { formatMoney, formatPercent } from "@/lib/format";
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
@@ -653,7 +655,7 @@ async function removeAvatar() {
   async function resetPassword() {
     setMessage("");
     const supabase = createClient();
-    const redirectTo = `${window.location.origin}/login`;
+    const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
     });
@@ -745,17 +747,22 @@ async function removeAvatar() {
 
   return (
     <>
-      <div className="fp-settings-tabbar">
-        <TabButton label="Profile" active={tab === "profile"} onClick={() => setTab("profile")} />
-        <TabButton label="Company" active={tab === "company"} onClick={() => setTab("company")} />
-        <TabButton label="Business Costs" active={tab === "business-costs"} onClick={() => setTab("business-costs")} />
-        <TabButton label="Preferences" active={tab === "preferences"} onClick={() => setTab("preferences")} />
-        <TabButton label="Notifications" active={tab === "notifications"} onClick={() => setTab("notifications")} />
-        <TabButton label="Subscription" active={tab === "subscription"} onClick={() => setTab("subscription")} />
-        <TabButton label="Data & Export" active={tab === "data"} onClick={() => setTab("data")} />
-        <TabButton label="Legal & Privacy" active={tab === "legal"} onClick={() => setTab("legal")} />
-        <TabButton label="Security" active={tab === "security"} onClick={() => setTab("security")} />
-      </div>
+      <AppTabs
+        activeKey={tab}
+        ariaLabel="Settings sections"
+        items={[
+          { key: "profile", label: "Profile" },
+          { key: "company", label: "Company" },
+          { key: "business-costs", label: "Business Costs" },
+          { key: "preferences", label: "Preferences" },
+          { key: "notifications", label: "Notifications" },
+          { key: "subscription", label: "Subscription" },
+          { key: "data", label: "Data & Export" },
+          { key: "legal", label: "Legal & Privacy" },
+          { key: "security", label: "Security" },
+        ]}
+        onChange={(key) => setTab(key as SettingsTab)}
+      />
 
       {message && <div className="fp-settings-global-message">{message}</div>}
 
@@ -1210,11 +1217,11 @@ async function removeAvatar() {
                   <span>
                     Current:{" "}
                     {companyFees.is_revenue_fee_active
-                      ? `${companyFees.revenue_fee_percent}% revenue fee`
+                      ? `${formatPercent(companyFees.revenue_fee_percent)} revenue fee`
                       : "Revenue fee disabled"}
                     {" · "}
                     {companyFees.is_mileage_fee_active
-                      ? `$${companyFees.mileage_fee_per_mile.toFixed(2)}/mi`
+                      ? `${formatMoney(companyFees.mileage_fee_per_mile)}/mi`
                       : "Mileage fee disabled"}
                   </span>
                   <button
@@ -2214,21 +2221,6 @@ function loadImage(file: File) {
 }
 
 
-function TabButton({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button className={active ? "active" : ""} onClick={onClick}>
-      {label}
-    </button>
-  );
-}
 
 function SelectSetting({
   label,

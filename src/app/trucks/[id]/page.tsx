@@ -1,3 +1,4 @@
+import AppTabs from "@/components/app-tabs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
@@ -141,24 +142,18 @@ export default async function TruckProfilePage({
           </div>
         </section>
 
-        <nav className="fp-truck-profile-tabs">
-          {[
-            ["overview", "Overview"],
-            ["loads", "Loads"],
-            ["expenses", "Expenses"],
-            ["maintenance", "Maintenance"],
-            ["fuel", "Fuel"],
-            ["history", "History"],
-          ].map(([key, label]) => (
-            <Link
-              key={key}
-              href={`/trucks/${id}${key === "overview" ? "" : `?tab=${key}`}`}
-              className={tab === key ? "active" : ""}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
+        <AppTabs
+          activeKey={tab}
+          ariaLabel="Truck profile sections"
+          items={[
+            { key: "overview", label: "Overview", href: `/trucks/${id}` },
+            { key: "loads", label: "Loads", href: `/trucks/${id}?tab=loads` },
+            { key: "expenses", label: "Expenses", href: `/trucks/${id}?tab=expenses` },
+            { key: "maintenance", label: "Maintenance", href: `/trucks/${id}?tab=maintenance` },
+            { key: "fuel", label: "Fuel", href: `/trucks/${id}?tab=fuel` },
+            { key: "history", label: "History", href: `/trucks/${id}?tab=history` },
+          ]}
+        />
 
         <div className="fp-detail-kpi-grid">
           <DetailKpi label="Revenue" value={money(revenue)} tone="blue" />

@@ -1,3 +1,12 @@
+import {
+  latestDatedValue,
+  reportFreshnessLabel,
+} from "@/lib/report-freshness";
+import { effectiveLoadStatus, isCompletedLoadStatus } from "@/lib/load-domain";
+import { calculateWeekFinance } from "@/lib/week-finance";
+import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
+import KpiTile from "@/components/kpi-tile";
+import { formatMoney, formatPercent } from "@/lib/format";
 import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import ReportActions from "./report-actions";
@@ -7,22 +16,60 @@ type Expense = { truck_id:string|null; amount:number|string|null; category:strin
 type Truck = { id:string; unit_number:string };
 
 const n=(v:unknown)=>Number(v||0)||0;
-const money=(v:number)=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(v);
+const money=(v:number)=>formatMoney(v);
 
 export default async function ReportsPage() {
   const { supabase, fullName, companyName, role } = await getMileVoxaAccount();
   const [{data:loadsData},{data:expensesData},{data:trucksData}] = await Promise.all([
-    supabase.from("loads").select("truck_id, rate, loaded_miles, deadhead_miles, status, pickup_date").order("pickup_date",{ascending:false}).limit(500),
-    supabase.from("expenses").select("truck_id, amount, category, expense_date").order("expense_date",{ascending:false}).limit(1000),
+    supabase.from("loads").select("truck_id, rate, loaded_miles, deadhead_miles, status, pickup_date").order("pickup_date",{ascending:false}),
+    supabase.from("expenses").select("truck_id, amount, category, expense_date").order("expense_date",{ascending:false}),
     supabase.from("trucks").select("id, unit_number"),
   ]);
-  const loads=(loadsData??[]) as Load[];
+  const lifecycleNow = new Date();
+  const loads=((loadsData??[]) as Load[]).map((load) => ({
+    ...load,
+    status: effectiveLoadStatus(load.status, load.pickup_date, lifecycleNow),
+  }));
   const expenses=(expensesData??[]) as Expense[];
   const trucks=(trucksData??[]) as Truck[];
-  const revenue=loads.reduce((s,r)=>s+n(r.rate),0);
-  const expenseTotal=expenses.reduce((s,r)=>s+n(r.amount),0);
-  const net=revenue-expenseTotal;
-  const completed=loads.filter(r=>["COMPLETED","DELIVERED"].includes((r.status||"").toUpperCase())).length;
+  const reportFinance = calculateWeekFinance({
+    loads,
+    expenses,
+    reimbursements: [],
+    fixedExpenses: [],
+    odometers: [],
+    settings: {
+      is_revenue_fee_active: false,
+      is_mileage_fee_active: false,
+    },
+  });
+  const revenue = reportFinance.grossRevenue;
+  const expenseTotal = reportFinance.variableExpenses;
+  const net = reportFinance.netProfit;
+  const completedLoads = loads.filter((load) =>
+    isCompletedLoadStatus(load.status, load.pickup_date, lifecycleNow)
+  );
+  const completed = completedLoads.length;
+
+  const revenueFreshness = reportFreshnessLabel(
+    latestDatedValue(loads.map((load) => load.pickup_date)),
+    lifecycleNow
+  );
+  const expenseFreshness = reportFreshnessLabel(
+    latestDatedValue(expenses.map((expense) => expense.expense_date)),
+    lifecycleNow
+  );
+  const netFreshness = reportFreshnessLabel(
+    latestDatedValue([
+      ...loads.map((load) => load.pickup_date),
+      ...expenses.map((expense) => expense.expense_date),
+    ]),
+    lifecycleNow
+  );
+  const completedFreshness = reportFreshnessLabel(
+    latestDatedValue(completedLoads.map((load) => load.pickup_date)),
+    lifecycleNow
+  );
 
   const categories = ["Fuel","Maintenance","Tolls","Insurance","Other"].map((label,idx)=>{
     const amount=expenses.filter(e=>{
@@ -30,30 +77,45 @@ export default async function ReportsPage() {
       if(label==="Other") return !["fuel","maintenance","tolls","insurance"].some(x=>c.includes(x));
       return c.includes(label.toLowerCase());
     }).reduce((s,e)=>s+n(e.amount),0);
-    return {label,amount,color:["#58bd69","#765ce7","#f2b33f","#e85f58","#9baac0"][idx]};
+    return { label, amount, color: chartCategoryColor(idx) };
   });
 
   const truckRows=trucks.map(t=>{
-    const r=loads.filter(l=>l.truck_id===t.id).reduce((s,l)=>s+n(l.rate),0);
+    const truckLoads = loads.filter(l=>l.truck_id===t.id);
+    const r=truckLoads.reduce((s,l)=>s+n(l.rate),0);
     const e=expenses.filter(x=>x.truck_id===t.id).reduce((s,x)=>s+n(x.amount),0);
-    const count=loads.filter(l=>l.truck_id===t.id).length;
-    return {unit:t.unit_number,revenue:r,expenses:e,profit:r-e,loads:count};
+    const completedCount=completedLoads.filter(l=>l.truck_id===t.id).length;
+    return {
+      unit:t.unit_number,
+      revenue:r,
+      expenses:e,
+      profit:r-e,
+      completedLoads:completedCount,
+      scope:"All-time financials · all-time completed-load count",
+    };
   }).sort((a,b)=>b.profit-a.profit).slice(0,5);
 
   return <AppShell active="reports" fullName={fullName} companyName={companyName} role={role}>
     <div className="fp-tool-page">
       <div className="fp-tool-heading"><div><h1>Reports</h1><p>Get insights into your operations, costs, and profitability.</p></div><ReportActions truckRows={truckRows} /></div>
       <div className="fp-report-kpis">
-        <Kpi label="Total Revenue" value={money(revenue)} tone="blue"/>
-        <Kpi label="Total Expenses" value={money(expenseTotal)} tone="red"/>
-        <Kpi label="Net Profit" value={money(net)} tone="green"/>
-        <Kpi label="Loads Completed" value={String(completed)} tone="purple"/>
+        <KpiTile label="Total Revenue" value={money(revenue)} delta={revenueFreshness} />
+        <KpiTile label="Total Expenses" value={money(expenseTotal)} delta={expenseFreshness} />
+        <KpiTile label="Net Profit" value={money(net)} delta={netFreshness} />
+        <KpiTile label="Completed Loads · All Time" value={String(completed)} delta={completedFreshness} />
       </div>
 
       <div className="fp-report-layout">
         <div>
           <section className="fp-panel">
-            <div className="fp-tabs-row"><span className="active">Overview</span><span>Financial</span><span>Loads</span><span>Fuel</span><span>Maintenance</span><span>Drivers</span></div>
+            <div className="fp-report-section-heading">
+              <span>REPORT OVERVIEW</span>
+              <h2>Financial &amp; Operations Summary</h2>
+              <p>
+                Revenue, expenses, loads, fuel, maintenance and fleet performance
+                are summarized below.
+              </p>
+            </div>
             <div className="fp-report-filters"><button>📅 All Time⌄</button><button>All Trucks⌄</button><button>All Drivers⌄</button><button className="ml-auto">⇩ Export</button></div>
             <div className="fp-report-chart-grid">
               <div><h2>Revenue vs. Expenses</h2><ReportBars revenue={revenue} expenses={expenseTotal}/></div>
@@ -62,9 +124,9 @@ export default async function ReportsPage() {
           </section>
 
           <section className="fp-panel mt-3">
-            <div className="fp-section-title"><h2>Top Performing Trucks</h2><span>View All →</span></div>
-            <table className="fp-compact-table"><thead><tr><th>#</th><th>Truck</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Loads</th></tr></thead>
-            <tbody>{truckRows.map((r,i)=><tr key={r.unit}><td>{i+1}</td><td>#{r.unit}</td><td>{money(r.revenue)}</td><td>{money(r.expenses)}</td><td className="good">{money(r.profit)}</td><td>{r.loads}</td></tr>)}</tbody></table>
+            <div className="fp-section-title"><div><h2>Top Performing Trucks</h2><small>All-time financials · all-time completed-load count per truck</small></div><span>View All →</span></div>
+            <table className="fp-compact-table"><thead><tr><th>#</th><th>Truck</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th title="Same all-time completed-load definition as the KPI">Completed Loads · All Time</th></tr></thead>
+            <tbody>{truckRows.map((r,i)=><tr key={r.unit}><td>{i+1}</td><td>#{r.unit}</td><td>{money(r.revenue)}</td><td>{money(r.expenses)}</td><td className="good">{money(r.profit)}</td><td>{r.completedLoads}</td></tr>)}</tbody></table>
           </section>
         </div>
         <aside className="fp-right-stack">
@@ -76,8 +138,31 @@ export default async function ReportsPage() {
   </AppShell>
 }
 
-function Kpi({label,value,tone}:{label:string;value:string;tone:string}){return <div className="fp-tool-kpi"><span className={`icon ${tone}`}>◫</span><div><small>{label}</small><strong>{value}</strong><em>↑ Live data</em></div></div>}
 function Action({text}:{text:string}){return <button className="fp-side-action">▣ <span>{text}</span><b>›</b></button>}
 function Promo({text}:{text:string}){return <div className="fp-tool-promo"><div>{text.split("\n").map((x,i)=><div key={i}>{x}</div>)}</div><small>MileVoxa</small></div>}
-function ReportBars({revenue,expenses}:{revenue:number;expenses:number}){const max=Math.max(revenue,expenses,1);return <div className="fp-report-bars">{[.45,.6,.52,.7,.58,.82,.67,.74,.62,.9].map((f,i)=><div className="grp" key={i}><i style={{height:`${Math.max(10,f*110)}px`}}/><b style={{height:`${Math.max(7,f*(expenses/max)*110)}px`}}/></div>)}</div>}
-function ReportDonut({total,items}:{total:number;items:{label:string;amount:number;color:string}[]}){let c=0;const safe=Math.max(total,1);const stops=items.map(x=>{const a=c,b=c+x.amount/safe*100;c=b;return `${x.color} ${a}% ${b}%`});return <div className="fp-report-donut-wrap"><div className="fp-report-donut" style={{background:`conic-gradient(${stops.join(",")})`}}><div><strong>{money(total)}</strong><span>Total Expenses</span></div></div><div>{items.map(x=><p key={x.label}><i style={{background:x.color}}/>{x.label}<b>{Math.round(x.amount/safe*100)}%</b></p>)}</div></div>}
+function ReportBars({ revenue, expenses }: { revenue: number; expenses: number }) {
+  const max = Math.max(revenue, expenses, 1);
+  return (
+    <div className="fp-report-bars">
+      {[.45, .6, .52, .7, .58, .82, .67, .74, .62, .9].map((factor, index) => (
+        <div className="grp" key={index}>
+          <i
+            aria-label="Revenue"
+            style={{
+              height: `${Math.max(10, factor * 110)}px`,
+              backgroundColor: CHART_PALETTE.navy,
+            }}
+          />
+          <b
+            aria-label="Expenses"
+            style={{
+              height: `${Math.max(7, factor * (expenses / max) * 110)}px`,
+              backgroundColor: CHART_PALETTE.green,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+function ReportDonut({total,items}:{total:number;items:{label:string;amount:number;color:string}[]}){let c=0;const safe=Math.max(total,1);const stops=items.map(x=>{const a=c,b=c+x.amount/safe*100;c=b;return `${x.color} ${a}% ${b}%`});return <div className="fp-report-donut-wrap"><div className="fp-report-donut" style={{background:`conic-gradient(${stops.join(",")})`}}><div><strong>{money(total)}</strong><span>Total Expenses</span></div></div><div>{items.map(x=><p key={x.label}><i style={{background:x.color}}/>{x.label}<b>{formatPercent(x.amount/safe*100)}</b></p>)}</div></div>}

@@ -5,6 +5,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type ActionType = "load" | "expense" | "fuel" | "maintenance";
 
@@ -111,37 +112,40 @@ export default function DashboardQuickActions({
       if (action === "load") {
         const truckId = value(form, "truck_id");
         const loadNumber = value(form, "load_number");
-        const pickup = value(form, "pickup");
-        const delivery = value(form, "delivery");
+        const pickupRaw = value(form, "pickup");
+        const deliveryRaw = value(form, "delivery");
         const pickupDate = value(form, "pickup_date");
         const deliveryDate = value(form, "delivery_date");
         const rate = number(form, "rate");
-        const loadedMiles = number(form, "loaded_miles");
+        const mileage = validateLoadMiles(number(form, "loaded_miles"), 0);
+        const pickup = normalizeUsLocation(pickupRaw);
+        const delivery = normalizeUsLocation(deliveryRaw);
 
         if (
           !truckId ||
           !loadNumber ||
-          !pickup ||
-          !delivery ||
           !pickupDate ||
           !deliveryDate ||
-          rate <= 0 ||
-          loadedMiles <= 0
+          rate <= 0
         ) {
           throw new Error("Complete all required load fields.");
         }
+
+        if (!mileage.ok) throw new Error(mileage.error);
+        if (!pickup.ok) throw new Error(`Pickup: ${pickup.error}`);
+        if (!delivery.ok) throw new Error(`Delivery: ${delivery.error}`);
 
         const { error } = await supabase.from("loads").insert({
           truck_id: truckId,
           load_number: loadNumber,
           broker: value(form, "broker"),
-          pickup,
-          delivery,
+          pickup: pickup.value,
+          delivery: delivery.value,
           pickup_date: pickupDate,
           delivery_date: deliveryDate,
           rate,
-          loaded_miles: loadedMiles,
-          deadhead_miles: 0,
+          loaded_miles: mileage.loadedMiles,
+          deadhead_miles: mileage.deadheadMiles,
           status: "UPCOMING",
         });
 
@@ -367,7 +371,8 @@ export default function DashboardQuickActions({
                       name="loaded_miles"
                       label="Loaded Miles"
                       type="number"
-                      step="0.1"
+                      step="1"
+                      min="0"
                       required
                     />
                     <Field name="broker" label="Broker / Customer" wide />
@@ -542,6 +547,7 @@ function Field({
   label,
   type = "text",
   step,
+  min,
   defaultValue,
   required = false,
   wide = false,
@@ -550,6 +556,7 @@ function Field({
   label: string;
   type?: string;
   step?: string;
+  min?: string;
   defaultValue?: string;
   required?: boolean;
   wide?: boolean;
@@ -564,6 +571,7 @@ function Field({
         name={name}
         type={type}
         step={step}
+        min={min}
         defaultValue={defaultValue}
         required={required}
       />

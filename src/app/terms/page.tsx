@@ -1,9 +1,12 @@
 import LegalPage, { LegalSection } from "@/components/legal-page";
+import { publicPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = publicPageMetadata({
   title: "Terms of Service",
-  description: "MileVoxa web application terms of service.",
-};
+  description:
+    "Read the MileVoxa terms covering accounts, free trials, paid subscriptions, refunds, cancellation, and service use.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
@@ -57,12 +60,35 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Free trial and paid features">
+      <LegalSection title="5. Free trial, billing, refunds, and cancellation">
         <p>
-          MileVoxa may offer a time-limited free trial. Paid billing,
-          subscription prices, renewal terms, taxes, cancellation rules, and
-          any additional commercial terms will be presented before a paid
-          purchase is completed.
+          MileVoxa may offer a time-limited free trial. No card is required to
+          start the current free trial, and the account is not automatically
+          charged when the trial ends. Paid billing begins only after the
+          company owner actively completes the paid subscription checkout.
+        </p>
+        <p>
+          <strong>Refund policy.</strong> Paid MileVoxa subscription charges
+          are generally non-refundable once a billing period has started,
+          except where a refund is required by applicable law or where MileVoxa
+          confirms a duplicate or erroneous charge. Requests involving a
+          suspected billing error should be sent to{" "}
+          <strong>Support@MileVoxa.com</strong>.
+        </p>
+        <p>
+          <strong>Cancellation.</strong> The company owner may cancel an active
+          paid subscription through the Stripe billing portal. Cancellation
+          takes effect at the end of the current paid billing period. You may
+          continue using paid MileVoxa access through the end of that period,
+          unless access must be restricted for another reason permitted by
+          these Terms.
+        </p>
+        <p>
+          <strong>Partial billing periods.</strong> MileVoxa does not provide
+          prorated refunds or credits for unused days remaining in a billing
+          period after cancellation. The subscription remains active until the
+          end of the period already paid for. This does not limit any refund
+          right that cannot legally be excluded in your jurisdiction.
         </p>
       </LegalSection>
 

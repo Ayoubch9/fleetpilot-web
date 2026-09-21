@@ -1,4 +1,5 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -138,36 +139,17 @@ export default function FuelControls({
 
   return (
     <>
-      <div className="fp-fuel-tabs fp-fuel-tabs-operational">
-        <button
-          type="button"
-          className={view === "overview" ? "active" : ""}
-          onClick={() => switchView("overview")}
-        >
-          Overview
-        </button>
-        <button
-          type="button"
-          className={view === "truck" ? "active" : ""}
-          onClick={() => switchView("truck")}
-        >
-          By Truck
-        </button>
-        <button
-          type="button"
-          className={view === "location" ? "active" : ""}
-          onClick={() => switchView("location")}
-        >
-          By Location
-        </button>
-        <button
-          type="button"
-          className={view === "vendor" ? "active" : ""}
-          onClick={() => switchView("vendor")}
-        >
-          By Vendor
-        </button>
-      </div>
+      <AppTabs
+        activeKey={view}
+        ariaLabel="Fuel analytics views"
+        items={[
+          { key: "overview", label: "Overview" },
+          { key: "truck", label: "By Truck" },
+          { key: "location", label: "By Location" },
+          { key: "vendor", label: "By Vendor" },
+        ]}
+        onChange={(key) => switchView(key as "overview" | "truck" | "location" | "vendor")}
+      />
 
       <div className="fp-fuel-filterbar fp-fuel-filterbar-operational">
         <label className="fp-fuel-search">

@@ -1,6 +1,11 @@
+import { calculateWeekFinance } from "@/lib/week-finance";
+import { CHART_PALETTE } from "@/lib/chart-palette";
+import KpiTile from "@/components/kpi-tile";
+import { formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
+import PromoBanner from "@/components/promo-banner";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SettlementControls, {
@@ -69,6 +74,15 @@ type FixedExpense = {
   name?: string | null;
 };
 
+type CostRow = {
+  id: string;
+  amount: number | string | null;
+  category: string | null;
+  expense_date: string | null;
+  vendor: string | null;
+  description: string | null;
+};
+
 type Odometer = {
   start_odometer: number | string | null;
   end_odometer: number | string | null;
@@ -88,11 +102,6 @@ type Settings = {
   is_mileage_fee_active?: boolean | null;
 };
 
-function isActiveFixed(row: FixedExpense) {
-  if (typeof row.is_active === "boolean") return row.is_active;
-  if (typeof row.active === "boolean") return row.active;
-  return true;
-}
 
 export default async function SettlementPage({
   searchParams,
@@ -189,6 +198,21 @@ export default async function SettlementPage({
   const reimbursements =
     (reimbursementResult.data ?? []) as Reimbursement[];
   const fixed = (fixedResult.data ?? []) as FixedExpense[];
+  const activeFixed = fixed.filter((row) =>
+    typeof row.is_active === "boolean"
+      ? row.is_active
+      : typeof row.active === "boolean"
+        ? row.active
+        : true
+  );
+  const fixedCostRows: CostRow[] = activeFixed.map((row, index) => ({
+    id: `fixed-${index}-${row.name || "expense"}`,
+    amount: row.amount,
+    category: "Fixed Expense",
+    expense_date: startText,
+    vendor: null,
+    description: row.name || "Weekly fixed expense",
+  }));
   const odometers = (odometerResult.data ?? []) as Odometer[];
   const settings = ((settingsResult.data ?? []) as Settings[])[0];
   const weeklyDepositTransactions =
@@ -221,90 +245,46 @@ export default async function SettlementPage({
     0
   );
 
-  const grossRevenue = loads.reduce(
-    (sum, row) => sum + num(row.rate),
-    0
-  );
-  const loadedMiles = loads.reduce(
-    (sum, row) => sum + num(row.loaded_miles),
-    0
-  );
-  const deadheadMiles = loads.reduce(
-    (sum, row) => sum + num(row.deadhead_miles),
-    0
-  );
-  const totalMiles = loadedMiles + deadheadMiles;
+  const finance = calculateWeekFinance({
+    loads,
+    expenses,
+    reimbursements,
+    fixedExpenses: fixed,
+    odometers,
+    settings,
+  });
 
-  const variableExpenses = expenses.reduce(
-    (sum, row) => sum + num(row.amount),
-    0
-  );
-  const reimbursementTotal = reimbursements.reduce(
-    (sum, row) => sum + num(row.amount),
-    0
-  );
-  const netVariableExpenses = variableExpenses - reimbursementTotal;
-  const fixedTotal = fixed
-    .filter(isActiveFixed)
-    .reduce((sum, row) => sum + num(row.amount), 0);
+  const {
+    grossRevenue,
+    loadedMiles,
+    deadheadMiles,
+    totalMiles,
+    variableExpenses,
+    reimbursementTotal,
+    netVariableExpenses,
+    fixedTotal,
+    fuelCost,
+    odometerMiles,
+    revenueFeePercent,
+    mileageFeeRate,
+    revenueFee,
+    mileageFee,
+    totalExpenses,
+    netProfit,
+    revenuePerMile,
+    costPerMile,
+    profitPerMile,
+    profitMargin,
+    deadheadPercent,
+  } = finance;
 
-  const fuelCost = expenses
-    .filter(
-      (row) => (row.category || "").trim().toLowerCase() === "fuel"
-    )
-    .reduce((sum, row) => sum + num(row.amount), 0);
-
-  const odometerMiles = odometers.reduce(
-    (sum, row) =>
-      sum +
-      Math.max(
-        num(row.end_odometer) - num(row.start_odometer),
-        0
-      ),
-    0
-  );
-
-  const revenueFeePercent =
-    settings?.revenue_fee_percent == null
-      ? 15
-      : num(settings.revenue_fee_percent);
-  const mileageFeeRate =
-    settings?.mileage_fee_per_mile == null
-      ? 0.15
-      : num(settings.mileage_fee_per_mile);
-
-  const revenueFeeActive =
-    settings?.is_revenue_fee_active == null
-      ? true
-      : Boolean(settings.is_revenue_fee_active);
-  const mileageFeeActive =
-    settings?.is_mileage_fee_active == null
-      ? true
-      : Boolean(settings.is_mileage_fee_active);
-
-  const revenueFee = revenueFeeActive
-    ? grossRevenue * (revenueFeePercent / 100)
-    : 0;
-  const mileageFee = mileageFeeActive
-    ? odometerMiles * mileageFeeRate
-    : 0;
-
-  const totalExpenses =
-    netVariableExpenses + fixedTotal + revenueFee + mileageFee;
-  const netProfit = grossRevenue - totalExpenses;
   const cashReceivedAfterHoldback =
     netProfit - weeklyDepositHeld + weeklyDepositReturned;
-
-  const revenuePerMile =
-    totalMiles > 0 ? grossRevenue / totalMiles : 0;
-  const costPerMile =
-    totalMiles > 0 ? totalExpenses / totalMiles : 0;
-  const profitPerMile =
-    totalMiles > 0 ? netProfit / totalMiles : 0;
-  const profitMargin =
-    grossRevenue > 0 ? (netProfit / grossRevenue) * 100 : 0;
-  const deadheadPercent =
-    totalMiles > 0 ? (deadheadMiles / totalMiles) * 100 : 0;
+  const cashIsDue = cashReceivedAfterHoldback < 0;
+  const cashDisplayAmount = Math.abs(cashReceivedAfterHoldback);
+  const cashDisplayLabel = cashIsDue
+    ? "Est. Cash Due"
+    : "Est. Cash Paid This Week";
 
   const errors = [
     loadsResult.error,
@@ -325,9 +305,14 @@ export default async function SettlementPage({
     ),
   ].sort();
 
+  const allCostRows: CostRow[] = [
+    ...expenses,
+    ...fixedCostRows,
+  ];
+
   const costCategories = [
     ...new Set(
-      expenses
+      allCostRows
         .map((row) => (row.category || "Other").trim())
         .filter(Boolean)
     ),
@@ -377,7 +362,7 @@ export default async function SettlementPage({
     return dateValue(b.pickup_date) - dateValue(a.pickup_date);
   });
 
-  let filteredCosts = expenses.filter((row) => {
+  let filteredCosts = allCostRows.filter((row) => {
     if (!q) return true;
     return [
       row.category,
@@ -496,7 +481,7 @@ export default async function SettlementPage({
       kind: "negative" as const,
     },
     {
-      label: `Revenue Fee (${revenueFeePercent.toFixed(1)}%)`,
+      label: `Revenue Fee (${formatPercent(revenueFeePercent)})`,
       value: revenueFee,
       kind: "negative" as const,
     },
@@ -535,34 +520,28 @@ export default async function SettlementPage({
         <div className="fp-settle-layout mt-4">
           <div className="min-w-0">
             <div className="fp-settle-kpi-grid">
-              <SettleKpi
-                label="Gross Revenue"
-                value={money(grossRevenue)}
-                tone="blue"
-                icon="revenue"
-                note={`${loads.length} loads this week`}
-              />
-              <SettleKpi
-                label="Total Miles"
-                value={`${totalMiles.toLocaleString()} mi`}
-                tone="green"
-                icon="miles"
-                note={`${odometerMiles.toLocaleString()} odometer mi`}
-              />
-              <SettleKpi
-                label="Net Profit"
-                value={money(netProfit)}
-                tone={netProfit >= 0 ? "purple" : "red"}
-                icon="profit"
-                note={`${money(profitPerMile)} profit / mile`}
-              />
+              <KpiTile
+              label="Gross Revenue"
+                              value={money(grossRevenue)}
+                              note={`${loads.length} loads this week`}
+            />
+              <KpiTile
+              label="Total Miles"
+                              value={`${totalMiles.toLocaleString()} mi`}
+                              note={`${odometerMiles.toLocaleString()} odometer mi`}
+            />
+              <KpiTile
+              label="Net Profit"
+                              value={money(netProfit)}
+                              note={totalMiles > 0 ? `${money(profitPerMile)} profit / mile` : "n/a profit / mile"}
+            />
             </div>
 
             <section className="fp-settle-table-card mt-4">
               <SettlementControls
                 tab={tab}
                 loadCount={loads.length}
-                costCount={expenses.length}
+                costCount={allCostRows.length}
                 reimbursementCount={reimbursements.length}
                 selectedWeek={startText}
                 loadStatuses={loadStatuses}
@@ -614,64 +593,55 @@ export default async function SettlementPage({
                 </div>
                 <div className="fp-settle-margin-pill">
                   <span>Profit Margin</span>
-                  <strong>{profitMargin.toFixed(1)}%</strong>
+                  <strong>{profitMargin == null ? "n/a" : formatPercent(profitMargin)}</strong>
                 </div>
               </div>
 
               <div className="fp-settle-overview-grid">
-                <OverviewMetric
+                <KpiTile
                   label="Revenue / Mile"
-                  value={money(revenuePerMile)}
-                  note="Gross revenue ÷ total load miles"
-                  tone="blue"
+                                    value={totalMiles > 0 ? money(revenuePerMile) : "n/a"}
+                                    note="Gross revenue ÷ total load miles"
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Cost / Mile"
-                  value={money(costPerMile)}
-                  note="All weekly operating costs"
-                  tone="red"
+                                    value={totalMiles > 0 ? money(costPerMile) : "n/a"}
+                                    note="All weekly operating costs"
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Profit / Mile"
-                  value={money(profitPerMile)}
-                  note="Net profit ÷ total load miles"
-                  tone={profitPerMile >= 0 ? "green" : "red"}
+                                    value={totalMiles > 0 ? money(profitPerMile) : "n/a"}
+                                    note="Net profit ÷ total load miles"
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Deadhead"
-                  value={`${deadheadPercent.toFixed(1)}%`}
-                  note={`${deadheadMiles.toLocaleString()} deadhead miles`}
-                  tone={deadheadPercent <= 15 ? "green" : "amber"}
+                                    value={formatPercent(deadheadPercent)}
+                                    note={`${deadheadMiles.toLocaleString()} deadhead miles`}
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Fuel Cost"
-                  value={money(fuelCost)}
-                  note={`${variableExpenses > 0 ? ((fuelCost / variableExpenses) * 100).toFixed(0) : "0"}% of variable costs`}
-                  tone="amber"
+                                    value={money(fuelCost)}
+                                    note={`${formatPercent(variableExpenses > 0 ? (fuelCost / variableExpenses) * 100 : 0)} of variable costs`}
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Reimbursements"
-                  value={money(reimbursementTotal)}
-                  note={`${reimbursements.length} recovered transactions`}
-                  tone="green"
+                                    value={money(reimbursementTotal)}
+                                    note={`${reimbursements.length} recovered transactions`}
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Fixed + Company Fees"
-                  value={money(fixedTotal + revenueFee + mileageFee)}
-                  note={`${money(fixedTotal)} fixed · ${money(revenueFee + mileageFee)} fees`}
-                  tone="purple"
+                                    value={money(fixedTotal + revenueFee + mileageFee)}
+                                    note={`${money(fixedTotal)} fixed · ${money(revenueFee + mileageFee)} fees`}
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Odometer Miles"
-                  value={`${odometerMiles.toLocaleString()} mi`}
-                  note={`${money(mileageFeeRate)} company mileage rate`}
-                  tone="blue"
+                                    value={`${odometerMiles.toLocaleString()} mi`}
+                                    note={`${money(mileageFeeRate)} company mileage rate`}
                 />
-                <OverviewMetric
+                <KpiTile
                   label="Security Holdback"
-                  value={money(weeklyDepositHeld)}
-                  note={`${money(depositOutstanding)} still owed by company`}
-                  tone="purple"
+                                    value={money(weeklyDepositHeld)}
+                                    note={`${money(depositOutstanding)} still owed by company`}
                 />
               </div>
 
@@ -731,7 +701,7 @@ export default async function SettlementPage({
                     num(load.loaded_miles) + num(load.deadhead_miles),
                   revenue: num(load.rate),
                 }))}
-                costs={expenses.map((row) => ({
+                costs={allCostRows.map((row) => ({
                   date: shortDate(row.expense_date),
                   category: row.category || "Other",
                   vendor: row.vendor || "",
@@ -776,8 +746,10 @@ export default async function SettlementPage({
                   <strong>{money(depositOutstanding)}</strong>
                 </div>
                 <div className="cash">
-                  <span>Est. Cash Paid This Week</span>
-                  <strong>{money(cashReceivedAfterHoldback)}</strong>
+                  <span>{cashDisplayLabel}</span>
+                  <strong className={cashIsDue ? "negative" : "positive"}>
+                    {money(cashDisplayAmount)}
+                  </strong>
                 </div>
               </div>
 
@@ -833,17 +805,11 @@ export default async function SettlementPage({
               </div>
             </section>
 
-            <div className="fp-settle-promo">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/26 to-transparent" />
-              <div className="relative z-10">
-                <div className="text-[16px] font-[740] leading-[1.18] text-white">
-                  Your Miles.
-                  <br />
-                  Your Profit.
-                </div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
-              </div>
-            </div>
+            <PromoBanner
+              headline="Your miles. Your profit."
+              subtext="Use the weekly settlement to see what remains after the costs that run the operation."
+              cta={{ label: "Open reports", href: "/reports" }}
+            />
           </aside>
         </div>
       </div>
@@ -934,7 +900,7 @@ function LoadsTable({
   );
 }
 
-function CostsTable({ rows }: { rows: Expense[] }) {
+function CostsTable({ rows }: { rows: CostRow[] }) {
   return (
     <div className="fp-settle-table-wrap">
       <table className="fp-settle-table fp-settle-cost-table">
@@ -1018,71 +984,7 @@ function ReimbursementsTable({
   );
 }
 
-function SettleKpi({
-  label,
-  value,
-  tone,
-  icon,
-  note,
-}: {
-  label: string;
-  value: string;
-  tone: "blue" | "green" | "purple" | "red";
-  icon: "revenue" | "miles" | "profit";
-  note: string;
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-    purple: { color: "#765ce7", soft: "#f0edff" },
-    red: { color: "#e75b63", soft: "#fff0f1" },
-  }[tone];
 
-  return (
-    <div className="fp-settle-kpi">
-      <div
-        className="fp-settle-kpi-icon"
-        style={{
-          color: palette.color,
-          backgroundColor: palette.soft,
-        }}
-      >
-        {icon === "revenue" ? (
-          <WalletIcon />
-        ) : icon === "miles" ? (
-          <MileageIcon />
-        ) : (
-          <ProfitIcon />
-        )}
-      </div>
-      <div>
-        <div className="fp-settle-kpi-label">{label}</div>
-        <div className="fp-number fp-settle-kpi-value">{value}</div>
-        <div className="fp-settle-kpi-note">{note}</div>
-      </div>
-    </div>
-  );
-}
-
-function OverviewMetric({
-  label,
-  value,
-  note,
-  tone,
-}: {
-  label: string;
-  value: string;
-  note: string;
-  tone: "blue" | "green" | "red" | "amber" | "purple";
-}) {
-  return (
-    <div className={`fp-settle-overview-metric ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{note}</small>
-    </div>
-  );
-}
 
 function FlowStep({
   label,
@@ -1120,6 +1022,7 @@ function SettleMiniChart({
               className="gross"
               style={{
                 height: `${Math.max(20, factor * 92)}px`,
+                backgroundColor: CHART_PALETTE.navy,
               }}
             />
             <span
@@ -1129,6 +1032,7 @@ function SettleMiniChart({
                   12,
                   factor * (profit / max) * 92
                 )}px`,
+                backgroundColor: CHART_PALETTE.green,
               }}
             />
           </div>
@@ -1172,43 +1076,8 @@ function dateValue(value?: string | null) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function WalletIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M4 6h16v12H4z" />
-      <path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z" />
-    </svg>
-  );
-}
 
-function MileageIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 12l4-3M7 16h10" />
-    </svg>
-  );
-}
 
-function ProfitIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M5 18V11M10 18V7M15 18V13M20 18V4" />
-    </svg>
-  );
-}
 
 function CalculatorIcon() {
   return (

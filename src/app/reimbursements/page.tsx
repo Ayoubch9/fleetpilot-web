@@ -1,5 +1,9 @@
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
+import { formatMoney } from "@/lib/format";
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
+import PromoBanner from "@/components/promo-banner";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import AddReimbursementForm from "./add-reimbursement-form";
@@ -277,19 +281,31 @@ export default async function ReimbursementsPage({
         <div className="fp-reimb-layout mt-4">
           <div className="min-w-0">
             <div className="fp-reimb-kpi-grid">
-              <ReimbKpi label="Total Reimbursed" value={money(total)} tone="blue" icon="wallet" note={reimbursementRangeNote(dateFrom, dateTo)} />
-              <ReimbKpi label="Records" value={`${filteredBase.length}`} tone="amber" icon="clock" note={reimbursementRangeNote(dateFrom, dateTo)} />
-              <ReimbKpi label="Full Recovery" value={money(fullAmount)} tone="green" icon="check" note={`${fullCount} records`} />
-              <ReimbKpi label="Partial Recovery" value={money(partialAmount)} tone="red" icon="partial" note={`${partialCount} records`} />
+              <KpiTile
+                label="Total Reimbursed" value={money(total)} note={reimbursementRangeNote(dateFrom, dateTo)}
+              />
+              <KpiTile
+                label="Records" value={`${filteredBase.length}`} note={reimbursementRangeNote(dateFrom, dateTo)}
+              />
+              <KpiTile
+                label="Full Recovery" value={money(fullAmount)} note={`${fullCount} records`}
+              />
+              <KpiTile
+                label="Partial Recovery" value={money(partialAmount)} note={`${partialCount} records`}
+              />
             </div>
 
             <section className="fp-reimb-table-card mt-4">
-              <div className="fp-reimb-tabs">
-                <ReimbTab href={reimbursementKindHref(query, "all")} label="All" count={filteredBase.length} active={kind === "all"} />
-                <ReimbTab href={reimbursementKindHref(query, "full")} label="Full Recovery" count={fullCount} active={kind === "full"} />
-                <ReimbTab href={reimbursementKindHref(query, "partial")} label="Partial Recovery" count={partialCount} active={kind === "partial"} />
-                <ReimbTab href={reimbursementKindHref(query, "standalone")} label="Standalone" count={standaloneCount} active={kind === "standalone"} />
-              </div>
+              <AppTabs
+                activeKey={kind}
+                ariaLabel="Reimbursement status"
+                items={[
+                  { key: "all", label: "All", count: filteredBase.length, href: reimbursementKindHref(query, "all") },
+                  { key: "full", label: "Full Recovery", count: fullCount, href: reimbursementKindHref(query, "full") },
+                  { key: "partial", label: "Partial Recovery", count: partialCount, href: reimbursementKindHref(query, "partial") },
+                  { key: "standalone", label: "Standalone", count: standaloneCount, href: reimbursementKindHref(query, "standalone") },
+                ]}
+              />
 
               <ReimbursementFilters
                 trucks={trucks}
@@ -402,15 +418,11 @@ export default async function ReimbursementsPage({
               </div>
             </section>
 
-            <div className="fp-reimb-promo">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/28 to-transparent" />
-              <div className="relative z-10">
-                <div className="text-[16px] font-[740] leading-[1.18] text-white">
-                  Recover More.<br />Protect Profit.
-                </div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
-              </div>
-            </div>
+            <PromoBanner
+              headline="Recover more. Protect profit."
+              subtext="Keep recovered business costs visible beside the expenses they offset."
+              cta={{ label: "Review expenses", href: "/expenses" }}
+            />
           </aside>
         </div>
       </div>
@@ -418,43 +430,8 @@ export default async function ReimbursementsPage({
   );
 }
 
-function ReimbKpi({ label, value, tone, icon, note }: {
-  label: string; value: string; tone: "blue" | "amber" | "green" | "red"; icon: "wallet" | "clock" | "check" | "partial"; note: string;
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    amber: { color: "#d69d2c", soft: "#fff5df" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-    red: { color: "#e75b63", soft: "#fff0f1" },
-  }[tone];
-  return (
-    <div className="fp-reimb-kpi">
-      <div className="fp-reimb-kpi-icon" style={{ color: palette.color, backgroundColor: palette.soft }}>
-        <ReimbKpiIcon type={icon} />
-      </div>
-      <div>
-        <div className="fp-reimb-kpi-label">{label}</div>
-        <div className="fp-number fp-reimb-kpi-value">{value}</div>
-        <div className="fp-reimb-kpi-note">{note}</div>
-      </div>
-    </div>
-  );
-}
 
-function ReimbKpiIcon({ type }: { type: "wallet" | "clock" | "check" | "partial" }) {
-  if (type === "clock") return <ClockIcon />;
-  if (type === "check") return <CheckIcon />;
-  if (type === "partial") return <PartialIcon />;
-  return <WalletIcon />;
-}
 
-function ReimbTab({ href, label, count, active }: { href: string; label: string; count: number; active: boolean }) {
-  return (
-    <Link href={href} className={`fp-reimb-tab ${active ? "active" : ""}`}>
-      <span>{label}</span><span className="fp-reimb-tab-count">{count}</span>
-    </Link>
-  );
-}
 
 function ReimbDonut({
   total,
@@ -553,7 +530,7 @@ function dateValue(value?: string | null) {
   return new Date(`${value.slice(0,10)}T12:00:00`).getTime();
 }
 function money(value: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+  return formatMoney(value);
 }
 function shortDate(value?: string | null) {
   if (!value) return "—";

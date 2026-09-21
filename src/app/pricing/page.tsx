@@ -1,4 +1,15 @@
+import type { Metadata } from "next";
+import PublicLayout from "@/components/public-layout";
 import Link from "next/link";
+import { publicPageMetadata } from "@/lib/seo";
+
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Pricing | MileVoxa - $29/mo per Company",
+  description:
+    "MileVoxa Pro is $29/month per company after a 14-day free trial, with no card required to start and no per-truck pricing.",
+  path: "/pricing",
+});
 
 const included = [
   "Dashboard & weekly performance",
@@ -16,29 +27,8 @@ const included = [
 
 export default function PricingPage() {
   return (
-    <main className="mv-pricing-page fp-marketing fp-pricing-page min-h-screen bg-[#f7f9fc] text-[#0b1730]">
-      <header className="fp-marketing-header">
-        <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-          <img
-            src="/branding/milevoxa-logo-full.png"
-            width={2000}
-            height={612}
-            className="mv-marketing-logo"
-            alt="MileVoxa — Run your trucking business with clarity."
-          />
-        </Link>
-
-        <nav className="fp-marketing-nav">
-          <Link href="/#features">Features</Link>
-          <Link href="/pricing" className="active">Pricing</Link>
-          <Link href="/#about">About</Link>
-        </nav>
-
-        <div className="fp-marketing-header-actions">
-          <Link href="/login" className="fp-marketing-button secondary">Sign In</Link>
-          <Link href="/signup" className="fp-marketing-button primary">Start Free</Link>
-        </div>
-      </header>
+    <PublicLayout mainClassName="mv-pricing-page fp-marketing fp-pricing-page min-h-screen bg-[#f7f9fc] text-[#0b1730]">
+      
 
       <section className="fp-pricing-hero">
         <span>Simple MileVoxa pricing</span>
@@ -56,7 +46,8 @@ export default function PricingPage() {
             <div>
               <span>MileVoxa Pro</span>
               <h2>$29<span>/month</span></h2>
-              <p>Planned launch pricing after the free trial.</p>
+              <p className="fp-pricing-scope">Per company — not per truck.</p>
+              <p>Current published MileVoxa Pro price after the free trial.</p>
             </div>
             <div className="fp-pricing-trial-badge">
               <strong>$0 today</strong>
@@ -76,7 +67,13 @@ export default function PricingPage() {
           <Link href="/signup" className="fp-marketing-button primary pricing">
             Start 14-Day Free Trial <span>→</span>
           </Link>
-          <small>Cancel before paid billing begins. Billing activation will be shown clearly before a paid subscription starts.</small>
+          <small>
+            No card is required for the trial and there is no automatic charge on
+            day 15. Stripe checkout exists in the billing backend, but paid checkout
+            is still disabled in the current MileVoxa settings UI pending billing/legal
+            activation. A paid subscription starts only after the company owner
+            actively completes checkout once it is enabled.
+          </small>
         </article>
 
         <aside className="fp-pricing-side">
@@ -122,6 +119,42 @@ export default function PricingPage() {
         </div>
       </section>
 
+      <section className="fp-pricing-faq" aria-labelledby="pricing-faq-title">
+        <div className="fp-marketing-section-heading compact">
+          <div>
+            <span>Pricing FAQ</span>
+            <h2 id="pricing-faq-title">Before you subscribe.</h2>
+          </div>
+          <p>
+            The answers below reflect the current MileVoxa billing implementation
+            and published pricing.
+          </p>
+        </div>
+
+        <div className="fp-pricing-faq-grid">
+          <PricingFaq
+            question="What happens after the 14-day trial?"
+            answer="The trial ends on day 15. Because no card is required to start, MileVoxa does not automatically charge you when the trial ends. Your company data remains tied to your account while you decide whether to subscribe."
+          />
+          <PricingFaq
+            question="When does paid billing start?"
+            answer="Paid billing starts only after the company owner actively completes Stripe checkout. The billing backend is implemented, but checkout is still disabled in the current MileVoxa settings UI pending billing/legal activation, so no paid subscription starts automatically today."
+          />
+          <PricingFaq
+            question="What is the refund policy?"
+            answer="MileVoxa does not currently publish a separate refund policy because paid checkout is not yet enabled in the product UI. Any applicable refund or purchase terms will be presented before a paid purchase is completed. Until checkout is enabled and completed, there is no subscription charge to refund."
+          />
+          <PricingFaq
+            question="How do I cancel?"
+            answer="Once paid billing is enabled and you have an active subscription, the company owner can manage or cancel it through the Stripe billing portal. There is nothing to cancel during the no-card free trial."
+          />
+          <PricingFaq
+            question="Does the price change with fleet size?"
+            answer="The current MileVoxa Pro price is $29/month per company, not per truck. The current Stripe checkout creates one subscription for the company, so adding trucks does not create a separate per-truck charge in the current billing model."
+          />
+        </div>
+      </section>
+
       <section className="fp-marketing-final-cta">
         <div>
           <span>Start without a card</span>
@@ -133,7 +166,25 @@ export default function PricingPage() {
           <Link href="/" className="fp-marketing-button ghost large">Back to Home</Link>
         </div>
       </section>
-    </main>
+    </PublicLayout>
+  );
+}
+
+function PricingFaq({
+  question,
+  answer,
+}: {
+  question: string;
+  answer: string;
+}) {
+  return (
+    <details className="fp-pricing-faq-item">
+      <summary>
+        {question}
+        <span>+</span>
+      </summary>
+      <p>{answer}</p>
+    </details>
   );
 }
 

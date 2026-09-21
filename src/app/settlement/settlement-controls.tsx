@@ -1,4 +1,5 @@
 "use client";
+import AppTabs from "@/components/app-tabs";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -196,31 +197,16 @@ export default function SettlementControls({
 
   return (
     <>
-      <div className="fp-settle-tabs">
-        <button
-          type="button"
-          className={`fp-settle-tab ${tab === "loads" ? "active" : ""}`}
-          onClick={() => switchTab("loads")}
-        >
-          Settlement Loads <b>{loadCount}</b>
-        </button>
-        <button
-          type="button"
-          className={`fp-settle-tab ${tab === "costs" ? "active" : ""}`}
-          onClick={() => switchTab("costs")}
-        >
-          Costs <b>{costCount}</b>
-        </button>
-        <button
-          type="button"
-          className={`fp-settle-tab ${
-            tab === "reimbursements" ? "active" : ""
-          }`}
-          onClick={() => switchTab("reimbursements")}
-        >
-          Reimbursements <b>{reimbursementCount}</b>
-        </button>
-      </div>
+      <AppTabs
+        activeKey={tab}
+        ariaLabel="Settlement sections"
+        items={[
+          { key: "loads", label: "Settlement Loads", count: loadCount },
+          { key: "costs", label: "Costs", count: costCount },
+          { key: "reimbursements", label: "Reimbursements", count: reimbursementCount },
+        ]}
+        onChange={(key) => switchTab(key as "loads" | "costs" | "reimbursements")}
+      />
 
       <div className="fp-settle-filterbar fp-settle-filterbar-operational">
         <label className="fp-settle-search">

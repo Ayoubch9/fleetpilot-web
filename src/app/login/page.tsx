@@ -45,6 +45,14 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit} className="space-y-5">
         <Field label="Email" type="email" value={email} set={setEmail} placeholder="you@example.com" />
         <Field label="Password" type="password" value={password} set={setPassword} placeholder="Your password" />
+        <div className="-mt-2 text-right">
+          <Link
+            href="/forgot-password"
+            className="text-[14px] font-bold text-[#16853B] hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
         {error && <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-600">{error}</div>}
         <button disabled={loading} className="mv-auth-primary">
           {loading ? "Signing in..." : "Sign In →"}
@@ -59,14 +67,14 @@ export default function LoginPage() {
 
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <main className="grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
+    <main className="mv-login-page grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
       <section className="relative hidden overflow-hidden border-r border-[#24364a] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <MileVoxaBrand onDark />
         <div>
           <div className="text-[10px] font-black uppercase tracking-[.2em] text-[#55b772]">Trucking business intelligence</div>
-          <h2 className="mt-5 max-w-lg text-5xl font-black leading-[1.02] tracking-[-.05em]">
+          <div className="mt-5 max-w-lg text-5xl font-black leading-[1.02] tracking-[-.05em]">
             Every mile. Every cost. <span className="text-[#55b772]">One clear business.</span>
-          </h2>
+          </div>
           <p className="mt-6 max-w-md leading-7 text-[#9fb0bf]">
             Open the same MileVoxa business account you use on mobile and manage your operation from a larger control center.
           </p>

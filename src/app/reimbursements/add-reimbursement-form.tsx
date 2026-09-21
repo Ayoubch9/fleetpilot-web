@@ -1,4 +1,5 @@
 "use client";
+import { formatMoney } from "@/lib/format";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -158,8 +159,8 @@ export default function AddReimbursementForm({
               {expenses.map((expense) => (
                 <option key={expense.id} value={expense.id}>
                   {expense.expense_date} · {expense.category || "Expense"} ·{" "}
-                  {expense.vendor || "No vendor"} · $
-                  {Number(expense.amount || 0).toFixed(2)}
+                  {expense.vendor || "No vendor"} ·{" "}
+                  {formatMoney(Number(expense.amount || 0))}
                 </option>
               ))}
             </select>

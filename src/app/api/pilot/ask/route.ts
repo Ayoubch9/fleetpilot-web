@@ -1,3 +1,5 @@
+import { formatMoney } from "@/lib/format";
+import { buildSettlementHistory } from "@/lib/settlement-history";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -54,12 +56,7 @@ type MaintenanceRow = {
 };
 
 const n = (value: unknown) => Number(value || 0) || 0;
-const money = (value: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(value);
+const money = (value: number) => formatMoney(value);
 
 export async function POST(request: NextRequest) {
   try {
@@ -118,15 +115,13 @@ export async function POST(request: NextRequest) {
         .select(
           "truck_id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status"
         )
-        .order("pickup_date", { ascending: false })
-        .limit(300),
+        .order("pickup_date", { ascending: false }),
       supabase
         .from("expenses")
         .select(
           "truck_id, category, expense_date, amount, vendor, gallons, fuel_price_per_gallon"
         )
-        .order("expense_date", { ascending: false })
-        .limit(600),
+        .order("expense_date", { ascending: false }),
       supabase
         .from("trucks")
         .select("id, unit_number, year, make, model, current_mileage, status"),
@@ -140,8 +135,7 @@ export async function POST(request: NextRequest) {
       supabase
         .from("reimbursements")
         .select("amount, reimbursement_date")
-        .order("reimbursement_date", { ascending: false })
-        .limit(300),
+        .order("reimbursement_date", { ascending: false }),
       supabase
         .from("weekly_fixed_expenses")
         .select("name, amount, is_active")
@@ -155,8 +149,7 @@ export async function POST(request: NextRequest) {
       supabase
         .from("weekly_odometer_records")
         .select("truck_id, week_start, start_odometer, end_odometer, rate_per_mile")
-        .order("week_start", { ascending: false })
-        .limit(100),
+        .order("week_start", { ascending: false }),
     ]);
 
     const loads = (loadData ?? []) as LoadRow[];
@@ -287,6 +280,16 @@ export async function POST(request: NextRequest) {
       truck: load.truck_id ? truckMap.get(load.truck_id)?.unit_number : null,
     }));
 
+    const settlementHistory = buildSettlementHistory({
+      loads,
+      expenses,
+      reimbursements: reimbursementData ?? [],
+      fixedExpenses: fixedExpenseData ?? [],
+      odometers: odometerData ?? [],
+      settings: feeSettings ?? undefined,
+      maxWeeks: 52,
+    });
+
     const context = {
       account: {
         userName: profile?.full_name || "MileVoxa User",
@@ -317,6 +320,13 @@ export async function POST(request: NextRequest) {
       feeSettings: feeSettings ?? null,
       latestOdometerRecords: (odometerData ?? []).slice(0, 20),
       latestLoads,
+      settlementHistory: {
+        readOnly: true,
+        basis:
+          "Reconciled with the same MileVoxa weekly settlement calculation: weekly revenue, reimbursements, active weekly fixed costs, company fees, odometer mileage and operating expenses.",
+        citationLabel: "Based on your settlements",
+        weeks: settlementHistory,
+      },
     };
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -349,6 +359,9 @@ export async function POST(request: NextRequest) {
       "If the data does not support a requested conclusion, say that clearly and explain what additional data would be needed.",
       "Reimbursements offset expenses; do not treat them as revenue.",
       "Differentiate direct truck profit (truck revenue minus directly assigned expenses) from full company net profit because company fixed expenses and company fees may not be allocated by truck.",
+      "For any question about a week, weekly profit, settlement history, best week, worst week, or most profitable week, use context.settlementHistory.weeks as the authoritative source instead of all-time totals.",
+      "Settlement history is read-only. Never imply that Pilot AI changed, reconciled, approved, or wrote settlement records.",
+      "When an answer uses settlementHistory, include a clear source line containing the exact phrase 'Based on your settlements' and identify the relevant week or weeks.",
       "When recommending actions, explain the business reason and reference relevant numbers when available.",
       "Do not expose database IDs, internal implementation details, API keys, or security configuration.",
       "Keep most answers under 350 words unless the user explicitly asks for a detailed analysis.",
@@ -386,14 +399,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: apiMessage }, { status: 502 });
     }
 
-    const answer =
+    const rawAnswer =
       extractOutputText(payload) ||
       "Pilot AI completed the request but returned no text response.";
+
+    const settlementHistoryIntent =
+      /\b(settlement|settlements|weekly|week|profitable week|best week|worst week)\b/i.test(
+        question
+      );
+
+    const answer =
+      settlementHistoryIntent &&
+      settlementHistory.length > 0 &&
+      !/based on your settlements/i.test(rawAnswer)
+        ? `${rawAnswer}\n\nSource: Based on your settlements (MileVoxa reconciled weekly metrics).`
+        : rawAnswer;
 
     return NextResponse.json({
       answer,
       model,
       generatedAt: new Date().toISOString(),
+      settlementHistoryReadOnly: true,
     });
   } catch (error) {
     console.error("Pilot AI route error:", error);

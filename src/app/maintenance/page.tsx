@@ -1,5 +1,8 @@
+import AppTabs from "@/components/app-tabs";
+import KpiTile from "@/components/kpi-tile";
 import Link from "next/link";
 import AppShell from "@/components/app-shell";
+import PromoBanner from "@/components/promo-banner";
 import { EmptyState, StatusBadge } from "@/components/fleet-ui";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import { num, parseDate, money } from "@/lib/fleetpilot-week";
@@ -77,7 +80,8 @@ export default async function MaintenancePage({
 
   const [
     { data: truckData, error: truckError },
-    { data: maintenanceData, error },
+    { data: maintenanceData, error: maintenanceError },
+    { data: maintenanceExpenseData, error: maintenanceExpenseError },
   ] = await Promise.all([
     supabase
       .from("trucks")
@@ -87,17 +91,46 @@ export default async function MaintenancePage({
       .from("maintenance_records")
       .select("*")
       .order("service_date", { ascending: false }),
+    supabase
+      .from("expenses")
+      .select("id")
+      .not("id", "is", null),
   ]);
 
   const allTrucks = (truckData ?? []) as Truck[];
   const trucks = allTrucks.filter((truck) => active(truck.status));
   const records = (maintenanceData ?? []) as Maintenance[];
+  const linkedExpenseIds = new Set(
+    (maintenanceExpenseData ?? [])
+      .map((row) => row.id)
+      .filter(Boolean)
+  );
   const truckMap = new Map(allTrucks.map((truck) => [truck.id, truck]));
 
   const today = new Date();
   const day = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
   const state = (record: Maintenance) => {
+    const serviceDate = parseDate(record.service_date);
+    const hasLinkedExpense =
+      Boolean(record.expense_id) &&
+      linkedExpenseIds.has(String(record.expense_id));
+
+    // A performed service in the past with a real linked expense is completed.
+    // Future scheduling fields describe the NEXT service and must not relabel
+    // an already-performed service as Upcoming.
+    if (
+      serviceDate &&
+      serviceDate.getTime() <= day.getTime() &&
+      hasLinkedExpense
+    ) {
+      return "Completed";
+    }
+
+    if (serviceDate && serviceDate.getTime() > day.getTime()) {
+      return "Upcoming";
+    }
+
     const truck = record.truck_id ? truckMap.get(record.truck_id) : undefined;
     const nextMileage =
       record.next_service_mileage == null
@@ -119,7 +152,12 @@ export default async function MaintenancePage({
         ? nextDate.getTime() <= day.getTime() + 30 * 86400000
         : false);
 
-    return overdue ? "Overdue" : upcoming ? "Upcoming" : "Completed";
+    if (overdue) return "Overdue";
+    if (upcoming) return "Upcoming";
+
+    return serviceDate && serviceDate.getTime() <= day.getTime()
+      ? "Completed"
+      : "Upcoming";
   };
 
   const serviceTypes = [...new Set(
@@ -270,45 +308,43 @@ export default async function MaintenancePage({
           </div>
         </section>
 
-        {(error || truckError) && (
+        {(maintenanceError || truckError || maintenanceExpenseError) && (
           <div className="mt-3 rounded-[10px] border border-[#ffcf82] bg-[#fff7e8] px-4 py-3 text-[10px] font-[600] text-[#966217]">
-            {(error || truckError)?.message}
+            {(maintenanceError || truckError || maintenanceExpenseError)?.message}
           </div>
         )}
 
         <div className="fp-maint-layout mt-4">
           <div className="min-w-0">
             <div className="fp-maint-kpi-grid">
-              <MaintKpi
+              <KpiTile
                 label="Total Services"
-                value={filteredBase.length}
-                tone="blue"
-                icon="service"
-                note={maintenanceRangeNote(dateFrom, dateTo)}
+                                value={filteredBase.length}
+                                note={maintenanceRangeNote(dateFrom, dateTo)}
               />
-              <MaintKpi
+              <KpiTile
                 label="Completed"
-                value={completed}
-                tone="green"
-                icon="completed"
-                note={maintenanceRangeNote(dateFrom, dateTo)}
+                                value={completed}
+                                note={maintenanceRangeNote(dateFrom, dateTo)}
               />
-              <MaintKpi
+              <KpiTile
                 label="Upcoming"
-                value={upcoming}
-                tone="blue"
-                icon="calendar"
-                note={maintenanceRangeNote(dateFrom, dateTo)}
+                                value={upcoming}
+                                note={maintenanceRangeNote(dateFrom, dateTo)}
               />
             </div>
 
             <section className="fp-maint-table-card mt-4">
-              <div className="fp-maint-tabs">
-                <MaintTab href={maintenanceStateHref(query, "all")} label="All Services" count={filteredBase.length} active={stateFilter === "all"} />
-                <MaintTab href={maintenanceStateHref(query, "upcoming")} label="Upcoming" count={upcoming} active={stateFilter === "upcoming"} />
-                <MaintTab href={maintenanceStateHref(query, "overdue")} label="Overdue" count={overdue} active={stateFilter === "overdue"} />
-                <MaintTab href={maintenanceStateHref(query, "completed")} label="Completed" count={completed} active={stateFilter === "completed"} />
-              </div>
+              <AppTabs
+                activeKey={stateFilter}
+                ariaLabel="Maintenance status"
+                items={[
+                  { key: "all", label: "All Services", count: filteredBase.length, href: maintenanceStateHref(query, "all") },
+                  { key: "upcoming", label: "Upcoming", count: upcoming, href: maintenanceStateHref(query, "upcoming") },
+                  { key: "overdue", label: "Overdue", count: overdue, href: maintenanceStateHref(query, "overdue") },
+                  { key: "completed", label: "Completed", count: completed, href: maintenanceStateHref(query, "completed") },
+                ]}
+              />
 
               <MaintenanceFilters
                 trucks={allTrucks}
@@ -342,7 +378,7 @@ export default async function MaintenancePage({
                           <td>{shortDate(record.service_date)}</td>
                           <td className="fp-maint-type">{record.service_type || "Service"}</td>
                           <td>{record.vendor || "—"}</td>
-                          <td className="font-[650]">#{truck?.unit_number || "—"}</td>
+                          <td className="font-[700]">#{truck?.unit_number || "—"}</td>
                           <td>{num(record.mileage) > 0 ? `${num(record.mileage).toLocaleString()} mi` : "—"}</td>
                           <td>
                             <StatusBadge tone={status === "Overdue" ? "red" : status === "Upcoming" ? "blue" : "green"}>
@@ -422,16 +458,11 @@ export default async function MaintenancePage({
               </div>
             </section>
 
-            <div className="fp-maint-promo">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/28 to-transparent" />
-              <div className="relative z-10">
-                <div className="text-[16px] font-[740] leading-[1.18] text-white">
-                  Prevent Problems.<br />Drive Further.
-                </div>
-                <div className="mt-1 text-[10px] text-white/80">Drive Further.</div>
-                <div className="mt-4 h-[3px] w-10 bg-[#4c98ff]" />
-              </div>
-            </div>
+            <PromoBanner
+              headline="Prevent problems. Drive further."
+              subtext="Keep service history and upcoming maintenance tied to the trucks you run."
+              cta={{ label: "View trucks", href: "/trucks" }}
+            />
           </aside>
         </div>
       </div>
@@ -439,44 +470,8 @@ export default async function MaintenancePage({
   );
 }
 
-function MaintKpi({ label, value, tone, icon, note }: {
-  label: string;
-  value: number;
-  tone: "blue" | "green";
-  icon: "service" | "completed" | "calendar";
-  note: string;
-}) {
-  const palette = {
-    blue: { color: "#4b8df6", soft: "#eaf3ff" },
-    green: { color: "#55a965", soft: "#e9f7ed" },
-  }[tone];
-  return (
-    <div className="fp-maint-kpi">
-      <div className="fp-maint-kpi-icon" style={{ color: palette.color, backgroundColor: palette.soft }}>
-        <MaintKpiIcon type={icon} />
-      </div>
-      <div>
-        <div className="fp-maint-kpi-label">{label}</div>
-        <div className="fp-number fp-maint-kpi-value">{value}</div>
-        <div className="fp-maint-kpi-note">{note}</div>
-      </div>
-    </div>
-  );
-}
 
-function MaintKpiIcon({ type }: { type: "service" | "completed" | "calendar" }) {
-  if (type === "completed") return <CheckIcon />;
-  if (type === "calendar") return <CalendarIcon />;
-  return <ToolIcon />;
-}
 
-function MaintTab({ href, label, count, active }: { href: string; label: string; count: number; active: boolean }) {
-  return (
-    <Link href={href} className={`fp-maint-tab ${active ? "active" : ""}`}>
-      <span>{label}</span><span className="fp-maint-tab-count">{count}</span>
-    </Link>
-  );
-}
 
 function MaintDonut({ total, completed, upcoming, overdue }: { total: number; completed: number; upcoming: number; overdue: number }) {
   const safe = Math.max(1, total);

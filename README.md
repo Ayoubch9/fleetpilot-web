@@ -1,16 +1,46 @@
-# MileVoxa Web v4.0.6 — Tools Selector Blue Restore
+# MileVoxa Web v4.3.9 — Loads Empty State + Shared Promo Banner
 
-Built on v4.0.5.
+Built on v4.3.8.
 
-Keeps the overall Tools page on the MileVoxa navy/green brand system while
-restoring the calculator selector list to a premium navy/blue interaction style.
+## Loads
+Verified the existing `Add Load` quick action is on the MileVoxa primary green
+contract.
 
-The selected calculator now uses:
-- dark navy/blue card
-- brighter blue border/accent
-- white title
-- soft blue description
-- left blue active indicator
+The table empty state is now a proper card with:
+- truck icon
+- `No loads found`
+- 14px `#64748B` supporting text
+- green `Add your first load` button
 
-All calculator buttons, results, focus states, and other page accents remain
-MileVoxa green.
+The button opens the existing Add Load flow via the same application event used
+by Loads Quick Actions.
+
+## Trucks
+Verified `Add Truck` uses the primary green contract.
+
+Truck status filters already use the shared `AppTabs` component. The active
+underline and count pill are explicitly kept on the green contract:
+- underline `#16853B`
+- active count background `#EAF6EC`
+- active count text `#126F32`
+
+## Shared PromoBanner
+Added:
+`src/components/promo-banner.tsx`
+
+Props:
+- `headline`
+- `subtext`
+- `cta`
+
+The repeated truck-photo promo treatment is now centralized and used by:
+- Trucks
+- Maintenance
+- Settlement
+- Reimbursements
+- Security Deposit
+
+Each page supplies page-specific headline, supporting copy, and CTA.
+
+The old page-specific promo markup for Trucks, Maintenance, Settlement, and
+Reimbursements was removed.

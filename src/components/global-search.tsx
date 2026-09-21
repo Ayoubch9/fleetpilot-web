@@ -1,4 +1,5 @@
 "use client";
+import { formatMoney } from "@/lib/format";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -274,14 +275,6 @@ export default function GlobalSearch() {
 
 function escapeLike(value: string) {
   return value.replace(/[%_]/g, "");
-}
-
-function formatMoney(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(value);
 }
 
 function typeLabel(type: SearchItem["type"]) {
