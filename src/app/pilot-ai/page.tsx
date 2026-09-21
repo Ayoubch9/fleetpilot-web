@@ -45,7 +45,7 @@ export default async function PilotAIPage({
       />
     </section>
     <aside className="fp-right-stack">
-      <section className="fp-panel side"><h2>Suggested Questions</h2>{["What was my most profitable week?","How can I reduce my fuel costs?","Which truck is the most profitable?","Show me this month's expense summary","What maintenance is due soon?","Analyze fleet performance","Which routes are most profitable?","Compare fuel efficiency by truck"].map(x=><a key={x} href={`/pilot-ai?q=${encodeURIComponent(x)}`} className="fp-ai-suggest">✦ {x}</a>)}</section>
+      <section className="fp-panel side"><h2>Suggested Questions</h2>{["What was my most profitable week?","How can I reduce my fuel costs?","Which truck is the most profitable?","Show me this month's expense summary","What maintenance is due soon?","Analyze fleet performance","Which routes are most profitable?","Compare fuel efficiency by truck"].map(x=><a key={x} href={`/pilot-ai?q=${encodeURIComponent(x)}`} className="fp-ai-suggest"><span className="fp-ai-suggest-spark">✦</span>{x}</a>)}</section>
       <section className="fp-panel side"><h2>Quick Insights</h2><Insight text={`Fuel expenses: ${money(fuel)}`}/><Insight text={`${active} active truck${active===1?"":"s"}`}/><Insight text={`${service} service date${service===1?"":"s"} tracked`}/><Insight text={`Net profit: ${money(profit)}`}/></section>
     </aside>
    </div>

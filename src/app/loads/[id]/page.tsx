@@ -1,4 +1,5 @@
 import { formatPercent } from "@/lib/format";
+import { calculateLoadProfitabilityMap } from "@/lib/load-domain";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
@@ -32,6 +33,7 @@ type Load = {
 
 type Expense = {
   id: string;
+  load_id: string | null;
   category: string | null;
   amount: number | string | null;
   vendor: string | null;
@@ -61,17 +63,16 @@ export default async function LoadProfitabilityPage({ params }: Props) {
   const weekTo = dbDate(weekEndDate);
 
   const [
-    directExpenseResult,
+    weeklyExpenseResult,
     truckResult,
     weeklyLoadsResult,
     weeklyFixedResult,
-    feeSettingsResult,
-    odometerResult,
   ] = await Promise.all([
     supabase
       .from("expenses")
-      .select("id, category, amount, vendor, description, expense_date")
-      .eq("load_id", id)
+      .select("id, load_id, category, amount, vendor, description, expense_date")
+      .gte("expense_date", weekFrom)
+      .lte("expense_date", weekTo)
       .order("expense_date"),
     load.truck_id
       ? supabase
@@ -82,18 +83,14 @@ export default async function LoadProfitabilityPage({ params }: Props) {
       : Promise.resolve({ data: null, error: null }),
     supabase
       .from("loads")
-      .select("id, rate, loaded_miles, deadhead_miles")
+      .select("id, rate, loaded_miles, deadhead_miles, pickup_date")
       .gte("pickup_date", weekFrom)
       .lte("pickup_date", weekTo),
     supabase.from("weekly_fixed_expenses").select("*"),
-    supabase.from("company_fee_settings").select("*").limit(1),
-    supabase
-      .from("weekly_odometer_records")
-      .select("start_odometer, end_odometer")
-      .eq("week_start", weekFrom),
   ]);
 
-  const directExpenses = (directExpenseResult.data ?? []) as Expense[];
+  const weeklyExpenses = (weeklyExpenseResult.data ?? []) as Expense[];
+  const directExpenses = weeklyExpenses.filter((expense) => expense.load_id === id);
   const truck = truckResult.data as
     | { id: string; unit_number: string; make: string | null; model: string | null }
     | null;
@@ -102,6 +99,7 @@ export default async function LoadProfitabilityPage({ params }: Props) {
     rate: number | string | null;
     loaded_miles: number | string | null;
     deadhead_miles: number | string | null;
+    pickup_date: string | null;
   }>;
 
   const revenue = num(load.rate);
@@ -111,108 +109,44 @@ export default async function LoadProfitabilityPage({ params }: Props) {
   const loadedRpm = loadedMiles > 0 ? revenue / loadedMiles : 0;
   const trueRpm = totalMiles > 0 ? revenue / totalMiles : 0;
 
-  const categoryCosts = new Map<string, number>();
-  for (const expense of directExpenses) {
-    const label = expense.category || "Other";
-    categoryCosts.set(label, (categoryCosts.get(label) || 0) + num(expense.amount));
-  }
+  const profitability = calculateLoadProfitabilityMap({
+    loads: weeklyLoads,
+    expenses: weeklyExpenses,
+    fixedExpenses: weeklyFixedResult.data ?? [],
+    expenseSourceAvailable: !weeklyExpenseResult.error,
+    fixedExpenseSourceAvailable: !weeklyFixedResult.error,
+  });
+  const profitResult = profitability.get(load.id);
 
-  const directCost = directExpenses.reduce(
-    (sum, expense) => sum + num(expense.amount),
-    0
-  );
-
-  const activeFixed = (weeklyFixedResult.data ?? []).filter((row: any) =>
-    typeof row.is_active === "boolean"
-      ? row.is_active
-      : typeof row.active === "boolean"
-        ? row.active
-        : true
-  );
-  const fixedWeekly = activeFixed.reduce(
-    (sum: number, row: any) => sum + num(row.amount),
-    0
-  );
-
-  const settings = (feeSettingsResult.data ?? [])[0] as any;
-  const revenueFeePercent =
-    settings?.revenue_fee_percent == null
-      ? 15
-      : num(settings.revenue_fee_percent);
-  const revenueFeeActive =
-    settings?.is_revenue_fee_active == null
-      ? true
-      : Boolean(settings.is_revenue_fee_active);
-  const mileageFeeRate =
-    settings?.mileage_fee_per_mile == null
-      ? 0.15
-      : num(settings.mileage_fee_per_mile);
-  const mileageFeeActive =
-    settings?.is_mileage_fee_active == null
-      ? true
-      : Boolean(settings.is_mileage_fee_active);
-
-  const weeklyLoadMiles = weeklyLoads.reduce(
-    (sum, row) =>
-      sum + num(row.loaded_miles) + num(row.deadhead_miles),
-    0
-  );
-  const loadShare =
-    weeklyLoadMiles > 0
-      ? totalMiles / weeklyLoadMiles
-      : weeklyLoads.length > 0
-        ? 1 / weeklyLoads.length
-        : 1;
-
-  const allocatedFixed = fixedWeekly * loadShare;
-  const allocatedRevenueFee = revenueFeeActive
-    ? revenue * (revenueFeePercent / 100)
-    : 0;
-
-  const odometerMiles = (odometerResult.data ?? []).reduce(
-    (sum: number, row: any) =>
-      sum +
-      Math.max(
-        num(row.end_odometer) - num(row.start_odometer),
-        0
-      ),
-    0
-  );
-
-  const allocatedMileageFee =
-    mileageFeeActive && odometerMiles > 0
-      ? odometerMiles * mileageFeeRate * loadShare
-      : mileageFeeActive
-        ? totalMiles * mileageFeeRate
-        : 0;
-
-  const allocatedOverhead =
-    allocatedFixed + allocatedRevenueFee + allocatedMileageFee;
-  const estimatedProfit = revenue - directCost - allocatedOverhead;
+  const directFuelAndTolls = profitResult?.directFuelAndTolls ?? 0;
+  const allocatedSharedFuelAndTolls =
+    profitResult?.allocatedSharedFuelAndTolls ?? 0;
+  const allocatedFixed = profitResult?.allocatedFixed ?? 0;
+  const allocatedCost = profitResult?.allocatedCost ?? null;
+  const estimatedProfit = profitResult?.profit ?? null;
   const profitPerMile =
-    totalMiles > 0 ? estimatedProfit / totalMiles : 0;
+    estimatedProfit != null && totalMiles > 0
+      ? estimatedProfit / totalMiles
+      : null;
   const margin =
-    revenue > 0 ? (estimatedProfit / revenue) * 100 : 0;
+    estimatedProfit != null && revenue > 0
+      ? (estimatedProfit / revenue) * 100
+      : null;
 
   const costRows = [
-    ...[...categoryCosts.entries()].map(([label, amount]) => ({
-      label,
-      amount,
+    {
+      label: "Linked Fuel & Tolls",
+      amount: directFuelAndTolls,
       type: "Direct",
-    })),
+    },
+    {
+      label: "Shared Weekly Fuel & Tolls",
+      amount: allocatedSharedFuelAndTolls,
+      type: "Allocated",
+    },
     {
       label: "Allocated Weekly Fixed Costs",
       amount: allocatedFixed,
-      type: "Allocated",
-    },
-    {
-      label: `Company Revenue Fee (${formatPercent(revenueFeePercent)})`,
-      amount: allocatedRevenueFee,
-      type: "Allocated",
-    },
-    {
-      label: `Mileage Fee (${money(mileageFeeRate)}/mi)`,
-      amount: allocatedMileageFee,
       type: "Allocated",
     },
   ].filter((row) => row.amount > 0);
@@ -249,16 +183,16 @@ export default async function LoadProfitabilityPage({ params }: Props) {
 
         <div className="fp-detail-kpi-grid">
           <DetailKpi label="Revenue" value={money(revenue)} tone="blue" />
-          <DetailKpi label="Direct Costs" value={money(directCost)} tone="red" />
+          <DetailKpi label="Linked Fuel & Tolls" value={money(directFuelAndTolls)} tone="red" />
           <DetailKpi
-            label="Allocated Overhead"
-            value={money(allocatedOverhead)}
+            label="Allocated Costs"
+            value={money(allocatedSharedFuelAndTolls + allocatedFixed)}
             tone="amber"
           />
           <DetailKpi
             label="Est. Load Profit"
-            value={money(estimatedProfit)}
-            tone={estimatedProfit >= 0 ? "green" : "red"}
+            value={estimatedProfit == null ? "—" : money(estimatedProfit)}
+            tone={estimatedProfit == null || estimatedProfit >= 0 ? "green" : "red"}
           />
         </div>
 
@@ -272,18 +206,27 @@ export default async function LoadProfitabilityPage({ params }: Props) {
             </div>
 
             <div className="fp-load-economics-grid">
-              <Metric label="Loaded Miles" value={`${loadedMiles.toLocaleString()} mi`} />
-              <Metric label="Deadhead Miles" value={`${deadheadMiles.toLocaleString()} mi`} />
-              <Metric label="Total Miles" value={`${totalMiles.toLocaleString()} mi`} />
+              <Metric
+                label="Loaded Miles"
+                value={load.loaded_miles == null ? "—" : `${loadedMiles.toLocaleString()} mi`}
+              />
+              <Metric
+                label="Deadhead Miles"
+                value={load.deadhead_miles == null ? "—" : `${deadheadMiles.toLocaleString()} mi`}
+              />
+              <Metric
+                label="Total Miles"
+                value={totalMiles > 0 ? `${totalMiles.toLocaleString()} mi` : "—"}
+              />
               <Metric label="Loaded RPM" value={money(loadedRpm)} />
               <Metric label="True RPM" value={money(trueRpm)} />
-              <Metric label="Profit / Mile" value={money(profitPerMile)} />
-              <Metric label="Profit Margin" value={formatPercent(margin)} />
+              <Metric label="Profit / Mile" value={profitPerMile == null ? "—" : money(profitPerMile)} />
+              <Metric label="Profit Margin" value={margin == null ? "—" : formatPercent(margin)} />
               <Metric
                 label="Cost / Mile"
                 value={money(
-                  totalMiles > 0
-                    ? (directCost + allocatedOverhead) / totalMiles
+                  allocatedCost != null && totalMiles > 0
+                    ? allocatedCost / totalMiles
                     : 0
                 )}
               />
@@ -357,11 +300,12 @@ export default async function LoadProfitabilityPage({ params }: Props) {
         <div className="fp-detail-note">
           <strong>How estimated profit is calculated</strong>
           <p>
-            Revenue minus expenses directly linked to this load, minus this
-            load&apos;s proportional share of weekly fixed costs and company
-            fees. The allocation is based on the load&apos;s share of weekly
-            load miles, so this is an operating estimate rather than an
-            accounting ledger entry.
+            Rate minus fuel and toll costs linked directly to this load, minus
+            its mileage-based share of unlinked weekly fuel/toll costs and
+            active weekly fixed costs.
+            {estimatedProfit == null && profitResult?.reason
+              ? ` ${profitResult.reason}`
+              : ""}
           </p>
         </div>
       </div>

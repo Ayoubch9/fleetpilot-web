@@ -272,7 +272,7 @@ export function StatusBadge({
   }[tone];
 
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-[8.5px] font-[750] ${colors}`}>
+    <span className={`inline-flex rounded-full px-2.5 py-1 text-[8.5px] font-[700] ${colors}`}>
       {children}
     </span>
   );

@@ -588,7 +588,7 @@ export default async function FuelPage({
                 </section>
 
                 <div className="fp-fuel-promo">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#06182d]/82 via-[#06182d]/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0B1730]/82 via-[#0B1730]/25 to-transparent" />
                   <div className="relative z-10">
                     <div className="text-[16px] font-[700] leading-[1.18] text-white">
                       Lower Fuel Costs.

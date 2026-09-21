@@ -563,6 +563,7 @@ export default async function LoadsPage({
                         numberValue(load.loaded_miles) +
                           numberValue(load.deadhead_miles)
                       );
+                      const hasVerifiedMiles = miles > 0;
                       const rate = numberValue(load.rate);
                       const profitResult = profitability.get(load.id);
                       const profit = profitResult?.profit ?? null;
@@ -588,7 +589,7 @@ export default async function LoadsPage({
                           <td>
                             <DateCell value={load.delivery_date} />
                           </td>
-                          <td>{miles.toLocaleString()}</td>
+                          <td>{hasVerifiedMiles ? miles.toLocaleString() : "—"}</td>
                           <td className="fp-load-rate">{money(rate)}</td>
                           <td
                              className={

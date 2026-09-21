@@ -85,7 +85,7 @@ const homepageFaqs = [
   {
     question: "What happens after the trial?",
     answer:
-      "On day 15, the free trial ends and there is no automatic charge because no card is required to start. The current published MileVoxa Pro price is $29/month per company, not per truck. Paid billing begins only when the company owner actively completes Stripe checkout, and cancellation is handled through the Stripe billing portal. If checkout is not yet visible in the current UI when your trial ends, you are not charged and your company data remains tied to your MileVoxa account.",
+      "On day 15, the free trial ends and there is no automatic charge because no card is required to start. MileVoxa plans are priced per company: Solo is $19/month for 1 truck, Fleet is $29/month for up to 5 trucks with unlimited drivers, and Pro is $49/month for up to 15 trucks. Paid billing begins only when the company owner actively completes checkout, and cancellation follows the existing MileVoxa terms.",
   },
   {
     question: "Can I import dispatcher load information?",
@@ -373,25 +373,39 @@ export default function HomePage() {
 
       <section className="fp-marketing-pricing-preview">
         <div>
-          <span>Simple subscription</span>
-          <h2>Try the full MileVoxa workflow for 14 days.</h2>
+          <span>Launch pricing</span>
+          <h2>One price per company. Pick the fleet size that fits.</h2>
           <p>
-            Start with the product, add your own loads and costs, and decide whether
-            MileVoxa earns a place in your weekly operation.
+            Every plan starts with a 14-day free trial with no credit card required.
+            You are not charged per driver.
           </p>
         </div>
 
         <div className="fp-marketing-pricing-preview-card">
           <div>
-            <small>MILEVOXA PRO</small>
-            <strong>14 days free</strong>
-            <span>No card required during the trial</span>
+            <small>MILEVOXA PLANS</small>
+            <strong>Starts at $19/month</strong>
+            <span>Per company — not per truck, not per driver</span>
           </div>
-          <ul>
-            <li>Loads, trucks and expenses</li>
-            <li>Fuel & maintenance analytics</li>
-            <li>Weekly settlement & reports</li>
-            <li>Pilot AI & operational alerts</li>
+          <ul className="mv-home-pricing-plan-list">
+            <li>
+              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
+              <b>Solo</b>
+              <span className="mv-home-plan-price">$19/mo</span>
+              <span className="mv-home-plan-scope">1 truck</span>
+            </li>
+            <li>
+              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
+              <b>Fleet</b>
+              <span className="mv-home-plan-price">$29/mo</span>
+              <span className="mv-home-plan-scope">Up to 5 trucks · unlimited drivers</span>
+            </li>
+            <li>
+              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
+              <b>Pro</b>
+              <span className="mv-home-plan-price">$49/mo</span>
+              <span className="mv-home-plan-scope">Up to 15 trucks</span>
+            </li>
           </ul>
           <div className="fp-marketing-pricing-buttons">
             <Link href="/signup" className="fp-marketing-button primary large">

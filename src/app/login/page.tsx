@@ -68,7 +68,7 @@ export default function LoginPage() {
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
     <main className="mv-login-page grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
-      <section className="relative hidden overflow-hidden border-r border-[#24364a] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <section className="relative hidden overflow-hidden border-r border-[#102238] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <MileVoxaBrand onDark />
         <div>
           <div className="text-[10px] font-black uppercase tracking-[.2em] text-[#55b772]">Trucking business intelligence</div>

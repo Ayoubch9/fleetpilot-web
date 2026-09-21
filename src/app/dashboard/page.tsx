@@ -554,7 +554,7 @@ export default async function DashboardPage({
           </div>
 
           <div className="min-w-0">
-            <div className="text-[11px] font-[700] text-[#10203a]">
+            <div className="text-[11px] font-[700] text-[#102238]">
               Ask MileVoxa
             </div>
             <div className="mt-1 text-[8px] leading-[1.35] text-[#6a7d93]">

@@ -43,7 +43,7 @@ export default function OpenGraphImage() {
               borderRadius: 14,
               background: "#16853B",
               fontSize: 26,
-              fontWeight: 900,
+              fontWeight: 800,
             }}
           >
             M
@@ -68,7 +68,7 @@ export default function OpenGraphImage() {
               maxWidth: 960,
               fontSize: 64,
               lineHeight: 1.03,
-              fontWeight: 850,
+              fontWeight: 800,
               letterSpacing: "-0.045em",
             }}
           >

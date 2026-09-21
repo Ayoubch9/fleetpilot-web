@@ -56,7 +56,7 @@ export default function SignupPage() {
 
   return (
     <main className="mv-signup-page grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
-      <section className="relative hidden overflow-hidden border-r border-[#24364a] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <section className="relative hidden overflow-hidden border-r border-[#102238] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <MileVoxaBrand onDark />
         <div>
           <div className="text-[10px] font-black uppercase tracking-[.2em] text-[#55b772]">Start your control center</div>
@@ -68,6 +68,7 @@ export default function SignupPage() {
           </p>
         </div>
         <div className="text-xs font-bold text-[#8da0b2]">14-day trial · No card required</div>
+        <div className="mt-1 text-[11px] font-[600] text-[#16853B]">Plans from $19/month per company.</div>
         <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#16853B]/10 blur-[100px]" />
       </section>
 

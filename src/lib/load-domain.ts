@@ -34,6 +34,7 @@ export type LoadProfitResult = {
   profit: number | null;
   allocatedCost: number | null;
   directFuelAndTolls: number;
+  allocatedSharedFuelAndTolls: number | null;
   allocatedFixed: number | null;
   reason?: string;
 };
@@ -203,23 +204,33 @@ export function calculateLoadProfitabilityMap({
     if (!key) continue;
     const miles =
       normalizeMiles(load.loaded_miles) + normalizeMiles(load.deadhead_miles);
+    if (miles <= 0) continue;
     weekMiles.set(key, (weekMiles.get(key) || 0) + miles);
   }
 
   const directByLoad = new Map<string, number>();
-  const unlinkedCostWeeks = new Set<string>();
+  const sharedFuelAndTollsByWeek = new Map<string, number>();
 
   for (const expense of expenses) {
     if (!isAllocatableDirectCategory(expense.category)) continue;
-    const amount = n(expense.amount);
+
+    const amount = Math.max(0, n(expense.amount));
+    if (amount <= 0) continue;
+
     if (expense.load_id) {
       directByLoad.set(
         expense.load_id,
         (directByLoad.get(expense.load_id) || 0) + amount
       );
-    } else {
-      const key = weekKey(expense.expense_date);
-      if (key && amount > 0) unlinkedCostWeeks.add(key);
+      continue;
+    }
+
+    const key = weekKey(expense.expense_date);
+    if (key) {
+      sharedFuelAndTollsByWeek.set(
+        key,
+        (sharedFuelAndTollsByWeek.get(key) || 0) + amount
+      );
     }
   }
 
@@ -235,8 +246,9 @@ export function calculateLoadProfitabilityMap({
         profit: null,
         allocatedCost: null,
         directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
         allocatedFixed: null,
-        reason: "Profit unavailable: linked fuel/toll costs could not be loaded.",
+        reason: "Profit unavailable: fuel/toll costs could not be loaded.",
       });
       continue;
     }
@@ -246,31 +258,45 @@ export function calculateLoadProfitabilityMap({
         profit: null,
         allocatedCost: null,
         directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
         allocatedFixed: null,
         reason: "Profit unavailable: weekly fixed costs could not be loaded.",
       });
       continue;
     }
 
-    if (!key || miles <= 0) {
+    if (rate <= 0) {
       result.set(load.id, {
         profit: null,
         allocatedCost: null,
         directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
         allocatedFixed: null,
-        reason: "Profit unavailable: this load has no allocatable mileage.",
+        reason: "Profit unavailable: this load has no valid rate.",
       });
       continue;
     }
 
-    if (unlinkedCostWeeks.has(key)) {
+    if (!key) {
       result.set(load.id, {
         profit: null,
         allocatedCost: null,
         directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
         allocatedFixed: null,
-        reason:
-          "Profit unavailable: fuel/toll costs exist this week without a load link.",
+        reason: "Profit unavailable: this load has no valid pickup date.",
+      });
+      continue;
+    }
+
+    if (miles <= 0) {
+      result.set(load.id, {
+        profit: null,
+        allocatedCost: null,
+        directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
+        allocatedFixed: null,
+        reason: "Profit unavailable: this load has no verified mileage.",
       });
       continue;
     }
@@ -281,31 +307,25 @@ export function calculateLoadProfitabilityMap({
         profit: null,
         allocatedCost: null,
         directFuelAndTolls: direct,
+        allocatedSharedFuelAndTolls: null,
         allocatedFixed: null,
         reason: "Profit unavailable: weekly mileage cannot be allocated.",
       });
       continue;
     }
 
-    const allocatedFixed = fixedWeekly * (miles / totalWeekMiles);
-    const allocatedCost = direct + allocatedFixed;
-
-    if (allocatedCost <= 0) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedFixed,
-        reason:
-          "Profit unavailable: no allocatable fuel/toll or weekly fixed costs are recorded yet.",
-      });
-      continue;
-    }
+    const mileageShare = miles / totalWeekMiles;
+    const allocatedSharedFuelAndTolls =
+      (sharedFuelAndTollsByWeek.get(key) || 0) * mileageShare;
+    const allocatedFixed = fixedWeekly * mileageShare;
+    const allocatedCost =
+      direct + allocatedSharedFuelAndTolls + allocatedFixed;
 
     result.set(load.id, {
       profit: rate - allocatedCost,
       allocatedCost,
       directFuelAndTolls: direct,
+      allocatedSharedFuelAndTolls,
       allocatedFixed,
     });
   }

@@ -98,8 +98,8 @@ export default async function AppShell({
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F9F8]">
-      <aside className="fp-sidebar-fixed fixed inset-y-0 left-0 z-40 hidden bg-gradient-to-b from-[#102238] to-[#0D1E31] text-white lg:flex lg:flex-col">
+    <main className="mv-app-shell min-h-screen bg-[#F7F9F8]">
+      <aside className="fp-sidebar-fixed fixed inset-y-0 left-0 z-40 hidden bg-gradient-to-b from-[#102238] to-[#0B1730] text-white lg:flex lg:flex-col">
         <div className="px-5 py-[16px]">
           <MileVoxaBrand
             href="/dashboard"
