@@ -16065,3 +16065,39 @@ body{
   color:#126F32!important;
 }
 /* === END MileVoxa Shared Promo + Loads Empty State v4.3.9 === */
+
+
+/* ==========================================================================
+   MileVoxa Public Header Full-Width Surface v4.3.11
+   Built directly on v4.3.9; discarded v4.3.10 changes are not included.
+   ========================================================================== */
+
+/* The old header itself stopped at 1440px, exposing the public-shell background
+   as different-colored gutters on wide screens. Make the white header surface
+   full width while preserving the exact centered 1440px content alignment. */
+.fp-public-shell .fp-public-header{
+  width:100%!important;
+  max-width:none!important;
+  background:#FFFFFF!important;
+}
+
+@media(min-width:768px){
+  .fp-public-shell .fp-public-header{
+    padding-left:max(38px,calc((100vw - 1440px)/2 + 38px))!important;
+    padding-right:max(38px,calc((100vw - 1440px)/2 + 38px))!important;
+  }
+}
+/* === END MileVoxa Public Header Full-Width Surface v4.3.11 === */
+
+
+/* ==========================================================================
+   MileVoxa Homepage Bottom Surface v4.3.12
+   Prevent the final CTA's bottom margin from collapsing into the gray
+   PublicLayout shell, so the spacing above the footer remains white.
+   ========================================================================== */
+
+.fp-public-shell .fp-marketing-page{
+  display:flow-root;
+  background:#FFFFFF!important;
+}
+/* === END MileVoxa Homepage Bottom Surface v4.3.12 === */

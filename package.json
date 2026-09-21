@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.3.9",
+  "version": "4.3.12",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -28,7 +28,9 @@
     "test:login-visual-polish": "node scripts/login-visual-polish.test.cjs",
     "test:legal-readability": "node scripts/legal-shared-chrome-readability.test.cjs",
     "test:branded-404": "node scripts/branded-404.test.cjs",
-    "test:loads-trucks-promo": "node scripts/loads-trucks-promo.test.cjs"
+    "test:loads-trucks-promo": "node scripts/loads-trucks-promo.test.cjs",
+    "test:public-header-full-width": "node scripts/public-header-full-width.test.cjs",
+    "test:homepage-bottom-surface": "node scripts/homepage-bottom-surface.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

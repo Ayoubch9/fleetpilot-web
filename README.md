@@ -1,46 +1,18 @@
-# MileVoxa Web v4.3.9 — Loads Empty State + Shared Promo Banner
+# MileVoxa Web v4.3.12 — Homepage Bottom Surface Fix
 
-Built on v4.3.8.
+Built from v4.3.11, which itself was built directly from v4.3.9.
+The discarded v4.3.10 changes remain excluded.
 
-## Loads
-Verified the existing `Add Load` quick action is on the MileVoxa primary green
-contract.
+## Fix
+The large light-gray strip below the homepage final CTA was caused by the final
+CTA's bottom margin collapsing outside the white homepage `<main>` and exposing
+the shared public-shell background.
 
-The table empty state is now a proper card with:
-- truck icon
-- `No loads found`
-- 14px `#64748B` supporting text
-- green `Add your first load` button
+The homepage now establishes its own formatting context with `display: flow-root`
+and explicitly keeps its surface white. This preserves the existing CTA spacing
+while making the entire gap above the shared footer white.
 
-The button opens the existing Add Load flow via the same application event used
-by Loads Quick Actions.
+No CTA, footer, content, spacing value, or responsive layout was redesigned.
 
-## Trucks
-Verified `Add Truck` uses the primary green contract.
-
-Truck status filters already use the shared `AppTabs` component. The active
-underline and count pill are explicitly kept on the green contract:
-- underline `#16853B`
-- active count background `#EAF6EC`
-- active count text `#126F32`
-
-## Shared PromoBanner
-Added:
-`src/components/promo-banner.tsx`
-
-Props:
-- `headline`
-- `subtext`
-- `cta`
-
-The repeated truck-photo promo treatment is now centralized and used by:
-- Trucks
-- Maintenance
-- Settlement
-- Reimbursements
-- Security Deposit
-
-Each page supplies page-specific headline, supporting copy, and CTA.
-
-The old page-specific promo markup for Trucks, Maintenance, Settlement, and
-Reimbursements was removed.
+## Preserved
+The v4.3.11 full-width white public-header fix remains included.
