@@ -325,39 +325,38 @@ export default function HomePage() {
       <section className="fp-marketing-social-proof" aria-labelledby="social-proof-heading">
         <div className="fp-marketing-section-heading compact">
           <div>
-            <span>Built for real trucking operations</span>
-            <h2 id="social-proof-heading">Clarity that should show up in the numbers.</h2>
+            <span>Built around real trucking workflows</span>
+            <h2 id="social-proof-heading">See where MileVoxa fits into the week.</h2>
           </div>
           <p>
-            These placeholders show the proof structure we want here. Replace them
-            with verified customer quotes and real aggregate usage numbers before
-            treating this section as published social proof.
+            These examples illustrate common ways an owner-operator or small fleet
+            can use MileVoxa. They are product scenarios, not customer testimonials.
           </p>
         </div>
 
         <div className="fp-marketing-testimonial-grid">
-          <Testimonial
-            quote="I stopped rebuilding the same weekly numbers in three different places. MileVoxa gives me one view of the load, the costs and what is actually left."
-            name="TODO — Owner-operator customer"
-            detail="TODO — City / operation type"
+          <ScenarioCard
+            text="Bring the load, fuel, tolls and weekly fixed costs into one view so you can see what the load actually contributed."
+            title="Owner-operator workflow"
+            detail="1 truck · Solo plan"
           />
-          <Testimonial
-            quote="The weekly settlement view makes it easier to see which costs are changing before they turn into a month-end surprise."
-            name="TODO — Small-fleet customer"
-            detail="TODO — Fleet size / region"
+          <ScenarioCard
+            text="Review weekly settlement and maintenance together so cost changes are easier to catch before they become a month-end surprise."
+            title="Growing fleet workflow"
+            detail="Up to 5 trucks · Fleet plan"
           />
-          <Testimonial
-            quote="I can check loads, fuel, maintenance and profit without jumping between a spreadsheet, receipts and messages."
-            name="TODO — Fleet owner customer"
-            detail="TODO — Company / market"
+          <ScenarioCard
+            text="Keep loads, fuel, maintenance, documents and profit reporting connected as the operation grows."
+            title="Established fleet workflow"
+            detail="Up to 15 trucks · Pro plan"
           />
         </div>
 
         <div className="fp-marketing-proof-stats">
-          <ProofStat value="TODO" label="Trucks tracked" />
-          <ProofStat value="TODO" label="Miles logged" />
-          <ProofStat value="TODO" label="Loads managed" />
-          <ProofStat value="TODO" label="Operating weeks reviewed" />
+          <ProofStat value="14 days" label="Free trial" detail="No credit card required" />
+          <ProofStat value="3 plans" label="Company pricing" detail="Solo · Fleet · Pro" />
+          <ProofStat value="15 trucks" label="Pro capacity" detail="Per company, not per truck" />
+          <ProofStat value="Unlimited" label="Drivers on Fleet & Pro" detail="No per-driver charge" />
         </div>
 
         <div className="fp-marketing-social-proof-trial">
@@ -473,33 +472,41 @@ function AboutPoint({ number, title, text }: { number: string; title: string; te
   );
 }
 
-function Testimonial({
-  quote,
-  name,
+function ScenarioCard({
+  text,
+  title,
   detail,
 }: {
-  quote: string;
-  name: string;
+  text: string;
+  title: string;
   detail: string;
 }) {
   return (
     <article className="fp-marketing-testimonial">
-      <span className="fp-marketing-placeholder-badge">TODO PLACEHOLDER</span>
-      <blockquote>“{quote}”</blockquote>
+      <span className="fp-marketing-placeholder-badge">ILLUSTRATIVE EXAMPLE</span>
+      <blockquote>{text}</blockquote>
       <div>
-        <strong>{name}</strong>
+        <strong>{title}</strong>
         <span>{detail}</span>
       </div>
     </article>
   );
 }
 
-function ProofStat({ value, label }: { value: string; label: string }) {
+function ProofStat({
+  value,
+  label,
+  detail,
+}: {
+  value: string;
+  label: string;
+  detail: string;
+}) {
   return (
     <div className="fp-marketing-proof-stat">
       <strong>{value}</strong>
       <span>{label}</span>
-      <small>TODO — replace with verified aggregate</small>
+      <small>{detail}</small>
     </div>
   );
 }

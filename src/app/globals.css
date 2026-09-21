@@ -16540,3 +16540,24 @@ body{
   }
 }
 /* === END MileVoxa Homepage Pricing Preview Alignment v4.3.17 === */
+
+
+/* ==========================================================================
+   MileVoxa Homepage Scenario Proof v4.3.19
+   Finished marketing content without fabricated customer claims.
+   ========================================================================== */
+
+.fp-marketing-page .fp-marketing-placeholder-badge{
+  border:1px solid #CBE8D2!important;
+  background:#EAF6EC!important;
+  color:#126F32!important;
+}
+
+.fp-marketing-page .fp-marketing-testimonial blockquote{
+  color:#102238!important;
+}
+
+.fp-marketing-page .fp-marketing-proof-stat small{
+  color:#8AA0B2!important;
+}
+/* === END MileVoxa Homepage Scenario Proof v4.3.19 === */

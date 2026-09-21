@@ -1,13 +1,18 @@
-# MileVoxa Web v4.3.18 — Pricing TypeScript Fix
+# MileVoxa Web v4.3.19 — Homepage Marketing Proof
 
-Built on v4.3.17.
+Built on v4.3.18.
 
-## Fix
-`src/app/pricing/pricing-plans.tsx` now defines an explicit shared `PricingPlan`
-type with `popular?: boolean`.
+The homepage placeholder social-proof area is now production-ready without
+fabricating real customer claims.
 
-This resolves the TypeScript error where `plan.popular` was not available on
-the Solo and Pro members of the inferred union.
+## Changes
+- Replaced TODO testimonial placeholders with clearly labeled illustrative
+  owner-operator / fleet workflow scenarios.
+- Replaced TODO aggregate metrics with real product facts:
+  - 14-day free trial
+  - 3 company plans
+  - up to 15 trucks on Pro
+  - unlimited drivers on Fleet and Pro
+- Preserved the existing card layout and MileVoxa visual system.
 
-No pricing content, layout, billing behavior, auth behavior, or trial logic was
-changed.
+No pricing logic, auth, billing, Supabase, or mobile-app behavior changed.

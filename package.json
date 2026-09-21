@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.3.18",
+  "version": "4.3.19",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -35,7 +35,8 @@
     "test:typography-navy-table": "node scripts/typography-navy-table.test.cjs",
     "test:load-data-quality-profit": "node scripts/load-data-quality-profit.test.cjs",
     "test:launch-pricing": "node scripts/launch-pricing-content.test.cjs",
-    "test:home-pricing-preview": "node scripts/home-pricing-preview-alignment.test.cjs"
+    "test:home-pricing-preview": "node scripts/home-pricing-preview-alignment.test.cjs",
+    "test:home-marketing-proof": "node scripts/home-marketing-proof.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
