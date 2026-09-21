@@ -13,6 +13,7 @@ type ActivePage =
   | "reimbursements"
   | "maintenance"
   | "settlement"
+  | "odometer"
   | "deposit"
   | "fuel"
   | "reports"
@@ -32,6 +33,7 @@ const more = [
   ["maintenance", "Maintenance", "/maintenance", "maintenance"],
   ["reimbursements", "Reimbursements", "/reimbursements", "wallet"],
   ["settlement", "Weekly Settlement", "/settlement", "settlement"],
+  ["odometer", "Weekly Odometer", "/odometer", "odometer"],
   ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
   ["reports", "Reports", "/reports", "report"],
@@ -201,6 +203,16 @@ function MobileIcon({ type }: { type: string }) {
       <svg {...common}>
         <rect x="5" y="3" width="14" height="18" rx="2" />
         <path d="M8 9h8M8 13h5" />
+      </svg>
+    );
+
+
+  if (type === "odometer")
+    return (
+      <svg {...common}>
+        <path d="M4 16a8 8 0 1 1 16 0" />
+        <path d="m12 12 4-4" />
+        <path d="M7 16h10" />
       </svg>
     );
 

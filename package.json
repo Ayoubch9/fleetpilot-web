@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.3.28",
+  "version": "4.3.29",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -44,7 +44,8 @@
     "test:hero-frame-removal": "node scripts/hero-frame-removal.test.cjs",
     "test:hero-clean-scene": "node scripts/hero-clean-scene.test.cjs",
     "test:hero-full-height": "node scripts/hero-full-height.test.cjs",
-    "test:hero-responsive-scale": "node scripts/hero-responsive-scale.test.cjs"
+    "test:hero-responsive-scale": "node scripts/hero-responsive-scale.test.cjs",
+    "test:weekly-odometer": "node scripts/weekly-odometer.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

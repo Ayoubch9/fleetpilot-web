@@ -16,6 +16,7 @@ type ActivePage =
   | "reimbursements"
   | "maintenance"
   | "settlement"
+  | "odometer"
   | "deposit"
   | "fuel"
   | "reports"
@@ -43,6 +44,7 @@ const operations = [
 
 const analytics = [
   ["settlement", "Weekly Settlement", "/settlement", "money"],
+  ["odometer", "Weekly Odometer", "/odometer", "odometer"],
   ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
 ] as const;
@@ -294,6 +296,7 @@ function Icon({ type }: { type: string }) {
   if (type === "tool") return <svg {...p}><path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z"/></svg>;
   if (type === "wallet") return <svg {...p}><path d="M4 6h16v12H4z"/><path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z"/></svg>;
   if (type === "money") return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>;
+  if (type === "odometer") return <svg {...p}><path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 12 4-4"/><path d="M7 16h10"/></svg>;
   if (type === "fuel") return <svg {...p}><path d="M6 3h9v18H6zM8 7h5"/><path d="M15 8h2l2 3v6a2 2 0 0 0 2 2"/></svg>;
   if (type === "deposit") return <svg {...p}><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="M9 11h6M12 8v6"/></svg>;
   if (type === "file") return <svg {...p}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg>;

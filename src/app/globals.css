@@ -17258,3 +17258,353 @@ body{
   }
 }
 /* === END MileVoxa Hero Responsive Scale v4.3.28 === */
+
+
+/* ==========================================================================
+   MileVoxa Weekly Odometer v4.3.29
+   ========================================================================== */
+
+.fp-odometer-page{
+  padding:28px 28px 80px;
+}
+
+.fp-odometer-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.fp-odometer-heading>div:first-child>span,
+.fp-odometer-card-head>div>span{
+  color:#16853B;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.12em;
+}
+
+.fp-odometer-heading h1{
+  margin-top:5px;
+  color:#0B1730;
+  font-size:28px;
+  line-height:1.1;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+
+.fp-odometer-heading p{
+  max-width:650px;
+  margin-top:8px;
+  color:#64748B;
+  font-size:12px;
+  line-height:1.55;
+  font-weight:500;
+}
+
+.fp-odometer-week-card{
+  min-width:210px;
+  border:1px solid #DCE6E1;
+  border-radius:13px;
+  background:#fff;
+  padding:13px 16px;
+  box-shadow:0 8px 24px rgba(16,34,56,.05);
+}
+
+.fp-odometer-week-card span{
+  display:block;
+  color:#16853B;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.12em;
+}
+
+.fp-odometer-week-card strong{
+  display:block;
+  margin-top:4px;
+  color:#102238;
+  font-size:13px;
+  font-weight:700;
+}
+
+.fp-odometer-week-card small{
+  display:block;
+  margin-top:3px;
+  color:#8A9AAC;
+  font-size:9px;
+  font-weight:500;
+}
+
+.fp-odometer-warning,
+.fp-odometer-message{
+  margin-top:14px;
+  border-radius:10px;
+  padding:11px 13px;
+  font-size:10px;
+  font-weight:600;
+}
+
+.fp-odometer-warning,
+.fp-odometer-message.error{
+  border:1px solid #F2C6CB;
+  background:#FFF1F2;
+  color:#B33A45;
+}
+
+.fp-odometer-message.success{
+  border:1px solid #CBE8D2;
+  background:#EAF6EC;
+  color:#126F32;
+}
+
+.fp-odometer-summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:20px;
+}
+
+.fp-odometer-summary>div{
+  border:1px solid #DEE7E3;
+  border-radius:14px;
+  background:#fff;
+  padding:18px;
+  box-shadow:0 8px 24px rgba(16,34,56,.045);
+}
+
+.fp-odometer-summary span{
+  display:block;
+  color:#64748B;
+  font-size:9px;
+  font-weight:600;
+}
+
+.fp-odometer-summary strong{
+  display:block;
+  margin-top:5px;
+  color:#102238;
+  font-size:22px;
+  line-height:1.1;
+  font-weight:800;
+}
+
+.fp-odometer-summary>div:last-child strong{
+  color:#16853B;
+}
+
+.fp-odometer-summary small{
+  display:block;
+  margin-top:5px;
+  color:#8A9AAC;
+  font-size:9px;
+  line-height:1.4;
+  font-weight:500;
+}
+
+.fp-odometer-card{
+  margin-top:16px;
+  overflow:hidden;
+  border:1px solid #DEE7E3;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 8px 28px rgba(16,34,56,.05);
+}
+
+.fp-odometer-card-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  padding:18px 20px;
+  border-bottom:1px solid #E9EFEC;
+}
+
+.fp-odometer-card-head h2{
+  margin-top:4px;
+  color:#102238;
+  font-size:17px;
+  font-weight:700;
+}
+
+.fp-odometer-card-head p{
+  max-width:420px;
+  color:#64748B;
+  font-size:10px;
+  line-height:1.45;
+  font-weight:500;
+  text-align:right;
+}
+
+.fp-odometer-table-wrap{
+  overflow-x:auto;
+}
+
+.fp-odometer-table{
+  width:100%;
+  min-width:760px;
+  border-collapse:collapse;
+}
+
+.fp-odometer-table td{
+  padding:13px 16px;
+  border-bottom:1px solid #EDF2EF;
+  color:#33465B;
+  font-size:11px;
+  vertical-align:middle;
+}
+
+.fp-odometer-table tbody tr:last-child td{
+  border-bottom:0;
+}
+
+.fp-odometer-truck{
+  display:grid;
+  gap:3px;
+}
+
+.fp-odometer-truck strong{
+  color:#102238;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-odometer-truck span{
+  color:#8A9AAC;
+  font-size:9px;
+  font-weight:500;
+}
+
+.fp-odometer-table input{
+  width:100%;
+  min-width:130px;
+  height:38px;
+  border:1px solid #D9E3DF;
+  border-radius:9px;
+  background:#fff;
+  padding:0 11px;
+  color:#0B1730;
+  font-size:11px;
+  font-weight:600;
+  outline:none;
+}
+
+.fp-odometer-table input:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.10);
+}
+
+.fp-odometer-calculated{
+  color:#102238;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-odometer-fee{
+  color:#16853B;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-odometer-save-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  border-top:1px solid #E9EFEC;
+  background:#FAFCFB;
+  padding:15px 18px;
+}
+
+.fp-odometer-save-row>div{
+  display:grid;
+  gap:3px;
+}
+
+.fp-odometer-save-row span{
+  color:#64748B;
+  font-size:9px;
+  font-weight:600;
+}
+
+.fp-odometer-save-row strong{
+  color:#102238;
+  font-size:11px;
+  font-weight:700;
+}
+
+.fp-odometer-save-row button{
+  min-height:40px;
+  border:1px solid #126F32;
+  border-radius:10px;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  padding:0 16px;
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  box-shadow:0 8px 18px rgba(22,133,59,.15);
+}
+
+.fp-odometer-save-row button:disabled{
+  cursor:not-allowed;
+  opacity:.6;
+}
+
+.fp-odometer-empty{
+  margin-top:20px;
+  border:1px solid #DEE7E3;
+  border-radius:14px;
+  background:#fff;
+  padding:32px;
+  text-align:center;
+}
+
+.fp-odometer-empty strong{
+  color:#102238;
+  font-size:15px;
+  font-weight:700;
+}
+
+.fp-odometer-empty p{
+  margin-top:5px;
+  color:#64748B;
+  font-size:11px;
+}
+
+@media(max-width:900px){
+  .fp-odometer-heading,
+  .fp-odometer-card-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .fp-odometer-week-card{
+    width:100%;
+  }
+
+  .fp-odometer-card-head p{
+    text-align:left;
+  }
+
+  .fp-odometer-summary{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .fp-odometer-page{
+    padding:20px 14px 110px;
+  }
+
+  .fp-odometer-heading h1{
+    font-size:24px;
+  }
+
+  .fp-odometer-save-row{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .fp-odometer-save-row button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Weekly Odometer v4.3.29 === */
