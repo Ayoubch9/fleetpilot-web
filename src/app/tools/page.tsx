@@ -38,7 +38,7 @@ export default function ToolsPage() {
           behind these calculations so profitability stays available whenever
           you need it.
         </p>
-        <Link href="/signup">Start Your 14-Day Free Trial →</Link>
+        <Link href="/signup">Join the Free Beta →</Link>
       </section>
     </PublicLayout>
   );

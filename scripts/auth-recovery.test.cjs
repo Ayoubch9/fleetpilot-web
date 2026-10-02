@@ -31,17 +31,9 @@ assert.ok(signup.includes('required={false}'));
 assert.ok(signup.includes("`${clean} Trucking`"));
 assert.ok(signup.includes('"My Trucking Business"'));
 
-assert.ok(
-  loginLayout.includes('title: { absolute: "Sign In | MileVoxa" }')
-);
-assert.ok(
-  signupLayout.includes(
-    'title: { absolute: "Start Free Trial | MileVoxa" }'
-  )
-);
-assert.ok(loginLayout.includes("index: false"));
-assert.ok(loginLayout.includes("follow: false"));
-assert.ok(signupLayout.includes("index: false"));
-assert.ok(signupLayout.includes("follow: false"));
+assert.ok(loginLayout.includes('title: "Sign In | MileVoxa"'));
+assert.ok(signupLayout.includes('title: "Join the Free Beta | MileVoxa"'));
+assert.ok(loginLayout.includes("noIndex: true"));
+assert.ok(signupLayout.includes("noIndex: true"));
 
 console.log("auth-recovery checks passed");

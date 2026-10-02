@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 import { publicPageMetadata } from "@/lib/seo";
 
 export const metadata = publicPageMetadata({
-  title: "Start Free Trial | MileVoxa",
+  title: "Join the Free Beta | MileVoxa",
   description:
-    "Start your MileVoxa free trial to manage loads, expenses, trucks, maintenance, and trucking profitability in one place.",
+    "Join the free MileVoxa public beta to manage loads, expenses, trucks, maintenance, weekly settlements, and trucking profitability in one place.",
   path: "/signup",
   noIndex: true,
 });

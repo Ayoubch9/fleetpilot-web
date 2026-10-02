@@ -314,6 +314,14 @@ export default async function FuelPage({
               Track fuel costs, mileage and efficiency. Find insights to
               reduce your fuel expenses.
             </p>
+            <div className="fp-fuel-data-note">
+              <span className="fp-fuel-data-note-icon" aria-hidden="true">i</span>
+              <p>
+                Add <strong>Gallons</strong> and <strong>Vendor</strong> details
+                to every fuel expense for more accurate fuel reports, averages,
+                vendor breakdowns and Pilot AI insights.
+              </p>
+            </div>
           </div>
         </section>
 

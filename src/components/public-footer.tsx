@@ -25,7 +25,10 @@ export default function PublicFooter() {
           <Link href="/login">Sign In</Link>
         </div>
 
-        <span>© 2026 MileVoxa</span>
+        <div className="fp-public-footer-meta">
+          <span className="fp-public-footer-beta">Public Beta · Free during beta · Paid plans announced later</span>
+          <span className="fp-public-footer-copy">© 2026 MileVoxa</span>
+        </div>
       </div>
     </footer>
   );

@@ -12,6 +12,7 @@ import SettlementControls, {
   type SettlementTab,
 } from "./settlement-controls";
 import SettlementQuickActions from "./settlement-quick-actions";
+import BetaMilestonePrompt from "@/components/beta-milestone-prompt";
 import {
   dbDate,
   displayDate,
@@ -305,9 +306,37 @@ export default async function SettlementPage({
     ),
   ].sort();
 
+  const companyFeeCostRows: CostRow[] = [
+    ...(revenueFee > 0
+      ? [
+          {
+            id: `company-revenue-fee-${startText}`,
+            amount: revenueFee,
+            category: "Company Fee",
+            expense_date: startText,
+            vendor: null,
+            description: `${formatPercent(revenueFeePercent)} revenue fee on weekly gross revenue`,
+          },
+        ]
+      : []),
+    ...(mileageFee > 0
+      ? [
+          {
+            id: `odometer-mileage-fee-${startText}`,
+            amount: mileageFee,
+            category: "Odometer Fee",
+            expense_date: startText,
+            vendor: null,
+            description: `${odometerMiles.toLocaleString()} odometer miles × ${money(mileageFeeRate)} per mile`,
+          },
+        ]
+      : []),
+  ];
+
   const allCostRows: CostRow[] = [
     ...expenses,
     ...fixedCostRows,
+    ...companyFeeCostRows,
   ];
 
   const costCategories = [
@@ -510,6 +539,8 @@ export default async function SettlementPage({
           </div>
         </section>
 
+        <BetaMilestonePrompt show={loads.some((load) => ["COMPLETED", "DELIVERED"].includes((load.status || "").toUpperCase()))} />
+
         {errors.length > 0 && (
           <div className="mt-3 rounded-[10px] border border-[#ffcf82] bg-[#fff7e8] px-4 py-3 text-[10px] font-[600] text-[#966217]">
             Some settlement sources could not be loaded. Successfully returned
@@ -629,9 +660,14 @@ export default async function SettlementPage({
                                     note={`${reimbursements.length} recovered transactions`}
                 />
                 <KpiTile
-                  label="Fixed + Company Fees"
-                                    value={money(fixedTotal + revenueFee + mileageFee)}
-                                    note={`${money(fixedTotal)} fixed · ${money(revenueFee + mileageFee)} fees`}
+                  label="Fixed Expenses"
+                                    value={money(fixedTotal)}
+                                    note={`${activeFixed.length} active weekly fixed ${activeFixed.length === 1 ? "expense" : "expenses"}`}
+                />
+                <KpiTile
+                  label="Company Fees"
+                                    value={money(revenueFee + mileageFee)}
+                                    note={`${money(revenueFee)} revenue fee · ${money(mileageFee)} mileage fee`}
                 />
                 <KpiTile
                   label="Odometer Miles"

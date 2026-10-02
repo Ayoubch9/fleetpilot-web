@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import AppShell from "@/components/app-shell";
 import { SectionPanel, EmptyState } from "@/components/fleet-ui";
 import DashboardQuickActions from "./dashboard-quick-actions";
+import { BetaFeedbackTrigger } from "@/components/beta-feedback-center";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import {
   dbDate,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/week-finance";
 import {
   fetchDashboardFleetSupport,
+  fetchDashboardTrendHistory,
   fetchWeekLedger,
 } from "@/lib/week-ledger";
 
@@ -43,6 +45,15 @@ type RawMaintenanceDue = {
   truck_id?: string | null;
   next_service_mileage?: number | string | null;
   next_service_date?: string | null;
+};
+
+type RawLoadOption = {
+  id?: string | null;
+  load_number?: string | null;
+  pickup?: string | null;
+  delivery?: string | null;
+  pickup_date?: string | null;
+  status?: string | null;
 };
 
 function money(value: number): string {
@@ -83,7 +94,7 @@ export default async function DashboardPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const { supabase, fullName, companyName, role } =
+  const { supabase, fullName, companyName, role, entitlement } =
     await getMileVoxaAccount();
 
   const today = new Date();
@@ -128,10 +139,12 @@ export default async function DashboardPage({
     currentWeekResult,
     previousWeekResult,
     fleetSupport,
+    trendHistoryResult,
   ] = await Promise.all([
     fetchWeekLedger(supabase, selectedWeekStart),
     fetchWeekLedger(supabase, previousWeekStart),
     fetchDashboardFleetSupport(supabase),
+    fetchDashboardTrendHistory(supabase, selectedWeekStart, 8),
   ]);
 
   const ledger = currentWeekResult.ledger;
@@ -143,6 +156,7 @@ export default async function DashboardPage({
     ...currentWeekResult.errors,
     ...previousWeekResult.errors,
     ...fleetSupport.errors,
+    ...trendHistoryResult.errors,
   ];
 
   const loads = ledger.loads;
@@ -150,6 +164,20 @@ export default async function DashboardPage({
   const trucks = fleetSupport.trucks as RawTruck[];
   const maintenanceRows =
     fleetSupport.maintenanceDueRows as RawMaintenanceDue[];
+  const quickActionLoads = (fleetSupport.loads as RawLoadOption[])
+    .filter(
+      (load): load is RawLoadOption & { id: string } =>
+        Boolean(load.id) &&
+        !["CANCELLED", "EXPIRED"].includes(
+          String(load.status || "").trim().toUpperCase()
+        )
+    )
+    .map((load) => ({
+      id: load.id,
+      load_number: load.load_number || "Load",
+      pickup: load.pickup || "",
+      delivery: load.delivery || "",
+    }));
 
   const {
     grossRevenue,
@@ -175,6 +203,24 @@ export default async function DashboardPage({
     profitMargin == null || previousFinance.profitMargin == null
       ? null
       : calculateTrend(profitMargin, previousFinance.profitMargin);
+
+  const dashboardTrendPoints = trendHistoryResult.points;
+  const netProfitSeries = dashboardTrendPoints.map((point) => ({
+    weekStart: point.weekStart,
+    value: point.netProfit,
+  }));
+  const grossRevenueSeries = dashboardTrendPoints.map((point) => ({
+    weekStart: point.weekStart,
+    value: point.grossRevenue,
+  }));
+  const totalExpensesSeries = dashboardTrendPoints.map((point) => ({
+    weekStart: point.weekStart,
+    value: point.totalExpenses,
+  }));
+  const profitMarginSeries = dashboardTrendPoints.map((point) => ({
+    weekStart: point.weekStart,
+    value: point.profitMargin,
+  }));
 
   const activity = buildWeekActivity(ledger).slice(0, 5);
   const expenseBreakdownDataRaw = buildExpenseBreakdown(ledger);
@@ -274,6 +320,21 @@ export default async function DashboardPage({
           </div>
         </section>
 
+        {entitlement.publicBeta && (
+          <div className="fp-beta-dashboard-banner">
+            <div>
+              <span>PUBLIC BETA</span>
+              <strong>Free Beta Access</strong>
+              <p>You have free access during the MileVoxa public beta. Paid plans will be announced later.</p>
+            </div>
+            <BetaFeedbackTrigger
+              className="fp-beta-dashboard-feedback"
+              label="Send Feedback"
+              context="Dashboard"
+            />
+          </div>
+        )}
+
         {errors.length > 0 && (
           <div className="mt-3 rounded-[10px] border border-[#ffcf82] bg-[#fff6e7] px-4 py-3 text-[10px] font-bold text-[#966217]">
             Some dashboard data could not be loaded. Successfully returned data is still shown.
@@ -288,6 +349,8 @@ export default async function DashboardPage({
             icon="$"
             change={trendCopy(netProfitTrend)}
             changeTone={netProfitTrend?.tone || "neutral"}
+            series={netProfitSeries}
+            valueKind="money"
           />
           <DashboardMetric
             label="Gross Revenue"
@@ -296,6 +359,8 @@ export default async function DashboardPage({
             icon="▥"
             change={trendCopy(grossRevenueTrend)}
             changeTone={grossRevenueTrend?.tone || "neutral"}
+            series={grossRevenueSeries}
+            valueKind="money"
           />
           <DashboardMetric
             label="Total Expenses"
@@ -304,6 +369,8 @@ export default async function DashboardPage({
             icon="◉"
             change={trendCopy(totalExpensesTrend)}
             changeTone={expenseTrendTone(totalExpensesTrend)}
+            series={totalExpensesSeries}
+            valueKind="money"
           />
           <DashboardMetric
             label="Profit Margin"
@@ -312,6 +379,8 @@ export default async function DashboardPage({
             icon="%"
             change={profitMargin == null ? "n/a" : trendCopy(marginTrend)}
             changeTone={marginTrend?.tone || "neutral"}
+            series={profitMarginSeries}
+            valueKind="percent"
           />
         </div>
 
@@ -530,7 +599,7 @@ export default async function DashboardPage({
     </SectionPanel>
 
     <SectionPanel className="fp-quick-actions-card" title="Quick Actions">
-      <DashboardQuickActions trucks={quickActionTrucks} />
+      <DashboardQuickActions trucks={quickActionTrucks} loads={quickActionLoads} />
     </SectionPanel>
 
     <SectionPanel
@@ -595,6 +664,11 @@ export default async function DashboardPage({
 }
 
 
+type DashboardMetricPoint = {
+  weekStart: string;
+  value: number | null;
+};
+
 function DashboardMetric({
   label,
   value,
@@ -602,6 +676,8 @@ function DashboardMetric({
   icon,
   change,
   changeTone = "neutral",
+  series,
+  valueKind = "money",
 }: {
   label: string;
   value: string;
@@ -609,12 +685,14 @@ function DashboardMetric({
   icon: string;
   change: string;
   changeTone?: "positive" | "negative" | "neutral";
+  series: DashboardMetricPoint[];
+  valueKind?: "money" | "percent";
 }) {
   const palette = {
-    green: { stroke: "#22a861", soft: "#eaf8f0", text: "#22a861" },
+    green: { stroke: "#16853B", soft: "#eaf8f0", text: "#16853B" },
     blue: { stroke: CHART_PALETTE.navy, soft: "rgba(16,34,56,.08)", text: CHART_PALETTE.navy },
-    red: { stroke: "#ee646b", soft: "#fff0f1", text: "#eb5862" },
-    purple: { stroke: "#6f63f4", soft: "#f1efff", text: "#6b5fe9" },
+    red: { stroke: CHART_PALETTE.red, soft: "#fff0f1", text: "#eb5862" },
+    purple: { stroke: CHART_PALETTE.purple, soft: "#f1efff", text: "#6b5fe9" },
   }[tone];
 
   return (
@@ -645,7 +723,12 @@ function DashboardMetric({
       </div>
 
       <div className="fp-dashboard-metric-chart">
-        <MetricMiniChart tone={tone} />
+        <MetricMiniChart
+          tone={tone}
+          series={series}
+          valueKind={valueKind}
+          label={label}
+        />
       </div>
     </div>
   );
@@ -653,48 +736,130 @@ function DashboardMetric({
 
 function MetricMiniChart({
   tone,
+  series,
+  valueKind,
+  label,
 }: {
   tone: "green" | "blue" | "red" | "purple";
+  series: DashboardMetricPoint[];
+  valueKind: "money" | "percent";
+  label: string;
 }) {
-  const config = {
-    green: { stroke: CHART_PALETTE.green, fill: "rgba(22,133,59,.09)", data: [28,24,26,20,23,16,19,13,15,10,7] },
-    blue: { stroke: CHART_PALETTE.navy, fill: "rgba(16,34,56,.09)", data: [29,25,27,20,24,16,20,13,16,10,6] },
-    red: { stroke: CHART_PALETTE.red, fill: "rgba(220,38,38,.09)", data: [30,26,28,21,24,17,20,13,15,9,5] },
-    purple: { stroke: CHART_PALETTE.purple, fill: "rgba(124,58,237,.09)", data: [28,24,27,20,23,15,19,12,15,9,5] },
+  const palette = {
+    green: { stroke: CHART_PALETTE.green, fill: "rgba(22,133,59,.11)" },
+    blue: { stroke: CHART_PALETTE.navy, fill: "rgba(16,34,56,.10)" },
+    red: { stroke: CHART_PALETTE.red, fill: "rgba(220,38,38,.10)" },
+    purple: { stroke: CHART_PALETTE.purple, fill: "rgba(124,58,237,.10)" },
   }[tone];
 
-  const width = 104;
-  const height = 46;
-  const step = width / (config.data.length - 1);
-  const points = config.data.map((y, i) => `${i * step},${y}`).join(" ");
-  const area = `M 0 ${config.data[0]} ` +
-    config.data.slice(1).map((y, i) => `L ${(i + 1) * step} ${y}`).join(" ") +
-    ` L ${width} ${height} L 0 ${height} Z`;
+  const usable = series.filter(
+    (point): point is { weekStart: string; value: number } =>
+      typeof point.value === "number" && Number.isFinite(point.value)
+  );
+
+  if (usable.length === 0) {
+    return (
+      <div className="fp-dashboard-metric-chart-empty">
+        No trend data
+      </div>
+    );
+  }
+
+  const width = 116;
+  const height = 50;
+  const padX = 4;
+  const padTop = 4;
+  const padBottom = 8;
+  const values = usable.map((point) => point.value);
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+  const spread = Math.max(maxValue - minValue, Math.abs(maxValue) * 0.08, 1);
+  const domainMin = minValue - spread * 0.16;
+  const domainMax = maxValue + spread * 0.16;
+  const plotHeight = height - padTop - padBottom;
+  const plotWidth = width - padX * 2;
+  const step = usable.length > 1 ? plotWidth / (usable.length - 1) : 0;
+
+  const yFor = (value: number) =>
+    padTop +
+    ((domainMax - value) / Math.max(domainMax - domainMin, 1)) * plotHeight;
+
+  const coords = usable.map((point, index) => ({
+    x: padX + index * step,
+    y: yFor(point.value),
+    ...point,
+  }));
+
+  const points = coords.map((point) => `${point.x},${point.y}`).join(" ");
+  const area = [
+    `M ${coords[0].x} ${coords[0].y}`,
+    ...coords.slice(1).map((point) => `L ${point.x} ${point.y}`),
+    `L ${coords[coords.length - 1].x} ${height - padBottom + 1}`,
+    `L ${coords[0].x} ${height - padBottom + 1}`,
+    "Z",
+  ].join(" ");
+
+  const formatPointValue = (value: number) =>
+    valueKind === "percent" ? formatPercent(value) : formatMoney(value);
+
+  const gradientId = `dashboard-metric-${tone}-${label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")}`;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full overflow-visible">
-      <line x1="0" y1="34" x2={width} y2="34" stroke="#e5ebf1" strokeWidth=".8" />
-      <line x1="0" y1="20" x2={width} y2="20" stroke="#eef2f6" strokeWidth=".7" strokeDasharray="2 3" />
-      <path d={area} fill={config.fill} />
-      <polyline
-        points={points}
-        fill="none"
-        stroke={config.stroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className="fp-dashboard-metric-svg"
+      role="img"
+      aria-label={`${label} trend over the last ${usable.length} weeks`}
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={palette.stroke} stopOpacity=".18" />
+          <stop offset="1" stopColor={palette.stroke} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
+      <line
+        x1={padX}
+        y1={height - padBottom}
+        x2={width - padX}
+        y2={height - padBottom}
+        stroke="#E5EBF1"
+        strokeWidth=".8"
       />
-      {config.data.map((y, i) => (
-        <circle
-          key={i}
-          cx={i * step}
-          cy={y}
-          r={i === config.data.length - 1 ? 2.6 : 1.1}
-          fill={i === config.data.length - 1 ? "#fff" : config.stroke}
-          stroke={i === config.data.length - 1 ? config.stroke : "none"}
-          strokeWidth={i === config.data.length - 1 ? 1.6 : 0}
-          opacity={i === config.data.length - 1 ? 1 : .72}
+
+      <path d={area} fill={`url(#${gradientId})`} />
+
+      {coords.length > 1 && (
+        <polyline
+          points={points}
+          fill="none"
+          stroke={palette.stroke}
+          strokeWidth="2"
+          vectorEffect="non-scaling-stroke"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
+      )}
+
+      {coords.map((point, index) => (
+        <g key={`${point.weekStart}-${index}`}>
+          <title>
+            {`${point.weekStart}: ${formatPointValue(point.value)}`}
+          </title>
+          <circle
+            cx={point.x}
+            cy={point.y}
+            r={index === coords.length - 1 ? 2.6 : 1.35}
+            fill={index === coords.length - 1 ? "#fff" : palette.stroke}
+            stroke={palette.stroke}
+            strokeWidth={index === coords.length - 1 ? 1.7 : 0}
+            vectorEffect="non-scaling-stroke"
+            opacity={index === coords.length - 1 ? 1 : .7}
+          />
+        </g>
       ))}
     </svg>
   );

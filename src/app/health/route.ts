@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isPublicBetaEnabled } from "@/lib/beta-access";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export async function GET() {
       app: "milevoxa-web",
       environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
       supabaseConfigured: configured,
+      publicBeta: isPublicBetaEnabled(),
       timestamp: new Date().toISOString(),
     },
     { status: configured ? 200 : 503 }

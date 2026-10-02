@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getMileVoxaAccessEntitlement } from "@/lib/beta-access";
 
 export async function getMileVoxaAccount() {
   const supabase = await createClient();
@@ -34,6 +35,16 @@ export async function getMileVoxaAccount() {
     companyName = company?.name ?? "";
   }
 
+  const entitlement = await getMileVoxaAccessEntitlement(
+    supabase,
+    membership?.company_id || null,
+    user.created_at
+  );
+
+  if (!entitlement.allowed) {
+    redirect("/pricing?access=required");
+  }
+
   const avatarUrl = await getAvatarUrl(
     supabase,
     profile?.avatar_path || null
@@ -47,6 +58,7 @@ export async function getMileVoxaAccount() {
     avatarUrl,
     companyName,
     role: membership?.role || "Member",
+    entitlement,
   };
 }
 

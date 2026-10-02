@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney } from "@/lib/format";
@@ -25,10 +25,15 @@ type FormState = Record<
   {
     start: string;
     end: string;
+    rate: number;
   }
 >;
 
-function initialState(trucks: Truck[], records: RecordRow[]): FormState {
+function initialState(
+  trucks: Truck[],
+  records: RecordRow[],
+  currentMileageRate: number
+): FormState {
   const byTruck = new Map(records.map((row) => [row.truckId, row]));
 
   return Object.fromEntries(
@@ -37,12 +42,12 @@ function initialState(trucks: Truck[], records: RecordRow[]): FormState {
       return [
         truck.id,
         {
-          start:
-            record?.startOdometer == null
-              ? ""
-              : String(record.startOdometer),
-          end:
-            record?.endOdometer == null ? "" : String(record.endOdometer),
+          start: record?.startOdometer == null ? "" : String(record.startOdometer),
+          end: record?.endOdometer == null ? "" : String(record.endOdometer),
+          rate:
+            record?.ratePerMile == null
+              ? currentMileageRate
+              : record.ratePerMile,
         },
       ];
     })
@@ -73,33 +78,54 @@ export default function OdometerManager({
 }) {
   const router = useRouter();
   const [values, setValues] = useState<FormState>(() =>
-    initialState(trucks, records)
+    initialState(trucks, records, mileageRate)
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  useEffect(() => {
+    setValues(initialState(trucks, records, mileageRate));
+    setError("");
+    setSuccess("");
+  }, [weekStart, trucks, records, mileageRate]);
+
   const summary = useMemo(() => {
     let miles = 0;
+    let fee = 0;
     let completed = 0;
+    const rates = new Set<number>();
 
     for (const truck of trucks) {
       const row = values[truck.id];
       const start = numberOrNull(row?.start || "");
       const end = numberOrNull(row?.end || "");
+      const rowRate = Number(row?.rate ?? mileageRate);
+
+      if (Number.isFinite(rowRate)) {
+        rates.add(Number(rowRate.toFixed(4)));
+      }
 
       if (start != null && end != null && end >= start) {
-        miles += end - start;
+        const rowMiles = end - start;
+        miles += rowMiles;
+        fee += mileageFeeActive ? rowMiles * rowRate : 0;
         completed += 1;
       }
     }
 
     return {
       miles,
+      fee,
       completed,
-      fee: mileageFeeActive ? miles * mileageRate : 0,
+      rates: [...rates],
     };
   }, [values, trucks, mileageRate, mileageFeeActive]);
+
+  const rateLabel =
+    summary.rates.length <= 1
+      ? `${formatMoney(summary.rates[0] ?? mileageRate)}/mi`
+      : "Mixed rates";
 
   function setValue(
     truckId: string,
@@ -109,7 +135,11 @@ export default function OdometerManager({
     setValues((current) => ({
       ...current,
       [truckId]: {
-        ...(current[truckId] || { start: "", end: "" }),
+        ...(current[truckId] || {
+          start: "",
+          end: "",
+          rate: mileageRate,
+        }),
         [field]: value,
       },
     }));
@@ -123,27 +153,30 @@ export default function OdometerManager({
 
     const rows = trucks
       .map((truck) => {
-        const value = values[truck.id] || { start: "", end: "" };
-        const start = numberOrNull(value.start);
-        const end = numberOrNull(value.end);
+        const value = values[truck.id] || {
+          start: "",
+          end: "",
+          rate: mileageRate,
+        };
 
         return {
           truck,
-          start,
-          end,
+          start: numberOrNull(value.start),
+          end: numberOrNull(value.end),
+          rate: value.rate,
         };
       })
       .filter((row) => row.start != null || row.end != null);
 
     if (rows.length === 0) {
-      setError("Enter at least one truck's starting and ending odometer.");
+      setError(`Enter odometer values for ${weekLabel}.`);
       return;
     }
 
     for (const row of rows) {
       if (row.start == null || row.end == null) {
         setError(
-          `${row.truck.unitNumber}: both starting and ending odometer are required.`
+          `${row.truck.unitNumber}: both starting and ending odometer are required for ${weekLabel}.`
         );
         return;
       }
@@ -180,7 +213,7 @@ export default function OdometerManager({
           week_start: weekStart,
           start_odometer: row.start,
           end_odometer: row.end,
-          rate_per_mile: Number(mileageRate.toFixed(2)),
+          rate_per_mile: Number(row.rate.toFixed(4)),
         };
 
         if ((existing ?? []).length > 0) {
@@ -200,13 +233,13 @@ export default function OdometerManager({
         }
       }
 
-      setSuccess(`Weekly odometer saved for ${weekLabel}.`);
+      setSuccess(`Odometer data saved only for ${weekLabel}.`);
       router.refresh();
     } catch (caught) {
       const message =
         caught && typeof caught === "object" && "message" in caught
           ? String(caught.message)
-          : "Unable to save weekly odometer.";
+          : `Unable to save odometer data for ${weekLabel}.`;
       setError(message);
     } finally {
       setSaving(false);
@@ -224,25 +257,35 @@ export default function OdometerManager({
 
   return (
     <form onSubmit={save}>
+      <div className="fp-odometer-week-isolation">
+        <strong>{weekLabel}</strong>
+        <span>
+          This week has its own odometer readings and mileage fee. Changing
+          weeks does not copy these values to another week.
+        </span>
+      </div>
+
       <section className="fp-odometer-summary">
         <div>
           <span>Weekly Odometer Miles</span>
           <strong>{summary.miles.toLocaleString()} mi</strong>
-          <small>
-            {summary.completed} of {trucks.length} trucks complete
-          </small>
+          <small>{summary.completed} of {trucks.length} trucks complete</small>
         </div>
+
         <div>
-          <span>Mileage Rate</span>
-          <strong>{formatMoney(mileageRate)}/mi</strong>
+          <span>Saved Week Rate</span>
+          <strong>{rateLabel}</strong>
           <small>
-            {mileageFeeActive ? "Mileage fee is active" : "Mileage fee is disabled"}
+            {records.length > 0
+              ? "Uses this week's saved rate"
+              : "New week uses the current company rate"}
           </small>
         </div>
+
         <div>
           <span>Weekly Mileage Expense</span>
           <strong>{formatMoney(summary.fee)}</strong>
-          <small>Odometer miles × company mileage rate</small>
+          <small>Each truck's weekly miles × its saved weekly rate</small>
         </div>
       </section>
 
@@ -252,9 +295,7 @@ export default function OdometerManager({
             <span>TRUCK ODOMETERS</span>
             <h2>{weekLabel}</h2>
           </div>
-          <p>
-            Enter the odometer at the beginning and end of the selected week.
-          </p>
+          <p>Enter the beginning and ending odometer for this selected week only.</p>
         </div>
 
         <div className="fp-odometer-table-wrap">
@@ -265,24 +306,29 @@ export default function OdometerManager({
                 <th>Starting Odometer</th>
                 <th>Ending Odometer</th>
                 <th>Weekly Miles</th>
+                <th>Rate</th>
                 <th>Mileage Expense</th>
               </tr>
             </thead>
             <tbody>
               {trucks.map((truck) => {
-                const row = values[truck.id] || { start: "", end: "" };
+                const row =
+                  values[truck.id] || {
+                    start: "",
+                    end: "",
+                    rate: mileageRate,
+                  };
                 const start = numberOrNull(row.start);
                 const end = numberOrNull(row.end);
-                const valid =
-                  start != null && end != null && end >= start;
+                const valid = start != null && end != null && end >= start;
                 const miles = valid ? end - start : null;
                 const fee =
                   miles == null || !mileageFeeActive
                     ? 0
-                    : miles * mileageRate;
+                    : miles * row.rate;
 
                 return (
-                  <tr key={truck.id}>
+                  <tr key={`${weekStart}-${truck.id}`}>
                     <td>
                       <div className="fp-odometer-truck">
                         <strong>{truck.unitNumber}</strong>
@@ -292,6 +338,7 @@ export default function OdometerManager({
                         </span>
                       </div>
                     </td>
+
                     <td>
                       <input
                         type="number"
@@ -302,14 +349,10 @@ export default function OdometerManager({
                         onChange={(event) =>
                           setValue(truck.id, "start", event.target.value)
                         }
-                        placeholder={
-                          truck.currentMileage == null
-                            ? "Start"
-                            : String(Math.round(truck.currentMileage))
-                        }
-                        aria-label={`${truck.unitNumber} starting odometer`}
+                        placeholder="Start"
                       />
                     </td>
+
                     <td>
                       <input
                         type="number"
@@ -321,21 +364,24 @@ export default function OdometerManager({
                           setValue(truck.id, "end", event.target.value)
                         }
                         placeholder="End"
-                        aria-label={`${truck.unitNumber} ending odometer`}
                       />
                     </td>
+
                     <td>
                       <strong className="fp-odometer-calculated">
-                        {miles == null
-                          ? "—"
-                          : `${miles.toLocaleString()} mi`}
+                        {miles == null ? "—" : `${miles.toLocaleString()} mi`}
                       </strong>
                     </td>
+
+                    <td>
+                      <strong className="fp-odometer-rate">
+                        {formatMoney(row.rate)}/mi
+                      </strong>
+                    </td>
+
                     <td>
                       <strong className="fp-odometer-fee">
-                        {miles == null
-                          ? "—"
-                          : formatMoney(fee)}
+                        {miles == null ? "—" : formatMoney(fee)}
                       </strong>
                     </td>
                   </tr>
@@ -346,25 +392,19 @@ export default function OdometerManager({
         </div>
 
         {(error || success) && (
-          <div
-            className={
-              error ? "fp-odometer-message error" : "fp-odometer-message success"
-            }
-          >
+          <div className={error ? "fp-odometer-message error" : "fp-odometer-message success"}>
             {error || success}
           </div>
         )}
 
         <div className="fp-odometer-save-row">
           <div>
-            <span>Settlement impact</span>
-            <strong>
-              {summary.miles.toLocaleString()} mi ×{" "}
-              {formatMoney(mileageRate)} = {formatMoney(summary.fee)}
-            </strong>
+            <span>Selected week settlement impact</span>
+            <strong>{summary.miles.toLocaleString()} mi → {formatMoney(summary.fee)}</strong>
           </div>
+
           <button type="submit" disabled={saving}>
-            {saving ? "Saving..." : "Save Weekly Odometer"}
+            {saving ? "Saving..." : `Save ${weekLabel}`}
           </button>
         </div>
       </section>

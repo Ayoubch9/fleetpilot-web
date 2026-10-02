@@ -1,8 +1,10 @@
 import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SettingsCenter from "./settings-center";
+import { isPublicBetaEnabled } from "@/lib/beta-access";
 
 export default async function SettingsPage() {
+  const publicBeta = isPublicBetaEnabled();
   const {
     supabase,
     user,
@@ -146,6 +148,7 @@ export default async function SettingsPage() {
           businessCostsReady={businessCostsReady}
           deletionPending={false}
           subscriptionInfo={subscriptionInfo}
+          publicBeta={publicBeta}
         />
       </div>
     </AppShell>

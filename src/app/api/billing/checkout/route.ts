@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { stripeRequest } from "@/lib/stripe";
+import { isPublicBetaEnabled } from "@/lib/beta-access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,6 +34,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Only the company owner can manage billing." },
         { status: 403 }
+      );
+    }
+
+    if (isPublicBetaEnabled()) {
+      return NextResponse.json(
+        {
+          error:
+            "MileVoxa is in free public beta. Paid checkout is disabled and no card is required.",
+        },
+        { status: 423 }
       );
     }
 

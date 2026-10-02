@@ -107,6 +107,23 @@ export default async function MaintenancePage({
   );
   const truckMap = new Map(allTrucks.map((truck) => [truck.id, truck]));
 
+  const maintenanceCostByTruck = new Map<string, number>();
+  for (const record of records) {
+    if (!record.truck_id) continue;
+    maintenanceCostByTruck.set(
+      record.truck_id,
+      (maintenanceCostByTruck.get(record.truck_id) || 0) + num(record.cost)
+    );
+  }
+
+  const truckMaintenanceTotals = allTrucks
+    .map((truck) => ({
+      truck,
+      total: maintenanceCostByTruck.get(truck.id) || 0,
+    }))
+    .filter((item) => item.total > 0)
+    .sort((a, b) => b.total - a.total);
+
   const today = new Date();
   const day = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
@@ -360,6 +377,7 @@ export default async function MaintenancePage({
                       <th>Service Type</th>
                       <th>Vendor</th>
                       <th>Truck</th>
+                      <th>Cost</th>
                       <th>Mileage</th>
                       <th>Status</th>
                       <th>Next Due</th>
@@ -379,6 +397,7 @@ export default async function MaintenancePage({
                           <td className="fp-maint-type">{record.service_type || "Service"}</td>
                           <td>{record.vendor || "—"}</td>
                           <td className="font-[700]">#{truck?.unit_number || "—"}</td>
+                          <td className="fp-maint-cost">{money(num(record.cost))}</td>
                           <td>{num(record.mileage) > 0 ? `${num(record.mileage).toLocaleString()} mi` : "—"}</td>
                           <td>
                             <StatusBadge tone={status === "Overdue" ? "red" : status === "Upcoming" ? "blue" : "green"}>
@@ -420,7 +439,38 @@ export default async function MaintenancePage({
           <aside className="fp-maint-right-rail">
             <section className="fp-maint-side-card">
               <h2>Quick Actions</h2>
-              <MaintenanceQuickActions records={filtered} />
+              <MaintenanceQuickActions
+                records={records.map((record) => ({
+                  ...record,
+                  export_status: state(record),
+                }))}
+                trucks={allTrucks}
+              />
+            </section>
+
+            <section className="fp-maint-side-card fp-maint-truck-cost-card">
+              <div className="fp-maint-side-card-head">
+                <h2>Maintenance Cost by Truck</h2>
+                <span>All recorded services</span>
+              </div>
+
+              <div className="fp-maint-truck-cost-list">
+                {truckMaintenanceTotals.length > 0 ? (
+                  truckMaintenanceTotals.map(({ truck, total }) => (
+                    <div className="fp-maint-truck-cost-row" key={truck.id}>
+                      <div>
+                        <strong>Truck #{truck.unit_number}</strong>
+                        <span>Maintenance spend</span>
+                      </div>
+                      <strong>{money(total)}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div className="fp-maint-truck-cost-empty">
+                    No maintenance costs recorded yet.
+                  </div>
+                )}
+              </div>
             </section>
 
             <section className="fp-maint-side-card">

@@ -1,138 +1,57 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 
-type BillingCycle = "monthly" | "yearly";
+// Kept for future paid-plan work. These values are intentionally not rendered
+// during public beta and are not a current offer.
+export const futurePaidPlanConfiguration = [
+  { name: "Solo", monthly: 19, yearly: 190, scope: "1 truck" },
+  { name: "Fleet", monthly: 29, yearly: 290, scope: "Up to 5 trucks" },
+  { name: "Pro", monthly: 49, yearly: 490, scope: "Up to 15 trucks" },
+] as const;
 
-type PricingPlan = {
-  name: string;
-  monthly: number;
-  yearly: number;
-  scope: string;
-  description: string;
-  features: readonly string[];
-  popular?: boolean;
-};
-
-const plans: readonly PricingPlan[] = [
-  {
-    name: "Solo",
-    monthly: 19,
-    yearly: 190,
-    scope: "1 truck",
-    description: "For an owner-operator running one truck.",
-    features: [
-      "Loads",
-      "Expenses",
-      "Fuel tracking",
-      "Real profit per load",
-      "Weekly settlement",
-      "Document storage",
-    ],
-  },
-  {
-    name: "Fleet",
-    monthly: 29,
-    yearly: 290,
-    scope: "Up to 5 trucks · Unlimited drivers",
-    description: "For growing small fleets that need operations and team visibility.",
-    popular: true,
-    features: [
-      "Everything in Solo",
-      "Maintenance tracking & reminders",
-      "Pilot AI",
-      "Team & driver records",
-    ],
-  },
-  {
-    name: "Pro",
-    monthly: 49,
-    yearly: 490,
-    scope: "Up to 15 trucks",
-    description: "For established fleets that need deeper reporting and support.",
-    features: [
-      "Everything in Fleet",
-      "Advanced profit reports",
-      "Priority support",
-    ],
-  },
+const availableFeatures = [
+  "Loads and truck management",
+  "Expenses and reimbursements",
+  "Weekly settlements",
+  "Fuel analytics",
+  "Maintenance tracking",
+  "Reports and exports",
+  "Document management",
+  "Pilot AI using your MileVoxa data",
 ] as const;
 
 export default function PricingPlans() {
-  const [cycle, setCycle] = useState<BillingCycle>("monthly");
-
   return (
-    <section className="mv-launch-pricing" aria-label="MileVoxa plans">
-      <div className="mv-pricing-toggle" role="group" aria-label="Billing cycle">
-        <button
-          type="button"
-          className={cycle === "monthly" ? "active" : ""}
-          aria-pressed={cycle === "monthly"}
-          onClick={() => setCycle("monthly")}
-        >
-          Monthly
-        </button>
-        <button
-          type="button"
-          className={cycle === "yearly" ? "active" : ""}
-          aria-pressed={cycle === "yearly"}
-          onClick={() => setCycle("yearly")}
-        >
-          Yearly <span>2 months free</span>
-        </button>
-      </div>
+    <section className="mv-launch-pricing mv-beta-pricing" aria-label="MileVoxa public beta access">
+      <article className="fp-pricing-card mv-beta-pricing-card">
+        <div className="fp-pricing-popular">PUBLIC BETA</div>
+        <div className="mv-pricing-plan-head">
+          <span>Free Beta Access</span>
+          <h2>$0<span>during beta</span></h2>
+          <p className="fp-pricing-scope">No credit card required</p>
+          <p>
+            Use MileVoxa while the product is in public beta, share honest feedback,
+            and help us improve the trucking workflow and user experience.
+          </p>
+        </div>
 
-      <div className="mv-pricing-plan-grid">
-        {plans.map((plan) => {
-          const price = cycle === "monthly" ? plan.monthly : plan.yearly;
-          const period = cycle === "monthly" ? "/month" : "/year";
+        <div className="fp-pricing-included">
+          <span>Available during beta:</span>
+          <div>
+            {availableFeatures.map((feature) => (
+              <p key={feature}><i>✓</i>{feature}</p>
+            ))}
+          </div>
+        </div>
 
-          return (
-            <article
-              key={plan.name}
-              className={`fp-pricing-card mv-pricing-plan-card ${
-                plan.popular ? "popular" : ""
-              }`}
-            >
-              {plan.popular && (
-                <div className="fp-pricing-popular">MOST POPULAR</div>
-              )}
+        <Link href="/signup" className="fp-marketing-button primary pricing">
+          Join the Free Beta <span>→</span>
+        </Link>
 
-              <div className="mv-pricing-plan-head">
-                <span>{plan.name}</span>
-                <h2>
-                  ${price}
-                  <span>{period}</span>
-                </h2>
-                <p className="fp-pricing-scope">{plan.scope}</p>
-                <p>{plan.description}</p>
-              </div>
-
-              <div className="fp-pricing-included">
-                <span>Included:</span>
-                <div>
-                  {plan.features.map((feature) => (
-                    <p key={feature}>
-                      <i>✓</i>
-                      {feature}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              <Link
-                href="/signup"
-                className="fp-marketing-button primary pricing"
-              >
-                Start 14-Day Free Trial <span>→</span>
-              </Link>
-
-              <small>No credit card required.</small>
-            </article>
-          );
-        })}
-      </div>
+        <small>
+          Paid plans will be announced later. Beta users will not be charged
+          automatically; choosing a future paid plan will require explicit action.
+        </small>
+      </article>
     </section>
   );
 }

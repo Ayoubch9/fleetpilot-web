@@ -117,8 +117,8 @@ const profitMap = domain.calculateLoadProfitabilityMap({
   fixedExpenses: [{ amount: 400, is_active: true }],
 });
 
-assert.strictEqual(profitMap.get("a").profit, 850);
-assert.strictEqual(profitMap.get("b").profit, 1700);
+assert.strictEqual(profitMap.get("a").profit, 700);
+assert.strictEqual(profitMap.get("b").profit, 1400);
 assert.notStrictEqual(
   profitMap.get("a").profit,
   1000,
@@ -140,8 +140,8 @@ const noCostMap = domain.calculateLoadProfitabilityMap({
 });
 assert.strictEqual(
   noCostMap.get("only").profit,
-  7500,
-  "zero recorded allocatable costs are a valid zero-cost allocation"
+  6375,
+  "with default company fee settings, revenue fee remains part of true load profit"
 );
 
 const incompleteMap = domain.calculateLoadProfitabilityMap({
@@ -166,8 +166,8 @@ const incompleteMap = domain.calculateLoadProfitabilityMap({
 
 assert.strictEqual(
   incompleteMap.get("a").profit,
-  850,
-  "unlinked same-week fuel/toll costs should allocate by mileage share"
+  700,
+  "unlinked same-week fuel/toll costs plus the revenue fee should be included"
 );
 
 
@@ -199,10 +199,10 @@ const sharedCostMap = domain.calculateLoadProfitabilityMap({
 
 assert.strictEqual(sharedCostMap.get("a").allocatedSharedFuelAndTolls, 100);
 assert.strictEqual(sharedCostMap.get("a").allocatedFixed, 100);
-assert.strictEqual(sharedCostMap.get("a").profit, 800);
+assert.strictEqual(sharedCostMap.get("a").profit, 650);
 assert.strictEqual(sharedCostMap.get("b").allocatedSharedFuelAndTolls, 300);
 assert.strictEqual(sharedCostMap.get("b").allocatedFixed, 300);
-assert.strictEqual(sharedCostMap.get("b").profit, 1400);
+assert.strictEqual(sharedCostMap.get("b").profit, 1100);
 
 const alerts = transpileModule("src/lib/fleetpilot-alerts.ts", {
   "@/lib/load-domain": domain,

@@ -67,6 +67,8 @@ export default async function LoadProfitabilityPage({ params }: Props) {
     truckResult,
     weeklyLoadsResult,
     weeklyFixedResult,
+    feeSettingsResult,
+    odometerResult,
   ] = await Promise.all([
     supabase
       .from("expenses")
@@ -87,6 +89,11 @@ export default async function LoadProfitabilityPage({ params }: Props) {
       .gte("pickup_date", weekFrom)
       .lte("pickup_date", weekTo),
     supabase.from("weekly_fixed_expenses").select("*"),
+    supabase.from("company_fee_settings").select("*").limit(1).maybeSingle(),
+    supabase
+      .from("weekly_odometer_records")
+      .select("week_start, start_odometer, end_odometer")
+      .eq("week_start", weekFrom),
   ]);
 
   const weeklyExpenses = (weeklyExpenseResult.data ?? []) as Expense[];
@@ -113,8 +120,12 @@ export default async function LoadProfitabilityPage({ params }: Props) {
     loads: weeklyLoads,
     expenses: weeklyExpenses,
     fixedExpenses: weeklyFixedResult.data ?? [],
+    feeSettings: feeSettingsResult.data ?? null,
+    odometers: odometerResult.data ?? [],
     expenseSourceAvailable: !weeklyExpenseResult.error,
     fixedExpenseSourceAvailable: !weeklyFixedResult.error,
+    feeSettingsSourceAvailable: !feeSettingsResult.error,
+    odometerSourceAvailable: !odometerResult.error,
   });
   const profitResult = profitability.get(load.id);
 
@@ -122,6 +133,8 @@ export default async function LoadProfitabilityPage({ params }: Props) {
   const allocatedSharedFuelAndTolls =
     profitResult?.allocatedSharedFuelAndTolls ?? 0;
   const allocatedFixed = profitResult?.allocatedFixed ?? 0;
+  const allocatedRevenueFee = profitResult?.allocatedRevenueFee ?? 0;
+  const allocatedMileageFee = profitResult?.allocatedMileageFee ?? 0;
   const allocatedCost = profitResult?.allocatedCost ?? null;
   const estimatedProfit = profitResult?.profit ?? null;
   const profitPerMile =
@@ -147,6 +160,16 @@ export default async function LoadProfitabilityPage({ params }: Props) {
     {
       label: "Allocated Weekly Fixed Costs",
       amount: allocatedFixed,
+      type: "Allocated",
+    },
+    {
+      label: "Revenue Fee",
+      amount: allocatedRevenueFee,
+      type: "Allocated",
+    },
+    {
+      label: "Odometer Mileage Fee",
+      amount: allocatedMileageFee,
       type: "Allocated",
     },
   ].filter((row) => row.amount > 0);
@@ -186,11 +209,16 @@ export default async function LoadProfitabilityPage({ params }: Props) {
           <DetailKpi label="Linked Fuel & Tolls" value={money(directFuelAndTolls)} tone="red" />
           <DetailKpi
             label="Allocated Costs"
-            value={money(allocatedSharedFuelAndTolls + allocatedFixed)}
+            value={money(
+              allocatedSharedFuelAndTolls +
+                allocatedFixed +
+                allocatedRevenueFee +
+                allocatedMileageFee
+            )}
             tone="amber"
           />
           <DetailKpi
-            label="Est. Load Profit"
+            label="Load Profit"
             value={estimatedProfit == null ? "—" : money(estimatedProfit)}
             tone={estimatedProfit == null || estimatedProfit >= 0 ? "green" : "red"}
           />
@@ -302,7 +330,8 @@ export default async function LoadProfitabilityPage({ params }: Props) {
           <p>
             Rate minus fuel and toll costs linked directly to this load, minus
             its mileage-based share of unlinked weekly fuel/toll costs and
-            active weekly fixed costs.
+            active weekly fixed costs, minus its company revenue fee and its
+            mileage-based share of the weekly odometer mileage fee.
             {estimatedProfit == null && profitResult?.reason
               ? ` ${profitResult.reason}`
               : ""}

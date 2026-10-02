@@ -17608,3 +17608,4102 @@ body{
   }
 }
 /* === END MileVoxa Weekly Odometer v4.3.29 === */
+
+
+/* ==========================================================================
+   MileVoxa Dashboard KPI Real Sparklines v4.3.31
+   ========================================================================== */
+
+.fp-dashboard-metric{
+  grid-template-columns:46px minmax(0,1fr) minmax(86px,112px)!important;
+  gap:12px!important;
+}
+
+.fp-dashboard-metric-copy{
+  min-width:0!important;
+}
+
+.fp-dashboard-metric-chart{
+  width:100%!important;
+  max-width:112px!important;
+  height:54px!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  align-self:center!important;
+  justify-self:stretch!important;
+}
+
+.fp-dashboard-metric-svg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  overflow:hidden!important;
+}
+
+.fp-dashboard-metric-chart-empty{
+  display:flex;
+  width:100%;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  color:#94A3B8;
+  font-size:8px;
+  font-weight:600;
+  text-align:center;
+}
+
+@media(max-width:1450px){
+  .fp-dashboard-metric{
+    grid-template-columns:40px minmax(0,1fr) minmax(72px,92px)!important;
+    gap:9px!important;
+  }
+
+  .fp-dashboard-metric-chart{
+    max-width:92px!important;
+    height:48px!important;
+  }
+
+  .fp-dashboard-metric-value{
+    font-size:21px!important;
+  }
+}
+
+@media(max-width:1180px) and (min-width:1051px){
+  .fp-dashboard-metric{
+    grid-template-columns:38px minmax(0,1fr) 70px!important;
+    padding-left:11px!important;
+    padding-right:11px!important;
+  }
+
+  .fp-dashboard-metric-icon{
+    width:38px!important;
+    height:38px!important;
+  }
+
+  .fp-dashboard-metric-chart{
+    max-width:70px!important;
+    height:44px!important;
+  }
+
+  .fp-dashboard-metric-value{
+    font-size:19px!important;
+  }
+
+  .fp-dashboard-metric-change{
+    font-size:8px!important;
+  }
+}
+
+@media(max-width:1050px){
+  .fp-dashboard-metric{
+    grid-template-columns:42px minmax(0,1fr) minmax(90px,120px)!important;
+  }
+
+  .fp-dashboard-metric-chart{
+    max-width:120px!important;
+    height:52px!important;
+  }
+}
+
+@media(max-width:650px){
+  .fp-dashboard-metric{
+    grid-template-columns:42px minmax(0,1fr) minmax(92px,118px)!important;
+  }
+}
+/* === END MileVoxa Dashboard KPI Real Sparklines v4.3.31 === */
+
+
+/* ==========================================================================
+   MileVoxa Stable Responsive System v4.3.34
+   Senior UI/UX pass:
+   - preserve desktop proportions instead of continuously stretching cards
+   - cap app pages to a stable working canvas
+   - use a deliberate desktop/tablet breakpoint instead of the raw Tailwind lg
+   - switch layouts at clear thresholds rather than continuously rescaling them
+   ========================================================================== */
+
+:root{
+  --mv-app-canvas:1480px;
+  --mv-sidebar-width:222px;
+}
+
+/* Stable working canvas across the authenticated product. This prevents
+   dashboards/tables/cards from becoming wider simply because the monitor is. */
+@media(min-width:1200px){
+  .mv-app-shell .fp-page,
+  .mv-app-shell .fp-loads-page,
+  .mv-app-shell .fp-trucks-page,
+  .mv-app-shell .fp-expenses-page,
+  .mv-app-shell .fp-maintenance-page,
+  .mv-app-shell .fp-reimb-page,
+  .mv-app-shell .fp-settle-page,
+  .mv-app-shell .fp-fuel-page,
+  .mv-app-shell .fp-reports-page,
+  .mv-app-shell .fp-documents-page,
+  .mv-app-shell .fp-pilot-page,
+  .mv-app-shell .fp-settings-page,
+  .mv-app-shell .fp-detail-page,
+  .mv-app-shell .fp-tool-page,
+  .mv-app-shell .fp-odometer-page,
+  .mv-app-shell .fp-security-deposit-page,
+  .mv-app-shell .fp-notifications-page{
+    width:100%!important;
+    max-width:var(--mv-app-canvas)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+}
+
+/* Desktop mode begins only when there is enough room for both the 222px
+   sidebar and a usable application canvas. */
+@media(min-width:1200px){
+  .mv-app-shell .fp-sidebar-fixed{
+    display:flex!important;
+    width:var(--mv-sidebar-width)!important;
+  }
+
+  .mv-app-shell .fp-app-content{
+    margin-left:var(--mv-sidebar-width)!important;
+  }
+
+  .mv-app-shell .fp-app-mobile-brand{
+    display:none!important;
+  }
+
+  .mv-app-shell .fp-app-global-search{
+    display:block!important;
+  }
+
+  .mv-app-shell .fp-app-week-selector{
+    display:block!important;
+  }
+
+  .mv-app-shell .fp-mobile-control-zone,
+  .mv-app-shell .fp-mobile-bottom-nav,
+  .mv-app-shell .fp-mobile-more-backdrop{
+    display:none!important;
+  }
+
+  body{
+    padding-bottom:0!important;
+  }
+}
+
+/* Compact/tablet mode. Do not squeeze a desktop sidebar into a narrow app
+   canvas. Switch cleanly to the compact navigation system instead. */
+@media(min-width:1024px) and (max-width:1199px){
+  .mv-app-shell .fp-sidebar-fixed{
+    display:none!important;
+  }
+
+  .mv-app-shell .fp-app-content{
+    margin-left:0!important;
+  }
+
+  .mv-app-shell .fp-app-mobile-brand{
+    display:block!important;
+  }
+
+  .mv-app-shell .fp-app-global-search,
+  .mv-app-shell .fp-app-week-selector{
+    display:none!important;
+  }
+
+  .mv-app-shell .fp-mobile-control-zone{
+    display:grid!important;
+  }
+
+  .mv-app-shell .fp-mobile-bottom-nav{
+    display:grid!important;
+  }
+
+  .mv-app-shell .fp-mobile-more-backdrop{
+    display:block!important;
+  }
+
+  body{
+    padding-bottom:calc(68px + env(safe-area-inset-bottom))!important;
+  }
+
+  .mv-app-shell .fp-app-header{
+    height:56px!important;
+    padding-left:16px!important;
+    padding-right:16px!important;
+  }
+
+  .mv-app-shell .fp-mobile-control-zone{
+    top:56px!important;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:10px;
+  }
+
+  .mv-app-shell .fp-mobile-week-selector{
+    max-width:460px;
+  }
+}
+
+/* Keep dashboard KPIs in deliberate steps:
+   4 columns when there is room, 2 on compact desktop/tablet, 1 only on phone. */
+@media(min-width:1300px){
+  .mv-app-shell .fp-kpi-strip{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+}
+
+@media(min-width:651px) and (max-width:1299px){
+  .mv-app-shell .fp-kpi-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .mv-app-shell .fp-dashboard-metric{
+    grid-template-columns:42px minmax(0,1fr) minmax(92px,118px)!important;
+    min-width:0!important;
+  }
+
+  .mv-app-shell .fp-dashboard-metric-chart{
+    max-width:118px!important;
+  }
+}
+
+@media(max-width:650px){
+  .mv-app-shell .fp-kpi-strip{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* Do not let very wide monitors stretch dashboard proportions. */
+@media(min-width:1703px){
+  .mv-app-shell .fp-page{
+    padding-left:28px!important;
+    padding-right:28px!important;
+  }
+}
+
+/* Every major grid item is allowed to shrink internally rather than force
+   the page itself wider. */
+.mv-app-shell .fp-dashboard-master,
+.mv-app-shell .fp-dashboard-left,
+.mv-app-shell .fp-dashboard-right-rail,
+.mv-app-shell .fp-dashboard-analytics-row,
+.mv-app-shell .fp-dashboard-recent-row,
+.mv-app-shell .fp-kpi-strip,
+.mv-app-shell .fp-chart-card,
+.mv-app-shell .fp-breakdown-card,
+.mv-app-shell .fp-recent-card,
+.mv-app-shell .fp-activity-card{
+  min-width:0!important;
+}
+
+/* Tables stay inside their cards instead of widening the application canvas. */
+.mv-app-shell .fp-loads-table-wrap,
+.mv-app-shell .fp-trucks-table-wrap,
+.mv-app-shell .fp-expenses-table-wrap,
+.mv-app-shell .fp-maintenance-table-wrap,
+.mv-app-shell .fp-reimb-table-wrap,
+.mv-app-shell .fp-settle-table-card,
+.mv-app-shell .fp-fuel-transactions,
+.mv-app-shell .fp-odometer-table-wrap{
+  max-width:100%!important;
+  overflow-x:auto!important;
+}
+
+/* Preserve the established desktop dashboard composition; the canvas width is
+   now capped, so these ratios remain visually consistent across large screens. */
+@media(min-width:1300px){
+  .mv-app-shell .fp-dashboard-master{
+    grid-template-columns:minmax(0,1fr) 274px!important;
+  }
+
+  .mv-app-shell .fp-dashboard-analytics-row{
+    grid-template-columns:minmax(0,1.55fr) minmax(300px,.95fr)!important;
+  }
+
+  .mv-app-shell .fp-dashboard-recent-row{
+    grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important;
+  }
+}
+
+/* Controlled compact layout: once the desktop canvas becomes too narrow,
+   simplify the hierarchy instead of squeezing everything. */
+@media(min-width:1024px) and (max-width:1299px){
+  .mv-app-shell .fp-dashboard-master{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-app-shell .fp-dashboard-right-rail{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+
+@media(min-width:768px) and (max-width:1023px){
+  .mv-app-shell .fp-dashboard-master{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-app-shell .fp-dashboard-analytics-row,
+  .mv-app-shell .fp-dashboard-recent-row{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-app-shell .fp-dashboard-right-rail{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+/* Mobile stays compact, but cards do not inherit giant desktop heights. */
+@media(max-width:767px){
+  .mv-app-shell .fp-dashboard-right-rail,
+  .mv-app-shell .fp-dashboard-analytics-row,
+  .mv-app-shell .fp-dashboard-recent-row{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-app-shell .fp-dashboard-metric{
+    min-height:92px!important;
+    height:92px!important;
+    max-height:92px!important;
+    padding:10px 12px!important;
+  }
+
+  .mv-app-shell .fp-dashboard-metric-chart{
+    height:44px!important;
+  }
+}
+/* === END MileVoxa Stable Responsive System v4.3.34 === */
+
+
+/* ==========================================================================
+   MileVoxa Expense Load Linking + Weekly Odometer Isolation v4.3.39
+   ========================================================================== */
+.fp-expense-load-link-block{display:grid;gap:5px;min-width:0}
+.fp-expense-load-link-block .fp-add-expense-field{margin:0}
+.fp-expense-load-helper,
+.fp-expense-edit-load-helper,
+.fp-quick-load-helper{display:block;color:#64748B;font-size:9px;line-height:1.45;font-weight:500}
+.fp-expense-edit-load-helper{margin-top:5px}
+.fp-quick-load-helper{margin:-2px 0 2px}
+
+.fp-odometer-week-isolation{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  margin-top:16px;border:1px solid #CFE4D5;border-radius:12px;
+  background:#F4FAF5;padding:12px 14px
+}
+.fp-odometer-week-isolation strong{color:#126F32;font-size:11px;font-weight:700;white-space:nowrap}
+.fp-odometer-week-isolation span{color:#5D7088;font-size:9px;line-height:1.45;font-weight:500;text-align:right}
+.fp-odometer-rate{color:#102238;font-size:11px;font-weight:700;white-space:nowrap}
+@media(max-width:700px){
+  .fp-odometer-week-isolation{align-items:flex-start;flex-direction:column;gap:4px}
+  .fp-odometer-week-isolation span{text-align:left}
+}
+/* === END MileVoxa Expense Load Linking + Weekly Odometer Isolation v4.3.39 === */
+
+
+/* ==========================================================================
+   MileVoxa Fuel Data Quality Note v4.3.40
+   ========================================================================== */
+
+.fp-fuel-data-note{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  max-width:650px;
+  margin-top:9px;
+  border:1px solid #D7E7DD;
+  border-radius:9px;
+  background:#F4FAF5;
+  padding:8px 10px;
+}
+
+.fp-fuel-data-note-icon{
+  display:flex;
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  align-items:center;
+  justify-content:center;
+  margin-top:1px;
+  border-radius:50%;
+  background:#E1F2E5;
+  color:#16853B;
+  font-size:9px;
+  font-weight:800;
+  line-height:1;
+}
+
+.fp-fuel-data-note p{
+  margin:0;
+  color:#5D7088;
+  font-size:9px;
+  line-height:1.45;
+  font-weight:500;
+}
+
+.fp-fuel-data-note strong{
+  color:#102238;
+  font-weight:700;
+}
+
+@media(max-width:700px){
+  .fp-fuel-data-note{
+    max-width:none;
+  }
+}
+/* === END MileVoxa Fuel Data Quality Note v4.3.40 === */
+
+
+/* ==========================================================================
+   MileVoxa Expenses Scope Note v4.3.41
+   ========================================================================== */
+
+.fp-expenses-scope-note{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  max-width:720px;
+  margin-top:9px;
+  border:1px solid #D7E7DD;
+  border-radius:9px;
+  background:#F4FAF5;
+  padding:8px 10px;
+}
+
+.fp-expenses-scope-note-icon{
+  display:flex;
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  align-items:center;
+  justify-content:center;
+  margin-top:1px;
+  border-radius:50%;
+  background:#E1F2E5;
+  color:#16853B;
+  font-size:9px;
+  font-weight:800;
+  line-height:1;
+}
+
+.fp-expenses-scope-note p{
+  margin:0;
+  color:#5D7088;
+  font-size:9px;
+  line-height:1.45;
+  font-weight:500;
+}
+
+.fp-expenses-scope-note strong{
+  color:#102238;
+  font-weight:700;
+}
+
+@media(max-width:700px){
+  .fp-expenses-scope-note{
+    max-width:none;
+  }
+}
+/* === END MileVoxa Expenses Scope Note v4.3.41 === */
+
+
+/* ==========================================================================
+   MileVoxa Expenses Week Selector Visibility v4.3.42
+   ========================================================================== */
+
+.mv-app-shell .fp-mobile-control-zone.fp-mobile-control-zone-search-only{
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+.mv-app-shell .fp-mobile-control-zone.fp-mobile-control-zone-search-only .fp-mobile-global-search{
+  width:100%;
+  max-width:none;
+}
+/* === END MileVoxa Expenses Week Selector Visibility v4.3.42 === */
+
+
+/* ==========================================================================
+   MileVoxa Expense Import Guide v4.3.43
+   ========================================================================== */
+
+.fp-expense-import-guide-modal{
+  width:min(680px,calc(100vw - 28px))!important;
+}
+
+.fp-import-guide-card,
+.fp-import-guide-example{
+  border:1px solid #E1E8EF;
+  border-radius:10px;
+  background:#F8FAFC;
+  padding:10px 12px;
+}
+
+.fp-import-guide-card + .fp-import-guide-card,
+.fp-import-guide-card + .fp-import-guide-example,
+.fp-import-guide-example + .fp-import-guide-actions{
+  margin-top:9px;
+}
+
+.fp-import-guide-title{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.fp-import-guide-title strong{
+  color:#102238;
+  font-size:10px;
+  font-weight:700;
+}
+
+.fp-import-guide-title span{
+  color:#7A8BA0;
+  font-size:8px;
+  line-height:1.35;
+  text-align:right;
+}
+
+.fp-import-chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.fp-import-chip-row code{
+  border:1px solid #D7E7DD;
+  border-radius:7px;
+  background:#F0F8F2;
+  padding:4px 7px;
+  color:#126F32;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-import-guide-rules{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 12px;
+  margin-top:8px;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-import-guide-rules b{
+  color:#102238;
+  font-weight:700;
+}
+
+.fp-import-guide-copy{
+  margin:7px 0 0;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-import-guide-copy code{
+  color:#126F32;
+  font-weight:700;
+}
+
+.fp-import-guide-example code{
+  display:block;
+  margin-top:8px;
+  overflow-x:auto;
+  white-space:nowrap;
+  border-radius:7px;
+  background:#102238;
+  padding:8px 10px;
+  color:#F8FAFC;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-import-guide-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+
+.fp-import-guide-actions button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-import-guide-actions button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-import-guide-title{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+  }
+
+  .fp-import-guide-title span{
+    text-align:left;
+  }
+
+  .fp-import-guide-rules{
+    grid-template-columns:1fr;
+  }
+
+  .fp-import-guide-actions{
+    flex-direction:column;
+  }
+
+  .fp-import-guide-actions button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Expense Import Guide v4.3.43 === */
+
+
+/* ==========================================================================
+   MileVoxa Expense Date Range Export v4.3.44
+   ========================================================================== */
+
+.fp-expense-export-modal{
+  width:min(500px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid #DFE7EF;
+  border-radius:14px;
+  background:#FFFFFF;
+  box-shadow:0 22px 70px rgba(16,34,56,.20);
+}
+
+.fp-expense-export-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid #E7EDF3;
+  padding:18px 20px 15px;
+}
+
+.fp-expense-export-modal>header span{
+  color:#16853B;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.fp-expense-export-modal>header h2{
+  margin:3px 0 0;
+  color:#102238;
+  font-size:18px;
+  font-weight:800;
+}
+
+.fp-expense-export-modal>header p{
+  margin:4px 0 0;
+  color:#6A7C92;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-expense-export-modal>header>button{
+  border:0;
+  background:transparent;
+  color:#6A7C92;
+  font-size:20px;
+  line-height:1;
+}
+
+.fp-expense-export-body{
+  padding:18px 20px;
+}
+
+.fp-expense-export-date-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.fp-expense-export-date-grid label{
+  display:grid;
+  gap:6px;
+}
+
+.fp-expense-export-date-grid span{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-expense-export-date-grid input{
+  width:100%;
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:10px;
+  outline:none;
+}
+
+.fp-expense-export-date-grid input:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08);
+}
+
+.fp-expense-export-hint{
+  margin-top:11px;
+  border:1px solid #D7E7DD;
+  border-radius:8px;
+  background:#F4FAF5;
+  padding:8px 10px;
+  color:#5D7088;
+  font-size:8px;
+  line-height:1.5;
+  font-weight:500;
+}
+
+.fp-expense-export-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #E7EDF3;
+  padding:12px 20px;
+}
+
+.fp-expense-export-modal>footer button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 13px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-expense-export-modal>footer button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+.fp-expense-export-modal>footer button:disabled{
+  cursor:not-allowed;
+  opacity:.5;
+}
+
+@media(max-width:560px){
+  .fp-expense-export-date-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-expense-export-modal>footer{
+    flex-direction:column-reverse;
+  }
+
+  .fp-expense-export-modal>footer button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Expense Date Range Export v4.3.44 === */
+
+
+/* ==========================================================================
+   MileVoxa Expense Export Category Filter v4.3.45
+   ========================================================================== */
+.fp-expense-export-category{
+  display:grid;
+  gap:6px;
+  margin-top:12px;
+}
+.fp-expense-export-category span{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+.fp-expense-export-category select{
+  width:100%;
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:10px;
+  outline:none;
+}
+.fp-expense-export-category select:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08);
+}
+/* === END MileVoxa Expense Export Category Filter v4.3.45 === */
+
+
+/* ==========================================================================
+   MileVoxa Maintenance Truck Costs v4.3.46
+   ========================================================================== */
+
+.fp-maint-cost{
+  color:#102238;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.fp-maint-side-card-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.fp-maint-side-card-head span{
+  color:#8797A9;
+  font-size:8px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.fp-maint-truck-cost-list{
+  display:grid;
+  gap:7px;
+  margin-top:12px;
+}
+
+.fp-maint-truck-cost-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid #E8EEF3;
+  padding:7px 0;
+}
+
+.fp-maint-truck-cost-row:last-child{
+  border-bottom:0;
+  padding-bottom:0;
+}
+
+.fp-maint-truck-cost-row>div{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+.fp-maint-truck-cost-row>div strong{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-maint-truck-cost-row>div span{
+  color:#8192A6;
+  font-size:8px;
+  font-weight:500;
+}
+
+.fp-maint-truck-cost-row>strong{
+  color:#16853B;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.fp-maint-truck-cost-empty{
+  color:#8192A6;
+  font-size:9px;
+  line-height:1.45;
+  padding:4px 0;
+}
+/* === END MileVoxa Maintenance Truck Costs v4.3.46 === */
+
+
+/* ==========================================================================
+   MileVoxa Maintenance Import Guide v4.3.47
+   ========================================================================== */
+
+.fp-maint-import-guide-modal{
+  width:min(680px,calc(100vw - 28px))!important;
+}
+
+.fp-maint-import-guide-card,
+.fp-maint-import-guide-example{
+  border:1px solid #E1E8EF;
+  border-radius:10px;
+  background:#F8FAFC;
+  padding:10px 12px;
+}
+
+.fp-maint-import-guide-card + .fp-maint-import-guide-card,
+.fp-maint-import-guide-card + .fp-maint-import-guide-example,
+.fp-maint-import-guide-example + .fp-maint-import-guide-actions{
+  margin-top:9px;
+}
+
+.fp-maint-import-guide-title{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.fp-maint-import-guide-title strong{
+  color:#102238;
+  font-size:10px;
+  font-weight:700;
+}
+
+.fp-maint-import-guide-title span{
+  color:#7A8BA0;
+  font-size:8px;
+  line-height:1.35;
+  text-align:right;
+}
+
+.fp-maint-import-chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.fp-maint-import-chip-row code{
+  border:1px solid #D7E7DD;
+  border-radius:7px;
+  background:#F0F8F2;
+  padding:4px 7px;
+  color:#126F32;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-maint-import-guide-rules{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 12px;
+  margin-top:8px;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-maint-import-guide-rules b{
+  color:#102238;
+  font-weight:700;
+}
+
+.fp-maint-import-guide-copy{
+  margin:7px 0 0;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-maint-import-guide-copy code{
+  color:#126F32;
+  font-weight:700;
+}
+
+.fp-maint-import-guide-example code{
+  display:block;
+  margin-top:8px;
+  overflow-x:auto;
+  white-space:nowrap;
+  border-radius:7px;
+  background:#102238;
+  padding:8px 10px;
+  color:#F8FAFC;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-maint-import-guide-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+
+.fp-maint-import-guide-actions button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-maint-import-guide-actions button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-maint-import-guide-title{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+  }
+
+  .fp-maint-import-guide-title span{
+    text-align:left;
+  }
+
+  .fp-maint-import-guide-rules{
+    grid-template-columns:1fr;
+  }
+
+  .fp-maint-import-guide-actions{
+    flex-direction:column;
+  }
+
+  .fp-maint-import-guide-actions button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Maintenance Import Guide v4.3.47 === */
+
+
+/* ==========================================================================
+   MileVoxa Maintenance Export Filters v4.3.48
+   ========================================================================== */
+
+.fp-maint-export-modal{
+  width:min(620px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid #DFE7EF;
+  border-radius:14px;
+  background:#FFFFFF;
+  box-shadow:0 22px 70px rgba(16,34,56,.20);
+}
+
+.fp-maint-export-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid #E7EDF3;
+  padding:18px 20px 15px;
+}
+
+.fp-maint-export-modal>header span{
+  color:#16853B;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.fp-maint-export-modal>header h2{
+  margin:3px 0 0;
+  color:#102238;
+  font-size:18px;
+  font-weight:800;
+}
+
+.fp-maint-export-modal>header p{
+  max-width:460px;
+  margin:4px 0 0;
+  color:#6A7C92;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-maint-export-modal>header>button{
+  border:0;
+  background:transparent;
+  color:#6A7C92;
+  font-size:20px;
+  line-height:1;
+}
+
+.fp-maint-export-body{
+  display:grid;
+  gap:12px;
+  padding:18px 20px;
+}
+
+.fp-maint-export-section{
+  display:grid;
+  gap:7px;
+}
+
+.fp-maint-export-section>strong{
+  color:#102238;
+  font-size:9px;
+  font-weight:800;
+}
+
+.fp-maint-export-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.fp-maint-export-grid label,
+.fp-maint-export-service-type{
+  display:grid;
+  gap:6px;
+}
+
+.fp-maint-export-grid label>span,
+.fp-maint-export-service-type>span{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-maint-export-grid input,
+.fp-maint-export-grid select,
+.fp-maint-export-service-type select{
+  width:100%;
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:10px;
+  outline:none;
+}
+
+.fp-maint-export-grid input:focus,
+.fp-maint-export-grid select:focus,
+.fp-maint-export-service-type select:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08);
+}
+
+.fp-maint-export-hint{
+  border:1px solid #D7E7DD;
+  border-radius:8px;
+  background:#F4FAF5;
+  padding:8px 10px;
+  color:#5D7088;
+  font-size:8px;
+  line-height:1.5;
+  font-weight:500;
+}
+
+.fp-maint-export-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #E7EDF3;
+  padding:12px 20px;
+}
+
+.fp-maint-export-modal>footer button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 13px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-maint-export-modal>footer button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-maint-export-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-maint-export-modal>footer{
+    flex-direction:column-reverse;
+  }
+
+  .fp-maint-export-modal>footer button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Maintenance Export Filters v4.3.48 === */
+
+
+/* ==========================================================================
+   MileVoxa Reimbursements Import Guide v4.3.49
+   ========================================================================== */
+
+.fp-reimb-import-guide-modal{
+  width:min(680px,calc(100vw - 28px))!important;
+}
+
+.fp-reimb-import-guide-card,
+.fp-reimb-import-guide-example{
+  border:1px solid #E1E8EF;
+  border-radius:10px;
+  background:#F8FAFC;
+  padding:10px 12px;
+}
+
+.fp-reimb-import-guide-card + .fp-reimb-import-guide-card,
+.fp-reimb-import-guide-card + .fp-reimb-import-guide-example,
+.fp-reimb-import-guide-example + .fp-reimb-import-guide-actions{
+  margin-top:9px;
+}
+
+.fp-reimb-import-guide-title{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.fp-reimb-import-guide-title strong{
+  color:#102238;
+  font-size:10px;
+  font-weight:700;
+}
+
+.fp-reimb-import-guide-title span{
+  color:#7A8BA0;
+  font-size:8px;
+  line-height:1.35;
+  text-align:right;
+}
+
+.fp-reimb-import-chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.fp-reimb-import-chip-row code{
+  border:1px solid #D7E7DD;
+  border-radius:7px;
+  background:#F0F8F2;
+  padding:4px 7px;
+  color:#126F32;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-reimb-import-guide-rules{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 12px;
+  margin-top:8px;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-reimb-import-guide-rules b{
+  color:#102238;
+  font-weight:700;
+}
+
+.fp-reimb-import-guide-copy{
+  margin:7px 0 0;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-reimb-import-guide-copy code{
+  color:#126F32;
+  font-weight:700;
+}
+
+.fp-reimb-import-guide-example code{
+  display:block;
+  margin-top:8px;
+  overflow-x:auto;
+  white-space:nowrap;
+  border-radius:7px;
+  background:#102238;
+  padding:8px 10px;
+  color:#F8FAFC;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-reimb-import-guide-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+
+.fp-reimb-import-guide-actions button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-reimb-import-guide-actions button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-reimb-import-guide-title{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+  }
+
+  .fp-reimb-import-guide-title span{
+    text-align:left;
+  }
+
+  .fp-reimb-import-guide-rules{
+    grid-template-columns:1fr;
+  }
+
+  .fp-reimb-import-guide-actions{
+    flex-direction:column;
+  }
+
+  .fp-reimb-import-guide-actions button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Reimbursements Import Guide v4.3.49 === */
+
+
+/* ==========================================================================
+   MileVoxa Reimbursements Export Filters v4.3.50
+   ========================================================================== */
+
+.fp-reimb-export-modal{
+  width:min(620px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid #DFE7EF;
+  border-radius:14px;
+  background:#FFFFFF;
+  box-shadow:0 22px 70px rgba(16,34,56,.20);
+}
+
+.fp-reimb-export-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid #E7EDF3;
+  padding:18px 20px 15px;
+}
+
+.fp-reimb-export-modal>header span{
+  color:#16853B;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.fp-reimb-export-modal>header h2{
+  margin:3px 0 0;
+  color:#102238;
+  font-size:18px;
+  font-weight:800;
+}
+
+.fp-reimb-export-modal>header p{
+  max-width:460px;
+  margin:4px 0 0;
+  color:#6A7C92;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-reimb-export-modal>header>button{
+  border:0;
+  background:transparent;
+  color:#6A7C92;
+  font-size:20px;
+  line-height:1;
+}
+
+.fp-reimb-export-body{
+  display:grid;
+  gap:12px;
+  padding:18px 20px;
+}
+
+.fp-reimb-export-section{
+  display:grid;
+  gap:7px;
+}
+
+.fp-reimb-export-section>strong{
+  color:#102238;
+  font-size:9px;
+  font-weight:800;
+}
+
+.fp-reimb-export-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.fp-reimb-export-grid label,
+.fp-reimb-export-category{
+  display:grid;
+  gap:6px;
+}
+
+.fp-reimb-export-grid label>span,
+.fp-reimb-export-category>span{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-reimb-export-grid input,
+.fp-reimb-export-grid select,
+.fp-reimb-export-category select{
+  width:100%;
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:10px;
+  outline:none;
+}
+
+.fp-reimb-export-grid input:focus,
+.fp-reimb-export-grid select:focus,
+.fp-reimb-export-category select:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08);
+}
+
+.fp-reimb-export-hint{
+  border:1px solid #D7E7DD;
+  border-radius:8px;
+  background:#F4FAF5;
+  padding:8px 10px;
+  color:#5D7088;
+  font-size:8px;
+  line-height:1.5;
+  font-weight:500;
+}
+
+.fp-reimb-export-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #E7EDF3;
+  padding:12px 20px;
+}
+
+.fp-reimb-export-modal>footer button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 13px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-reimb-export-modal>footer button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-reimb-export-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-reimb-export-modal>footer{
+    flex-direction:column-reverse;
+  }
+
+  .fp-reimb-export-modal>footer button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Reimbursements Export Filters v4.3.50 === */
+
+
+/* ==========================================================================
+   MileVoxa Non-Weekly Pages Week Selector Visibility v4.3.51
+   ========================================================================== */
+
+/*
+  Trucks, Expenses, Maintenance and Reimbursements use their own page-level
+  record/date filters, so the global Selected Week control is hidden there.
+*/
+.mv-app-shell .fp-mobile-control-zone.fp-mobile-control-zone-search-only{
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+.mv-app-shell .fp-mobile-control-zone.fp-mobile-control-zone-search-only .fp-mobile-global-search{
+  width:100%;
+  max-width:none;
+}
+/* === END MileVoxa Non-Weekly Pages Week Selector Visibility v4.3.51 === */
+
+
+/* ==========================================================================
+   MileVoxa Settlement Fixed / Company Fees Split v4.3.52
+   ========================================================================== */
+
+/*
+  Weekly Settlement now treats Fixed Expenses and Company Fees as separate
+  overview KPIs. The existing responsive overview grid continues to place
+  both cards using its normal auto-flow behavior.
+*/
+.fp-settle-overview-grid{
+  align-items:stretch;
+}
+/* === END MileVoxa Settlement Fixed / Company Fees Split v4.3.52 === */
+
+
+/* ==========================================================================
+   MileVoxa Settlement Cost Ledger Company Fees v4.3.53
+   ========================================================================== */
+
+/*
+  Weekly Settlement Costs now includes derived Company Revenue Fee and
+  Odometer Mileage Fee rows using the same finance values as the settlement
+  summary. No extra styling is required; rows use the existing cost table.
+*/
+/* === END MileVoxa Settlement Cost Ledger Company Fees v4.3.53 === */
+
+
+/* ==========================================================================
+   MileVoxa Trucks Import + Export Data Model v4.3.54
+   ========================================================================== */
+
+.fp-truck-import-guide-modal{
+  width:min(700px,calc(100vw - 28px))!important;
+}
+
+.fp-truck-import-guide-card,
+.fp-truck-import-guide-example{
+  border:1px solid #E1E8EF;
+  border-radius:10px;
+  background:#F8FAFC;
+  padding:10px 12px;
+}
+
+.fp-truck-import-guide-card + .fp-truck-import-guide-card,
+.fp-truck-import-guide-card + .fp-truck-import-guide-example,
+.fp-truck-import-guide-example + .fp-truck-import-guide-actions{
+  margin-top:9px;
+}
+
+.fp-truck-import-guide-title{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.fp-truck-import-guide-title strong{
+  color:#102238;
+  font-size:10px;
+  font-weight:700;
+}
+
+.fp-truck-import-guide-title span{
+  color:#7A8BA0;
+  font-size:8px;
+  line-height:1.35;
+  text-align:right;
+}
+
+.fp-truck-import-chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.fp-truck-import-chip-row code{
+  border:1px solid #D7E7DD;
+  border-radius:7px;
+  background:#F0F8F2;
+  padding:4px 7px;
+  color:#126F32;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-truck-import-guide-rules{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 12px;
+  margin-top:8px;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-truck-import-guide-rules b{
+  color:#102238;
+  font-weight:700;
+}
+
+.fp-truck-import-guide-copy{
+  margin:7px 0 0;
+  color:#64748B;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-truck-import-guide-copy code{
+  color:#126F32;
+  font-weight:700;
+}
+
+.fp-truck-import-guide-example code{
+  display:block;
+  margin-top:8px;
+  overflow-x:auto;
+  white-space:nowrap;
+  border-radius:7px;
+  background:#102238;
+  padding:8px 10px;
+  color:#F8FAFC;
+  font-size:8px;
+  line-height:1.4;
+}
+
+.fp-truck-import-guide-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+
+.fp-truck-import-guide-actions button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-truck-import-guide-actions button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+.fp-truck-export-modal{
+  width:min(640px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid #DFE7EF;
+  border-radius:14px;
+  background:#FFFFFF;
+  box-shadow:0 22px 70px rgba(16,34,56,.20);
+}
+
+.fp-truck-export-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid #E7EDF3;
+  padding:18px 20px 15px;
+}
+
+.fp-truck-export-modal>header span{
+  color:#16853B;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.fp-truck-export-modal>header h2{
+  margin:3px 0 0;
+  color:#102238;
+  font-size:18px;
+  font-weight:800;
+}
+
+.fp-truck-export-modal>header p{
+  max-width:470px;
+  margin:4px 0 0;
+  color:#6A7C92;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.fp-truck-export-modal>header>button{
+  border:0;
+  background:transparent;
+  color:#6A7C92;
+  font-size:20px;
+  line-height:1;
+}
+
+.fp-truck-export-body{
+  display:grid;
+  gap:12px;
+  padding:18px 20px;
+}
+
+.fp-truck-export-section{
+  display:grid;
+  gap:7px;
+}
+
+.fp-truck-export-section>strong{
+  color:#102238;
+  font-size:9px;
+  font-weight:800;
+}
+
+.fp-truck-export-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.fp-truck-export-grid label,
+.fp-truck-export-single{
+  display:grid;
+  gap:6px;
+}
+
+.fp-truck-export-grid label>span,
+.fp-truck-export-single>span{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-truck-export-grid input,
+.fp-truck-export-grid select,
+.fp-truck-export-single input{
+  width:100%;
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:10px;
+  outline:none;
+}
+
+.fp-truck-export-grid input:focus,
+.fp-truck-export-grid select:focus,
+.fp-truck-export-single input:focus{
+  border-color:#16853B;
+  box-shadow:0 0 0 3px rgba(22,133,59,.08);
+}
+
+.fp-truck-export-hint{
+  border:1px solid #D7E7DD;
+  border-radius:8px;
+  background:#F4FAF5;
+  padding:8px 10px;
+  color:#5D7088;
+  font-size:8px;
+  line-height:1.5;
+  font-weight:500;
+}
+
+.fp-truck-export-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #E7EDF3;
+  padding:12px 20px;
+}
+
+.fp-truck-export-modal>footer button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 13px;
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-truck-export-modal>footer button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:620px){
+  .fp-truck-import-guide-title{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+  }
+
+  .fp-truck-import-guide-title span{
+    text-align:left;
+  }
+
+  .fp-truck-import-guide-rules,
+  .fp-truck-export-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-truck-import-guide-actions{
+    flex-direction:column;
+  }
+
+  .fp-truck-import-guide-actions button{
+    width:100%;
+  }
+
+  .fp-truck-export-modal>footer{
+    flex-direction:column-reverse;
+  }
+
+  .fp-truck-export-modal>footer button{
+    width:100%;
+  }
+}
+/* === END MileVoxa Trucks Import + Export Data Model v4.3.54 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Business Upgrade v4.3.55
+   ========================================================================== */
+
+.fp-reports-v2 .fp-tool-heading{
+  align-items:flex-start;
+}
+
+.fp-report-period-shell{
+  display:grid;
+  grid-template-columns:auto minmax(170px,210px) minmax(220px,1fr);
+  align-items:center;
+  gap:12px;
+  margin-top:14px;
+  border:1px solid #E1E8EF;
+  border-radius:12px;
+  background:#FFFFFF;
+  padding:10px 12px;
+}
+
+.fp-report-period-tabs{
+  display:flex;
+  gap:5px;
+  padding:3px;
+  border-radius:9px;
+  background:#F1F5F9;
+}
+
+.fp-report-period-tabs button{
+  min-height:32px;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  padding:0 13px;
+  color:#66788E;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-report-period-tabs button.active{
+  background:#FFFFFF;
+  color:#16853B;
+  box-shadow:0 1px 4px rgba(16,34,56,.08);
+}
+
+.fp-report-period-date{
+  display:grid;
+  gap:4px;
+}
+
+.fp-report-period-date span,
+.fp-report-period-current span{
+  color:#8797A9;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.07em;
+}
+
+.fp-report-period-date input{
+  min-height:32px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 8px;
+  color:#102238;
+  font-size:9px;
+}
+
+.fp-report-period-current{
+  display:grid;
+  gap:2px;
+  justify-items:end;
+}
+
+.fp-report-period-current strong{
+  color:#102238;
+  font-size:11px;
+  font-weight:800;
+}
+
+.fp-report-kpis-expanded{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+
+.fp-report-business-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+
+.fp-report-business-metric{
+  display:grid;
+  gap:3px;
+  min-height:84px;
+  border:1px solid #E3EAF1;
+  border-radius:10px;
+  background:#FAFBFC;
+  padding:10px 11px;
+}
+
+.fp-report-business-metric>span{
+  color:#6B7D93;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-report-business-metric>strong{
+  color:#102238;
+  font-size:15px;
+  font-weight:800;
+}
+
+.fp-report-business-metric>strong.good{
+  color:#16853B;
+}
+
+.fp-report-business-metric>small{
+  color:#8A99AB;
+  font-size:7.5px;
+  line-height:1.35;
+}
+
+.fp-report-expense-ledger{
+  display:grid;
+  margin-top:12px;
+}
+
+.fp-report-expense-ledger>div{
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  border-bottom:1px solid #E8EEF3;
+  padding:9px 2px;
+}
+
+.fp-report-expense-ledger>div:last-child{
+  border-bottom:0;
+}
+
+.fp-report-expense-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#AAB7C7;
+}
+
+.fp-report-expense-ledger>div>div{
+  display:grid;
+  gap:2px;
+}
+
+.fp-report-expense-ledger strong{
+  color:#102238;
+  font-size:9px;
+  font-weight:700;
+}
+
+.fp-report-expense-ledger small{
+  color:#8797A9;
+  font-size:7.5px;
+}
+
+.fp-report-expense-ledger b{
+  color:#102238;
+  font-size:10px;
+  font-weight:800;
+}
+
+.fp-report-expense-ledger .reimbursement b{
+  color:#16853B;
+}
+
+.fp-report-expense-ledger .total{
+  border-top:1px solid #CFD9E4;
+  background:#F8FAFC;
+  padding:10px 8px;
+}
+
+.fp-report-table-wrap{
+  overflow-x:auto;
+}
+
+.fp-report-table-note{
+  margin-top:8px;
+  color:#7B8CA0;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-report-side-facts{
+  display:grid;
+  margin-top:10px;
+}
+
+.fp-report-side-facts>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid #E8EEF3;
+  padding:7px 0;
+}
+
+.fp-report-side-facts>div:last-child{
+  border-bottom:0;
+}
+
+.fp-report-side-facts span{
+  color:#7A8BA0;
+  font-size:8px;
+}
+
+.fp-report-side-facts strong{
+  color:#102238;
+  font-size:8.5px;
+  font-weight:700;
+  text-align:right;
+}
+
+.fp-report-side-copy{
+  margin:8px 0 0;
+  color:#718399;
+  font-size:8px;
+  line-height:1.5;
+}
+
+.fp-report-quick-actions{
+  display:grid;
+  gap:7px;
+  margin-top:10px;
+}
+
+.fp-report-quick-actions button{
+  display:grid;
+  grid-template-columns:18px minmax(0,1fr) auto;
+  align-items:center;
+  min-height:36px;
+  border:1px solid #DDE5ED;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  text-align:left;
+}
+
+.fp-report-quick-actions button span{
+  color:#16853B;
+}
+
+.fp-report-quick-actions button b{
+  font-size:8.5px;
+  font-weight:700;
+}
+
+.fp-report-quick-actions button em{
+  color:#8A99AB;
+  font-style:normal;
+}
+
+.fp-report-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(11,23,48,.34);
+  padding:14px;
+}
+
+.fp-report-modal{
+  width:min(520px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid #DFE7EF;
+  border-radius:14px;
+  background:#FFFFFF;
+  box-shadow:0 22px 70px rgba(16,34,56,.20);
+}
+
+.fp-report-modal>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:1px solid #E7EDF3;
+  padding:17px 19px 14px;
+}
+
+.fp-report-modal>header span{
+  color:#16853B;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.fp-report-modal>header h2{
+  margin:3px 0 0;
+  color:#102238;
+  font-size:17px;
+  font-weight:800;
+}
+
+.fp-report-modal>header p{
+  margin:4px 0 0;
+  color:#6A7C92;
+  font-size:8px;
+  line-height:1.45;
+}
+
+.fp-report-modal>header>button{
+  border:0;
+  background:transparent;
+  color:#6A7C92;
+  font-size:20px;
+}
+
+.fp-report-modal-body{
+  display:grid;
+  gap:11px;
+  padding:17px 19px;
+}
+
+.fp-report-modal-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.fp-report-modal-body label{
+  display:grid;
+  gap:5px;
+}
+
+.fp-report-modal-body label>span{
+  color:#102238;
+  font-size:8px;
+  font-weight:700;
+}
+
+.fp-report-modal-body input,
+.fp-report-modal-body select{
+  min-height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 10px;
+  color:#102238;
+  font-size:9px;
+}
+
+.fp-report-modal-error{
+  border:1px solid #F5C5C5;
+  border-radius:8px;
+  background:#FFF5F5;
+  padding:8px 10px;
+  color:#B63D3D;
+  font-size:8px;
+}
+
+.fp-report-modal>footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  border-top:1px solid #E7EDF3;
+  padding:11px 19px;
+}
+
+.fp-report-modal>footer button{
+  min-height:34px;
+  border:1px solid #D8E1EA;
+  border-radius:8px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:8.5px;
+  font-weight:700;
+}
+
+.fp-report-modal>footer button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+}
+
+@media(max-width:1100px){
+  .fp-report-business-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:760px){
+  .fp-report-period-shell{
+    grid-template-columns:1fr;
+  }
+
+  .fp-report-period-current{
+    justify-items:start;
+  }
+
+  .fp-report-kpis-expanded{
+    grid-template-columns:1fr!important;
+  }
+
+  .fp-report-business-grid{
+    grid-template-columns:1fr;
+  }
+
+  .fp-report-modal-grid{
+    grid-template-columns:1fr;
+  }
+}
+/* === END MileVoxa Reports Business Upgrade v4.3.55 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Alignment + Daily Detail v4.3.56
+   ========================================================================== */
+
+.fp-reports-v2 .fp-tool-heading{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:start!important;
+  gap:20px!important;
+  margin-bottom:12px!important;
+}
+
+.fp-report-header-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:7px;
+}
+
+.fp-report-header-actions button{
+  min-height:38px;
+  border:1px solid #DCE5ED;
+  border-radius:9px;
+  background:#FFFFFF;
+  padding:0 12px;
+  color:#102238;
+  font-size:8.5px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.fp-report-header-actions button.primary{
+  border-color:#16853B;
+  background:linear-gradient(180deg,#16853B 0%,#126F32 100%);
+  color:#FFFFFF;
+  box-shadow:0 7px 18px rgba(18,111,50,.14);
+}
+
+.fp-reports-v2 .fp-report-period-shell{
+  margin-top:0;
+}
+
+.fp-report-meta-strip{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  margin-top:12px;
+  overflow:hidden;
+  border:1px solid #E1E8EF;
+  border-radius:11px;
+  background:#FFFFFF;
+}
+
+.fp-report-meta-strip>div{
+  display:grid;
+  gap:3px;
+  min-width:0;
+  border-right:1px solid #E8EEF3;
+  padding:10px 12px;
+}
+
+.fp-report-meta-strip>div:last-child{
+  border-right:0;
+}
+
+.fp-report-meta-strip span{
+  color:#8292A6;
+  font-size:7px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.fp-report-meta-strip strong{
+  overflow:hidden;
+  color:#102238;
+  font-size:9px;
+  font-weight:800;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-report-content-stack{
+  display:grid;
+  gap:12px;
+  margin-top:12px;
+}
+
+.fp-reports-v2 .fp-report-section-panel{
+  overflow:hidden;
+  padding:0!important;
+}
+
+.fp-reports-v2 .fp-report-section-heading{
+  padding:14px 16px 12px!important;
+  border-bottom:1px solid #E8EEF3;
+}
+
+.fp-reports-v2 .fp-report-section-heading h2{
+  margin-top:3px!important;
+  font-size:16px!important;
+}
+
+.fp-reports-v2 .fp-report-section-heading p{
+  margin-top:5px!important;
+  max-width:900px;
+  font-size:9px!important;
+  line-height:1.45!important;
+}
+
+.fp-reports-v2 .fp-report-business-grid{
+  margin-top:0!important;
+  padding:12px 14px 14px;
+}
+
+.fp-reports-v2 .fp-report-business-metric{
+  min-height:76px;
+  padding:9px 10px;
+}
+
+.fp-report-tight-title{
+  margin:0!important;
+  padding:13px 16px 11px!important;
+  border-bottom:1px solid #E8EEF3;
+}
+
+.fp-report-tight-title h2{
+  font-size:14px!important;
+}
+
+.fp-report-tight-title small{
+  display:block;
+  margin-top:3px;
+  color:#7E8FA3;
+  font-size:8px!important;
+}
+
+.fp-reports-v2 .fp-report-expense-ledger{
+  margin-top:0!important;
+  padding:0 14px 6px;
+}
+
+.fp-reports-v2 .fp-report-expense-ledger>div{
+  padding:9px 2px!important;
+}
+
+.fp-report-daily-note{
+  margin:10px 14px 0;
+  border:1px solid #D7E7DD;
+  border-radius:8px;
+  background:#F4FAF5;
+  padding:7px 9px;
+  color:#5D7088;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+.fp-reports-v2 .fp-report-table-wrap{
+  overflow-x:auto;
+  padding:10px 14px 12px;
+}
+
+.fp-report-daily-table{
+  min-width:1180px;
+}
+
+.fp-report-daily-table td,
+.fp-report-daily-table th{
+  white-space:nowrap;
+}
+
+.fp-report-daily-table td:first-child strong{
+  color:#102238;
+  font-size:8.5px;
+}
+
+.fp-report-daily-table .bad,
+.fp-compact-table .bad{
+  color:#C74343!important;
+}
+
+.fp-reports-v2 .fp-report-table-note{
+  margin:0!important;
+  border-top:1px solid #E8EEF3;
+  padding:8px 14px 10px;
+}
+
+@media(max-width:1180px){
+  .fp-report-meta-strip{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .fp-report-meta-strip>div:nth-child(3n){
+    border-right:0;
+  }
+}
+
+@media(max-width:820px){
+  .fp-reports-v2 .fp-tool-heading{
+    grid-template-columns:1fr!important;
+  }
+
+  .fp-report-header-actions{
+    justify-content:flex-start;
+  }
+
+  .fp-report-header-actions button{
+    flex:1 1 140px;
+  }
+
+  .fp-report-meta-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .fp-report-meta-strip>div:nth-child(2n){
+    border-right:0;
+  }
+}
+
+@media(max-width:520px){
+  .fp-report-meta-strip{
+    grid-template-columns:1fr;
+  }
+
+  .fp-report-meta-strip>div{
+    border-right:0;
+  }
+}
+/* === END MileVoxa Reports Alignment + Daily Detail v4.3.56 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Period Navigation v4.3.57
+   ========================================================================== */
+
+.fp-report-period-shell-v2{
+  grid-template-columns:auto minmax(185px,230px) minmax(330px,1fr)!important;
+}
+
+.fp-report-period-navigation{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 38px;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.fp-report-period-navigation>button{
+  width:38px;
+  height:38px;
+  border:1px solid #D8E1EA;
+  border-radius:9px;
+  background:#FFFFFF;
+  color:#102238;
+  font-size:14px;
+  font-weight:700;
+}
+
+.fp-report-period-navigation>button:hover{
+  border-color:#B9C8D8;
+  background:#F8FAFC;
+}
+
+.fp-report-period-navigation .fp-report-period-current{
+  min-width:0;
+  justify-items:center;
+  text-align:center;
+}
+
+.fp-report-period-navigation .fp-report-period-current strong{
+  overflow:hidden;
+  width:100%;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-report-custom-active{
+  display:flex;
+  align-items:center;
+  min-height:32px;
+  border-radius:7px;
+  background:#EAF6EC;
+  padding:0 11px;
+  color:#126F32;
+  font-size:9px;
+  font-weight:800;
+}
+
+.fp-report-period-custom{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+.fp-report-period-custom>span{
+  color:#16853B;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.07em;
+}
+
+.fp-report-period-custom>strong{
+  overflow:hidden;
+  color:#102238;
+  font-size:10px;
+  font-weight:800;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-report-period-custom>small{
+  color:#8192A6;
+  font-size:7px;
+  line-height:1.35;
+}
+
+.fp-report-period-date input[type="number"]{
+  appearance:textfield;
+}
+
+.fp-report-period-date input[type="number"]::-webkit-inner-spin-button,
+.fp-report-period-date input[type="number"]::-webkit-outer-spin-button{
+  margin:0;
+}
+
+@media(max-width:980px){
+  .fp-report-period-shell-v2{
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .fp-report-period-navigation{
+    grid-column:1 / -1;
+  }
+}
+
+@media(max-width:660px){
+  .fp-report-period-shell-v2{
+    grid-template-columns:1fr!important;
+  }
+
+  .fp-report-period-tabs{
+    width:100%;
+  }
+
+  .fp-report-period-tabs button{
+    flex:1 1 0;
+  }
+
+  .fp-report-period-navigation{
+    grid-column:auto;
+  }
+}
+/* === END MileVoxa Reports Period Navigation v4.3.57 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Simplified Period Controls v4.3.58
+   ========================================================================== */
+
+.fp-report-period-shell-v3{
+  grid-template-columns:auto minmax(360px,1fr)!important;
+  align-items:center;
+}
+
+.fp-report-period-shell-v3 .fp-report-period-navigation{
+  margin-left:auto;
+  width:min(100%,620px);
+}
+
+.fp-report-period-shell-v3 .fp-report-period-current small{
+  display:block;
+  margin-top:2px;
+  color:#8192A6;
+  font-size:7px;
+  font-weight:500;
+}
+
+@media(max-width:820px){
+  .fp-report-period-shell-v3{
+    grid-template-columns:1fr!important;
+  }
+
+  .fp-report-period-shell-v3 .fp-report-period-navigation{
+    width:100%;
+    margin-left:0;
+  }
+}
+/* === END MileVoxa Reports Simplified Period Controls v4.3.58 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Completed Loads Date Logic v4.3.59
+   ========================================================================== */
+/*
+  Completed Loads in Reports are counted by delivery_date when available,
+  falling back to pickup_date only for legacy rows without a delivery date.
+*/
+/* === END MileVoxa Reports Completed Loads Date Logic v4.3.59 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Settlement-Style PDF Export v4.3.60
+   ========================================================================== */
+
+.fp-report-header-actions button:disabled{
+  cursor:not-allowed;
+  opacity:.58;
+}
+/* === END MileVoxa Reports Settlement-Style PDF Export v4.3.60 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Designed PDF v4.3.62
+   ========================================================================== */
+.fp-report-header-actions button.primary{
+  letter-spacing:.01em;
+}
+/* === END MileVoxa Reports Designed PDF v4.3.62 === */
+
+
+/* ==========================================================================
+   MileVoxa Pilot AI Typography Alignment v4.3.65
+   ========================================================================== */
+
+/*
+  Keep Pilot AI on the same authenticated-app type scale as the operational
+  pages. These rules are scoped to /pilot-ai so the compact Dashboard Pilot
+  widget keeps its own denser typography.
+*/
+
+.fp-pilot-page .fp-tool-heading h1{
+  font-size:29px!important;
+  line-height:1!important;
+  font-weight:800!important;
+  letter-spacing:-.045em!important;
+}
+
+.fp-pilot-page .fp-tool-heading p{
+  margin-top:8px!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+  font-weight:500!important;
+}
+
+.fp-pilot-page .fp-panel h2,
+.fp-pilot-page .fp-ai-chat h2{
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+  letter-spacing:-.02em!important;
+}
+
+.fp-pilot-page .fp-ai-message{
+  font-size:10.5px!important;
+  line-height:1.55!important;
+}
+
+.fp-pilot-page .fp-ai-message p{
+  font-size:inherit!important;
+  line-height:inherit!important;
+}
+
+.fp-pilot-page .fp-ai-composer input{
+  font-size:10px!important;
+  line-height:1.4!important;
+}
+
+.fp-pilot-page .fp-ai-chip-row button{
+  font-size:9px!important;
+  line-height:1.2!important;
+  font-weight:600!important;
+}
+
+.fp-pilot-page .fp-ai-suggest{
+  font-size:9.5px!important;
+  line-height:1.35!important;
+  font-weight:500!important;
+}
+
+.fp-pilot-page .fp-ai-insight p{
+  font-size:9.5px!important;
+  line-height:1.45!important;
+}
+
+.fp-pilot-page .fp-ai-note{
+  font-size:8px!important;
+  line-height:1.4!important;
+}
+
+.fp-pilot-page .fp-ai-error{
+  font-size:9.5px!important;
+  line-height:1.45!important;
+}
+
+@media(max-width:640px){
+  .fp-pilot-page .fp-tool-heading h1{
+    font-size:25px!important;
+    line-height:1.08!important;
+  }
+
+  .fp-pilot-page .fp-tool-heading p{
+    font-size:10px!important;
+    line-height:1.5!important;
+  }
+
+  .fp-pilot-page .fp-ai-message{
+    max-width:94%!important;
+    font-size:10px!important;
+  }
+
+  .fp-pilot-page .fp-ai-suggest,
+  .fp-pilot-page .fp-ai-insight p{
+    font-size:9px!important;
+  }
+}
+/* === END MileVoxa Pilot AI Typography Alignment v4.3.65 === */
+
+
+/* ==========================================================================
+   MileVoxa Pilot AI Weekly Settlement Readability v4.3.66
+   ========================================================================== */
+
+/*
+  Weekly Settlement is the readability reference for the full Pilot AI page.
+  Increase operational text one level above the previous compact Pilot scale.
+*/
+
+.fp-pilot-page .fp-tool-heading h1{
+  font-size:29px!important;
+  line-height:1!important;
+  font-weight:800!important;
+  letter-spacing:-.045em!important;
+}
+
+.fp-pilot-page .fp-tool-heading p{
+  font-size:11px!important;
+  line-height:1.5!important;
+  font-weight:500!important;
+}
+
+.fp-pilot-page .fp-panel h2,
+.fp-pilot-page .fp-ai-chat h2{
+  font-size:15px!important;
+  line-height:1.3!important;
+  font-weight:700!important;
+}
+
+.fp-pilot-page .fp-ai-message{
+  padding:13px 14px!important;
+  font-size:12px!important;
+  line-height:1.6!important;
+}
+
+.fp-pilot-page .fp-ai-message p{
+  font-size:12px!important;
+  line-height:1.6!important;
+}
+
+.fp-pilot-page .fp-ai-message-icon{
+  width:30px!important;
+  height:30px!important;
+  font-size:11px!important;
+}
+
+.fp-pilot-page .fp-ai-composer{
+  grid-template-columns:minmax(0,1fr) 42px!important;
+}
+
+.fp-pilot-page .fp-ai-composer input{
+  height:42px!important;
+  padding:0 13px!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+}
+
+.fp-pilot-page .fp-ai-composer button{
+  min-height:42px!important;
+}
+
+.fp-pilot-page .fp-ai-chip-row{
+  gap:7px!important;
+}
+
+.fp-pilot-page .fp-ai-chip-row button{
+  padding:7px 10px!important;
+  font-size:10px!important;
+  line-height:1.25!important;
+  font-weight:600!important;
+}
+
+.fp-pilot-page .fp-ai-suggest{
+  min-height:40px!important;
+  padding:7px 11px!important;
+  font-size:11px!important;
+  line-height:1.4!important;
+  font-weight:500!important;
+}
+
+.fp-pilot-page .fp-ai-insight{
+  grid-template-columns:32px minmax(0,1fr)!important;
+  gap:10px!important;
+  margin-top:10px!important;
+}
+
+.fp-pilot-page .fp-ai-insight span{
+  width:31px!important;
+  height:31px!important;
+  font-size:10px!important;
+}
+
+.fp-pilot-page .fp-ai-insight p{
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+
+.fp-pilot-page .fp-ai-note{
+  margin-top:9px!important;
+  font-size:9px!important;
+  line-height:1.45!important;
+}
+
+.fp-pilot-page .fp-ai-error{
+  font-size:10px!important;
+  line-height:1.5!important;
+}
+
+@media(max-width:640px){
+  .fp-pilot-page .fp-tool-heading h1{
+    font-size:25px!important;
+    line-height:1.08!important;
+  }
+
+  .fp-pilot-page .fp-tool-heading p{
+    font-size:10px!important;
+  }
+
+  .fp-pilot-page .fp-ai-message,
+  .fp-pilot-page .fp-ai-message p{
+    font-size:11px!important;
+    line-height:1.55!important;
+  }
+
+  .fp-pilot-page .fp-ai-suggest,
+  .fp-pilot-page .fp-ai-insight p{
+    font-size:10.5px!important;
+  }
+
+  .fp-pilot-page .fp-ai-composer input{
+    font-size:10.5px!important;
+  }
+
+  .fp-pilot-page .fp-ai-chip-row button{
+    font-size:9.5px!important;
+  }
+}
+/* === END MileVoxa Pilot AI Weekly Settlement Readability v4.3.66 === */
+
+/* MileVoxa Documents Command Center v4.3.68 */
+.fp-documents-v2 .fp-doc-kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.fp-truck-doc-pack{margin-top:14px;padding:0!important;overflow:hidden}
+.fp-doc-pack-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:15px 17px 13px;border-bottom:1px solid #E4EBF1}
+.fp-doc-pack-heading span{color:#16853B;font-size:8px;font-weight:800;letter-spacing:.07em}.fp-doc-pack-heading h2{margin:3px 0 0;color:#102238;font-size:16px;font-weight:800}.fp-doc-pack-heading p{max-width:760px;margin:5px 0 0;color:#66788E;font-size:9px;line-height:1.45}.fp-doc-pack-heading select{min-width:145px;min-height:36px;border:1px solid #D8E1EA;border-radius:9px;background:#FFF;padding:0 10px;color:#102238;font-size:9px;font-weight:700}
+.fp-doc-pack-score{display:grid;grid-template-columns:150px minmax(160px,360px) minmax(0,1fr);align-items:center;gap:16px;padding:13px 17px;background:#FAFCFB;border-bottom:1px solid #E6EDF2}.fp-doc-pack-score>div:first-child{display:grid;gap:2px}.fp-doc-pack-score strong{color:#102238;font-size:20px;font-weight:800}.fp-doc-pack-score span,.fp-doc-pack-score small{color:#6B7D92;font-size:8px;line-height:1.4}.fp-doc-pack-progress{height:8px;overflow:hidden;border-radius:999px;background:#E5EBEF}.fp-doc-pack-progress i{display:block;height:100%;border-radius:inherit;background:#16853B}
+.fp-doc-pack-types{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px 17px}.fp-doc-pack-types>div{display:flex;align-items:center;gap:7px;min-height:36px;border:1px solid #E1E8EF;border-radius:9px;padding:0 9px;background:#FFF}.fp-doc-pack-types>div span{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:800}.fp-doc-pack-types>div b{color:#53667E;font-size:8px;font-weight:700;line-height:1.3}.fp-doc-pack-types>div.ready span{background:#EAF6EC;color:#16853B}.fp-doc-pack-types>div.missing span{background:#F1F4F7;color:#9AA8B7}
+.fp-doc-wallet-list{padding:0 17px 13px}.fp-doc-wallet-title{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid #E7EDF3}.fp-doc-wallet-title b{color:#102238;font-size:9px}.fp-doc-wallet-title span{color:#7E8FA3;font-size:8px}.fp-doc-wallet-list>div:not(.fp-doc-wallet-title):not(.empty){display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:center;gap:9px;padding:7px 0;border-top:1px solid #EFF3F6}.fp-doc-wallet-list .status{width:8px;height:8px;border-radius:50%;background:#16853B}.fp-doc-wallet-list .status.expiring-soon{background:#C98714}.fp-doc-wallet-list .status.expired{background:#C74343}.fp-doc-wallet-list>div>div{display:grid;gap:2px}.fp-doc-wallet-list b{color:#102238;font-size:8.5px}.fp-doc-wallet-list small{color:#7A8CA0;font-size:7.5px}.fp-doc-wallet-list em{color:#66788E;font-size:7.5px;font-style:normal}.fp-doc-wallet-list .empty,.fp-doc-pack-empty{padding:14px 17px;color:#7B8DA1;font-size:8.5px}
+.fp-doc-form-heading{grid-column:1/-1;display:flex;justify-content:space-between;gap:15px;padding-bottom:10px;border-bottom:1px solid #E7EDF3}.fp-doc-form-heading span{color:#16853B;font-size:7px;font-weight:800;letter-spacing:.07em}.fp-doc-form-heading h2{margin:3px 0 0;color:#102238;font-size:14px;font-weight:800}.fp-doc-form-heading p{margin:4px 0 0;color:#718399;font-size:8px}.fp-doc-form-heading>button{align-self:start;border:0;background:transparent;color:#6D7F94;font-size:20px}
+.fp-doc-form-grid{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fp-doc-form-grid label{display:grid;gap:5px}.fp-doc-form-grid label>span{color:#102238;font-size:8px;font-weight:700}.fp-doc-form-grid input,.fp-doc-form-grid select,.fp-doc-form-grid textarea{width:100%;min-height:36px;border:1px solid #D8E1EA;border-radius:8px;background:#FFF;padding:8px 10px;color:#102238;font-size:9px}.fp-doc-form-grid .span-2{grid-column:1/-1}
+.fp-doc-carry-toggle{display:grid!important;grid-template-columns:18px minmax(0,1fr);align-items:center;gap:8px!important;border:1px solid #D9E7DD;border-radius:9px;background:#F5FAF6;padding:9px 10px}.fp-doc-carry-toggle input{width:16px!important;min-height:16px!important;height:16px;padding:0!important}.fp-doc-carry-toggle>span{display:grid;gap:2px}.fp-doc-carry-toggle b{color:#126F32;font-size:8.5px}.fp-doc-carry-toggle small{color:#6E8175;font-size:7.5px}
+.fp-doc-quick-actions .fp-doc-side-copy{margin:5px 0 10px;color:#73859A;font-size:8px;line-height:1.45}.fp-doc-quick-actions>button{display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;width:100%;min-height:39px;margin-top:7px;border:1px solid #DCE5ED;border-radius:9px;background:#FFF;padding:0 10px;color:#102238;text-align:left}.fp-doc-quick-actions>button span{color:#16853B;font-size:11px;font-weight:800}.fp-doc-quick-actions>button b{font-size:8.5px;font-weight:700}.fp-doc-quick-actions>button em{color:#8D9CAF;font-size:12px;font-style:normal}
+.fp-doc-folder-form{display:grid;gap:8px;margin-top:10px;border-top:1px solid #E8EEF3;padding-top:10px}.fp-doc-folder-form label{display:grid;gap:4px}.fp-doc-folder-form label span{color:#102238;font-size:8px;font-weight:700}.fp-doc-folder-form input{min-height:34px;border:1px solid #D8E1EA;border-radius:8px;padding:0 9px;font-size:8.5px}.fp-doc-folder-form>div{display:flex;justify-content:flex-end;gap:6px}.fp-doc-folder-form button{min-height:31px;border:1px solid #D8E1EA;border-radius:7px;background:#FFF;padding:0 9px;color:#102238;font-size:8px;font-weight:700}.fp-doc-folder-form button[type="submit"]{border-color:#16853B;background:#16853B;color:#FFF}.fp-doc-folder-form .error{color:#B43D3D;font-size:7.5px}
+.fp-doc-pack-filter{min-height:36px;border:1px solid #D8E1EA;border-radius:8px;background:#FFF;padding:0 10px;color:#52657C;font-size:8.5px;font-weight:700}.fp-doc-pack-filter.active{border-color:#B9D8C2;background:#EAF6EC;color:#126F32}.fp-doc-name-cell strong{display:flex;align-items:center;gap:7px}.fp-doc-pack-badge{display:inline-flex;align-items:center;min-height:16px;border-radius:999px;background:#EAF6EC;padding:0 6px;color:#126F32;font-size:6px;font-style:normal;font-weight:800;letter-spacing:.04em}
+@media(max-width:1150px){.fp-doc-pack-types{grid-template-columns:repeat(3,minmax(0,1fr))}.fp-doc-pack-score{grid-template-columns:130px 1fr}.fp-doc-pack-score>small{grid-column:1/-1}}
+@media(max-width:760px){.fp-documents-v2 .fp-doc-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}.fp-doc-pack-heading{display:grid}.fp-doc-pack-heading select{width:100%}.fp-doc-pack-types{grid-template-columns:1fr 1fr}.fp-doc-form-grid{grid-template-columns:1fr}.fp-doc-form-grid .span-2{grid-column:auto}}
+/* END MileVoxa Documents Command Center v4.3.68 */
+
+
+/* ==========================================================================
+   MileVoxa Documents Centered Modal Forms v4.3.69
+   ========================================================================== */
+
+.fp-doc-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  background:rgba(11,23,48,.46);
+  padding:24px;
+  backdrop-filter:blur(2px);
+}
+
+.fp-doc-modal{
+  width:min(820px,calc(100vw - 48px));
+  max-height:calc(100vh - 48px);
+  overflow:auto;
+  border:1px solid #DCE5EC;
+  border-radius:16px;
+  background:#FFFFFF;
+  box-shadow:0 28px 80px rgba(16,34,56,.24);
+}
+
+.fp-doc-modal .fp-document-upload-form{
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:18px!important;
+}
+
+.fp-doc-modal .fp-doc-form-heading{
+  position:sticky;
+  top:-18px;
+  z-index:2;
+  margin:-18px -18px 8px;
+  padding:18px 18px 12px;
+  background:#FFFFFF;
+}
+
+.fp-doc-modal .fp-document-form-actions{
+  position:sticky;
+  bottom:-18px;
+  z-index:2;
+  margin:8px -18px -18px;
+  padding:12px 18px 18px;
+  border-top:1px solid #E7EDF3;
+  background:#FFFFFF;
+}
+
+.fp-doc-modal .fp-document-file-field{
+  grid-column:1 / -1;
+}
+
+body:has(.fp-doc-modal-backdrop){
+  overflow:hidden;
+}
+
+@media(max-width:760px){
+  .fp-doc-modal-backdrop{
+    align-items:flex-start;
+    padding:12px;
+  }
+
+  .fp-doc-modal{
+    width:100%;
+    max-height:calc(100vh - 24px);
+    border-radius:12px;
+  }
+
+  .fp-doc-modal .fp-document-upload-form{
+    padding:14px!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-heading{
+    top:-14px;
+    margin:-14px -14px 8px;
+    padding:14px 14px 10px;
+  }
+
+  .fp-doc-modal .fp-document-form-actions{
+    bottom:-14px;
+    margin:8px -14px -14px;
+    padding:10px 14px 14px;
+  }
+}
+/* === END MileVoxa Documents Centered Modal Forms v4.3.69 === */
+
+
+/* ==========================================================================
+   MileVoxa Documents Body Portal Modal Fix v4.3.70
+   ========================================================================== */
+
+.fp-doc-modal-backdrop{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  z-index:9999!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:24px!important;
+  overflow:auto!important;
+}
+
+.fp-doc-modal{
+  position:relative!important;
+  width:min(820px,calc(100vw - 48px))!important;
+  max-width:820px!important;
+  max-height:calc(100vh - 48px)!important;
+  margin:auto!important;
+  overflow:auto!important;
+  transform:none!important;
+}
+
+@media(max-width:760px){
+  .fp-doc-modal-backdrop{
+    place-items:start center!important;
+    padding:12px!important;
+  }
+
+  .fp-doc-modal{
+    width:100%!important;
+    max-width:none!important;
+    max-height:calc(100vh - 24px)!important;
+  }
+}
+/* === END MileVoxa Documents Body Portal Modal Fix v4.3.70 === */
+
+
+/* ==========================================================================
+   MileVoxa Documents Modal Render Fix v4.3.71
+   ========================================================================== */
+
+/*
+  Portal modals must be self-contained. Older .fp-document-upload-form rules
+  were written for an inline form and could collapse/clip the portal version.
+*/
+
+.fp-doc-modal-backdrop{
+  box-sizing:border-box!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  min-width:100vw!important;
+  min-height:100vh!important;
+  z-index:99999!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:auto!important;
+  padding:24px!important;
+  background:rgba(11,23,48,.46)!important;
+  backdrop-filter:blur(2px);
+}
+
+.fp-doc-modal{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:block!important;
+  width:min(820px,calc(100vw - 48px))!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:calc(100vh - 48px)!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:1px solid #DCE5EC!important;
+  border-radius:16px!important;
+  background:#FFFFFF!important;
+  box-shadow:0 28px 80px rgba(16,34,56,.24)!important;
+  transform:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+.fp-doc-modal .fp-document-upload-form,
+.fp-doc-modal .fp-document-upload-form-v2{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:calc(100vh - 48px)!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:auto!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#FFFFFF!important;
+  box-shadow:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+.fp-doc-modal .fp-doc-form-heading{
+  position:sticky!important;
+  top:0!important;
+  z-index:4!important;
+  width:100%!important;
+  margin:0!important;
+  padding:18px 20px 14px!important;
+  border-bottom:1px solid #E7EDF3!important;
+  background:#FFFFFF!important;
+}
+
+.fp-doc-modal .fp-doc-form-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+  width:100%!important;
+  padding:16px 20px 0!important;
+}
+
+.fp-doc-modal .fp-document-file-field{
+  display:grid!important;
+  gap:6px!important;
+  width:auto!important;
+  margin:14px 20px 0!important;
+  padding:0!important;
+}
+
+.fp-doc-modal .fp-document-file-field input[type="file"]{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-height:46px!important;
+  border:1px solid #D8E1EA!important;
+  border-radius:9px!important;
+  background:#FFFFFF!important;
+  padding:10px 12px!important;
+}
+
+.fp-doc-modal .fp-document-form-error{
+  margin:12px 20px 0!important;
+}
+
+.fp-doc-modal .fp-document-form-actions{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:4!important;
+  display:flex!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  width:100%!important;
+  margin:16px 0 0!important;
+  padding:13px 20px 18px!important;
+  border-top:1px solid #E7EDF3!important;
+  background:#FFFFFF!important;
+}
+
+.fp-doc-modal .fp-document-form-actions button{
+  min-height:38px!important;
+}
+
+@media(max-width:760px){
+  .fp-doc-modal-backdrop{
+    align-items:flex-start!important;
+    padding:12px!important;
+  }
+
+  .fp-doc-modal{
+    width:100%!important;
+    max-width:none!important;
+    max-height:calc(100vh - 24px)!important;
+    border-radius:12px!important;
+  }
+
+  .fp-doc-modal .fp-document-upload-form,
+  .fp-doc-modal .fp-document-upload-form-v2{
+    max-height:calc(100vh - 24px)!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-grid{
+    grid-template-columns:1fr!important;
+    padding:14px 14px 0!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-heading{
+    padding:14px 14px 11px!important;
+  }
+
+  .fp-doc-modal .fp-document-file-field{
+    margin:12px 14px 0!important;
+  }
+
+  .fp-doc-modal .fp-document-form-error{
+    margin:10px 14px 0!important;
+  }
+
+  .fp-doc-modal .fp-document-form-actions{
+    padding:11px 14px 14px!important;
+  }
+}
+/* === END MileVoxa Documents Modal Render Fix v4.3.71 === */
+
+
+/* ==========================================================================
+   MileVoxa Documents Modal Narrow-Viewport Overflow Fix v4.3.72
+   ========================================================================== */
+
+.fp-doc-modal-backdrop{
+  box-sizing:border-box!important;
+  max-width:100vw!important;
+  overflow-x:hidden!important;
+}
+
+.fp-doc-modal,
+.fp-doc-modal *{
+  box-sizing:border-box!important;
+}
+
+.fp-doc-modal{
+  left:auto!important;
+  right:auto!important;
+  width:min(820px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  min-width:0!important;
+  overflow-x:hidden!important;
+}
+
+.fp-doc-modal .fp-document-upload-form,
+.fp-doc-modal .fp-document-upload-form-v2,
+.fp-doc-modal .fp-doc-form-heading,
+.fp-doc-modal .fp-doc-form-grid,
+.fp-doc-modal .fp-document-file-field,
+.fp-doc-modal .fp-document-form-actions{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+.fp-doc-modal .fp-doc-form-grid>*,
+.fp-doc-modal .fp-doc-form-grid label,
+.fp-doc-modal .fp-doc-form-grid input,
+.fp-doc-modal .fp-doc-form-grid select,
+.fp-doc-modal .fp-doc-form-grid textarea{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+.fp-doc-modal .fp-doc-form-grid input,
+.fp-doc-modal .fp-doc-form-grid select,
+.fp-doc-modal .fp-doc-form-grid textarea,
+.fp-doc-modal .fp-document-file-field input[type="file"]{
+  width:100%!important;
+}
+
+.fp-doc-modal .fp-doc-form-heading>div{
+  min-width:0!important;
+  max-width:calc(100% - 34px)!important;
+}
+
+.fp-doc-modal .fp-doc-form-heading h2,
+.fp-doc-modal .fp-doc-form-heading p,
+.fp-doc-modal .fp-doc-carry-toggle small{
+  overflow-wrap:anywhere!important;
+}
+
+@media(max-width:760px){
+  .fp-doc-modal-backdrop{
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    padding:10px!important;
+  }
+
+  .fp-doc-modal{
+    width:calc(100vw - 20px)!important;
+    max-width:calc(100vw - 20px)!important;
+    min-width:0!important;
+    margin:0 auto!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-grid .span-2{
+    grid-column:1!important;
+  }
+
+  .fp-doc-modal .fp-doc-carry-toggle{
+    grid-template-columns:18px minmax(0,1fr)!important;
+  }
+
+  .fp-doc-modal .fp-document-form-actions{
+    flex-wrap:wrap!important;
+  }
+}
+
+@media(max-width:420px){
+  .fp-doc-modal-backdrop{
+    padding:6px!important;
+  }
+
+  .fp-doc-modal{
+    width:calc(100vw - 12px)!important;
+    max-width:calc(100vw - 12px)!important;
+    border-radius:10px!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-heading{
+    padding:13px 12px 10px!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-grid{
+    padding:12px 12px 0!important;
+  }
+
+  .fp-doc-modal .fp-document-file-field{
+    margin:12px 12px 0!important;
+  }
+
+  .fp-doc-modal .fp-document-form-error{
+    margin:10px 12px 0!important;
+  }
+
+  .fp-doc-modal .fp-document-form-actions{
+    padding:10px 12px 12px!important;
+  }
+
+  .fp-doc-modal .fp-document-form-actions button{
+    flex:1 1 120px!important;
+  }
+}
+/* === END MileVoxa Documents Modal Narrow-Viewport Overflow Fix v4.3.72 === */
+
+
+/* ==========================================================================
+   MileVoxa Documents Modal Legacy Position Reset v4.3.73
+   ========================================================================== */
+
+/*
+  Root cause of the clipped left edge:
+  legacy inline Documents styles still set `right:26px` and responsive
+  `inset:78px 12px auto` on .fp-document-upload-form.
+  A relatively positioned portal form therefore shifted left inside its modal.
+*/
+
+.fp-doc-modal .fp-document-upload-form,
+.fp-doc-modal .fp-document-upload-form-v2{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  float:none!important;
+  translate:none!important;
+  transform:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* Keep all major modal content aligned to the same safe inner edge. */
+.fp-doc-modal .fp-doc-form-heading,
+.fp-doc-modal .fp-doc-form-grid,
+.fp-doc-modal .fp-document-file-field,
+.fp-doc-modal .fp-document-form-error,
+.fp-doc-modal .fp-document-form-actions{
+  position:relative;
+  left:auto!important;
+  right:auto!important;
+  translate:none!important;
+  transform:none!important;
+}
+
+/* Explicit left/right gutters prevent text from touching the clipping edge. */
+.fp-doc-modal .fp-doc-form-heading{
+  padding-left:20px!important;
+  padding-right:20px!important;
+}
+
+.fp-doc-modal .fp-doc-form-grid{
+  padding-left:20px!important;
+  padding-right:20px!important;
+}
+
+.fp-doc-modal .fp-document-file-field{
+  margin-left:20px!important;
+  margin-right:20px!important;
+}
+
+.fp-doc-modal .fp-document-form-error{
+  margin-left:20px!important;
+  margin-right:20px!important;
+}
+
+.fp-doc-modal .fp-document-form-actions{
+  padding-left:20px!important;
+  padding-right:20px!important;
+}
+
+@media(max-width:760px){
+  .fp-doc-modal .fp-doc-form-heading{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+
+  .fp-doc-modal .fp-doc-form-grid{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+
+  .fp-doc-modal .fp-document-file-field{
+    margin-left:14px!important;
+    margin-right:14px!important;
+  }
+
+  .fp-doc-modal .fp-document-form-error{
+    margin-left:14px!important;
+    margin-right:14px!important;
+  }
+
+  .fp-doc-modal .fp-document-form-actions{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+}
+/* === END MileVoxa Documents Modal Legacy Position Reset v4.3.73 === */
+
+
+/* ==========================================================================
+   MileVoxa Documents Edit Metadata v4.3.75
+   ========================================================================== */
+
+.fp-document-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+}
+
+.fp-document-actions button.edit{
+  color:#16853B;
+}
+
+.fp-doc-edit-file-note{
+  display:grid;
+  gap:3px;
+  margin:14px 20px 0;
+  border:1px solid #D9E7DD;
+  border-radius:9px;
+  background:#F5FAF6;
+  padding:10px 12px;
+}
+
+.fp-doc-edit-file-note b{
+  color:#126F32;
+  font-size:8.5px;
+  font-weight:800;
+}
+
+.fp-doc-edit-file-note span{
+  color:#64786B;
+  font-size:7.5px;
+  line-height:1.45;
+}
+
+@media(max-width:760px){
+  .fp-doc-edit-file-note{
+    margin-left:14px;
+    margin-right:14px;
+  }
+}
+/* === END MileVoxa Documents Edit Metadata v4.3.75 === */
+
+
+/* ==========================================================================
+   MileVoxa Document Search Navigation v4.3.77
+   ========================================================================== */
+.fp-doc-search-smart{position:relative;z-index:20}
+.fp-doc-search-smart input{padding-right:34px!important}
+.fp-doc-search-clear{position:absolute;top:50%;right:9px;z-index:2;width:22px;height:22px;margin-top:-11px;border:0;background:transparent;color:#8090A3;font-size:15px;line-height:1}
+.fp-doc-search-results{position:absolute;top:calc(100% + 6px);left:0;z-index:80;width:min(520px,calc(100vw - 32px));overflow:hidden;border:1px solid #DCE5ED;border-radius:10px;background:#FFF;box-shadow:0 18px 42px rgba(16,34,56,.16)}
+.fp-doc-search-results-head{display:flex;align-items:center;justify-content:space-between;min-height:31px;border-bottom:1px solid #E9EEF3;padding:0 10px;color:#6A7C91;font-size:7.5px;font-weight:700}
+.fp-doc-search-results-head b{display:grid;place-items:center;min-width:18px;height:18px;border-radius:999px;background:#EAF6EC;color:#126F32;font-size:7px}
+.fp-doc-search-results>button{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;min-height:48px;border:0;border-bottom:1px solid #EEF2F5;background:#FFF;padding:7px 10px;color:#102238;text-align:left}
+.fp-doc-search-results>button:hover{background:#F7FAF8}
+.fp-doc-search-result-icon{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:#EAF6EC;color:#16853B;font-size:9px}
+.fp-doc-search-results>button>span:nth-child(2){display:grid;gap:2px;min-width:0}
+.fp-doc-search-results strong{overflow:hidden;color:#102238;font-size:8.5px;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
+.fp-doc-search-results small{overflow:hidden;color:#7A8CA0;font-size:7.5px;text-overflow:ellipsis;white-space:nowrap}
+.fp-doc-search-results em{color:#8A9AAF;font-size:13px;font-style:normal}
+.fp-doc-search-no-results{padding:16px 10px;color:#7B8DA1;font-size:8px;text-align:center}
+.fp-doc-search-hint{padding:7px 10px;background:#FAFCFB;color:#7A8CA0;font-size:7px}
+.fp-doc-search-status{min-height:27px;border-top:1px solid #EDF2F5;border-bottom:1px solid #EDF2F5;background:#FBFCFC;padding:8px 12px;color:#75869A;font-size:8px}
+.fp-doc-search-status b{color:#102238;font-weight:800}
+.fp-doc-search-status strong{color:#126F32;font-weight:700}
+.fp-compact-table.docs tbody tr.fp-doc-row-focused td{background:#F0F9F2!important;box-shadow:inset 0 1px 0 #B9DEC3,inset 0 -1px 0 #B9DEC3}
+.fp-compact-table.docs tbody tr.fp-doc-row-focused td:first-child{box-shadow:inset 4px 0 0 #16853B,inset 0 1px 0 #B9DEC3,inset 0 -1px 0 #B9DEC3}
+.fp-compact-table.docs tbody tr.fp-doc-row-focused .fp-doc-name-cell strong{color:#126F32!important}
+@media(max-width:760px){.fp-doc-search-results{width:calc(100vw - 28px);max-width:none}}
+/* === END MileVoxa Document Search Navigation v4.3.77 === */
+
+
+/* ==========================================================================
+   MileVoxa Shared Tabs Card Alignment v4.3.78
+   Applies once to the shared AppTabs used by Loads, Trucks, Expenses,
+   Maintenance, Weekly Settlement, Fuel Analytics and Documents.
+   ========================================================================== */
+
+.mv-app-tabs{
+  box-sizing:border-box!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+
+/* Keep the first/last tab comfortably inside rounded cards on small screens. */
+@media(max-width:767px){
+  .mv-app-tabs{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+}
+/* === END MileVoxa Shared Tabs Card Alignment v4.3.78 === */
+
+
+/* ==========================================================================
+   MileVoxa Reports Week Selector + Loads Quick Actions Cleanup v4.3.79
+   ========================================================================== */
+
+.fp-load-side-action-v2{
+  grid-template-columns:40px minmax(0,1fr) auto!important;
+  min-height:58px!important;
+  align-items:center!important;
+}
+
+.fp-load-quick-copy{
+  display:grid!important;
+  gap:3px!important;
+  min-width:0!important;
+  text-align:left!important;
+}
+
+.fp-load-quick-copy strong{
+  color:inherit;
+  font-size:10px;
+  line-height:1.2;
+  font-weight:700;
+}
+
+.fp-load-quick-copy small{
+  color:#7C8DA1;
+  font-size:7.5px;
+  line-height:1.3;
+  font-weight:500;
+}
+
+.fp-load-side-action-v2.primary .fp-load-quick-copy small{
+  color:rgba(255,255,255,.76);
+}
+/* === END MileVoxa Reports Week Selector + Loads Quick Actions Cleanup v4.3.79 === */
+
+
+/* ==========================================================================
+   MileVoxa Load Add Mode Separation v4.3.80
+   ========================================================================== */
+
+.fp-add-load-form .fp-smart-load-import{
+  width:100%;
+}
+
+.fp-add-load-form .fp-smart-load-panel{
+  margin-top:0;
+}
+
+.fp-add-load-form .fp-telegram-import-help{
+  font-size:9px;
+  line-height:1.5;
+}
+
+/* Telegram import begins as a clean first step; load fields appear only after parsing. */
+.fp-add-load-form .fp-smart-load-textarea{
+  min-height:180px;
+}
+/* === END MileVoxa Load Add Mode Separation v4.3.80 === */
+
+
+/* ==========================================================================
+   MileVoxa U.S. City + State Autocomplete v4.3.81
+   ========================================================================== */
+
+.fp-us-city-field{
+  position:relative;
+  z-index:12;
+}
+
+.fp-us-city-field:focus-within{
+  z-index:40;
+}
+
+.fp-us-city-autocomplete{
+  position:relative;
+  min-width:0;
+}
+
+.fp-us-city-loading{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  color:#8393A5;
+  font-size:8px;
+  pointer-events:none;
+}
+
+.fp-us-city-suggestions{
+  position:absolute;
+  top:calc(100% + 5px);
+  left:0;
+  right:0;
+  z-index:120;
+  max-height:246px;
+  overflow-y:auto;
+  border:1px solid #D8E1EA;
+  border-radius:10px;
+  background:#FFFFFF;
+  box-shadow:0 16px 38px rgba(16,34,56,.15);
+  overscroll-behavior:contain;
+}
+
+.fp-us-city-suggestions button{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;
+  min-height:44px;
+  border:0;
+  border-bottom:1px solid #EEF2F5;
+  background:#FFFFFF;
+  padding:8px 11px;
+  color:#102238;
+  text-align:left;
+}
+
+.fp-us-city-suggestions button:last-child{
+  border-bottom:0;
+}
+
+.fp-us-city-suggestions button:hover,
+.fp-us-city-suggestions button.active{
+  background:#F1F8F3;
+}
+
+.fp-us-city-suggestions strong{
+  min-width:0;
+  overflow:hidden;
+  font-size:10px;
+  font-weight:700;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.fp-us-city-suggestions button>span{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex:0 0 auto;
+  color:#126F32;
+  font-size:9px;
+  font-weight:800;
+}
+
+.fp-us-city-suggestions small{
+  color:#8393A5;
+  font-size:7.5px;
+  font-weight:500;
+}
+
+.fp-us-city-empty{
+  padding:14px 11px;
+  color:#7B8DA1;
+  font-size:8.5px;
+  text-align:center;
+}
+
+.fp-us-city-help{
+  margin-top:4px;
+  color:#8191A4;
+  font-size:7.5px;
+  line-height:1.35;
+}
+
+@media(max-width:760px){
+  .fp-us-city-suggestions{
+    max-height:220px;
+  }
+
+  .fp-us-city-suggestions button{
+    min-height:46px;
+  }
+}
+/* === END MileVoxa U.S. City + State Autocomplete v4.3.81 === */
+
+
+/* ==========================================================================
+   MileVoxa Dashboard Recent Loads Priority Width v4.3.85
+   Give the data-heavy Recent Loads table more room than Recent Activity.
+   ========================================================================== */
+
+@media(min-width:1300px){
+  .mv-app-shell .fp-dashboard-recent-row{
+    grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr)!important;
+  }
+}
+
+@media(min-width:1024px) and (max-width:1299px){
+  .mv-app-shell .fp-dashboard-recent-row{
+    grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr)!important;
+  }
+}
+
+/* With the larger card, keep table headers readable instead of compacting them. */
+@media(min-width:1024px){
+  .mv-app-shell .fp-recent-loads-table th{
+    font-size:7px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table td{
+    font-size:8.5px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(3),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(3){
+    width:12%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(4),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(4){
+    width:10%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(5),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(5){
+    width:14%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(6),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(6){
+    width:14%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(2),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(2){
+    width:27%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(1),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(1){
+    width:8%!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table th:nth-child(7),
+  .mv-app-shell .fp-recent-loads-table td:nth-child(7){
+    width:15%!important;
+  }
+}
+/* === END MileVoxa Dashboard Recent Loads Priority Width v4.3.85 === */
+
+
+/* ==========================================================================
+   MileVoxa Dashboard Recent Loads Typography v4.3.86
+   ========================================================================== */
+
+@media(min-width:1024px){
+  .mv-app-shell .fp-recent-loads-table th{
+    font-size:8.5px!important;
+    line-height:1.15!important;
+    font-weight:700!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table td{
+    font-size:9.5px!important;
+    line-height:1.2!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table .fp-load-status{
+    font-size:8px!important;
+  }
+}
+
+@media(min-width:1300px){
+  .mv-app-shell .fp-recent-loads-table th{
+    font-size:9px!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table td{
+    font-size:10px!important;
+  }
+
+  .mv-app-shell .fp-recent-loads-table .fp-load-status{
+    font-size:8.5px!important;
+  }
+}
+/* === END MileVoxa Dashboard Recent Loads Typography v4.3.86 === */
+
+/* ==========================================================================
+   MileVoxa Free Public Beta v4.4.0
+   ========================================================================== */
+
+.fp-beta-sidebar-badge,
+.fp-beta-header-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.fp-beta-sidebar-badge{
+  width:max-content;
+  margin-top:8px;
+  border:1px solid rgba(85,183,114,.34);
+  background:rgba(22,133,59,.15);
+  padding:4px 8px;
+  color:#8BE3A5;
+  font-size:7px;
+}
+
+.fp-beta-header-badge{
+  border:1px solid #CDE6D4;
+  background:#EAF6EC;
+  padding:5px 9px;
+  color:#126F32;
+  font-size:7px;
+}
+
+.fp-beta-sidebar-feedback{
+  display:flex;
+  width:100%;
+  height:36px;
+  align-items:center;
+  gap:9px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  padding:0 14px;
+  color:#D2DEEA;
+  font-size:11px;
+  font-weight:500;
+  text-align:left;
+}
+.fp-beta-sidebar-feedback::before{content:"✦";color:#69CE86;font-size:12px}
+.fp-beta-sidebar-feedback:hover{background:rgba(255,255,255,.05);color:#FFF}
+
+.fp-beta-dashboard-banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-top:12px;
+  border:1px solid #CFE5D5;
+  border-radius:12px;
+  background:linear-gradient(90deg,#F2FAF4,#FFFFFF);
+  padding:12px 14px;
+}
+.fp-beta-dashboard-banner>div{display:grid;gap:2px}
+.fp-beta-dashboard-banner span{color:#16853B;font-size:7px;font-weight:800;letter-spacing:.08em}
+.fp-beta-dashboard-banner strong{color:#102238;font-size:11px;font-weight:800}
+.fp-beta-dashboard-banner p{margin:0;color:#697C91;font-size:8.5px}
+.fp-beta-dashboard-feedback{
+  flex:0 0 auto;
+  min-height:34px;
+  border:0;
+  border-radius:9px;
+  background:linear-gradient(135deg,#16853B,#126F32);
+  padding:0 13px;
+  color:#FFF;
+  font-size:8.5px;
+  font-weight:800;
+}
+
+.fp-beta-feedback-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  background:rgba(11,23,48,.52);
+  padding:18px;
+  backdrop-filter:blur(3px);
+}
+.fp-beta-feedback-modal{
+  width:min(620px,calc(100vw - 36px));
+  max-height:calc(100vh - 36px);
+  overflow:auto;
+  border:1px solid #DCE5EC;
+  border-radius:16px;
+  background:#FFF;
+  box-shadow:0 28px 80px rgba(16,34,56,.24);
+  padding:18px;
+}
+.fp-beta-feedback-modal header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid #E7EDF3;padding-bottom:12px}
+.fp-beta-feedback-modal header span{color:#16853B;font-size:7px;font-weight:800;letter-spacing:.08em}
+.fp-beta-feedback-modal header h2{margin:3px 0 0;color:#102238;font-size:18px;font-weight:800}
+.fp-beta-feedback-modal header p{margin:5px 0 0;color:#6D7F94;font-size:9px;line-height:1.5}
+.fp-beta-feedback-modal header>button{border:0;background:transparent;color:#6D7F94;font-size:20px}
+.fp-beta-feedback-modal>label{display:grid;gap:6px;margin-top:13px;color:#102238;font-size:8px;font-weight:800}
+.fp-beta-feedback-modal label small{color:#8493A5;font-weight:500}
+.fp-beta-feedback-modal select,
+.fp-beta-feedback-modal input,
+.fp-beta-feedback-modal textarea{width:100%;border:1px solid #D8E1EA;border-radius:9px;background:#FFF;padding:10px 11px;color:#102238;font-size:9px;outline:none}
+.fp-beta-feedback-modal select:focus,
+.fp-beta-feedback-modal input:focus,
+.fp-beta-feedback-modal textarea:focus{border-color:#16853B;box-shadow:0 0 0 3px rgba(22,133,59,.08)}
+.fp-beta-feedback-contact{grid-template-columns:18px minmax(0,1fr)!important;align-items:flex-start;border:1px solid #D9E7DD;border-radius:10px;background:#F5FAF6;padding:10px!important}
+.fp-beta-feedback-contact input{width:16px!important;height:16px;padding:0!important}
+.fp-beta-feedback-contact>span{display:grid;gap:2px}
+.fp-beta-feedback-contact b{color:#126F32;font-size:8.5px}
+.fp-beta-feedback-contact small{font-size:7.5px;line-height:1.4}
+.fp-beta-feedback-status{margin-top:12px;border-radius:9px;padding:9px 10px;font-size:8.5px;font-weight:700}
+.fp-beta-feedback-status.success{border:1px solid #CDE6D4;background:#EAF6EC;color:#126F32}
+.fp-beta-feedback-status.error{border:1px solid #F0C8C8;background:#FFF1F1;color:#B33B3B}
+.fp-beta-feedback-modal footer{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;border-top:1px solid #E7EDF3;padding-top:13px}
+.fp-beta-feedback-modal footer button{min-height:36px;border:1px solid #D8E1EA;border-radius:9px;background:#FFF;padding:0 12px;color:#102238;font-size:8.5px;font-weight:800}
+.fp-beta-feedback-modal footer button.primary{border-color:#16853B;background:linear-gradient(135deg,#16853B,#126F32);color:#FFF}
+.fp-beta-feedback-modal footer button:disabled{opacity:.55;cursor:not-allowed}
+
+.fp-beta-milestone-prompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:12px;
+  border:1px solid #CFE5D5;
+  border-radius:12px;
+  background:#F5FAF6;
+  padding:11px 13px;
+}
+.fp-beta-milestone-prompt>div:first-child{display:grid;gap:2px}
+.fp-beta-milestone-prompt span{color:#16853B;font-size:7px;font-weight:800;letter-spacing:.08em}
+.fp-beta-milestone-prompt strong{color:#102238;font-size:10px}
+.fp-beta-milestone-prompt p{margin:0;color:#6F8194;font-size:8.5px}
+.fp-beta-milestone-prompt>div:last-child{display:flex;gap:7px;flex:0 0 auto}
+.fp-beta-milestone-prompt button{min-height:32px;border:0;border-radius:8px;background:#16853B;padding:0 11px;color:#FFF;font-size:8px;font-weight:800}
+.fp-beta-milestone-prompt button.dismiss{border:1px solid #D4DEE7;background:#FFF;color:#5E7086}
+
+.fp-beta-access-points{display:grid;gap:7px;min-width:210px}
+.fp-beta-access-points>div{display:flex;align-items:center;gap:7px;color:#52687E;font-size:8.5px;font-weight:700}
+.fp-beta-access-points b{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#EAF6EC;color:#16853B}
+.fp-beta-existing-paid-note{display:grid;gap:4px;margin-top:14px;border:1px solid #F0D6A6;border-radius:10px;background:#FFF8EB;padding:11px 12px}
+.fp-beta-existing-paid-note strong{color:#8A5A13;font-size:9px}
+.fp-beta-existing-paid-note span{color:#7D6B51;font-size:8px;line-height:1.45}
+
+.fp-beta-marketing-pill span{background:#16853B!important;color:#FFF!important}
+.mv-beta-home-section .mv-home-beta-note{margin:14px 0 0;color:#697C91;font-size:10px;line-height:1.55}
+.mv-beta-pricing{max-width:760px!important}
+.mv-beta-pricing-card{width:100%!important;max-width:none!important}
+.mv-beta-pricing-notice{width:min(1180px,calc(100% - 48px));margin:18px auto 0;border:1px solid #CFE5D5;border-radius:14px;background:#F3FAF5;padding:16px 18px}
+.mv-beta-pricing-notice>span{display:block;color:#16853B;font-size:8px;font-weight:800;letter-spacing:.08em}
+.mv-beta-pricing-notice>strong{display:block;margin-top:4px;color:#102238;font-size:13px}
+.mv-beta-pricing-notice>p{margin:5px 0 0;color:#697C91;font-size:10px;line-height:1.55}
+.fp-public-footer-beta{color:#6D7F94!important;font-size:8px!important;font-weight:700!important}
+
+@media(max-width:760px){
+  .fp-beta-header-badge{display:none}
+  .fp-beta-dashboard-banner,
+  .fp-beta-milestone-prompt{align-items:flex-start;flex-direction:column}
+  .fp-beta-dashboard-feedback{width:100%}
+  .fp-beta-milestone-prompt>div:last-child{width:100%}
+  .fp-beta-milestone-prompt button{flex:1}
+  .fp-beta-feedback-backdrop{align-items:flex-start;padding:10px}
+  .fp-beta-feedback-modal{width:100%;max-height:calc(100vh - 20px);border-radius:12px;padding:14px}
+  .fp-beta-access-points{min-width:0}
+  .mv-beta-pricing-notice{width:calc(100% - 28px);padding:14px}
+}
+
+@media(prefers-color-scheme:dark){
+  .fp-beta-feedback-modal{background:#102238;border-color:#2B4058}
+  .fp-beta-feedback-modal header{border-bottom-color:#2B4058}
+  .fp-beta-feedback-modal header h2,
+  .fp-beta-feedback-modal>label{color:#F4F8FB}
+  .fp-beta-feedback-modal header p{color:#AAB8C7}
+  .fp-beta-feedback-modal select,
+  .fp-beta-feedback-modal input,
+  .fp-beta-feedback-modal textarea{border-color:#344A61;background:#0B1730;color:#F4F8FB}
+  .fp-beta-feedback-modal footer{border-top-color:#2B4058}
+  .fp-beta-feedback-modal footer button:not(.primary){border-color:#344A61;background:#0B1730;color:#F4F8FB}
+}
+/* === END MileVoxa Free Public Beta v4.4.0 === */
+
+
+/* ==========================================================================
+   MileVoxa Public Footer Meta Alignment v4.4.1
+   Keeps beta status and copyright in the intended third footer column.
+   ========================================================================== */
+.fp-public-footer-inner>.fp-public-footer-meta{
+  display:grid!important;
+  justify-items:end!important;
+  align-items:center!important;
+  gap:6px!important;
+  min-width:0;
+  text-align:right;
+}
+.fp-public-footer-copy{
+  color:#94A2B0!important;
+  font-size:7px!important;
+  font-weight:500!important;
+  line-height:1.2!important;
+}
+@media(max-width:767px){
+  .fp-public-footer-inner>.fp-public-footer-meta{
+    justify-items:start!important;
+    text-align:left;
+  }
+}
+/* === END MileVoxa Public Footer Meta Alignment v4.4.1 === */

@@ -117,7 +117,7 @@ export default function ExpenseFilters({ trucks }: { trucks: Truck[] }) {
               scroll: false,
             });
           }}
-          placeholder="Search description, vendor, category, truck..."
+          placeholder="Search #0001, description, vendor, category, truck..."
         />
 
         {search && (

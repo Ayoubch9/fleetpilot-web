@@ -122,6 +122,8 @@ export default async function LoadsPage({
     { data: truckData, error: truckError },
     { data: expenseData, error: expenseError },
     { data: fixedExpenseData, error: fixedExpenseError },
+    { data: feeSettingsData, error: feeSettingsError },
+    { data: odometerData, error: odometerError },
   ] = await Promise.all([
     supabase
       .from("loads")
@@ -137,6 +139,10 @@ export default async function LoadsPage({
       .from("expenses")
       .select("load_id, amount, category, expense_date"),
     supabase.from("weekly_fixed_expenses").select("*"),
+    supabase.from("company_fee_settings").select("*").limit(1).maybeSingle(),
+    supabase
+      .from("weekly_odometer_records")
+      .select("week_start, start_odometer, end_odometer"),
   ]);
 
   const lifecycleNow = new Date();
@@ -149,13 +155,19 @@ export default async function LoadsPage({
   );
   const expenses = (expenseData ?? []) as Expense[];
   const fixedExpenses = (fixedExpenseData ?? []) as FixedExpense[];
+  const feeSettings = feeSettingsData ?? null;
+  const odometers = odometerData ?? [];
 
   const profitability = calculateLoadProfitabilityMap({
     loads: allLoads,
     expenses,
     fixedExpenses,
+    feeSettings,
+    odometers,
     expenseSourceAvailable: !expenseError,
     fixedExpenseSourceAvailable: !fixedExpenseError,
+    feeSettingsSourceAvailable: !feeSettingsError,
+    odometerSourceAvailable: !odometerError,
   });
 
   const loadProfit = (load: Load) =>
@@ -457,6 +469,8 @@ export default async function LoadsPage({
     truckError,
     expenseError,
     fixedExpenseError,
+    feeSettingsError,
+    odometerError,
   ].filter(Boolean);
 
   return (
@@ -680,10 +694,7 @@ export default async function LoadsPage({
           <aside className="fp-loads-right-rail">
             <section className="fp-load-side-card fp-load-quick-card">
               <h2>Quick Actions</h2>
-              <LoadsQuickActions
-                loads={allLoads}
-                exportLoads={exportLoads}
-              />
+              <LoadsQuickActions />
             </section>
 
             <section className="fp-load-side-card">

@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SmartLoadImport from "./smart-load-import";
+import UsCityStateAutocomplete from "./us-city-state-autocomplete";
 import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type Truck = {
@@ -29,6 +30,8 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [mode, setMode] = useState<"manual" | "telegram">("manual");
+  const [detailsVisible, setDetailsVisible] = useState(true);
   const [smartImportSignal, setSmartImportSignal] = useState(0);
   const [draft, setDraft] = useState<Draft>({
     loadNumber: "",
@@ -45,10 +48,15 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
 useEffect(() => {
   function openAddLoad(event: Event) {
     const custom = event as CustomEvent<{ mode?: "add" | "import" }>;
+    const nextMode =
+      custom.detail?.mode === "import" ? "telegram" : "manual";
+
+    setMode(nextMode);
     setOpen(true);
     setError("");
+    setDetailsVisible(nextMode === "manual");
 
-    if (custom.detail?.mode === "import") {
+    if (nextMode === "telegram") {
       setSmartImportSignal((value) => value + 1);
     }
 
@@ -159,49 +167,123 @@ useEffect(() => {
         >
           <div className="fp-add-load-header md:col-span-2">
             <div>
-              <span>New Load</span>
-              <h3>Add Load Details</h3>
-              <p>Enter the core dispatch and financial information for this load.</p>
+              <span>{mode === "telegram" ? "Telegram Import" : "New Load"}</span>
+              <h3>
+                {mode === "telegram"
+                  ? "Import Load from Telegram"
+                  : "Add Load Manually"}
+              </h3>
+              <p>
+                {mode === "telegram"
+                  ? detailsVisible
+                    ? "Review the details MileVoxa read from the Telegram message, complete anything missing, then save."
+                    : "Paste the Telegram load message first. Load details will appear after MileVoxa reads the message."
+                  : "Enter the core dispatch and financial information for this load."}
+              </p>
             </div>
-            <div className="fp-add-load-required">* Required fields</div>
+            <div className="fp-add-load-required">
+              {detailsVisible ? "* Required fields" : "Step 1 of 2"}
+            </div>
           </div>
-          <SmartLoadImport
-            openSignal={smartImportSignal}
-            onParsed={(data) =>
-              patchDraft({
-                loadNumber: data.loadNumber ?? draft.loadNumber,
-                referenceNumber:
-                  data.referenceNumber ?? draft.referenceNumber,
-                broker: data.broker ?? draft.broker,
-                pickup: data.pickup ?? draft.pickup,
-                delivery: data.delivery ?? draft.delivery,
-                pickupDate: data.pickupDate ?? draft.pickupDate,
-                deliveryDate: data.deliveryDate ?? draft.deliveryDate,
-                rate: data.rate ?? draft.rate,
-              })
-            }
-          />
 
-          <SelectTruck trucks={trucks} />
-          <ControlledField name="load_number" label="Load ID *" value={draft.loadNumber} setValue={(v) => patchDraft({ loadNumber: v })} />
-
-          {draft.referenceNumber && (
-            <div className="fp-telegram-ref-preview">
-              <span>Telegram REF #</span>
-              <strong>{draft.referenceNumber}</strong>
-              <small>
-                Reference is shown for review only because the current Loads table has no dedicated REF # column.
-              </small>
-            </div>
+          {mode === "telegram" && (
+            <SmartLoadImport
+              openSignal={smartImportSignal}
+              dedicated
+              onParsed={(data) => {
+                patchDraft({
+                  loadNumber: data.loadNumber ?? draft.loadNumber,
+                  referenceNumber:
+                    data.referenceNumber ?? draft.referenceNumber,
+                  broker: data.broker ?? draft.broker,
+                  pickup: data.pickup ?? draft.pickup,
+                  delivery: data.delivery ?? draft.delivery,
+                  pickupDate: data.pickupDate ?? draft.pickupDate,
+                  deliveryDate: data.deliveryDate ?? draft.deliveryDate,
+                  rate: data.rate ?? draft.rate,
+                });
+                setDetailsVisible(true);
+              }}
+            />
           )}
-          <ControlledField name="broker" label="Broker / Customer" value={draft.broker} setValue={(v) => patchDraft({ broker: v })} wide />
-          <ControlledField name="pickup" label="Pickup City, State *" value={draft.pickup} setValue={(v) => patchDraft({ pickup: v })} />
-          <ControlledField name="delivery" label="Delivery City, State *" value={draft.delivery} setValue={(v) => patchDraft({ delivery: v })} />
-          <ControlledField name="pickup_date" label="Pickup Date *" type="date" value={draft.pickupDate} setValue={(v) => patchDraft({ pickupDate: v })} />
-          <ControlledField name="delivery_date" label="Delivery Date *" type="date" value={draft.deliveryDate} setValue={(v) => patchDraft({ deliveryDate: v })} />
-          <ControlledField name="rate" label="Rate *" type="number" step="0.01" value={draft.rate} setValue={(v) => patchDraft({ rate: v })} />
-          <Field name="loaded_miles" label="Loaded Miles *" type="number" step="1" min="0" />
-          <Field name="deadhead_miles" label="Deadhead Miles" type="number" step="1" min="0" />
+
+          {detailsVisible && (
+            <>
+              <SelectTruck trucks={trucks} />
+              <ControlledField
+                name="load_number"
+                label="Load ID *"
+                value={draft.loadNumber}
+                setValue={(v) => patchDraft({ loadNumber: v })}
+              />
+
+              {mode === "telegram" && draft.referenceNumber && (
+                <div className="fp-telegram-ref-preview">
+                  <span>Telegram REF #</span>
+                  <strong>{draft.referenceNumber}</strong>
+                  <small>
+                    Reference is shown for review only because the current Loads table has no dedicated REF # column.
+                  </small>
+                </div>
+              )}
+
+              <ControlledField
+                name="broker"
+                label="Broker / Customer"
+                value={draft.broker}
+                setValue={(v) => patchDraft({ broker: v })}
+                wide
+              />
+              <UsCityStateAutocomplete
+                name="pickup"
+                label="Pickup City, State *"
+                value={draft.pickup}
+                setValue={(v) => patchDraft({ pickup: v })}
+              />
+              <UsCityStateAutocomplete
+                name="delivery"
+                label="Delivery City, State *"
+                value={draft.delivery}
+                setValue={(v) => patchDraft({ delivery: v })}
+              />
+              <ControlledField
+                name="pickup_date"
+                label="Pickup Date *"
+                type="date"
+                value={draft.pickupDate}
+                setValue={(v) => patchDraft({ pickupDate: v })}
+              />
+              <ControlledField
+                name="delivery_date"
+                label="Delivery Date *"
+                type="date"
+                value={draft.deliveryDate}
+                setValue={(v) => patchDraft({ deliveryDate: v })}
+              />
+              <ControlledField
+                name="rate"
+                label="Rate *"
+                type="number"
+                step="0.01"
+                value={draft.rate}
+                setValue={(v) => patchDraft({ rate: v })}
+              />
+              <Field
+                name="loaded_miles"
+                label="Loaded Miles *"
+                type="number"
+                step="1"
+                min="0"
+              />
+              <Field
+                name="deadhead_miles"
+                label="Deadhead Miles"
+                type="number"
+                step="1"
+                min="0"
+              />
+            </>
+          )}
 
           {error && (
             <div className="fp-add-load-error md:col-span-2">
@@ -210,7 +292,13 @@ useEffect(() => {
           )}
 
           <div className="fp-add-load-footer md:col-span-2">
-            <span>Load will be created with <b>Upcoming</b> status.</span>
+            <span>
+              {detailsVisible ? (
+                <>Load will be created with <b>Upcoming</b> status.</>
+              ) : (
+                <>Paste the Telegram message and click <b>Read Message &amp; Fill Load</b>.</>
+              )}
+            </span>
 
             <div className="fp-add-load-footer-actions">
               <button
@@ -222,12 +310,14 @@ useEffect(() => {
                 Close
               </button>
 
-              <button
-                disabled={saving}
-                className="fp-add-load-save"
-              >
-                {saving ? "Saving..." : "Save Load"}
-              </button>
+              {detailsVisible && (
+                <button
+                  disabled={saving}
+                  className="fp-add-load-save"
+                >
+                  {saving ? "Saving..." : "Save Load"}
+                </button>
+              )}
             </div>
           </div>
         </form>

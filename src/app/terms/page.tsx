@@ -4,7 +4,7 @@ import { publicPageMetadata } from "@/lib/seo";
 export const metadata = publicPageMetadata({
   title: "Terms of Service",
   description:
-    "Read the MileVoxa terms covering accounts, free trials, paid subscriptions, refunds, cancellation, and service use.",
+    "Read the MileVoxa terms covering public beta access, accounts, future paid subscriptions, refunds, cancellation, and service use.",
   path: "/terms",
 });
 
@@ -13,7 +13,7 @@ export default function TermsPage() {
     <LegalPage
       eyebrow="LEGAL"
       title="Terms of Service"
-      intro="These Terms govern use of the MileVoxa web application, including free trials, account features, trucking-business tools, and Google sign-in."
+      intro="These Terms govern use of the MileVoxa web application, including public beta access, account features, trucking-business tools, and Google sign-in."
     >
       <LegalSection title="1. Using MileVoxa">
         <p>
@@ -60,35 +60,38 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Free trial, billing, refunds, and cancellation">
+      <LegalSection title="5. Public beta, future billing, refunds, and cancellation">
         <p>
-          MileVoxa may offer a time-limited free trial. No card is required to
-          start the current free trial, and the account is not automatically
-          charged when the trial ends. Paid billing begins only after the
-          company owner actively completes the paid subscription checkout.
+          MileVoxa is currently offered as a free public beta for eligible
+          users. No payment card or checkout is required for beta access. The
+          public beta is temporary and is not a promise that MileVoxa will
+          remain free forever.
+        </p>
+        <p>
+          MileVoxa may announce paid plans later. We intend to give advance
+          notice before free beta access changes. Beta access will not
+          automatically convert into a paid subscription, and starting a future
+          paid plan will require explicit action by the company owner or other
+          authorized account holder.
+        </p>
+        <p>
+          <strong>Existing paid subscriptions.</strong> If an account already
+          has an active paid subscription from an earlier billing phase, that
+          billing relationship is not automatically cancelled, refunded, or
+          modified merely because MileVoxa is running a public beta. Contact
+          <strong> Support@MileVoxa.com</strong> with billing questions.
         </p>
         <p>
           <strong>Refund policy.</strong> Paid MileVoxa subscription charges
           are generally non-refundable once a billing period has started,
           except where a refund is required by applicable law or where MileVoxa
-          confirms a duplicate or erroneous charge. Requests involving a
-          suspected billing error should be sent to{" "}
-          <strong>Support@MileVoxa.com</strong>.
+          confirms a duplicate or erroneous charge.
         </p>
         <p>
-          <strong>Cancellation.</strong> The company owner may cancel an active
-          paid subscription through the Stripe billing portal. Cancellation
-          takes effect at the end of the current paid billing period. You may
-          continue using paid MileVoxa access through the end of that period,
-          unless access must be restricted for another reason permitted by
-          these Terms.
-        </p>
-        <p>
-          <strong>Partial billing periods.</strong> MileVoxa does not provide
-          prorated refunds or credits for unused days remaining in a billing
-          period after cancellation. The subscription remains active until the
-          end of the period already paid for. This does not limit any refund
-          right that cannot legally be excluded in your jurisdiction.
+          <strong>Cancellation.</strong> A company owner with an existing paid
+          subscription may use the available billing-management process to
+          cancel it. Cancellation takes effect according to the paid billing
+          terms that apply to that subscription.
         </p>
       </LegalSection>
 

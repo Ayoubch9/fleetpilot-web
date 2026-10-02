@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ReceiptUpload from "./receipt-upload";
+import { expenseLoadLinkMessage, expenseRequiresLoad } from "@/lib/expense-load-link";
 
 type Truck = { id: string; unit_number: string };
 type Load = { id: string; load_number: string | null; pickup: string | null; delivery: string | null };
@@ -62,9 +63,18 @@ export default function AddExpenseForm({
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
     const amount = Number(form.get("amount")) || 0;
+    const loadId = String(form.get("load_id") || "");
 
     if (amount <= 0) {
       setError("Expense amount must be greater than zero.");
+      setSaving(false);
+      return;
+    }
+
+    if (expenseRequiresLoad(category) && !loadId) {
+      setError(
+        "Select the Load ID for this expense so MileVoxa can calculate load profit correctly."
+      );
       setSaving(false);
       return;
     }
@@ -73,7 +83,7 @@ export default function AddExpenseForm({
 
     const { error: insertError } = await supabase.from("expenses").insert({
       truck_id: String(form.get("truck_id") || "") || null,
-      load_id: String(form.get("load_id") || "") || null,
+      load_id: loadId || null,
       category,
       expense_date: String(form.get("expense_date")),
       amount,
@@ -127,17 +137,28 @@ export default function AddExpenseForm({
             items={[{ value: "", label: "No truck" }, ...trucks.map((t) => ({ value: t.id, label: `Truck #${t.unit_number}` }))]}
           />
 
-          <Select
-            name="load_id"
-            label="Assign to Load"
-            items={[
-              { value: "", label: "No load" },
-              ...loads.map((l) => ({
-                value: l.id,
-                label: `${l.load_number || "Load"} — ${l.pickup || ""} → ${l.delivery || ""}`,
-              })),
-            ]}
-          />
+          <div className="fp-expense-load-link-block">
+            <Select
+              name="load_id"
+              label={expenseRequiresLoad(category) ? "Load ID *" : "Load ID"}
+              required={expenseRequiresLoad(category)}
+              items={[
+                {
+                  value: "",
+                  label: expenseRequiresLoad(category)
+                    ? "Select load"
+                    : "Company-level / no load",
+                },
+                ...loads.map((l) => ({
+                  value: l.id,
+                  label: `#${l.load_number || "Load"} — ${l.pickup || ""} → ${l.delivery || ""}`,
+                })),
+              ]}
+            />
+            <small className="fp-expense-load-helper">
+              {expenseLoadLinkMessage(category)}
+            </small>
+          </div>
 
           {category === "Fuel" && (
             <>
@@ -214,16 +235,19 @@ function Select({
   name,
   label,
   items,
+  required = false,
 }: {
   name: string;
   label: string;
   items: { value: string; label: string }[];
+  required?: boolean;
 }) {
   return (
     <label className="fp-add-expense-field">
       <span>{label}</span>
       <select
         name={name}
+        required={required}
         className="fp-add-expense-control"
       >
         {items.map((item) => (

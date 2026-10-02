@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
+import { expenseLoadLinkMessage, expenseRequiresLoad } from "@/lib/expense-load-link";
 
 type ActionType = "load" | "expense" | "fuel" | "maintenance";
 
@@ -13,6 +14,13 @@ type Truck = {
   id: string;
   unit_number: string;
   current_mileage: number;
+};
+
+type LoadOption = {
+  id: string;
+  load_number: string;
+  pickup: string;
+  delivery: string;
 };
 
 const expenseCategories = [
@@ -78,17 +86,21 @@ const actionCopy: Record<
 
 export default function DashboardQuickActions({
   trucks,
+  loads,
 }: {
   trucks: Truck[];
+  loads: LoadOption[];
 }) {
   const router = useRouter();
   const [action, setAction] = useState<ActionType | null>(null);
+  const [expenseCategory, setExpenseCategory] = useState("Other");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   function open(type: ActionType) {
     setError("");
+    if (type === "expense") setExpenseCategory("Other");
     setAction(type);
   }
 
@@ -156,14 +168,21 @@ export default function DashboardQuickActions({
         const amount = number(form, "amount");
         const date = value(form, "expense_date");
         const category = value(form, "category") || "Other";
+        const loadId = value(form, "load_id");
 
         if (!date || amount <= 0) {
           throw new Error("Date and an amount greater than zero are required.");
         }
 
+        if (expenseRequiresLoad(category) && !loadId) {
+          throw new Error(
+            "Select the Load ID for this expense so MileVoxa can calculate load profit correctly."
+          );
+        }
+
         const { error } = await supabase.from("expenses").insert({
           truck_id: value(form, "truck_id") || null,
-          load_id: null,
+          load_id: loadId || null,
           category,
           expense_date: date,
           amount,
@@ -179,6 +198,7 @@ export default function DashboardQuickActions({
 
       if (action === "fuel") {
         const truckId = value(form, "truck_id");
+        const loadId = value(form, "load_id");
         const date = value(form, "expense_date");
         const gallons = number(form, "gallons");
         const price = number(form, "fuel_price_per_gallon");
@@ -190,15 +210,15 @@ export default function DashboardQuickActions({
               ? gallons * price
               : 0;
 
-        if (!truckId || !date || amount <= 0) {
+        if (!truckId || !loadId || !date || amount <= 0) {
           throw new Error(
-            "Truck, date, and fuel total are required. You can enter Total or Gallons × Price/Gal."
+            "Truck, Load ID, date, and fuel total are required. You can enter Total or Gallons × Price/Gal."
           );
         }
 
         const { error } = await supabase.from("expenses").insert({
           truck_id: truckId,
-          load_id: null,
+          load_id: loadId,
           category: "Fuel",
           expense_date: date,
           amount,
@@ -383,7 +403,11 @@ export default function DashboardQuickActions({
                   <>
                     <label>
                       <span>Category *</span>
-                      <select name="category" defaultValue="Other">
+                      <select
+                        name="category"
+                        value={expenseCategory}
+                        onChange={(event) => setExpenseCategory(event.target.value)}
+                      >
                         {expenseCategories
                           .filter((item) => item !== "Fuel")
                           .map((item) => (
@@ -401,12 +425,23 @@ export default function DashboardQuickActions({
                     <Field name="amount" label="Amount" type="number" step="0.01" required />
                     <Field name="vendor" label="Vendor" />
                     <TruckField trucks={trucks} includeNone />
+                    <LoadField
+                      loads={loads}
+                      required={expenseRequiresLoad(expenseCategory)}
+                    />
+                    <p className="fp-quick-load-helper wide">
+                      {expenseLoadLinkMessage(expenseCategory)}
+                    </p>
                   </>
                 )}
 
                 {action === "fuel" && (
                   <>
                     <TruckField trucks={trucks} required />
+                    <LoadField loads={loads} required />
+                    <p className="fp-quick-load-helper wide">
+                      Load ID is required for fuel so the cost is assigned to the correct load profit.
+                    </p>
                     <Field
                       name="expense_date"
                       label="Fuel Date"
@@ -535,6 +570,31 @@ function TruckField({
             {truck.current_mileage > 0
               ? ` · ${Math.round(truck.current_mileage).toLocaleString()} mi`
               : ""}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+
+function LoadField({
+  loads,
+  required = false,
+}: {
+  loads: LoadOption[];
+  required?: boolean;
+}) {
+  return (
+    <label>
+      <span>{required ? "Load ID *" : "Load ID"}</span>
+      <select name="load_id" required={required}>
+        <option value="">
+          {required ? "Select load" : "Company-level / no load"}
+        </option>
+        {loads.map((load) => (
+          <option key={load.id} value={load.id}>
+            #{load.load_number} — {load.pickup} → {load.delivery}
           </option>
         ))}
       </select>

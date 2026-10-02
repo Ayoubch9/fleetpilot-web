@@ -1,7 +1,11 @@
 import { formatMoney } from "@/lib/format";
+import { expenseCategoryLabel } from "@/lib/expense-taxonomy";
 import { buildSettlementHistory } from "@/lib/settlement-history";
+import { buildPilotDataCoverage, buildPilotWeeklySnapshots } from "@/lib/pilot-data";
+import { dbDate, monday, plusDays, weekEnd } from "@/lib/fleetpilot-week";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getMileVoxaAccessEntitlement } from "@/lib/beta-access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -96,17 +100,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const entitlement = await getMileVoxaAccessEntitlement(
+      supabase,
+      membership.company_id,
+      user.created_at
+    );
+
+    if (!entitlement.allowed) {
+      return NextResponse.json(
+        { error: "Your MileVoxa access is not active." },
+        { status: 403 }
+      );
+    }
+
     const [
       { data: profile },
       { data: company },
-      { data: loadData },
-      { data: expenseData },
-      { data: truckData },
-      { data: maintenanceData },
-      { data: reimbursementData },
-      { data: fixedExpenseData },
-      { data: feeSettings },
-      { data: odometerData },
+      { data: loadData, error: loadError },
+      { data: expenseData, error: expenseError },
+      { data: truckData, error: truckError },
+      { data: maintenanceData, error: maintenanceError },
+      { data: reimbursementData, error: reimbursementError },
+      { data: fixedExpenseData, error: fixedExpenseError },
+      { data: feeSettings, error: feeSettingsError },
+      { data: odometerData, error: odometerError },
     ] = await Promise.all([
       supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle(),
       supabase.from("companies").select("name").eq("id", membership.company_id).maybeSingle(),
@@ -290,7 +307,88 @@ export async function POST(request: NextRequest) {
       maxWeeks: 52,
     });
 
+    const weeklyOperations = buildPilotWeeklySnapshots({
+      loads,
+      expenses,
+      reimbursements: reimbursementData ?? [],
+      odometers: odometerData ?? [],
+      maintenance,
+      trucks,
+      defaultMileageRate:
+        feeSettings?.mileage_fee_per_mile == null
+          ? 0.15
+          : n(feeSettings.mileage_fee_per_mile),
+      maxWeeks: 104,
+    });
+
+    const dataCoverage = buildPilotDataCoverage({
+      loads,
+      expenses,
+      reimbursements: reimbursementData ?? [],
+      odometers: odometerData ?? [],
+      maintenance,
+    });
+
+    const sourceStatus = {
+      loads: loadError ? "unavailable" : "available",
+      expenses: expenseError ? "unavailable" : "available",
+      trucks: truckError ? "unavailable" : "available",
+      maintenance: maintenanceError ? "unavailable" : "available",
+      reimbursements: reimbursementError ? "unavailable" : "available",
+      fixedExpenses: fixedExpenseError ? "unavailable" : "available",
+      feeSettings: feeSettingsError ? "unavailable" : "available",
+      odometers: odometerError ? "unavailable" : "available",
+    };
+
+    const recentFuelPurchases = expenses
+      .filter((row) => expenseCategoryLabel(row.category) === "Fuel")
+      .slice(0, 100)
+      .map((row) => ({
+        date: row.expense_date,
+        truck: row.truck_id ? truckMap.get(row.truck_id)?.unit_number || null : null,
+        vendor: row.vendor || null,
+        gallons: n(row.gallons),
+        amount: n(row.amount),
+        pricePerGallon:
+          n(row.gallons) > 0
+            ? n(row.amount) / n(row.gallons)
+            : n(row.fuel_price_per_gallon) || null,
+      }));
+
+    const asOf = new Date();
+    const currentWeekStartDate = monday(asOf);
+    const previousWeekStartDate = plusDays(currentWeekStartDate, -7);
+
+    const timeContext = {
+      asOfDate: dbDate(asOf),
+      weekDefinition: "Monday through Sunday",
+      currentWeek: {
+        start: dbDate(currentWeekStartDate),
+        end: dbDate(weekEnd(currentWeekStartDate)),
+      },
+      previousWeek: {
+        start: dbDate(previousWeekStartDate),
+        end: dbDate(weekEnd(previousWeekStartDate)),
+      },
+    };
+
+    const recentExpenseRecords = expenses.slice(0, 150).map((row) => ({
+      date: row.expense_date,
+      category: expenseCategoryLabel(row.category),
+      truck: row.truck_id
+        ? truckMap.get(row.truck_id)?.unit_number || null
+        : null,
+      vendor: row.vendor || null,
+      amount: n(row.amount),
+      gallons: n(row.gallons),
+      pricePerGallon:
+        n(row.gallons) > 0
+          ? n(row.amount) / n(row.gallons)
+          : n(row.fuel_price_per_gallon) || null,
+    }));
+
     const context = {
+      time: timeContext,
       account: {
         userName: profile?.full_name || "MileVoxa User",
         company: company?.name || "MileVoxa Company",
@@ -318,6 +416,15 @@ export async function POST(request: NextRequest) {
       upcomingMaintenance,
       fixedExpenses,
       feeSettings: feeSettings ?? null,
+      sourceStatus,
+      dataCoverage,
+      weeklyOperations: {
+        basis:
+          "Calendar weeks run Monday through Sunday. Fuel gallons/spend, variable expenses, reimbursements, odometer mileage, mileage expense, maintenance, load count, revenue and load miles are grouped by their recorded dates.",
+        weeks: weeklyOperations,
+      },
+      recentFuelPurchases,
+      recentExpenseRecords,
       latestOdometerRecords: (odometerData ?? []).slice(0, 20),
       latestLoads,
       settlementHistory: {
@@ -354,17 +461,25 @@ export async function POST(request: NextRequest) {
 
     const instructions = [
       "You are Pilot AI inside MileVoxa, a trucking business management application.",
-      "Give concise, practical business answers grounded ONLY in the supplied MileVoxa company data.",
-      "Never invent loads, trucks, costs, dates, rates, vendors, routes, maintenance items, or financial values.",
-      "If the data does not support a requested conclusion, say that clearly and explain what additional data would be needed.",
+      "Give practical, data-rich answers grounded ONLY in the supplied MileVoxa company data.",
+      "Never invent loads, trucks, costs, dates, rates, vendors, routes, gallons, maintenance items, mileage, or financial values.",
+      "If a data source is marked unavailable in context.sourceStatus, say that source is unavailable instead of treating it as zero.",
+      "If a requested date or week is outside context.dataCoverage, say the available coverage does not include that period.",
+      "Use context.time to resolve relative periods such as this week and last week. Calendar weeks run Monday through Sunday and are identified by weekStart/weekEnd.",
+      "For questions about fuel consumed, fuel gallons, fuel spend, average fuel price, or fuel by truck in a specific week, use context.weeklyOperations.weeks as the authoritative source. Do not use all-time fuel totals for a weekly question.",
+      "For detailed recent fuel-purchase questions, use context.recentFuelPurchases when it contains the requested date or transaction.",
+      "For questions about a week, weekly expenses, weekly mileage, odometer miles, mileage expense, load count, revenue, maintenance, or reimbursements, use context.weeklyOperations.weeks first.",
+      "For weekly profit, best/worst/profitable week, or settlement history, use context.settlementHistory.weeks as the authoritative source.",
+      "When the user says 'fuel consumed', report gallons when gallons are recorded. Also report fuel spend and average price per gallon when available. If gallons are zero because gallon values were not recorded, say that explicitly rather than claiming no fuel was consumed.",
       "Reimbursements offset expenses; do not treat them as revenue.",
       "Differentiate direct truck profit (truck revenue minus directly assigned expenses) from full company net profit because company fixed expenses and company fees may not be allocated by truck.",
-      "For any question about a week, weekly profit, settlement history, best week, worst week, or most profitable week, use context.settlementHistory.weeks as the authoritative source instead of all-time totals.",
       "Settlement history is read-only. Never imply that Pilot AI changed, reconciled, approved, or wrote settlement records.",
       "When an answer uses settlementHistory, include a clear source line containing the exact phrase 'Based on your settlements' and identify the relevant week or weeks.",
+      "For weekly operational answers, identify the exact Monday-Sunday date range you used.",
+      "When useful, break the answer down by truck and expense category instead of giving only a single total.",
       "When recommending actions, explain the business reason and reference relevant numbers when available.",
       "Do not expose database IDs, internal implementation details, API keys, or security configuration.",
-      "Keep most answers under 350 words unless the user explicitly asks for a detailed analysis.",
+      "Keep most answers under 500 words unless the user explicitly asks for a detailed analysis.",
       "Use plain text with short headings or bullets when useful.",
     ].join(" ");
 
@@ -404,16 +519,30 @@ export async function POST(request: NextRequest) {
       "Pilot AI completed the request but returned no text response.";
 
     const settlementHistoryIntent =
-      /\b(settlement|settlements|weekly|week|profitable week|best week|worst week)\b/i.test(
+      /\b(settlement|settlements|profitable week|best week|worst week|weekly profit)\b/i.test(
         question
       );
 
-    const answer =
+    const weeklyOperationsIntent =
+      /\b(fuel|gallons?|week|weekly|odometer|mileage|miles|expenses?|reimbursements?|maintenance|loads?)\b/i.test(
+        question
+      );
+
+    let answer = rawAnswer;
+
+    if (
       settlementHistoryIntent &&
       settlementHistory.length > 0 &&
-      !/based on your settlements/i.test(rawAnswer)
-        ? `${rawAnswer}\n\nSource: Based on your settlements (MileVoxa reconciled weekly metrics).`
-        : rawAnswer;
+      !/based on your settlements/i.test(answer)
+    ) {
+      answer = `${answer}\n\nSource: Based on your settlements (MileVoxa reconciled weekly metrics).`;
+    } else if (
+      weeklyOperationsIntent &&
+      weeklyOperations.length > 0 &&
+      !/based on your milevoxa data/i.test(answer)
+    ) {
+      answer = `${answer}\n\nSource: Based on your MileVoxa data (weekly operational records).`;
+    }
 
     return NextResponse.json({
       answer,

@@ -107,6 +107,14 @@ export default async function ExpensesPage({
   ]);
 
   const allExpenses = (expenseData ?? []) as Expense[];
+
+  // Expense numbers shown in the UI (#0001, #0002, ...) are presentation
+  // identifiers, not database IDs. Build the mapping once from the canonical
+  // expense order so the number remains stable while filtering/paging/sorting.
+  const expenseNumberById = new Map(
+    allExpenses.map((expense, index) => [expense.id, index + 1])
+  );
+
   const trucks = ((truckData ?? []) as Truck[]).filter(
     (truck) => (truck.status || "").toUpperCase() !== "INACTIVE"
   );
@@ -124,10 +132,36 @@ export default async function ExpensesPage({
     );
   }
 
-  let filteredExpenses = allExpenses.filter((expense) => {
+
+const expenseNumberQuery = /^#?0*(\d+)$/.exec(q);
+const requestedExpenseNumber = expenseNumberQuery
+  ? Number(expenseNumberQuery[1])
+  : null;
+const isExactExpenseNumberLookup =
+  requestedExpenseNumber != null && requestedExpenseNumber > 0;
+
+let filteredExpenses: Expense[];
+
+if (isExactExpenseNumberLookup) {
+  // Treat #0001-style searches as direct record lookups. This prevents the
+  // current category/date/truck/vendor filters from hiding a valid result.
+  const matchedExpense = allExpenses.find((expense) => {
+    const displayNumber = expenseNumberById.get(expense.id) || 0;
+    return displayNumber === requestedExpenseNumber;
+  });
+
+  filteredExpenses = matchedExpense ? [matchedExpense] : [];
+} else {
+  filteredExpenses = allExpenses.filter((expense) => {
     if (!q) return true;
+
+    const displayNumber = expenseNumberById.get(expense.id) || 0;
     const truck = expense.truck_id ? truckMap.get(expense.truck_id) : null;
+    const displayNumberText = `#${String(displayNumber).padStart(4, "0")}`;
+
     return [
+      displayNumberText,
+      String(displayNumber),
       expense.description,
       expense.vendor,
       expense.category,
@@ -171,7 +205,7 @@ export default async function ExpensesPage({
       (expense) => numberValue(expense.amount) <= maxAmount
     );
   }
-
+}
   const total = totalOf(filteredExpenses);
   const categorySummary = summarizeExpenseCategories(
     filteredExpenses,
@@ -197,7 +231,7 @@ export default async function ExpensesPage({
   ) as Record<(typeof TAB_CATEGORIES)[number]["key"], number>;
 
   let expenses =
-    categoryFilter === "all"
+    isExactExpenseNumberLookup || categoryFilter === "all"
       ? [...filteredExpenses]
       : filteredExpenses.filter((expense) =>
           matchesCategoryTab(expense.category, categoryFilter)
@@ -264,6 +298,15 @@ export default async function ExpensesPage({
             <p className="fp-expenses-subtitle">
               Track and manage all your business expenses. Keep your costs under control.
             </p>
+            <div className="fp-expenses-scope-note">
+              <span className="fp-expenses-scope-note-icon" aria-hidden="true">i</span>
+              <p>
+                This page shows recorded expense transactions only.
+                <strong> Odometer mileage fees</strong> and
+                <strong> Weekly Fixed Expenses</strong> are not included here;
+                they are calculated separately in Weekly Settlement.
+              </p>
+            </div>
           </div>
 
           <div id="add-expense" className="fp-expense-add-form-host">
@@ -344,7 +387,7 @@ export default async function ExpensesPage({
                       return (
                         <tr key={expense.id}>
                           <td className="fp-expense-number">
-                            #{String((page - 1) * PAGE_SIZE + index + 1).padStart(4, "0")}
+                            #{String(expenseNumberById.get(expense.id) || 0).padStart(4, "0")}
                           </td>
 
                           <td>{longDate(expense.expense_date)}</td>
@@ -445,7 +488,7 @@ export default async function ExpensesPage({
             <section className="fp-expense-side-card">
               <h2>Quick Actions</h2>
 
-              <ExpenseQuickActions expenses={expenses} />
+              <ExpenseQuickActions expenses={allExpenses} trucks={trucks} loads={loads} />
             </section>
 
             <section className="fp-expense-side-card">

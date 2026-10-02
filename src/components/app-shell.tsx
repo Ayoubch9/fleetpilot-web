@@ -7,6 +7,8 @@ import { getAvatarUrl } from "@/lib/fleetpilot-account";
 import SidebarSignOut from "@/components/sidebar-sign-out";
 import MobileAppNavigation from "@/components/mobile-app-navigation";
 import MileVoxaBrand, { MileVoxaMark } from "@/components/milevoxa-brand";
+import BetaFeedbackCenter, { BetaFeedbackTrigger } from "@/components/beta-feedback-center";
+import { isPublicBetaEnabled } from "@/lib/beta-access";
 
 type ActivePage =
   | "overview"
@@ -64,6 +66,18 @@ export default async function AppShell({
   role,
   children,
 }: AppShellProps) {
+  const publicBeta = isPublicBetaEnabled();
+  const showWeekSelector = ![
+    "expenses",
+    "trucks",
+    "maintenance",
+    "reimbursements",
+    "reports",
+    "settings",
+    "pilot",
+    "documents",
+    "deposit",
+  ].includes(active);
   let alertCount = 0;
   let avatarUrl: string | null = null;
 
@@ -108,6 +122,7 @@ export default async function AppShell({
             onDark
             className="mv-sidebar-brand"
           />
+          {publicBeta && <div className="fp-beta-sidebar-badge">Public Beta</div>}
         </div>
 
         <div className="fp-scroll flex-1 overflow-y-auto px-3 pb-3">
@@ -128,14 +143,21 @@ export default async function AppShell({
 
           <div className="my-3 border-t border-white/10" />
           <SideItem href="/settings" label="Settings" icon="settings" active={active === "settings"} />
+          {publicBeta && (
+            <BetaFeedbackTrigger
+              className="fp-beta-sidebar-feedback"
+              label="Send Feedback"
+              context={`/${active}`}
+            />
+          )}
           <SidebarSignOut />
         </div>
 
       </aside>
 
-      <section className="min-h-screen lg:ml-[222px]">
-        <header className="sticky top-0 z-30 flex h-[68px] items-center gap-4 border-b border-[#e0e8f0] bg-white/95 px-5 backdrop-blur-xl sm:px-6">
-          <div className="lg:hidden">
+      <section className="fp-app-content min-h-screen lg:ml-[222px]">
+        <header className="fp-app-header sticky top-0 z-30 flex h-[68px] items-center gap-4 border-b border-[#e0e8f0] bg-white/95 px-5 backdrop-blur-xl sm:px-6">
+          <div className="fp-app-mobile-brand lg:hidden">
             <Link
               href="/dashboard"
               className="fp-mobile-header-brand"
@@ -152,14 +174,17 @@ export default async function AppShell({
             </Link>
           </div>
 
-          <div className="hidden max-w-[505px] flex-1 lg:block">
+          <div className="fp-app-global-search hidden max-w-[505px] flex-1 lg:block">
             <GlobalSearch />
           </div>
 
           <div className="ml-auto flex items-center gap-3 text-[#0b1730]">
-            <div className="hidden md:block">
-              <WeekSelector />
-            </div>
+            {publicBeta && <span className="fp-beta-header-badge">Public Beta</span>}
+            {showWeekSelector && (
+              <div className="fp-app-week-selector hidden md:block">
+                <WeekSelector />
+              </div>
+            )}
             <Link
               href="/notifications"
               aria-label={`${alertCount} MileVoxa notifications`}
@@ -197,18 +222,25 @@ export default async function AppShell({
           </div>
         </header>
 
-        <div className="fp-mobile-control-zone lg:hidden">
+        <div
+          className={`fp-mobile-control-zone lg:hidden ${
+            showWeekSelector ? "" : "fp-mobile-control-zone-search-only"
+          }`}
+        >
           <div className="fp-mobile-global-search">
             <GlobalSearch />
           </div>
-          <div className="fp-mobile-week-selector">
-            <WeekSelector />
-          </div>
+          {showWeekSelector && (
+            <div className="fp-mobile-week-selector">
+              <WeekSelector />
+            </div>
+          )}
         </div>
 
         {children}
 
         <MobileAppNavigation active={active} />
+        {publicBeta && <BetaFeedbackCenter />}
       </section>
     </main>
   );

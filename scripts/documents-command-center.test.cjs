@@ -1,0 +1,18 @@
+const fs=require("fs"),assert=require("assert");
+const page=fs.readFileSync("src/app/documents/page.tsx","utf8");
+const mgr=fs.readFileSync("src/app/documents/document-manager.tsx","utf8");
+const qa=fs.readFileSync("src/app/documents/document-quick-actions.tsx","utf8");
+const pack=fs.readFileSync("src/app/documents/truck-document-pack.tsx","utf8");
+const center=fs.readFileSync("src/app/documents/document-center.tsx","utf8");
+const mig=fs.readFileSync("supabase_documents_command_center_v4_3_68.sql","utf8");
+assert.ok(page.includes("TruckDocumentPack"));
+assert.ok(page.includes("DocumentQuickActions"));
+assert.ok(mgr.includes("carry_in_truck"));
+assert.ok(mgr.includes("multiple required"));
+assert.ok(qa.includes("Create Folder"));
+assert.ok(qa.includes("milevoxa:documents-view-expiring"));
+assert.ok(pack.includes("Truck Document Pack"));
+assert.ok(center.includes("Truck Pack"));
+assert.ok(mig.includes("document_folders"));
+assert.ok(mig.includes("carry_in_truck"));
+console.log("documents-command-center checks passed");

@@ -85,8 +85,7 @@ export default async function ReimbursementsPage({
     supabase
       .from("expenses")
       .select("id, category, vendor, amount, expense_date, truck_id")
-      .order("expense_date", { ascending: false })
-      .limit(300),
+      .order("expense_date", { ascending: false }),
     supabase.from("trucks").select("id, unit_number").order("unit_number"),
   ]);
 
@@ -382,7 +381,18 @@ export default async function ReimbursementsPage({
           <aside className="fp-reimb-right-rail">
             <section className="fp-reimb-side-card">
               <h2>Quick Actions</h2>
-              <ReimbursementQuickActions rows={filtered} />
+              <ReimbursementQuickActions
+                rows={reimbursements.map((row) => ({
+                  ...row,
+                  export_kind: isStandalone(row)
+                    ? "Standalone"
+                    : isFull(row)
+                      ? "Full"
+                      : "Partial",
+                }))}
+                expenses={expenses}
+                trucks={trucks}
+              />
             </section>
 
             <section className="fp-reimb-side-card">

@@ -30,12 +30,27 @@ export type FixedExpenseLike = {
   active?: boolean | null;
 };
 
+export type LoadFeeSettingsLike = {
+  revenue_fee_percent?: number | string | null;
+  mileage_fee_per_mile?: number | string | null;
+  is_revenue_fee_active?: boolean | null;
+  is_mileage_fee_active?: boolean | null;
+};
+
+export type LoadOdometerLike = {
+  week_start?: string | null;
+  start_odometer?: number | string | null;
+  end_odometer?: number | string | null;
+};
+
 export type LoadProfitResult = {
   profit: number | null;
   allocatedCost: number | null;
   directFuelAndTolls: number;
   allocatedSharedFuelAndTolls: number | null;
   allocatedFixed: number | null;
+  allocatedRevenueFee: number | null;
+  allocatedMileageFee: number | null;
   reason?: string;
 };
 
@@ -184,19 +199,45 @@ export function calculateLoadProfitabilityMap({
   loads,
   expenses,
   fixedExpenses,
+  feeSettings,
+  odometers = [],
   expenseSourceAvailable = true,
   fixedExpenseSourceAvailable = true,
+  feeSettingsSourceAvailable = true,
+  odometerSourceAvailable = true,
 }: {
   loads: LoadLike[];
   expenses: LoadExpenseLike[];
   fixedExpenses: FixedExpenseLike[];
+  feeSettings?: LoadFeeSettingsLike | null;
+  odometers?: LoadOdometerLike[];
   expenseSourceAvailable?: boolean;
   fixedExpenseSourceAvailable?: boolean;
+  feeSettingsSourceAvailable?: boolean;
+  odometerSourceAvailable?: boolean;
 }) {
   const result = new Map<string, LoadProfitResult>();
+
   const fixedWeekly = fixedExpenses
     .filter(activeFixed)
     .reduce((sum, row) => sum + n(row.amount), 0);
+
+  const revenueFeePercent =
+    feeSettings?.revenue_fee_percent == null
+      ? 15
+      : n(feeSettings.revenue_fee_percent);
+  const mileageFeeRate =
+    feeSettings?.mileage_fee_per_mile == null
+      ? 0.15
+      : n(feeSettings.mileage_fee_per_mile);
+  const revenueFeeActive =
+    feeSettings?.is_revenue_fee_active == null
+      ? true
+      : Boolean(feeSettings.is_revenue_fee_active);
+  const mileageFeeActive =
+    feeSettings?.is_mileage_fee_active == null
+      ? true
+      : Boolean(feeSettings.is_mileage_fee_active);
 
   const weekMiles = new Map<string, number>();
   for (const load of loads) {
@@ -206,6 +247,20 @@ export function calculateLoadProfitabilityMap({
       normalizeMiles(load.loaded_miles) + normalizeMiles(load.deadhead_miles);
     if (miles <= 0) continue;
     weekMiles.set(key, (weekMiles.get(key) || 0) + miles);
+  }
+
+  const odometerMilesByWeek = new Map<string, number>();
+  for (const row of odometers) {
+    const key = weekKey(row.week_start);
+    if (!key) continue;
+    const miles = Math.max(
+      n(row.end_odometer) - n(row.start_odometer),
+      0
+    );
+    odometerMilesByWeek.set(
+      key,
+      (odometerMilesByWeek.get(key) || 0) + miles
+    );
   }
 
   const directByLoad = new Map<string, number>();
@@ -234,6 +289,23 @@ export function calculateLoadProfitabilityMap({
     }
   }
 
+  const unavailable = (
+    loadId: string,
+    direct: number,
+    reason: string
+  ) => {
+    result.set(loadId, {
+      profit: null,
+      allocatedCost: null,
+      directFuelAndTolls: direct,
+      allocatedSharedFuelAndTolls: null,
+      allocatedFixed: null,
+      allocatedRevenueFee: null,
+      allocatedMileageFee: null,
+      reason,
+    });
+  };
+
   for (const load of loads) {
     const rate = n(load.rate);
     const miles =
@@ -242,84 +314,104 @@ export function calculateLoadProfitabilityMap({
     const direct = directByLoad.get(load.id) || 0;
 
     if (!expenseSourceAvailable) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: fuel/toll costs could not be loaded.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: fuel/toll costs could not be loaded."
+      );
       continue;
     }
 
     if (!fixedExpenseSourceAvailable) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: weekly fixed costs could not be loaded.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: weekly fixed costs could not be loaded."
+      );
+      continue;
+    }
+
+    if (!feeSettingsSourceAvailable) {
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: company fee settings could not be loaded."
+      );
+      continue;
+    }
+
+    if (mileageFeeActive && !odometerSourceAvailable) {
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: weekly odometer mileage could not be loaded."
+      );
       continue;
     }
 
     if (rate <= 0) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: this load has no valid rate.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: this load has no valid rate."
+      );
       continue;
     }
 
     if (!key) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: this load has no valid pickup date.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: this load has no valid pickup date."
+      );
       continue;
     }
 
     if (miles <= 0) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: this load has no verified mileage.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: this load has no verified mileage."
+      );
       continue;
     }
 
     const totalWeekMiles = weekMiles.get(key) || 0;
     if (totalWeekMiles <= 0) {
-      result.set(load.id, {
-        profit: null,
-        allocatedCost: null,
-        directFuelAndTolls: direct,
-        allocatedSharedFuelAndTolls: null,
-        allocatedFixed: null,
-        reason: "Profit unavailable: weekly mileage cannot be allocated.",
-      });
+      unavailable(
+        load.id,
+        direct,
+        "Profit unavailable: weekly mileage cannot be allocated."
+      );
       continue;
     }
 
     const mileageShare = miles / totalWeekMiles;
+
     const allocatedSharedFuelAndTolls =
       (sharedFuelAndTollsByWeek.get(key) || 0) * mileageShare;
+
     const allocatedFixed = fixedWeekly * mileageShare;
+
+    // Revenue fee is inherently revenue-based, so each load receives its own
+    // exact percentage instead of a mileage-weighted approximation.
+    const allocatedRevenueFee = revenueFeeActive
+      ? rate * (revenueFeePercent / 100)
+      : 0;
+
+    // Weekly Settlement charges the mileage fee from recorded odometer miles.
+    // Allocate that same weekly fee back to loads by their share of load miles.
+    const weeklyMileageFee = mileageFeeActive
+      ? (odometerMilesByWeek.get(key) || 0) * mileageFeeRate
+      : 0;
+    const allocatedMileageFee = weeklyMileageFee * mileageShare;
+
     const allocatedCost =
-      direct + allocatedSharedFuelAndTolls + allocatedFixed;
+      direct +
+      allocatedSharedFuelAndTolls +
+      allocatedFixed +
+      allocatedRevenueFee +
+      allocatedMileageFee;
 
     result.set(load.id, {
       profit: rate - allocatedCost,
@@ -327,6 +419,8 @@ export function calculateLoadProfitabilityMap({
       directFuelAndTolls: direct,
       allocatedSharedFuelAndTolls,
       allocatedFixed,
+      allocatedRevenueFee,
+      allocatedMileageFee,
     });
   }
 

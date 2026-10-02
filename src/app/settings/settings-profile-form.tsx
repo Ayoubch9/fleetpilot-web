@@ -182,8 +182,7 @@ async function requestDeletion() {
         <section className="fp-panel side">
           <h2>Quick Actions</h2>
           <button className="fp-side-action" onClick={resetPassword}>▣ <span>Change Password</span><b>›</b></button>
-          <button className="fp-side-action" disabled={billingBusy} onClick={() => billingAction("portal")}>▣ <span>Manage Subscription</span><b>›</b></button>
-          <button className="fp-side-action" disabled={billingBusy} onClick={() => billingAction("checkout")}>▣ <span>Start / Upgrade Plan</span><b>›</b></button>
+          <button className="fp-side-action" type="button" onClick={() => { window.location.href = "/pricing"; }}>▣ <span>Beta Access Details</span><b>›</b></button>
           <button className="fp-side-action" onClick={exportProfile}>▣ <span>Export Your Data</span><b>›</b></button>
           <button className="fp-side-action danger" onClick={() => setDeleteOpen(true)}>▣ <span>Delete Account</span><b>›</b></button>
         </section>

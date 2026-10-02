@@ -1,26 +1,34 @@
-MILEVOXA WEB v1.7.0 — OPERATIONAL NOTIFICATIONS
+MILEVOXA WEB v4.4.0 — FREE PUBLIC BETA
 
-No new SQL is required.
+1. Keep your existing .env.local and Supabase credentials.
+2. Add:
+   MILEVOXA_PUBLIC_BETA=true
 
-Keep your existing .env.local and Supabase setup.
+   The app defaults to public beta if this variable is omitted, but setting it
+   explicitly is recommended for production/staging clarity.
 
-Then:
+3. Run these SQL files in Supabase SQL Editor if not already applied:
+   - supabase_public_beta_feedback_v4_4_0.sql
+   - existing project migrations required by your installation
 
-cd C:\projects\fleetpilot_web
-npm install
-npm run typecheck
-npm run build
-npm run dev
+4. Before production rollout, run the READ-ONLY audit:
+   - supabase_public_beta_billing_audit_v4_4_0.sql
 
-Test:
-http://localhost:3000/notifications
+   If it returns active Stripe subscriptions, review those customers separately.
+   This release does not cancel, refund, modify, or create subscriptions.
 
-Also check the bell in the top header. Its badge should now reflect the real alert count.
+5. Install/check locally:
 
-Recommended tests:
-1. Open Notifications.
-2. Check Critical / Due Soon / Upcoming filters.
-3. Click an alert and confirm it opens the relevant page.
-4. Compare maintenance alerts with Maintenance records.
-5. Compare document alerts with Documents expiration dates.
-6. Compare load alerts with open/upcoming Loads.
+   cd C:\projects\fleetpilot_web
+   npm install
+   npm run typecheck
+   npm run build
+   npm run dev
+
+Public beta behavior:
+- no checkout/card required
+- expired/active legacy trial users receive beta access
+- paid checkout endpoint is blocked while beta is enabled
+- existing paid billing records are preserved
+- disabling beta does not create a charge or auto-enroll anyone
+- future paid checkout still requires explicit owner action

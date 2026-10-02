@@ -124,9 +124,11 @@ function parseDispatcher(text: string): ParsedLoad {
 export default function SmartLoadImport({
   onParsed,
   openSignal = 0,
+  dedicated = false,
 }: {
   onParsed: (data: ParsedLoad) => void;
   openSignal?: number;
+  dedicated?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
@@ -143,15 +145,17 @@ export default function SmartLoadImport({
 
   return (
     <div className="fp-smart-load-import md:col-span-2">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="fp-smart-load-trigger"
-      >
-        {open ? "Close Telegram Import" : "Paste Telegram Load"}
-      </button>
+      {!dedicated && (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="fp-smart-load-trigger"
+        >
+          {open ? "Close Telegram Import" : "Paste Telegram Load"}
+        </button>
+      )}
 
-      {open && (
+      {(open || dedicated) && (
         <div className="fp-smart-load-panel">
           <div className="fp-telegram-import-help">
             Paste the dispatcher load message from Telegram. MileVoxa will extract the load ID, route, dates, customer and rate automatically.

@@ -334,7 +334,7 @@ export default async function TrucksPage({
             <section className="fp-truck-side-card">
               <h2>Quick Actions</h2>
               <TrucksQuickActions
-                visibleTrucks={trucks}
+                trucks={allTrucks}
                 inactiveHref={filterHref("inactive", q, makeFilter, sort)}
               />
             </section>

@@ -109,6 +109,7 @@ export default function SettingsCenter({
   businessCostsReady,
   deletionPending,
   subscriptionInfo,
+  publicBeta,
 }: {
   userId: string;
   companyId: string;
@@ -126,6 +127,7 @@ export default function SettingsCenter({
   businessCostsReady: boolean;
   deletionPending: boolean;
   subscriptionInfo: SubscriptionInfo;
+  publicBeta: boolean;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<SettingsTab>("profile");
@@ -185,6 +187,7 @@ export default function SettingsCenter({
   const [newFixedAmount, setNewFixedAmount] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [billingBusy, setBillingBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [deleteReason, setDeleteReason] = useState("");
@@ -232,6 +235,23 @@ export default function SettingsCenter({
     : trialActive
       ? "Free Trial"
       : "Trial Ended";
+
+  async function openExistingBillingPortal() {
+    setBillingBusy(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/billing/portal", { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok || !payload?.url) {
+        throw new Error(payload?.error || "Could not open billing management.");
+      }
+      window.location.href = payload.url;
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not open billing management.");
+    } finally {
+      setBillingBusy(false);
+    }
+  }
 
 
 async function uploadAvatar(file: File) {
@@ -756,7 +776,7 @@ async function removeAvatar() {
           { key: "business-costs", label: "Business Costs" },
           { key: "preferences", label: "Preferences" },
           { key: "notifications", label: "Notifications" },
-          { key: "subscription", label: "Subscription" },
+          { key: "subscription", label: publicBeta ? "Beta Access" : "Subscription" },
           { key: "data", label: "Data & Export" },
           { key: "legal", label: "Legal & Privacy" },
           { key: "security", label: "Security" },
@@ -1638,156 +1658,124 @@ async function removeAvatar() {
             <section className="fp-panel fp-settings-main-card fp-subscription-center">
               <div className="fp-subscription-heading">
                 <div>
-                  <span>PLAN & BILLING</span>
-                  <h2>Subscription</h2>
+                  <span>{publicBeta ? "PUBLIC BETA" : "ACCESS & BILLING"}</span>
+                  <h2>{publicBeta ? "Free Beta Access" : "Subscription"}</h2>
                   <p className="fp-settings-copy">
-                    See your MileVoxa plan, trial status and what happens next.
+                    {publicBeta
+                      ? "You have free access during the MileVoxa public beta. Paid plans will be announced later."
+                      : "Review your MileVoxa access and billing status."}
                   </p>
                 </div>
-                <div className={`fp-subscription-status ${trialActive ? "trial" : paidActive ? "active" : "ended"}`}>
-                  {subscriptionLabel}
+                <div className={`fp-subscription-status ${publicBeta ? "active" : paidActive ? "active" : trialActive ? "trial" : "ended"}`}>
+                  {publicBeta ? "Public Beta" : subscriptionLabel}
                 </div>
               </div>
 
-              <div className="fp-trial-hero">
-                <div className="fp-trial-hero-copy">
-                  <span>{subscriptionInfo.planName}</span>
-                  {paidActive ? (
-                    <>
-                      <h3>Your MileVoxa Pro subscription is active.</h3>
+              {publicBeta ? (
+                <>
+                  <div className="fp-trial-hero fp-beta-access-hero">
+                    <div className="fp-trial-hero-copy">
+                      <span>Free Beta Access</span>
+                      <h3>Your MileVoxa public beta access is active.</h3>
                       <p>
-                        You have access to the complete MileVoxa operating system.
+                        Use the core product, test real trucking workflows, and send honest feedback to help improve MileVoxa.
                       </p>
-                    </>
-                  ) : trialActive ? (
-                    <>
-                      <h3>
-                        {trialDaysRemaining} day{trialDaysRemaining === 1 ? "" : "s"} remaining
-                      </h3>
-                      <p>
-                        Your 14-day MileVoxa Pro trial ends on{" "}
-                        <strong>{formatSubscriptionDate(trialEnd)}</strong>.
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <h3>Your free trial has ended.</h3>
-                      <p>
-                        Choose a MileVoxa Pro plan when you are ready to continue with Pro access.
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                {!paidActive && (
-                  <div className="fp-trial-progress-block">
-                    <div className="fp-trial-progress-top">
-                      <span>Trial progress</span>
-                      <strong>
-                        {trialActive
-                          ? `${trialDaysUsed} of 14 days used`
-                          : "14 of 14 days used"}
-                      </strong>
                     </div>
-                    <div className="fp-trial-progress-track">
-                      <i
-                        style={{
-                          width: `${trialActive ? Math.max(4, trialProgress) : 100}%`,
-                        }}
-                      />
-                    </div>
-                    <div className="fp-trial-progress-dates">
-                      <span>{formatSubscriptionDate(trialStart)}</span>
-                      <span>{formatSubscriptionDate(trialEnd)}</span>
+                    <div className="fp-beta-access-points">
+                      <div><b>✓</b><span>No credit card required</span></div>
+                      <div><b>✓</b><span>No trial countdown</span></div>
+                      <div><b>✓</b><span>No automatic paid enrollment</span></div>
                     </div>
                   </div>
-                )}
-              </div>
 
-              <div className="fp-subscription-facts">
-                <SubscriptionFact
-                  label="Current plan"
-                  value={subscriptionInfo.planName}
-                />
-                <SubscriptionFact
-                  label="Status"
-                  value={subscriptionLabel}
-                />
-                <SubscriptionFact
-                  label={paidActive ? "Billing period ends" : "Trial ends"}
-                  value={formatSubscriptionDate(
-                    paidActive && subscriptionInfo.currentPeriodEnd
-                      ? new Date(subscriptionInfo.currentPeriodEnd)
-                      : trialEnd
-                  )}
-                />
-                <SubscriptionFact
-                  label="Trial payment"
-                  value="No card required"
-                />
-              </div>
+                  <div className="fp-subscription-facts">
+                    <SubscriptionFact label="Access" value="Free Beta Access" />
+                    <SubscriptionFact label="Status" value="Public Beta" />
+                    <SubscriptionFact label="Payment method" value="Not required" />
+                    <SubscriptionFact label="Future billing" value="Explicit opt-in only" />
+                  </div>
 
-              <div className="fp-subscription-included">
-                <div>
-                  <span>WHAT YOU HAVE ACCESS TO</span>
-                  <h3>Full MileVoxa Pro during your trial</h3>
-                </div>
-                <div className="fp-subscription-feature-grid">
-                  {[
-                    "Loads & truck management",
-                    "Expenses & reimbursements",
-                    "Fuel analytics",
-                    "Maintenance tracking",
-                    "Weekly settlement",
-                    "Reports & exports",
-                    "Documents & alerts",
-                    "Pilot AI",
-                  ].map((item) => (
-                    <div key={item}>
-                      <i>✓</i>
-                      <span>{item}</span>
+                  {paidActive && (
+                    <div className="fp-beta-existing-paid-note">
+                      <strong>Existing paid billing record detected</strong>
+                      <span>
+                        Your existing billing record has not been changed. MileVoxa public beta access is active, but billing treatment for existing paying customers should be reviewed separately before production rollout.
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  )}
 
-              {!subscriptionInfo.storageReady && (
-                <div className="fp-subscription-storage-note">
-                  <strong>Trial storage setup recommended</strong>
-                  <span>
-                    MileVoxa is currently calculating this trial from the account creation date. Run <b>supabase_trial_subscription_setup.sql</b> once so trial dates are stored permanently at company level.
-                  </span>
-                </div>
+                  <div className="fp-subscription-included">
+                    <div>
+                      <span>AVAILABLE DURING PUBLIC BETA</span>
+                      <h3>Core MileVoxa workflows are open for testing</h3>
+                    </div>
+                    <div className="fp-subscription-feature-grid">
+                      {[
+                        "Loads & truck management",
+                        "Expenses & reimbursements",
+                        "Fuel analytics",
+                        "Maintenance tracking",
+                        "Weekly settlement",
+                        "Reports & exports",
+                        "Documents & alerts",
+                        "Pilot AI",
+                      ].map((item) => (
+                        <div key={item}><i>✓</i><span>{item}</span></div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="fp-subscription-actions fp-beta-access-actions">
+                    <div>
+                      <strong>Paid plans will be announced later.</strong>
+                      <span>
+                        We will give advance notice before free beta access changes. You will not be charged automatically when beta ends; starting a paid plan will require your explicit action.
+                      </span>
+                    </div>
+                    <div>
+                      <Link href="/pricing" className="fp-subscription-secondary">Beta Access Details</Link>
+                      {paidActive && (
+                        <button
+                          type="button"
+                          className="fp-subscription-primary"
+                          onClick={openExistingBillingPortal}
+                          disabled={billingBusy}
+                        >
+                          {billingBusy ? "Opening..." : "Manage Existing Billing"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="fp-trial-hero">
+                    <div className="fp-trial-hero-copy">
+                      <span>{subscriptionInfo.planName}</span>
+                      {paidActive ? (
+                        <>
+                          <h3>Your MileVoxa subscription is active.</h3>
+                          <p>Your existing paid access remains unchanged.</p>
+                        </>
+                      ) : trialActive ? (
+                        <>
+                          <h3>{trialDaysRemaining} day{trialDaysRemaining === 1 ? "" : "s"} remaining</h3>
+                          <p>Your legacy trial ends on <strong>{formatSubscriptionDate(trialEnd)}</strong>.</p>
+                        </>
+                      ) : (
+                        <>
+                          <h3>Your MileVoxa access is inactive.</h3>
+                          <p>Review available access options before continuing.</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="fp-subscription-actions">
+                    <div><strong>Billing changes require explicit action.</strong><span>MileVoxa never silently enrolls an account into a paid plan.</span></div>
+                    <div><Link href="/pricing" className="fp-subscription-secondary">View Access Details</Link></div>
+                  </div>
+                </>
               )}
-
-              <div className="fp-subscription-actions">
-                <div>
-                  <strong>
-                    {trialActive
-                      ? "Enjoy the full product during your trial."
-                      : paidActive
-                        ? "Your subscription is active."
-                        : "Ready to continue with MileVoxa Pro?"}
-                  </strong>
-                  <span>
-                    Stripe checkout remains disabled until billing/legal setup is completed.
-                  </span>
-                </div>
-
-                <div>
-                  <Link href="/pricing" className="fp-subscription-secondary">
-                    View Plan Details
-                  </Link>
-                  <button
-                    type="button"
-                    className="fp-subscription-primary"
-                    disabled
-                    title="Billing will be enabled after Stripe setup is complete."
-                  >
-                    {paidActive ? "Manage Subscription" : "Choose Plan"}
-                  </button>
-                </div>
-              </div>
             </section>
           )}
 
@@ -1848,7 +1836,7 @@ async function removeAvatar() {
                     <span>TERMS</span>
                     <strong>Terms of Service</strong>
                     <p>
-                      Review MileVoxa account, service, trial, and operational
+                      Review MileVoxa account, public beta, service, and operational
                       calculation terms.
                     </p>
                   </div>

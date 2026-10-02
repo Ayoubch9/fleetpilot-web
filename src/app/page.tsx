@@ -6,9 +6,9 @@ import { publicPageMetadata, SITE_URL } from "@/lib/seo";
 
 
 export const metadata: Metadata = publicPageMetadata({
-  title: "MileVoxa | Trucking Profit, Expenses & Fleet Management",
+  title: "MileVoxa | Free Public Beta for Trucking Operations",
   description:
-    "Track loads, fuel, expenses, maintenance, settlements, and real weekly trucking profit in one connected system for owner-operators and small fleets.",
+    "Manage loads, expenses, trucks, fuel, maintenance, documents and weekly settlements in one place. Join the free MileVoxa public beta with no credit card required.",
   path: "/",
 });
 
@@ -63,9 +63,9 @@ const outcomes = [
 
 const homepageFaqs = [
   {
-    question: "Do I need a credit card for the trial?",
+    question: "Do I need a credit card for the beta?",
     answer:
-      "No. You can create your MileVoxa account and use the 14-day trial without entering card details.",
+      "No. MileVoxa is free during the public beta and no payment card is required to join.",
   },
   {
     question: "Is MileVoxa only for large fleets?",
@@ -83,9 +83,9 @@ const homepageFaqs = [
       "Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views.",
   },
   {
-    question: "What happens after the trial?",
+    question: "What happens when the public beta changes?",
     answer:
-      "On day 15, the free trial ends and there is no automatic charge because no card is required to start. MileVoxa plans are priced per company: Solo is $19/month for 1 truck, Fleet is $29/month for up to 5 trucks with unlimited drivers, and Pro is $49/month for up to 15 trucks. Paid billing begins only when the company owner actively completes checkout, and cancellation follows the existing MileVoxa terms.",
+      "Paid plans will be announced later. MileVoxa will give advance notice before free beta access changes, and beta access will not automatically turn into a paid subscription. Choosing a future paid plan will require explicit action.",
   },
   {
     question: "Can I import dispatcher load information?",
@@ -144,30 +144,29 @@ export default function HomePage() {
 
       <section className="fp-marketing-hero mv-live-copy-hero">
         <div className="fp-marketing-hero-copy">
-          <div className="fp-marketing-eyebrow">MileVoxa Control Center</div>
+          <div className="fp-marketing-eyebrow">MileVoxa Public Beta</div>
 
           <h1>
-            Control Your Miles.
-            <span>Grow Your Business.</span>
+            Your trucking business,
+            <span>organized.</span>
           </h1>
 
           <p>
-            One operating system for owner-operators and small fleets. Manage loads,
-            expenses, fuel, maintenance, documents and weekly profit from one connected
-            control center.
+            Manage your loads, expenses, trucks, and weekly settlements in one place.
+            Join the free MileVoxa beta and help shape what comes next.
           </p>
 
-          <div className="fp-marketing-trial-pill">
-            <span>14 DAYS FREE</span>
-            <strong>No card required to start</strong>
+          <div className="fp-marketing-trial-pill fp-beta-marketing-pill">
+            <span>PUBLIC BETA</span>
+            <strong>Free during beta. No credit card required.</strong>
           </div>
 
           <div className="fp-marketing-hero-actions">
             <Link href="/signup" className="fp-marketing-button primary large">
-              Start 14-Day Free Trial <span>→</span>
+              Join the Free Beta <span>→</span>
             </Link>
             <Link href="/pricing" className="fp-marketing-button secondary large">
-              See Pricing
+              Beta Access Details
             </Link>
           </div>
 
@@ -204,8 +203,8 @@ export default function HomePage() {
           <span>not disconnected spreadsheets</span>
         </div>
         <div>
-          <strong>14 days free</strong>
-          <span>to test the workflow yourself</span>
+          <strong>Free public beta</strong>
+          <span>test MileVoxa and help us improve it</span>
         </div>
       </section>
 
@@ -337,81 +336,65 @@ export default function HomePage() {
           <ScenarioCard
             text="Bring the load, fuel, tolls and weekly fixed costs into one view so you can see what the load actually contributed."
             title="Owner-operator workflow"
-            detail="1 truck · Solo plan"
+            detail="Single-truck workflow"
           />
           <ScenarioCard
             text="Review weekly settlement and maintenance together so cost changes are easier to catch before they become a month-end surprise."
             title="Growing fleet workflow"
-            detail="Up to 5 trucks · Fleet plan"
+            detail="Growing fleet workflow"
           />
           <ScenarioCard
             text="Keep loads, fuel, maintenance, documents and profit reporting connected as the operation grows."
             title="Established fleet workflow"
-            detail="Up to 15 trucks · Pro plan"
+            detail="Multi-truck workflow"
           />
         </div>
 
         <div className="fp-marketing-proof-stats">
-          <ProofStat value="14 days" label="Free trial" detail="No credit card required" />
-          <ProofStat value="3 plans" label="Company pricing" detail="Solo · Fleet · Pro" />
-          <ProofStat value="15 trucks" label="Pro capacity" detail="Per company, not per truck" />
-          <ProofStat value="Unlimited" label="Drivers on Fleet & Pro" detail="No per-driver charge" />
+          <ProofStat value="Free" label="Public beta access" detail="No credit card required" />
+          <ProofStat value="One place" label="Connected operations" detail="Loads · costs · trucks · settlement" />
+          <ProofStat value="Your data" label="Real business workflows" detail="Use your own operation while testing" />
+          <ProofStat value="Direct" label="Product feedback" detail="Tell us what should improve" />
         </div>
 
         <div className="fp-marketing-social-proof-trial">
-          <div className="fp-marketing-trial-pill">
-            <span>14 DAYS FREE</span>
-            <strong>No card required to start</strong>
+          <div className="fp-marketing-trial-pill fp-beta-marketing-pill">
+            <span>PUBLIC BETA</span>
+            <strong>Free during beta. No card required.</strong>
           </div>
           <Link href="/signup" className="fp-marketing-button primary">
-            Start 14-Day Free Trial <span>→</span>
+            Join the Free Beta <span>→</span>
           </Link>
         </div>
       </section>
 
-      <section className="fp-marketing-pricing-preview">
+      <section className="fp-marketing-pricing-preview mv-beta-home-section">
         <div>
-          <span>Launch pricing</span>
-          <h2>One price per company. Pick the fleet size that fits.</h2>
+          <span>Free public beta</span>
+          <h2>Test MileVoxa with your real trucking workflow.</h2>
           <p>
-            Every plan starts with a 14-day free trial with no credit card required.
-            You are not charged per driver.
+            MileVoxa is currently in free public beta. Paid plans will be announced later,
+            and we’ll give you advance notice before free beta access changes.
           </p>
         </div>
 
-        <div className="fp-marketing-pricing-preview-card">
+        <div className="fp-marketing-pricing-preview-card mv-home-beta-card">
           <div>
-            <small>MILEVOXA PLANS</small>
-            <strong>Starts at $19/month</strong>
-            <span>Per company — not per truck, not per driver</span>
+            <small>PUBLIC BETA ACCESS</small>
+            <strong>$0 during beta</strong>
+            <span>No credit card required</span>
           </div>
           <ul className="mv-home-pricing-plan-list">
-            <li>
-              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
-              <b>Solo</b>
-              <span className="mv-home-plan-price">$19/mo</span>
-              <span className="mv-home-plan-scope">1 truck</span>
-            </li>
-            <li>
-              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
-              <b>Fleet</b>
-              <span className="mv-home-plan-price">$29/mo</span>
-              <span className="mv-home-plan-scope">Up to 5 trucks · unlimited drivers</span>
-            </li>
-            <li>
-              <span className="mv-home-plan-check" aria-hidden="true">✓</span>
-              <b>Pro</b>
-              <span className="mv-home-plan-price">$49/mo</span>
-              <span className="mv-home-plan-scope">Up to 15 trucks</span>
-            </li>
+            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Loads & trucks</b><span className="mv-home-plan-scope">Manage the operation</span></li>
+            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Expenses & settlement</b><span className="mv-home-plan-scope">Understand weekly results</span></li>
+            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Feedback built in</b><span className="mv-home-plan-scope">Help shape what comes next</span></li>
           </ul>
+          <p className="mv-home-beta-note">
+            Beta access will not automatically become a paid subscription. A future paid plan will require your explicit action.
+          </p>
           <div className="fp-marketing-pricing-buttons">
-            <Link href="/signup" className="fp-marketing-button primary large">
-              Start Free Trial
-            </Link>
-            <Link href="/pricing" className="fp-marketing-button secondary large">
-              See Pricing
-            </Link>
+            <Link href="/signup" className="fp-marketing-button primary large">Join the Free Beta</Link>
+            <Link href="/pricing" className="fp-marketing-button secondary large">Beta Access Details</Link>
           </div>
         </div>
       </section>
@@ -433,13 +416,13 @@ export default function HomePage() {
 
       <section className="fp-marketing-final-cta">
         <div>
-          <span>14-day free trial</span>
-          <h2>Put your next week of trucking data in one place.</h2>
-          <p>No card required. Start with real loads, real costs and your own operation.</p>
+          <span>PUBLIC BETA</span>
+          <h2>Put your trucking operation in one place and help us improve it.</h2>
+          <p>Free during beta. No card required. Paid plans will be announced later.</p>
         </div>
         <div>
           <Link href="/signup" className="fp-marketing-button primary large">
-            Start Free Trial <span>→</span>
+            Join the Free Beta <span>→</span>
           </Link>
           <Link href="/login" className="fp-marketing-button ghost large">
             Sign In

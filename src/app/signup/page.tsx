@@ -67,8 +67,8 @@ export default function SignupPage() {
             Create one account for your loads, costs, fleet, maintenance and weekly profit — shared across MileVoxa web and mobile.
           </p>
         </div>
-        <div className="text-xs font-bold text-[#8da0b2]">14-day trial · No card required</div>
-        <div className="mt-1 text-[11px] font-[600] text-[#16853B]">Plans from $19/month per company.</div>
+        <div className="text-xs font-bold text-[#8da0b2]">Free public beta · No card required</div>
+        <div className="mt-1 text-[11px] font-[600] text-[#16853B]">Paid plans will be announced later.</div>
         <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#16853B]/10 blur-[100px]" />
       </section>
 
@@ -76,9 +76,9 @@ export default function SignupPage() {
         <div className="w-full max-w-[450px]">
           <MileVoxaBrand showTagline={false} className="mb-10 justify-center lg:hidden" />
           <div className="mb-8">
-            <div className="text-[10px] font-black uppercase tracking-[.18em] text-[#16853B]">Create MileVoxa Account</div>
-            <h1 className="mt-3 text-4xl font-black tracking-[-.04em] text-[#102238]">Start free</h1>
-            <p className="mt-3 text-sm text-[#6d7f94]">Use the same account later on mobile and web.</p>
+            <div className="text-[10px] font-black uppercase tracking-[.18em] text-[#16853B]">Join MileVoxa Public Beta</div>
+            <h1 className="mt-3 text-4xl font-black tracking-[-.04em] text-[#102238]">Join the free beta</h1>
+            <p className="mt-3 text-sm text-[#6d7f94]">Create your MileVoxa account and use the core product free during public beta. No credit card required.</p>
           </div>
 
           <div className="fleet-card rounded-[28px] p-7 sm:p-8">
@@ -115,7 +115,7 @@ export default function SignupPage() {
               <Field label="Password" type="password" value={password} set={setPassword} placeholder="Create a password" />
               {error && <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-600">{error}</div>}
               <button disabled={loading} className="mv-auth-primary">
-                {loading ? "Creating account..." : "Create Account →"}
+                {loading ? "Creating account..." : "Join the Free Beta →"}
               </button>
               <div className="fp-email-signup-legal">
                 By creating an account, you agree to <Link href="/terms" target="_blank">Terms</Link> and acknowledge the <Link href="/privacy" target="_blank">Privacy Policy</Link>.

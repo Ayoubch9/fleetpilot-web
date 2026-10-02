@@ -25,7 +25,7 @@ export default function PublicHeader() {
           Sign In
         </Link>
         <Link href="/signup" className="fp-marketing-button primary">
-          Start Free
+          Join the Free Beta
         </Link>
       </div>
     </header>

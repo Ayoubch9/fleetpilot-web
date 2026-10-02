@@ -68,6 +68,29 @@ export default function GlobalSearch() {
       try {
         const supabase = createClient();
         const pattern = `%${escapeLike(q)}%`;
+        const expenseNumberMatch = /^#?0*(\d+)$/.exec(q);
+        const requestedExpenseNumber = expenseNumberMatch
+          ? Number(expenseNumberMatch[1])
+          : null;
+
+        const expenseSearchQuery =
+          requestedExpenseNumber != null && requestedExpenseNumber > 0
+            ? supabase
+                .from("expenses")
+                .select("id, category, vendor, description, amount, expense_date")
+                .order("expense_date", { ascending: false })
+                .range(
+                  requestedExpenseNumber - 1,
+                  requestedExpenseNumber - 1
+                )
+            : supabase
+                .from("expenses")
+                .select("id, category, vendor, description, amount, expense_date")
+                .or(
+                  `category.ilike.${pattern},vendor.ilike.${pattern},description.ilike.${pattern}`
+                )
+                .order("expense_date", { ascending: false })
+                .limit(6);
 
         const [
           loadsResult,
@@ -90,14 +113,7 @@ export default function GlobalSearch() {
               `unit_number.ilike.${pattern},make.ilike.${pattern},model.ilike.${pattern},license_plate.ilike.${pattern}`
             )
             .limit(6),
-          supabase
-            .from("expenses")
-            .select("id, category, vendor, description, amount, expense_date")
-            .or(
-              `category.ilike.${pattern},vendor.ilike.${pattern},description.ilike.${pattern}`
-            )
-            .order("expense_date", { ascending: false })
-            .limit(6),
+          expenseSearchQuery,
           supabase
             .from("maintenance_records")
             .select("id, service_type, vendor, service_date, truck_id")
@@ -106,9 +122,9 @@ export default function GlobalSearch() {
             .limit(6),
           supabase
             .from("documents")
-            .select("id, name, document_type, file_name")
+            .select("id, name, document_type, file_name, jurisdiction, document_number")
             .or(
-              `name.ilike.${pattern},document_type.ilike.${pattern},file_name.ilike.${pattern}`
+              `name.ilike.${pattern},document_type.ilike.${pattern},file_name.ilike.${pattern},jurisdiction.ilike.${pattern},document_number.ilike.${pattern}`
             )
             .limit(6),
         ]);
@@ -142,12 +158,22 @@ export default function GlobalSearch() {
         }
 
         for (const row of expensesResult.data ?? []) {
+          const isExpenseNumberResult =
+            requestedExpenseNumber != null && requestedExpenseNumber > 0;
+          const displayExpenseNumber = isExpenseNumberResult
+            ? `#${String(requestedExpenseNumber).padStart(4, "0")}`
+            : null;
+
           items.push({
             id: `expense-${row.id}`,
             type: "expense",
-            title: row.vendor || row.category || "Expense",
+            title: isExpenseNumberResult
+              ? `${displayExpenseNumber} · ${row.vendor || row.category || "Expense"}`
+              : row.vendor || row.category || "Expense",
             subtitle: `${row.category || "Other"} · ${formatMoney(Number(row.amount || 0))}${row.expense_date ? ` · ${row.expense_date}` : ""}`,
-            href: `/expenses?q=${encodeURIComponent(row.vendor || row.category || q)}`,
+            href: isExpenseNumberResult
+              ? `/expenses?q=${encodeURIComponent(displayExpenseNumber || q)}`
+              : `/expenses?q=${encodeURIComponent(row.vendor || row.category || q)}`,
           });
         }
 
@@ -167,8 +193,14 @@ export default function GlobalSearch() {
               id: `document-${row.id}`,
               type: "document",
               title: row.name || row.file_name || "Document",
-              subtitle: row.document_type || row.file_name || "Document",
-              href: `/documents`,
+              subtitle: [
+                row.document_type,
+                row.jurisdiction,
+                row.document_number,
+              ].filter(Boolean).join(" · ") || row.file_name || "Document",
+              href: `/documents?q=${encodeURIComponent(
+                row.name || row.document_type || row.file_name || q
+              )}&focus=${encodeURIComponent(row.id)}#document-${encodeURIComponent(row.id)}`,
             });
           }
         }
@@ -258,7 +290,7 @@ export default function GlobalSearch() {
           ) : (
             <div className="fp-global-search-empty">
               <strong>No matches found</strong>
-              <span>Try a load number, truck unit, vendor, category, route or document name.</span>
+              <span>Try #0001, a load number, truck unit, vendor, category, route or document name.</span>
             </div>
           )}
 

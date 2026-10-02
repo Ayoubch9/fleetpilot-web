@@ -113,6 +113,7 @@ export default async function OdometerPage({
         )}
 
         <OdometerManager
+          key={weekStart}
           weekStart={weekStart}
           weekLabel={`${displayDate(start)} – ${displayDate(sunday)}`}
           mileageRate={Number.isFinite(rate) ? rate : 0.15}

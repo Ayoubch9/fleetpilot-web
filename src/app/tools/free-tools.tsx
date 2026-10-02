@@ -65,7 +65,7 @@ export default function FreeTools({
             <span>Want these numbers saved automatically?</span>
             <strong>MileVoxa connects loads, trucks and costs for you.</strong>
           </div>
-          <Link href="/signup">Start 14-Day Free Trial →</Link>
+          <Link href="/signup">Join the Free Beta →</Link>
         </div>
       </section>
     </div>

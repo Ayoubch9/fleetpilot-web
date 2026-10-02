@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getMileVoxaAccessEntitlement } from "@/lib/beta-access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,6 +25,19 @@ export async function GET() {
     if (!membership?.company_id) {
       return NextResponse.json(
         { error: "No MileVoxa company is linked to this account." },
+        { status: 403 }
+      );
+    }
+
+    const entitlement = await getMileVoxaAccessEntitlement(
+      supabase,
+      membership.company_id,
+      user.created_at
+    );
+
+    if (!entitlement.allowed) {
+      return NextResponse.json(
+        { error: "Your MileVoxa access is not active." },
         { status: 403 }
       );
     }

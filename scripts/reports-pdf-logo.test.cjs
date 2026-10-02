@@ -1,0 +1,16 @@
+const fs=require("fs");
+const assert=require("assert");
+const actions=fs.readFileSync("src/app/reports/report-actions.tsx","utf8");
+assert.ok(actions.includes("loadPdfLogo"));
+assert.ok(actions.includes("/branding/milevoxa-report-logo-full.png"));
+assert.ok(actions.includes("drawPdfBrand"));
+assert.ok(actions.includes("registerJpeg"));
+assert.ok(actions.includes("imageCommand"));
+assert.ok(actions.includes("/ASCIIHexDecode /DCTDecode"));
+assert.ok(actions.includes('name: "MileVoxaLogo"'));
+assert.ok(actions.includes('pdf.hasImage("MileVoxaLogo")'));
+assert.ok(actions.includes('drawPdfBrand(pdf, 30, 14, 220, 68)'));
+assert.ok(actions.includes('drawPdfBrand(pdf, 30, 12, 150, 46)'));
+assert.ok(!actions.includes('x + logoSize + 7'));
+assert.ok(fs.existsSync('public/branding/milevoxa-report-logo-full.png'));
+console.log("reports-pdf-logo checks passed");
