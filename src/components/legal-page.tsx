@@ -5,11 +5,13 @@ export default function LegalPage({
   eyebrow,
   title,
   intro,
+  updated = "September 20, 2026",
   children,
 }: {
   eyebrow: string;
   title: string;
   intro: string;
+  updated?: string;
   children: ReactNode;
 }) {
   return (
@@ -19,7 +21,7 @@ export default function LegalPage({
           <span>{eyebrow}</span>
           <h1>{title}</h1>
           <p>{intro}</p>
-          <small>Last updated: September 20, 2026</small>
+          <small>Last updated: {updated}</small>
         </div>
 
         <div className="fp-legal-body">{children}</div>

@@ -14,7 +14,8 @@ export default function PrivacyPage() {
     <LegalPage
       eyebrow="LEGAL"
       title="Privacy Policy"
-      intro="This policy explains the information MileVoxa processes when you create an account, connect with Google, and use the web application."
+      intro="This policy explains the information MileVoxa processes when you create an account, connect with Google, and use the web or mobile application."
+      updated="October 5, 2026"
     >
       <LegalSection title="1. Information you provide">
         <p>
@@ -23,10 +24,16 @@ export default function PrivacyPage() {
           enter about your trucking operation.
         </p>
         <p>
-          Business data may include trucks, loads, expenses, reimbursements,
+          Business data may include trucks, loads, mileage, expenses, reimbursements,
           maintenance records, fuel information, weekly settlements, fixed
           expenses, company fee settings, security-deposit transactions,
-          documents, notes, and related operational records.
+          uploaded statements, documents, receipt images, notes, and related operational records.
+        </p>
+        <p>
+          Public Beta feedback may include your message, user and company
+          context, feedback category, page context, and preference about being
+          contacted. We use this information to review feedback, troubleshoot
+          issues, improve the product, and follow up according to your contact preference.
         </p>
       </LegalSection>
 
@@ -51,13 +58,32 @@ export default function PrivacyPage() {
           exports and reports, keep settings synchronized, protect account
           security, troubleshoot the service, and improve MileVoxa.
         </p>
+        <p>
+          Receipt images and recognized text are processed to extract expense
+          information. The mobile app uses Google ML Kit for receipt OCR
+          (optical character recognition/text recognition). ML Kit processes
+          OCR input on your device and does not send receipt content or OCR
+          results to Google servers. Receipt images you upload and expense data
+          you save may be stored in MileVoxa through Supabase.
+        </p>
+        <p>
+          Separately from receipt content, ML Kit may collect limited diagnostic
+          and usage information, such as device and app information, identifiers,
+          performance metrics, and error and usage events, to maintain and improve
+          its services. See Google's{" "}
+          <a href="https://developers.google.com/ml-kit/android-data-disclosure">
+            ML Kit data disclosure
+          </a>{" "}
+          for details.
+        </p>
       </LegalSection>
 
       <LegalSection title="4. Service providers">
         <p>
           MileVoxa relies on service providers to operate the product,
-          including Supabase for authentication/database services, Vercel for
-          web hosting and delivery, and Google when you choose Google sign-in.
+          including Supabase for backend, authentication, database, and storage
+          services; Vercel for web hosting and delivery; and Google for Google
+          authentication and ML Kit receipt OCR.
           Those providers process information according to their own terms and
           privacy practices.
         </p>
@@ -65,8 +91,8 @@ export default function PrivacyPage() {
 
       <LegalSection title="5. Data sharing and sale">
         <p>
-          MileVoxa is not designed to sell personal information or trucking
-          business records to advertisers. Information may be disclosed when
+          MileVoxa does not sell personal information or trucking business
+          records. Information may be disclosed when
           needed to operate the service, protect MileVoxa or its users,
           comply with applicable legal obligations, or complete a transaction
           you request.
@@ -78,6 +104,7 @@ export default function PrivacyPage() {
           Active account and company data is kept while needed to provide
           MileVoxa. You can export supported account data from Settings and
           can permanently delete your account from Settings → Security.
+          In the mobile app, open Profile &amp; Company → Danger Zone → Delete Account.
         </p>
         <p>
           After self-service deletion, MileVoxa retains a minimal deletion
@@ -95,8 +122,9 @@ export default function PrivacyPage() {
 
       <LegalSection title="7. Security">
         <p>
-          MileVoxa uses authenticated access controls and company-scoped
-          database rules. No online system can guarantee absolute security, so
+          MileVoxa uses HTTPS/TLS encryption for data transmitted between the
+          app or website and its services, authenticated access controls, and
+          company-scoped database rules. No online system can guarantee absolute security, so
           users should protect their sign-in credentials and device access.
         </p>
       </LegalSection>
@@ -121,7 +149,8 @@ export default function PrivacyPage() {
         <p>
           MileVoxa may update this policy as the product, legal requirements,
           or service providers change. The updated date at the top identifies
-          the current published version.
+          the current published version. Material changes will be communicated
+          through appropriate in-app or account notices.
         </p>
       </LegalSection>
 
@@ -133,8 +162,31 @@ export default function PrivacyPage() {
         </p>
         <p>
           For privacy, deletion, or support questions, contact MileVoxa at{" "}
-          <strong>{SUPPORT_EMAIL}</strong>. We aim to respond to support
+          <a href={`mailto:${SUPPORT_EMAIL.toLowerCase()}`}>support@milevoxa.com</a>. We aim to respond to support
           inquiries within 48 hours.
+        </p>
+      </LegalSection>
+      <LegalSection title="12. Free Public Beta">
+        <p>
+          MileVoxa is currently in Free Public Beta: access is free during beta
+          and no credit card is required. Features may change as we improve the
+          service. Paid plans may be introduced later, and users will receive
+          advance notice before free beta access materially changes.
+        </p>
+      </LegalSection>
+      <LegalSection title="13. Business calculations and professional advice">
+        <p>
+          MileVoxa is a business-management tool. Profit, cost-per-mile, RPM
+          (revenue per mile), settlements, expenses, and fuel analytics depend
+          on user-entered or imported data and may be incomplete or inaccurate.
+          Review OCR-extracted information before saving or relying on it.
+        </p>
+        <p>
+          MileVoxa does not provide tax, accounting, legal, investment,
+          employment, or regulatory advice. Users should verify records and
+          calculations before using them for taxes, payroll, settlements,
+          compliance, or major business decisions, and consult qualified
+          professionals where appropriate.
         </p>
       </LegalSection>
     </LegalPage>

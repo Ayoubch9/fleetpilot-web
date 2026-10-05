@@ -14,7 +14,8 @@ export default function DataDeletionPage() {
     <LegalPage
       eyebrow="ACCOUNT & DATA"
       title="MileVoxa Data Deletion"
-      intro="MileVoxa provides a self-service path to permanently delete your account from the web application."
+      intro="MileVoxa provides self-service paths to permanently delete your account from the web and mobile applications."
+      updated="October 5, 2026"
     >
       <LegalSection title="Delete your account">
         <ol>
@@ -25,8 +26,22 @@ export default function DataDeletionPage() {
           <li>Review the deletion notice and type DELETE to confirm.</li>
         </ol>
         <p>
+          In the mobile app: open Profile &amp; Company → Danger Zone → Delete Account,
+          then review and complete the confirmation shown in the app.
+        </p>
+        <p>
           You can export supported account data from Settings → Data &amp;
           Export before deleting.
+          Deletion is permanent; deleted account and eligible company records
+          cannot be recovered by signing in again.
+        </p>
+      </LegalSection>
+      <LegalSection title="Deletion support">
+        <p>
+          If you cannot access your account or need help requesting account and
+          associated data deletion, email{" "}
+          <a href="mailto:support@milevoxa.com">support@milevoxa.com</a>.
+          We may need to verify account ownership before processing a request.
         </p>
       </LegalSection>
 
