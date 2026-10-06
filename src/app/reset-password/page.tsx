@@ -4,18 +4,10 @@ import ResetPasswordClient from "./reset-password-client";
 
 function LoadingState() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        background: "#F5F7F9",
-        padding: 24,
-        fontFamily:
-          'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-      }}
-    >
-      <p style={{ color: "#667085", margin: 0 }}>Preparing your secure reset…</p>
+    <main className="min-h-screen bg-[#F5F7F9] px-6 py-12">
+      <div className="mx-auto flex min-h-[70vh] max-w-xl items-center justify-center">
+        <p className="text-sm text-[#667085]">Preparing password recovery…</p>
+      </div>
     </main>
   );
 }
