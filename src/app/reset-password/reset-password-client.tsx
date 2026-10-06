@@ -65,7 +65,7 @@ export default function ResetPasswordClient() {
             background: "#EAF6EC",
             color: green,
             fontSize: 24,
-            fontWeight: 900,
+            fontWeight: 800,
             marginBottom: 18,
           }}
           aria-hidden="true"
