@@ -7,6 +7,8 @@ import AppShell from "@/components/app-shell";
 import { SectionPanel, EmptyState } from "@/components/fleet-ui";
 import DashboardQuickActions from "./dashboard-quick-actions";
 import { BetaFeedbackTrigger } from "@/components/beta-feedback-center";
+import { ActionCenterCard } from "@/components/action-center-card";
+import { getActionCenterAlerts } from "@/lib/action-center";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import {
   dbDate,
@@ -285,6 +287,7 @@ export default async function DashboardPage({
   }
 
 
+  const actionCenter = await getActionCenterAlerts(supabase);
 
   const firstName = fullName.split(/\s+/)[0] || "Driver";
 
@@ -382,6 +385,10 @@ export default async function DashboardPage({
             series={profitMarginSeries}
             valueKind="percent"
           />
+        </div>
+
+        <div className="mt-3">
+          <ActionCenterCard alerts={actionCenter.alerts} stateAvailable={actionCenter.stateAvailable} compact />
         </div>
 
 <div className="fp-dashboard-master mt-3">

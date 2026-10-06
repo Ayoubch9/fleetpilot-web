@@ -1,17 +1,16 @@
 import PublicLayout from "@/components/public-layout";
 import type { ReactNode } from "react";
+import { LEGAL_LAST_UPDATED } from "@/lib/legal";
 
 export default function LegalPage({
   eyebrow,
   title,
   intro,
-  updated = "September 20, 2026",
   children,
 }: {
   eyebrow: string;
   title: string;
   intro: string;
-  updated?: string;
   children: ReactNode;
 }) {
   return (
@@ -21,7 +20,7 @@ export default function LegalPage({
           <span>{eyebrow}</span>
           <h1>{title}</h1>
           <p>{intro}</p>
-          <small>Last updated: {updated}</small>
+          <small>Last updated: {LEGAL_LAST_UPDATED}</small>
         </div>
 
         <div className="fp-legal-body">{children}</div>

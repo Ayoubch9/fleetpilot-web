@@ -3,6 +3,7 @@ import Image from "next/image";
 import PublicLayout from "@/components/public-layout";
 import Link from "next/link";
 import { publicPageMetadata, SITE_URL } from "@/lib/seo";
+import { SUPPORT_EMAIL } from "@/lib/support";
 
 
 export const metadata: Metadata = publicPageMetadata({
@@ -103,7 +104,13 @@ const organizationJsonLd = {
   name: "MileVoxa",
   url: SITE_URL,
   logo: `${SITE_URL}/branding/milevoxa-logo-full.png`,
-  email: "Support@MileVoxa.com",
+  email: SUPPORT_EMAIL,
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: SUPPORT_EMAIL,
+    availableLanguage: ["English"],
+  },
 };
 
 const websiteJsonLd = {

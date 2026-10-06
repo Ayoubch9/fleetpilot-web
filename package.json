@@ -1,6 +1,6 @@
 {
   "name": "fleetpilot-web",
-  "version": "4.4.1",
+  "version": "4.7.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -103,12 +103,20 @@
     "test:hide-week-selector-non-week-pages": "node scripts/hide-week-selector-non-week-pages.test.cjs",
     "test:hide-week-selector-actual-keys": "node scripts/hide-week-selector-actual-keys.test.cjs",
     "test:public-beta": "node scripts/public-beta-v4_4_0.test.cjs",
-    "test:public-footer-alignment": "node scripts/public-footer-alignment.test.cjs"
+    "test:public-footer-alignment": "node scripts/public-footer-alignment.test.cjs",
+    "test:action-center": "node scripts/action-center-v4_5_0.test.cjs",
+    "test:load-decision": "node scripts/load-decision-v4_6_0.test.cjs",
+    "test:signout-feedback": "node scripts/signout-feedback-v4_6_6.test.cjs",
+    "test:launch-hardening": "node scripts/launch-hardening-v4_7_0.test.cjs",
+    "test:regression": "node scripts/run-all-regression-tests.cjs",
+    "audit:prod": "npm audit --omit=dev",
+    "cleanup:stale-tests": "node scripts/cleanup-stale-tests-v4_7_1.cjs",
+    "pretest:regression": "node scripts/cleanup-stale-tests-v4_7_1.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.4",
-    "next": "16.3.4",
+    "next": "16.3.8",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "country-state-city": "3.2.1"
@@ -119,8 +127,12 @@
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "eslint": "^9.36.0",
-    "eslint-config-next": "16.3.4",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "sharp": "0.35.5",
+    "source-map-js": "1.2.2"
   }
 }

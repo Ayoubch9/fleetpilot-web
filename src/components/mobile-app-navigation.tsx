@@ -8,6 +8,7 @@ import { MileVoxaMark } from "@/components/milevoxa-brand";
 type ActivePage =
   | "overview"
   | "loads"
+  | "decision"
   | "trucks"
   | "expenses"
   | "reimbursements"

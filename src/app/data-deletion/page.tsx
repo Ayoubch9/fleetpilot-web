@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SUPPORT_EMAIL } from "@/lib/support";
 import LegalPage, { LegalSection } from "@/components/legal-page";
 import { publicPageMetadata } from "@/lib/seo";
 
@@ -14,10 +15,30 @@ export default function DataDeletionPage() {
     <LegalPage
       eyebrow="ACCOUNT & DATA"
       title="MileVoxa Data Deletion"
-      intro="MileVoxa provides self-service paths to permanently delete your account from the web and mobile applications."
-      updated="October 5, 2026"
+      intro="MileVoxa provides self-service paths to permanently delete your account from the web application and mobile app."
     >
-      <LegalSection title="Delete your account">
+      <LegalSection title="Request account deletion">
+        <p>
+          If you can sign in, the fastest path is the self-service deletion
+          flow described below. If you cannot access your account, you can send
+          a deletion request from this public page. For security, MileVoxa may
+          need to verify that you control the account before completing the
+          request.
+        </p>
+        <div className="fp-legal-actions">
+          <a
+            className="fp-legal-primary-link"
+            href={`mailto:${SUPPORT_EMAIL}?subject=MileVoxa%20Account%20Deletion%20Request`}
+          >
+            Request Account Deletion
+          </a>
+          <Link className="fp-legal-secondary-link" href="/contact">
+            Contact Support
+          </Link>
+        </div>
+      </LegalSection>
+
+      <LegalSection title="Delete your account on the web">
         <ol>
           <li>Sign in to MileVoxa.</li>
           <li>Open Settings.</li>
@@ -26,22 +47,21 @@ export default function DataDeletionPage() {
           <li>Review the deletion notice and type DELETE to confirm.</li>
         </ol>
         <p>
-          In the mobile app: open Profile &amp; Company → Danger Zone → Delete Account,
-          then review and complete the confirmation shown in the app.
-        </p>
-        <p>
           You can export supported account data from Settings → Data &amp;
           Export before deleting.
-          Deletion is permanent; deleted account and eligible company records
-          cannot be recovered by signing in again.
         </p>
       </LegalSection>
-      <LegalSection title="Deletion support">
+
+      <LegalSection title="Delete your account in the mobile app">
+        <ol>
+          <li>Open MileVoxa and sign in.</li>
+          <li>Open Profile &amp; Company.</li>
+          <li>Go to Danger Zone.</li>
+          <li>Choose Delete Account and follow the confirmation steps.</li>
+        </ol>
         <p>
-          If you cannot access your account or need help requesting account and
-          associated data deletion, email{" "}
-          <a href="mailto:support@milevoxa.com">support@milevoxa.com</a>.
-          We may need to verify account ownership before processing a request.
+          Account deletion is permanent. Export any records you need before
+          confirming deletion.
         </p>
       </LegalSection>
 
@@ -52,32 +72,32 @@ export default function DataDeletionPage() {
           company-scoped operational records.
         </p>
         <p>
-          If other company members remain, MileVoxa blocks owner deletion
-          until ownership or membership access is resolved. This avoids
-          deleting business data that other users still rely on.
+          If other company members remain, MileVoxa blocks owner deletion until
+          ownership or membership access is resolved. This avoids deleting
+          business data that other users still rely on.
         </p>
       </LegalSection>
 
       <LegalSection title="What is retained after deletion">
         <p>
-          MileVoxa retains a minimal deletion marker containing the
-          normalized account email and deletion metadata. It is not used to
-          restore your former company data. It exists so a future Google
-          sign-in with the same email does not silently create a new
-          MileVoxa workspace.
+          MileVoxa retains a minimal deletion marker containing the normalized
+          account email and deletion metadata. It is not used to restore your
+          former company data. It exists so a future Google sign-in with the
+          same email does not silently create a new MileVoxa workspace.
         </p>
         <p>
           Limited information may also remain temporarily in backups, security
           logs, or where retention is required for legal, fraud-prevention, or
-          system-integrity purposes.
+          system-integrity purposes. Eligible account and company data is
+          otherwise permanently deleted through the deletion process.
         </p>
       </LegalSection>
 
       <LegalSection title="Signing in with Google after deletion">
         <p>
-          If the same Google email signs in again, MileVoxa recognizes that
-          the former account was deleted and shows a deleted-account screen.
-          The old business records are not restored.
+          If the same Google email signs in again, MileVoxa recognizes that the
+          former account was deleted and shows a deleted-account screen. The old
+          business records are not restored.
         </p>
         <p>
           The user can explicitly choose to create a new blank MileVoxa
@@ -86,11 +106,14 @@ export default function DataDeletionPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Need to start over?">
+      <LegalSection title="Need to start over or need help?">
         <p>
           If your deleted Google identity is currently signed in, use the
           deleted-account screen to explicitly create a new blank account.
           Otherwise, return to <Link href="/login">MileVoxa sign in</Link>.
+        </p>
+        <p>
+          For deletion or privacy questions, contact <strong>{SUPPORT_EMAIL}</strong>.
         </p>
       </LegalSection>
     </LegalPage>

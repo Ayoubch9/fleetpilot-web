@@ -1,5 +1,7 @@
 import LegalPage, { LegalSection } from "@/components/legal-page";
 import { publicPageMetadata } from "@/lib/seo";
+import { SUPPORT_EMAIL } from "@/lib/support";
+import { LEGAL_OPERATOR_NAME } from "@/lib/legal";
 
 export const metadata = publicPageMetadata({
   title: "Terms of Service",
@@ -15,6 +17,14 @@ export default function TermsPage() {
       title="Terms of Service"
       intro="These Terms govern use of the MileVoxa web application, including public beta access, account features, trucking-business tools, and Google sign-in."
     >
+      <LegalSection title="Operator and contact">
+        <p>
+          MileVoxa is operated by <strong>{LEGAL_OPERATOR_NAME}</strong>. For
+          account, billing, privacy, or service questions, contact
+          <strong> {SUPPORT_EMAIL}</strong>.
+        </p>
+      </LegalSection>
+
       <LegalSection title="1. Using MileVoxa">
         <p>
           You may use MileVoxa only for lawful purposes and only if you are
@@ -32,8 +42,11 @@ export default function TermsPage() {
         </p>
         <p>
           Do not attempt to access another company&apos;s records, bypass
-          security controls, interfere with the service, or use MileVoxa for
-          fraudulent or unlawful activity.
+          security controls, interfere with the service, introduce malicious
+          code, use automated scraping or requests that materially burden the
+          service, reverse engineer the service except where applicable law
+          expressly permits it, or use MileVoxa for fraudulent or unlawful
+          activity.
         </p>
       </LegalSection>
 
@@ -60,6 +73,17 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="MileVoxa software and intellectual property">
+        <p>
+          MileVoxa and its software, interface, branding, documentation, and
+          service content are protected by applicable intellectual-property
+          laws. Subject to these Terms, MileVoxa gives you a limited,
+          non-exclusive, non-transferable right to use the service for your
+          permitted business purposes during the period in which you have
+          authorized access.
+        </p>
+      </LegalSection>
+
       <LegalSection title="5. Public beta, future billing, refunds, and cancellation">
         <p>
           MileVoxa is currently offered as a free public beta for eligible
@@ -79,7 +103,7 @@ export default function TermsPage() {
           has an active paid subscription from an earlier billing phase, that
           billing relationship is not automatically cancelled, refunded, or
           modified merely because MileVoxa is running a public beta. Contact
-          <strong> Support@MileVoxa.com</strong> with billing questions.
+          <strong> {SUPPORT_EMAIL}</strong> with billing questions.
         </p>
         <p>
           <strong>Refund policy.</strong> Paid MileVoxa subscription charges
@@ -97,10 +121,11 @@ export default function TermsPage() {
 
       <LegalSection title="6. Third-party services">
         <p>
-          MileVoxa depends on third-party infrastructure and authentication
-          providers such as Supabase, Vercel, and Google. Availability of those
-          services can affect MileVoxa, and their separate terms may apply to
-          your use of their services.
+          MileVoxa depends on third-party infrastructure, authentication,
+          OCR, and billing providers such as Supabase, Vercel, Google, and,
+          where billing is enabled, Stripe. Availability of those services can
+          affect MileVoxa, and their separate terms may apply to your use of
+          their services.
         </p>
       </LegalSection>
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://milevoxa.com";
+export const SITE_URL = "https://www.milevoxa.com";
 export const SOCIAL_IMAGE_PATH = "/opengraph-image";
 
 export function absoluteUrl(path = "/") {

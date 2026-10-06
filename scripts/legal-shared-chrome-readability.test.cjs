@@ -19,7 +19,7 @@ for (const page of [privacy, terms, deletion]) {
 }
 
 assert.ok(header.includes("Sign In"));
-assert.ok(header.includes("Start Free"));
+assert.ok(header.includes("Join the Free Beta"));
 assert.ok(footer.includes('href="/privacy"'));
 assert.ok(footer.includes('href="/terms"'));
 assert.ok(footer.includes('href="/data-deletion"'));

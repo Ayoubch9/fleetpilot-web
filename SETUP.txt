@@ -9,6 +9,7 @@ MILEVOXA WEB v4.4.0 — FREE PUBLIC BETA
 
 3. Run these SQL files in Supabase SQL Editor if not already applied:
    - supabase_public_beta_feedback_v4_4_0.sql
+   - supabase_signout_feedback_v4_6_6.sql
    - existing project migrations required by your installation
 
 4. Before production rollout, run the READ-ONLY audit:

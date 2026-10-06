@@ -34,6 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: absoluteUrl("/contact"),
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
   ];
 
   const calculators: MetadataRoute.Sitemap = TOOL_DEFINITIONS.map((tool) => ({

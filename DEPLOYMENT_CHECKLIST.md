@@ -14,6 +14,7 @@ secret Stripe or Supabase service-role values to the browser.
 Run:
 
 - `supabase_public_beta_feedback_v4_4_0.sql`
+- `supabase_signout_feedback_v4_6_6.sql`
 
 Confirm RLS remains enabled on business tables and no broad anonymous policies exist.
 The feedback table allows authenticated INSERT only; normal users have no SELECT policy.
@@ -79,7 +80,20 @@ Test:
 - Success/error states
 - normal authenticated user cannot read feedback rows
 
-## 8. Milestone prompt
+## 8. Sign-out feedback
+Test:
+
+- Sign Out opens the 10-second experience prompt during Public Beta
+- Rating is required; chips/comment are optional
+- 1–2 ratings ask what went wrong
+- 4–5 ratings ask what worked well
+- Missing feature / Bug chips adapt the comment prompt
+- Send Feedback submits, then signs out automatically
+- Skip & Sign Out leaves immediately
+- Submit or skip suppresses the prompt for 7 days in that browser
+- normal authenticated users still cannot SELECT feedback rows
+
+## 9. Milestone prompt
 After a settlement week containing a COMPLETED/DELIVERED load:
 
 - gentle beta feedback prompt appears
@@ -87,11 +101,11 @@ After a settlement week containing a COMPLETED/DELIVERED load:
 - dismissal persists in that browser
 - prompt never makes beta access conditional on feedback
 
-## 9. Responsive review
+## 10. Responsive review
 Check desktop/tablet/mobile and supported light/dark surfaces for beta badges,
 feedback modal, pricing, signup, settings, and settlement prompt.
 
-## 10. Production deployment
+## 11. Production deployment
 This package is prepared for review only. Do not deploy or change real billing until:
 
 - billing audit is reviewed

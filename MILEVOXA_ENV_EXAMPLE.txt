@@ -1,0 +1,7 @@
+MileVoxa production environment reference
+
+Set this in .env.local and in Vercel Environment Variables:
+NEXT_PUBLIC_MILEVOXA_DEVELOPER_NAME=MileVoxa
+
+IMPORTANT:
+The value must exactly match the developer/business name used in Google Play.

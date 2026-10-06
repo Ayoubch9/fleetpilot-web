@@ -13,6 +13,7 @@ import { isPublicBetaEnabled } from "@/lib/beta-access";
 type ActivePage =
   | "overview"
   | "loads"
+  | "decision"
   | "trucks"
   | "expenses"
   | "reimbursements"
@@ -38,6 +39,7 @@ type AppShellProps = {
 const operations = [
   ["overview", "Dashboard", "/dashboard", "home"],
   ["loads", "Loads", "/loads", "truck"],
+  ["decision", "Load Decision", "/load-decision", "spark"],
   ["trucks", "Trucks", "/trucks", "truck"],
   ["expenses", "Expenses", "/expenses", "expense"],
   ["maintenance", "Maintenance", "/maintenance", "tool"],
@@ -69,6 +71,7 @@ export default async function AppShell({
   const publicBeta = isPublicBetaEnabled();
   const showWeekSelector = ![
     "expenses",
+    "decision",
     "trucks",
     "maintenance",
     "reimbursements",
@@ -150,7 +153,7 @@ export default async function AppShell({
               context={`/${active}`}
             />
           )}
-          <SidebarSignOut />
+          <SidebarSignOut feedbackEnabled={publicBeta} />
         </div>
 
       </aside>

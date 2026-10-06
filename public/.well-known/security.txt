@@ -1,0 +1,5 @@
+Contact: mailto:support@milevoxa.com
+Canonical: https://www.milevoxa.com/.well-known/security.txt
+Preferred-Languages: en
+Policy: https://www.milevoxa.com/contact
+Expires: 2027-10-06T23:59:59Z

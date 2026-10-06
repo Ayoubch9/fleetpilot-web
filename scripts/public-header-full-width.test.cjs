@@ -19,6 +19,6 @@ assert.ok(header.includes("Free Tools"));
 assert.ok(header.includes("Pricing"));
 assert.ok(header.includes("About"));
 assert.ok(header.includes("Sign In"));
-assert.ok(header.includes("Start Free"));
+assert.ok(header.includes("Join the Free Beta"));
 
 console.log("public-header-full-width checks passed");
