@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SITE_URL } from "@/lib/seo";
 
+import GoogleAnalytics from "@/components/google-analytics";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
   },
 };
 
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
@@ -32,6 +35,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <div id="milevoxa-content">{children}</div>
+
+        <GoogleAnalytics />
+
       </body>
     </html>
   );
