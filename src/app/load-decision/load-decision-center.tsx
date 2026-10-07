@@ -1,10 +1,11 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { analyzeLoadDecision } from "@/lib/load-decision";
 import { normalizeUsLocation } from "@/lib/load-domain";
+import { trackEvent } from "@/lib/analytics";
 
 type Truck = { id: string; unit_number: string; make: string | null; model: string | null; status?: string | null };
 
@@ -21,6 +22,7 @@ export default function LoadDecisionCenter({ trucks, historicalFuelPrice }: { tr
   const [showAccept, setShowAccept] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const decisionTracked = useRef(false);
 
   const result = useMemo(() => analyzeLoadDecision({
     rate: Number(rate), loadedMiles: Number(loadedMiles), deadheadMiles: Number(deadheadMiles), fuelPrice: Number(fuelPrice), mpg: Number(mpg), operatingCostPerMile: Number(operatingCost), targetAllMileRpm: Number(targetRpm),
@@ -28,6 +30,17 @@ export default function LoadDecisionCenter({ trucks, historicalFuelPrice }: { tr
 
   const ready = Number(rate) > 0 && Number(loadedMiles) > 0 && result.totalMiles > 0;
   const ratingLabel = result.rating === "good" ? "Good Load" : result.rating === "poor" ? "Poor Load" : "Marginal Load";
+
+  useEffect(() => {
+    if (!ready || decisionTracked.current) return;
+
+    decisionTracked.current = true;
+
+    trackEvent("load_decision_used", {
+      rating: result.rating,
+      historical_fuel_data: historicalFuelPrice !== null,
+    });
+  }, [ready, result.rating, historicalFuelPrice]);
 
   async function saveLoad(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setMessage(""); setSaving(true);

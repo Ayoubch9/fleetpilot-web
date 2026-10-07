@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SocialAuthButtons from "@/components/social-auth-buttons";
 import MileVoxaBrand from "@/components/milevoxa-brand";
+import { trackEvent } from "@/lib/analytics";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -39,11 +40,16 @@ export default function SignupPage() {
       },
     });
 
+
     if (authError) {
       setError(authError.message);
       setLoading(false);
       return;
     }
+
+    trackEvent("sign_up", {
+      method: "email",
+    });
 
     if (data.session) {
       router.push("/dashboard");

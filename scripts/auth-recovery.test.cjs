@@ -18,10 +18,11 @@ assert.ok(
   "reset email must return through the server auth callback"
 );
 assert.ok(
-  reset.includes('milevoxa://reset-password/') &&
-    reset.includes('token_hash') &&
-    reset.includes('type === "recovery"'),
-  "reset page must preserve the secure mobile recovery deep-link flow"
+  reset.includes("verifyOtp") &&
+    reset.includes("token_hash") &&
+    reset.includes('type: "recovery"') &&
+    reset.includes("supabase.auth.updateUser"),
+  "reset page must securely verify the recovery token and update the password"
 );
 assert.ok(
   settings.includes("/auth/callback?next=/reset-password"),

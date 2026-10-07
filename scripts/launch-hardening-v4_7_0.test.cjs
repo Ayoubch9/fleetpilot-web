@@ -37,7 +37,7 @@ assert.ok(terms.includes("MileVoxa software and intellectual property"));
 assert.ok(terms.includes("reverse engineer"));
 assert.ok(deletion.includes("Request Account Deletion"));
 assert.ok(deletion.includes("mailto:${SUPPORT_EMAIL}"));
-assert.ok(legal.includes("October 6, 2026"));
+assert.ok(legal.includes("October 7, 2026"));
 assert.ok(legal.includes("NEXT_PUBLIC_MILEVOXA_DEVELOPER_NAME"));
 assert.ok(securityTxt.includes("Canonical: https://www.milevoxa.com/.well-known/security.txt"));
 

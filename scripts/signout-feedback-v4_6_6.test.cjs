@@ -71,5 +71,5 @@ pass("responsive MileVoxa modal", () => {
 pass("public beta and privacy integration", () => {
   assert.ok(shell.includes("<SidebarSignOut feedbackEnabled={publicBeta} />"));
   assert.ok(privacy.includes("experience"));
-  assert.ok(privacy.includes("approximate session duration"));
+  assert.ok(/approximate\s+session\s+duration/.test(privacy));
 });

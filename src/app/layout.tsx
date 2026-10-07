@@ -3,6 +3,7 @@ import "./globals.css";
 import { SITE_URL } from "@/lib/seo";
 
 import GoogleAnalytics from "@/components/google-analytics";
+import AnalyticsEvents from "@/components/analytics-events";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <div id="milevoxa-content">{children}</div>
 
         <GoogleAnalytics />
+        <AnalyticsEvents />
 
       </body>
     </html>

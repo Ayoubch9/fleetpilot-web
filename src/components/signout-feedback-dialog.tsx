@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { trackEvent } from "@/lib/analytics";
 
 const RATINGS = [
   { value: 1, emoji: "😕", label: "Very poor" },
@@ -133,6 +134,12 @@ export default function SignOutFeedbackDialog({
       if (!response.ok) {
         throw new Error(payload?.error || "Could not send feedback.");
       }
+
+      trackEvent("feedback_submitted", {
+        feedback_kind: "signout",
+        rating,
+        tag_count: tags.length,
+      });
 
       setStatus("Thanks — your feedback directly helps shape MileVoxa.");
       window.setTimeout(() => {

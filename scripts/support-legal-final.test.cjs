@@ -16,7 +16,7 @@ assert.ok(terms.includes("generally non-refundable"));
 assert.ok(terms.includes("reverse engineer"));
 assert.ok(terms.includes("LEGAL_OPERATOR_NAME"));
 assert.ok(deletion.includes("Request Account Deletion"));
-assert.ok(legal.includes('LEGAL_LAST_UPDATED = "October 6, 2026"'));
+assert.ok(legal.includes('LEGAL_LAST_UPDATED = "October 7, 2026"'));
 assert.ok(!terms.includes("TODO:"));
 assert.ok(!privacy.includes("TODO:"));
 console.log("support-legal-final checks passed");
