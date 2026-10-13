@@ -4,7 +4,14 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SmartLoadImport from "./smart-load-import";
+import LoadStopsEditor from "./load-stops-editor";
 import UsCityStateAutocomplete from "./us-city-state-autocomplete";
+import {
+  createEmptyLoadStop,
+  legacyLoadEndpoints,
+  LoadStop,
+  validateLoadStops,
+} from "@/lib/load-stops";
 import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
 
 type Truck = {
@@ -20,10 +27,15 @@ type Draft = {
   broker: string;
   pickup: string;
   delivery: string;
-  pickupDate: string;
-  deliveryDate: string;
   rate: string;
 };
+
+function emptyRoute(): LoadStop[] {
+  return [
+    { ...createEmptyLoadStop("PICKUP"), id: "new-pickup" },
+    { ...createEmptyLoadStop("DELIVERY"), id: "new-delivery" },
+  ];
+}
 
 export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
   const router = useRouter();
@@ -39,10 +51,9 @@ export default function AddLoadForm({ trucks }: { trucks: Truck[] }) {
     broker: "",
     pickup: "",
     delivery: "",
-    pickupDate: "",
-    deliveryDate: "",
     rate: "",
   });
+  const [routeStops, setRouteStops] = useState<LoadStop[]>(emptyRoute);
 
 
 useEffect(() => {
@@ -84,14 +95,26 @@ useEffect(() => {
       form.get("loaded_miles"),
       form.get("deadhead_miles")
     );
-    const pickup = normalizeUsLocation(String(form.get("pickup") || ""));
-    const delivery = normalizeUsLocation(String(form.get("delivery") || ""));
+    const pickup = normalizeUsLocation(draft.pickup);
+    const delivery = normalizeUsLocation(draft.delivery);
+    const effectiveStops = routeStops.map((stop, index) => ({
+      ...stop,
+      location:
+        stop.location.trim() ||
+        (index === 0 && pickup.ok
+          ? pickup.value
+          : index === routeStops.length - 1 && delivery.ok
+            ? delivery.value
+            : ""),
+    }));
+    const stopError = validateLoadStops(effectiveStops);
+    const endpoints = legacyLoadEndpoints(routeStops);
 
     if (
       !form.get("truck_id") ||
       !form.get("load_number") ||
-      !form.get("pickup_date") ||
-      !form.get("delivery_date") ||
+      !endpoints.pickupDate ||
+      !endpoints.deliveryDate ||
       rate <= 0
     ) {
       setError("Complete the required load fields.");
@@ -117,6 +140,12 @@ useEffect(() => {
       return;
     }
 
+    if (stopError) {
+      setError(stopError);
+      setSaving(false);
+      return;
+    }
+
     const supabase = createClient();
     const { error: insertError } = await supabase.from("loads").insert({
       truck_id: String(form.get("truck_id")),
@@ -124,8 +153,9 @@ useEffect(() => {
       broker: String(form.get("broker") || "").trim(),
       pickup: pickup.value,
       delivery: delivery.value,
-      pickup_date: String(form.get("pickup_date")),
-      delivery_date: String(form.get("delivery_date")),
+      pickup_date: endpoints.pickupDate,
+      delivery_date: endpoints.deliveryDate,
+      route_stops: effectiveStops,
       rate,
       loaded_miles: mileage.loadedMiles,
       deadhead_miles: mileage.deadheadMiles,
@@ -145,10 +175,9 @@ useEffect(() => {
       broker: "",
       pickup: "",
       delivery: "",
-      pickupDate: "",
-      deliveryDate: "",
       rate: "",
     });
+    setRouteStops(emptyRoute());
     setSaving(false);
     setOpen(false);
     router.refresh();
@@ -198,9 +227,22 @@ useEffect(() => {
                   broker: data.broker ?? draft.broker,
                   pickup: data.pickup ?? draft.pickup,
                   delivery: data.delivery ?? draft.delivery,
-                  pickupDate: data.pickupDate ?? draft.pickupDate,
-                  deliveryDate: data.deliveryDate ?? draft.deliveryDate,
                   rate: data.rate ?? draft.rate,
+                });
+                setRouteStops((current) => {
+                  const next = [...current];
+                  next[0] = {
+                    ...next[0],
+                    location: data.pickup ?? next[0].location,
+                    appointmentDate: data.pickupDate ?? next[0].appointmentDate,
+                  };
+                  const lastIndex = next.length - 1;
+                  next[lastIndex] = {
+                    ...next[lastIndex],
+                    location: data.delivery ?? next[lastIndex].location,
+                    appointmentDate: data.deliveryDate ?? next[lastIndex].appointmentDate,
+                  };
+                  return next;
                 });
                 setDetailsVisible(true);
               }}
@@ -238,28 +280,15 @@ useEffect(() => {
                 name="pickup"
                 label="Pickup City, State *"
                 value={draft.pickup}
-                setValue={(v) => patchDraft({ pickup: v })}
+                setValue={(value) => patchDraft({ pickup: value })}
               />
               <UsCityStateAutocomplete
                 name="delivery"
                 label="Delivery City, State *"
                 value={draft.delivery}
-                setValue={(v) => patchDraft({ delivery: v })}
+                setValue={(value) => patchDraft({ delivery: value })}
               />
-              <ControlledField
-                name="pickup_date"
-                label="Pickup Date *"
-                type="date"
-                value={draft.pickupDate}
-                setValue={(v) => patchDraft({ pickupDate: v })}
-              />
-              <ControlledField
-                name="delivery_date"
-                label="Delivery Date *"
-                type="date"
-                value={draft.deliveryDate}
-                setValue={(v) => patchDraft({ deliveryDate: v })}
-              />
+              <LoadStopsEditor stops={routeStops} onChange={setRouteStops} />
               <ControlledField
                 name="rate"
                 label="Rate *"

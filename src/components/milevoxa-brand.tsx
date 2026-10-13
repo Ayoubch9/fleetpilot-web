@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type BrandProps = {
@@ -16,7 +17,7 @@ export function MileVoxaMark({
   onDark?: boolean;
 }) {
   return (
-    <img
+    <Image unoptimized
       src={
         onDark
           ? "/branding/milevoxa-logo-mark-white.png"
@@ -52,7 +53,7 @@ export default function MileVoxaBrand({
       className={`mv-brand ${compact ? "compact" : ""} ${className}`}
       aria-label="MileVoxa home"
     >
-      <img
+      <Image unoptimized
         src={src}
         width={2000}
         height={showTagline ? 612 : 445}

@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function PublicHeader() {
   return (
     <header className="fp-marketing-header fp-public-header">
       <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-        <img
+        <Image unoptimized
           src="/branding/milevoxa-logo-full.png"
           width={2000}
           height={612}

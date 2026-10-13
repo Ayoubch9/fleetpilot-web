@@ -2,11 +2,17 @@ const fs=require("fs");
 const assert=require("assert");
 const pricing=fs.readFileSync("src/app/pricing/page.tsx","utf8");
 const plans=fs.readFileSync("src/app/pricing/pricing-plans.tsx","utf8");
+
 assert.ok(plans.includes("futurePaidPlanConfiguration"));
 assert.ok(plans.includes('href="/signup"'));
 assert.ok(plans.includes("Join the Free Beta"));
 assert.ok(plans.includes("$0<span>during beta</span>"));
-assert.ok(pricing.includes("PUBLIC BETA"));
-assert.ok(pricing.includes("No automatic paid enrollment"));
+
+assert.ok(pricing.includes("Public Beta"));
+assert.ok(pricing.includes("No credit card required"));
+assert.ok(pricing.includes("You will never be auto-charged"));
+assert.ok(pricing.includes("cannot be billed automatically"));
+assert.ok(pricing.includes("Join the Free Beta"));
 assert.ok(!pricing.includes("Founding member offer"));
+
 console.log("launch-pricing-content checks passed");

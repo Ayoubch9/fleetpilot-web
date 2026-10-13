@@ -65,11 +65,16 @@ export default function WeekSelector() {
 
   const [selected, setSelected] = useState(initialWeek);
 
+  const initialWeekKey = dbDate(initialWeek);
+  const [previousWeekKey, setPreviousWeekKey] = useState(initialWeekKey);
+  if (previousWeekKey !== initialWeekKey) {
+    setPreviousWeekKey(initialWeekKey);
+    setSelected(initialWeek);
+  }
+
   useEffect(() => {
     const fromUrl = parseDate(searchParams.get("week"));
     if (fromUrl) {
-      const start = monday(fromUrl);
-      setSelected(start > currentWeek ? currentWeek : start);
       return;
     }
 
@@ -77,7 +82,6 @@ export default function WeekSelector() {
     if (fromCookie) {
       const start = monday(fromCookie);
       const safe = start > currentWeek ? currentWeek : start;
-      setSelected(safe);
 
       if (dbDate(safe) !== dbDate(currentWeek)) {
         const params = new URLSearchParams(searchParams.toString());
@@ -87,7 +91,6 @@ export default function WeekSelector() {
       return;
     }
 
-    setSelected(currentWeek);
   }, [pathname, router, searchParams, currentWeek]);
 
   const end = addDays(selected, 6);

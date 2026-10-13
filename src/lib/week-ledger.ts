@@ -1,4 +1,4 @@
-import { dbDate, graceMonday, loadBelongsToWeek, plusDays, weekEnd } from "@/lib/fleetpilot-week";
+import { dbDate, loadBelongsToWeek, plusDays, weekEnd } from "@/lib/fleetpilot-week";
 import { calculateWeekFinance } from "@/lib/week-finance";
 import type {
   LedgerExpense,
@@ -10,9 +10,7 @@ import type {
   LedgerSettings,
   WeekLedger,} from "@/lib/week-finance";
 
-type SupabaseLike = {
-  from: (table: string) => any;
-};
+type SupabaseLike = Pick<import("@supabase/supabase-js").SupabaseClient, "from">;
 
 export async function fetchWeekLedger(
   supabase: SupabaseLike,

@@ -1,12 +1,12 @@
 const fs=require("fs");
 const assert=require("assert");
 const page=fs.readFileSync("src/app/page.tsx","utf8");
-const css=fs.readFileSync("src/app/globals.css","utf8");
-
-assert.ok(page.includes("Your trucking business,"));
-assert.ok(page.includes("<span>organized.</span>"));
-assert.ok(page.includes("MileVoxa Public Beta"));
-assert.ok(page.includes("Free during beta. No credit card required."));
-assert.ok(page.includes('src="/milevoxa-home-hero-visual.jpg"'));
-assert.ok(css.includes(".mv-concept-image-only"));
+const css=fs.readFileSync("src/app/home-redesign.module.css","utf8");
+assert.ok(page.includes("Your truck can gross $8,000 this week."));
+assert.ok(page.includes("That doesn&apos;t mean you made $8,000."));
+assert.ok(page.includes("Gary, IN ➔ Dallas, TX"));
+assert.ok(page.includes("WHAT THE TRUCK ACTUALLY MADE:"));
+assert.ok(page.includes("+$1,753.19"));
+assert.ok(css.includes(".driverHeroLayout"));
+assert.ok(css.includes(".tripCostGrid"));
 console.log("home-hero-concept checks passed");

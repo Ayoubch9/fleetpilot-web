@@ -68,10 +68,7 @@ export default function SettlementQuickActions({
   const [issuesOpen, setIssuesOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  const costTotal = useMemo(
-    () => costs.reduce((sum, row) => sum + row.amount, 0),
-    [costs]
-  );
+
 
   const weekIssues = useMemo(() => {
     const issues: {
@@ -282,7 +279,7 @@ export default function SettlementQuickActions({
                   <span>WEEKLY SETTLEMENT</span>
                   <h2>{summary.weekLabel}</h2>
                   <p>
-                    A focused review of the selected week's operating result.
+                    A focused review of the selected week&apos;s operating result.
                   </p>
                 </div>
                 <button

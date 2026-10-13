@@ -103,14 +103,22 @@ export default async function SecurityDepositPage() {
       companyName={companyName}
       role={role}
     >
-      <div className="fp-deposit-page">
+      <div className="fp-deposit-page mv-security-deposit-control-center">
         <section className="fp-deposit-heading">
           <div>
+            <span>ESCROW &amp; HOLDBACK TRACKER</span>
             <h1>Security Deposit</h1>
             <p>
               Track money the company is holding, repayments received and the
               balance they still owe you.
             </p>
+          </div>
+          <div className="fp-deposit-heading-callout">
+            <span aria-hidden="true">🔒</span>
+            <div>
+              <strong>PROTECT CASH FLOW</strong>
+              <small>WITHOUT DISTORTING PROFIT</small>
+            </div>
           </div>
         </section>
 

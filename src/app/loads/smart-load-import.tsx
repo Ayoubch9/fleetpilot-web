@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type ParsedLoad = {
   loadNumber?: string;
@@ -130,12 +130,14 @@ export default function SmartLoadImport({
   openSignal?: number;
   dedicated?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(openSignal > 0);
   const [text, setText] = useState("");
 
-  useEffect(() => {
+  const [previousOpenSignal, setPreviousOpenSignal] = useState(openSignal);
+  if (previousOpenSignal !== openSignal) {
+    setPreviousOpenSignal(openSignal);
     if (openSignal > 0) setOpen(true);
-  }, [openSignal]);
+  }
 
   function parse() {
     const parsed = parseDispatcher(text);

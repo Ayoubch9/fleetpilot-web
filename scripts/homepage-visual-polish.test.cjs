@@ -1,13 +1,15 @@
 const fs=require("fs");
 const assert=require("assert");
 const home=fs.readFileSync("src/app/page.tsx","utf8");
-const css=fs.readFileSync("src/app/globals.css","utf8");
-
+const css=fs.readFileSync("src/app/home-redesign.module.css","utf8");
+assert.ok(!home.includes("HomepageLoadDecision"));
+assert.ok(home.includes("HomepageStickyCta"));
 assert.ok(home.includes("Join the Free Beta"));
 assert.ok(home.includes("Beta Access Details"));
-assert.ok(home.includes('className="fp-marketing-button primary large"'));
-assert.ok(home.includes('className="fp-marketing-button secondary large"'));
-assert.ok(css.includes(".fp-marketing-page .fp-marketing-trial-pill span"));
-assert.ok(css.includes("background:#16853B"));
-assert.ok(css.includes(".fp-marketing-page .fp-marketing-trust-strip span"));
+assert.ok(home.includes("Gary, IN ➔ Dallas, TX"));
+assert.ok(css.includes("--navy:#102238"));
+assert.ok(css.includes("--deep:#0B1730"));
+assert.ok(css.includes("--green:#10B981"));
+assert.ok(css.includes(".driverHeroGridBackground"));
+assert.ok(css.includes(".driverTripCard"));
 console.log("homepage-visual-polish checks passed");

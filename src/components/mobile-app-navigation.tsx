@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { MileVoxaMark } from "@/components/milevoxa-brand";
+import MileVoxaBrand from "@/components/milevoxa-brand";
+import NavigationIcon from "@/components/navigation-icon";
 
 type ActivePage =
   | "overview"
@@ -25,22 +26,22 @@ type ActivePage =
 
 const primary = [
   ["overview", "Home", "/dashboard", "home"],
-  ["loads", "Loads", "/loads", "loads"],
-  ["trucks", "Trucks", "/trucks", "trucks"],
-  ["expenses", "Expenses", "/expenses", "expenses"],
+  ["loads", "Loads", "/loads", "load"],
+  ["trucks", "Trucks", "/trucks", "truck"],
+  ["expenses", "Expenses", "/expenses", "expense"],
 ] as const;
 
 const more = [
   ["maintenance", "Maintenance", "/maintenance", "maintenance"],
-  ["reimbursements", "Reimbursements", "/reimbursements", "wallet"],
+  ["reimbursements", "Reimbursements", "/reimbursements", "reimbursements"],
   ["settlement", "Weekly Settlement", "/settlement", "settlement"],
   ["odometer", "Weekly Odometer", "/odometer", "odometer"],
   ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
-  ["reports", "Reports", "/reports", "report"],
-  ["pilot", "Pilot AI", "/pilot-ai", "spark"],
-  ["documents", "Documents", "/documents", "document"],
-  ["notifications", "Notifications", "/notifications", "bell"],
+  ["reports", "Reports", "/reports", "reports"],
+  ["pilot", "Pilot AI", "/pilot-ai", "pilot"],
+  ["documents", "Documents", "/documents", "documents"],
+  ["notifications", "Notifications", "/notifications", "notifications"],
   ["settings", "Settings", "/settings", "settings"],
 ] as const;
 
@@ -71,7 +72,10 @@ export default function MobileAppNavigation({
             href={href}
             className={active === key ? "active" : ""}
           >
-            <MobileIcon type={icon} />
+            <NavigationIcon
+              type={icon}
+              className="fp-mobile-navigation-emoji"
+            />
             <span>{label}</span>
           </Link>
         ))}
@@ -82,7 +86,7 @@ export default function MobileAppNavigation({
           onClick={() => setOpen(true)}
           aria-label="More MileVoxa pages"
         >
-          <MobileIcon type="more" />
+          <MoreMenuIcon />
           <span>More</span>
         </button>
       </nav>
@@ -103,11 +107,10 @@ export default function MobileAppNavigation({
 
               <header>
                 <div className="mv-mobile-more-brand">
-                  <MileVoxaMark className="h-7 w-7" />
-                  <div>
-                    <span>MILEVOXA</span>
-                    <h2>More</h2>
-                  </div>
+                  <MileVoxaBrand
+                    href="/dashboard"
+                    className="mv-sidebar-brand fp-mobile-more-logo"
+                  />
                 </div>
                 <button
                   type="button"
@@ -127,7 +130,10 @@ export default function MobileAppNavigation({
                     onClick={() => setOpen(false)}
                   >
                     <span className="fp-mobile-more-icon">
-                      <MobileIcon type={icon} />
+                      <NavigationIcon
+                        type={icon}
+                        className="fp-mobile-navigation-emoji"
+                      />
                     </span>
                     <span>{label}</span>
                   </Link>
@@ -141,7 +147,7 @@ export default function MobileAppNavigation({
   );
 }
 
-function MobileIcon({ type }: { type: string }) {
+function MoreMenuIcon() {
   const common = {
     viewBox: "0 0 24 24",
     className: "h-[20px] w-[20px] fill-none stroke-current",
@@ -150,116 +156,11 @@ function MobileIcon({ type }: { type: string }) {
     strokeLinejoin: "round" as const,
   };
 
-  if (type === "home")
-    return (
-      <svg {...common}>
-        <path d="M3 11 12 3l9 8v10H3z" />
-        <path d="M9 21v-6h6v6" />
-      </svg>
-    );
-
-  if (type === "loads" || type === "trucks")
-    return (
-      <svg {...common}>
-        <path d="M3 6h11v10H3zM14 9h4l3 3v4h-7z" />
-        <circle cx="7" cy="18" r="2" />
-        <circle cx="18" cy="18" r="2" />
-      </svg>
-    );
-
-  if (type === "expenses")
-    return (
-      <svg {...common}>
-        <path d="M5 3h14v18H5z" />
-        <path d="M8 8h8M8 12h8M8 16h5" />
-      </svg>
-    );
-
-  if (type === "more")
-    return (
-      <svg {...common}>
-        <circle cx="5" cy="12" r="1" />
-        <circle cx="12" cy="12" r="1" />
-        <circle cx="19" cy="12" r="1" />
-      </svg>
-    );
-
-  if (type === "maintenance")
-    return (
-      <svg {...common}>
-        <path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z" />
-      </svg>
-    );
-
-  if (type === "wallet")
-    return (
-      <svg {...common}>
-        <path d="M4 6h16v12H4z" />
-        <path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z" />
-      </svg>
-    );
-
-  if (type === "settlement")
-    return (
-      <svg {...common}>
-        <rect x="5" y="3" width="14" height="18" rx="2" />
-        <path d="M8 9h8M8 13h5" />
-      </svg>
-    );
-
-
-  if (type === "odometer")
-    return (
-      <svg {...common}>
-        <path d="M4 16a8 8 0 1 1 16 0" />
-        <path d="m12 12 4-4" />
-        <path d="M7 16h10" />
-      </svg>
-    );
-
-  if (type === "deposit")
-    return (
-      <svg {...common}>
-        <path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z" />
-        <path d="M9 11h6M12 8v6" />
-      </svg>
-    );
-
-  if (type === "fuel")
-    return (
-      <svg {...common}>
-        <path d="M6 3h9v18H6zM8 7h5" />
-        <path d="M15 8h2l2 3v6a2 2 0 0 0 2 2" />
-      </svg>
-    );
-
-  if (type === "spark")
-    return (
-      <svg {...common}>
-        <path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z" />
-      </svg>
-    );
-
-  if (type === "bell")
-    return (
-      <svg {...common}>
-        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
-        <path d="M10 21h4" />
-      </svg>
-    );
-
-  if (type === "settings")
-    return (
-      <svg {...common}>
-        <circle cx="12" cy="12" r="3" />
-        <path d="M4 12a8 8 0 1 0 16 0 8 8 0 1 0-16 0" />
-      </svg>
-    );
-
   return (
     <svg {...common}>
-      <path d="M6 3h8l4 4v14H6z" />
-      <path d="M14 3v5h5" />
+      <circle cx="5" cy="12" r="1" />
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
     </svg>
   );
 }

@@ -1,0 +1,84 @@
+/* Keep the app-header notification control consistent across the styled Control Center pages. */
+.mv-app-shell:has(.mv-odometer-control-center) .fp-control-center-notification,
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification,
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification,
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-control-center-notification,
+.mv-app-shell:has(.mv-documents-control-center) .fp-control-center-notification,
+.mv-app-shell:has(.fp-settings-control-grid) .fp-control-center-notification{
+  position:relative!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 36px!important;
+  overflow:visible!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#EDF2F7!important;
+  color:#334155!important;
+  text-decoration:none!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.04)!important;
+}
+.mv-app-shell:has(.mv-odometer-control-center) .fp-control-center-notification:hover,
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification:hover,
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification:hover,
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-control-center-notification:hover,
+.mv-app-shell:has(.mv-documents-control-center) .fp-control-center-notification:hover,
+.mv-app-shell:has(.fp-settings-control-grid) .fp-control-center-notification:hover{
+  border-color:#94A3B8!important;
+  background:#FFFFFF!important;
+}
+.mv-app-shell:has(.mv-odometer-control-center) .fp-control-center-notification.is-active,
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification.is-active,
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification.is-active,
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-control-center-notification.is-active,
+.mv-app-shell:has(.mv-documents-control-center) .fp-control-center-notification.is-active,
+.mv-app-shell:has(.fp-settings-control-grid) .fp-control-center-notification.is-active{
+  border-color:#A7F3D0!important;
+  background:#ECFDF5!important;
+}
+.mv-app-shell:has(.mv-odometer-control-center) .fp-control-center-notification-bell,
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification-bell,
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification-bell,
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-control-center-notification-bell,
+.mv-app-shell:has(.mv-documents-control-center) .fp-control-center-notification-bell,
+.mv-app-shell:has(.fp-settings-control-grid) .fp-control-center-notification-bell{
+  width:18px!important;
+  height:18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+.mv-app-shell:has(.mv-odometer-control-center) .fp-control-center-notification-count,
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification-count,
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification-count,
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-control-center-notification-count,
+.mv-app-shell:has(.mv-documents-control-center) .fp-control-center-notification-count,
+.mv-app-shell:has(.fp-settings-control-grid) .fp-control-center-notification-count{
+  position:absolute!important;
+  top:-5px!important;
+  right:-5px!important;
+  min-width:16px!important;
+  height:16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:#DC2626!important;
+  padding:0 4px!important;
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+  letter-spacing:0!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.10)!important;
+}

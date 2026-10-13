@@ -1,4 +1,4 @@
-import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
+import { CHART_PALETTE } from "@/lib/chart-palette";
 import { formatMoney, formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -104,7 +104,7 @@ export default async function DashboardPage({
   const cookieStore = await cookies();
   const rememberedWeek = cookieStore.get("fleetpilot_week")?.value;
 
-  let selectedWeekStart = selectedWeek(params.week || rememberedWeek);
+  const selectedWeekStart = selectedWeek(params.week || rememberedWeek);
   if (selectedWeekStart.getTime() > currentWeekStart.getTime()) {
     redirect("/dashboard");
   }
@@ -162,7 +162,7 @@ export default async function DashboardPage({
   ];
 
   const loads = ledger.loads;
-  const expenses = ledger.expenses;
+
   const trucks = fleetSupport.trucks as RawTruck[];
   const maintenanceRows =
     fleetSupport.maintenanceDueRows as RawMaintenanceDue[];
@@ -289,11 +289,33 @@ export default async function DashboardPage({
 
   const actionCenter = await getActionCenterAlerts(supabase);
 
-  const firstName = fullName.split(/\s+/)[0] || "Driver";
+  const firstName = fullName.split(/\s+/)[0] || "Driver";  const expenseBreakdownColor = (label: string, index: number) => {
+    const byLabel: Record<string, string> = {
+      Fuel: "#10B981",
+      Maintenance: "#102238",
+      Tolls: "#D97706",
+      Insurance: "#DC2626",
+      Other: "#94A3B8",
+      "Truck Payment": "#059669",
+    };
+
+    const fallback = [
+      "#10B981",
+      "#102238",
+      "#D97706",
+      "#DC2626",
+      "#94A3B8",
+      "#059669",
+    ] as const;
+
+    return byLabel[label] || fallback[index % fallback.length];
+  };
+
+
 
   const expenseBreakdownData = expenseBreakdownDataRaw.map((item, index) => ({
     ...item,
-    color: chartCategoryColor(index),
+    color: expenseBreakdownColor(item.label, index),
   }));
 
 
@@ -304,7 +326,7 @@ export default async function DashboardPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-page">
+      <div className="fp-page mv-control-center-dashboard">
         <section className="fp-hero-exact min-h-[138px] rounded-[14px] border border-[#dfe7ef] px-7 py-6">
           <div className="relative z-10 max-w-[620px]">
             <h1 className="text-[30px] font-[800] tracking-[-.05em] text-[#0b1730] sm:text-[37px]">
@@ -380,7 +402,7 @@ export default async function DashboardPage({
             value={profitMargin == null ? "n/a" : formatPercent(profitMargin)}
             tone={profitMargin != null && profitMargin > 0 ? "green" : "purple"}
             icon="%"
-            change={profitMargin == null ? "n/a" : trendCopy(marginTrend)}
+            change={profitMargin == null ? "Awaiting recorded loads" : trendCopy(marginTrend)}
             changeTone={marginTrend?.tone || "neutral"}
             series={profitMarginSeries}
             valueKind="percent"
@@ -436,7 +458,7 @@ export default async function DashboardPage({
                 right={
                   <Link
                     href="/loads"
-                    className="flex items-center gap-1 text-[9px] font-[600] text-[#16853B]"
+                    className="fp-recent-loads-view-all flex items-center gap-1 text-[9px] font-[600] text-[#16853B]"
                   >
                     View All <span className="text-[11px]">→</span>
                   </Link>
@@ -502,7 +524,13 @@ export default async function DashboardPage({
                     </table>
 
                     {loads.length === 0 && (
-                      <EmptyState text="No loads recorded for this week." />
+                      <div className="fp-recent-loads-empty">
+                        <span className="fp-recent-loads-empty-icon" aria-hidden="true">📦</span>
+                        <p>No loads recorded for this week yet.</p>
+                        <Link href="/loads#add-load" className="fp-recent-loads-empty-button">
+                          Record First Load
+                        </Link>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -546,10 +574,10 @@ export default async function DashboardPage({
                   right={<Link href="/trucks" className="text-[9px] font-[700] text-[#16853B]">View Fleet →</Link>}
                 >
                   <div className="fp-fleet-status-grid px-4 pb-4">
-                    <FleetKpi label="Active Truck" value={`${activeTrucks.length}`} icon="truck" />
+                    <FleetKpi label="Active Trucks" value={`${activeTrucks.length}`} icon="truck" />
                     <FleetKpi label="Service Due" value={`${maintenanceDueCount}`} icon="service" />
-                    <FleetKpi label="Total Loads This Week" value={`${loads.length}`} icon="loads" />
-                    <FleetKpi label="Total Miles This Week" value={totalMiles.toLocaleString(undefined, { maximumFractionDigits: 0 })} icon="miles" />
+                    <FleetKpi label="Total Loads Wk" value={`${loads.length}`} icon="loads" />
+                    <FleetKpi label="Total Miles Wk" value={totalMiles.toLocaleString(undefined, { maximumFractionDigits: 0 })} icon="miles" />
                   </div>
                 </SectionPanel>
 
@@ -621,22 +649,10 @@ export default async function DashboardPage({
       }
     >
       <div className="px-3 pb-3">
-        <div className="fp-pilot-intro">
-          <div className="fp-pilot-orb">
-            <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-none stroke-white" strokeWidth="1.7">
-              <path d="m12 3 1.4 4.3L18 9l-4.6 1.6L12 15l-1.4-4.4L6 9l4.6-1.7L12 3Z" />
-              <path d="m18.2 3.8.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z" />
-            </svg>
-          </div>
-
-          <div className="min-w-0">
-            <div className="text-[11px] font-[700] text-[#102238]">
-              Ask MileVoxa
-            </div>
-            <div className="mt-1 text-[8px] leading-[1.35] text-[#6a7d93]">
-              Get insights about your business, find opportunities, and make smarter decisions.
-            </div>
-          </div>
+                <div className="fp-pilot-intro">
+          <p className="fp-pilot-summary">
+            Get instant answers about your numbers, catch margin leaks, and make informed load decisions.
+          </p>
         </div>
 
         <Link href="/pilot-ai" className="fp-pilot-start mt-3">
@@ -703,7 +719,7 @@ function DashboardMetric({
   }[tone];
 
   return (
-    <div className="fp-dashboard-metric">
+    <div className="fp-dashboard-metric" data-empty={value === "n/a" ? "true" : "false"} data-tone={tone}>
       <div
         className="fp-dashboard-metric-icon"
         style={{ backgroundColor: palette.soft, color: palette.text }}
@@ -872,6 +888,12 @@ function MetricMiniChart({
   );
 }
 
+const revenueChartColors = {
+  revenue: "#102238",
+  expenses: "#D97706",
+  profit: "#10B981",
+} as const;
+
 function BarChart({
   revenue,
   expenses,
@@ -905,9 +927,9 @@ function BarChart({
   return (
     <div className="pt-1">
       <div className="mb-3 flex items-center justify-center gap-5 text-[9px] font-[600] text-[#60728a]">
-        <ChartLegend color={CHART_PALETTE.navy} label="Revenue" />
-        <ChartLegend color={CHART_PALETTE.red} label="Expenses" />
-        <ChartLegend color={CHART_PALETTE.green} label="Profit" />
+        <ChartLegend color={revenueChartColors.revenue} label="Revenue" />
+        <ChartLegend color={revenueChartColors.expenses} label="Expenses" />
+        <ChartLegend color={revenueChartColors.profit} label="Profit" />
       </div>
 
       <div className="grid grid-cols-[34px_minmax(0,1fr)] gap-2">
@@ -954,17 +976,17 @@ function BarChart({
                   <ChartBar
                     value={revenueValue}
                     max={chartMax}
-                    color={CHART_PALETTE.navy}
+                    color={revenueChartColors.revenue}
                   />
                   <ChartBar
                     value={expenseSeries[index]}
                     max={chartMax}
-                    color={CHART_PALETTE.red}
+                    color={revenueChartColors.expenses}
                   />
                   <ChartBar
                     value={profitSeries[index]}
                     max={chartMax}
-                    color={CHART_PALETTE.green}
+                    color={revenueChartColors.profit}
                   />
                 </div>
               ))}
@@ -1118,80 +1140,9 @@ function ProgressRing({ value }: { value: number }) {
   );
 }
 
-function Quick({
-  href,
-  label,
-  type,
-  primary = false,
-}: {
-  href: string;
-  label: string;
-  type: "load" | "expense" | "fuel" | "maintenance";
-  primary?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`fp-quick-row ${primary ? "fp-quick-row-primary" : ""}`}
-    >
-      <span className="fp-quick-left">
-        <span className={`fp-quick-icon ${primary ? "fp-quick-icon-primary" : ""}`}>
-          <QuickIcon type={type} />
-        </span>
-        <span>{label}</span>
-      </span>
 
-      <span className="fp-quick-arrow">›</span>
-    </Link>
-  );
-}
 
-function QuickIcon({
-  type,
-}: {
-  type: "load" | "expense" | "fuel" | "maintenance";
-}) {
-  const common = {
-    viewBox: "0 0 24 24",
-    className: "h-[14px] w-[14px] fill-none stroke-current",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
 
-  if (type === "load") {
-    return (
-      <svg {...common}>
-        <path d="M12 5v14M5 12h14" />
-      </svg>
-    );
-  }
-
-  if (type === "expense") {
-    return (
-      <svg {...common}>
-        <path d="M6 3h12v18H6z" />
-        <path d="M9 8h6M9 12h6M9 16h4" />
-      </svg>
-    );
-  }
-
-  if (type === "fuel") {
-    return (
-      <svg {...common}>
-        <path d="M6 3h9v18H6z" />
-        <path d="M8 7h5" />
-        <path d="M15 8h2l2 3v6a2 2 0 0 0 2 2" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...common}>
-      <path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z" />
-    </svg>
-  );
-}
 
 function Activity({
   type,
@@ -1205,10 +1156,10 @@ function Activity({
   when: string;
 }) {
   const config = {
-    load: { bg: CHART_PALETTE.navy, amount: CHART_PALETTE.green },
-    fuel: { bg: CHART_PALETTE.green, amount: CHART_PALETTE.red },
-    maintenance: { bg: CHART_PALETTE.purple, amount: CHART_PALETTE.red },
-    expense: { bg: CHART_PALETTE.gray, amount: CHART_PALETTE.red },
+    load: { bg: "var(--mv-cc-navy)", amount: "var(--mv-cc-green-hover)" },
+    fuel: { bg: "var(--mv-cc-green)", amount: "var(--mv-cc-red)" },
+    maintenance: { bg: "var(--mv-cc-deep)", amount: "var(--mv-cc-red)" },
+    expense: { bg: "var(--mv-cc-border-dark)", amount: "var(--mv-cc-red)" },
   }[type];
 
   return (
@@ -1366,9 +1317,7 @@ function FleetKpiIcon({
   );
 }
 
-function dot(index: number) {
-  return ["bg-[#16853B]","bg-[#ff4e5b]","bg-[#43d89b]","bg-[#f23f95]","bg-[#6857cc]","bg-[#ffae35]"][index % 6];
-}
+
 
 function compactLocation(value?: string | null) {
   if (!value) return "—";

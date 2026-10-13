@@ -2,6 +2,7 @@ import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import SettingsCenter from "./settings-center";
 import { isPublicBetaEnabled } from "@/lib/beta-access";
+import styles from "./settings-control-center.module.css";
 
 export default async function SettingsPage() {
   const publicBeta = isPublicBetaEnabled();
@@ -12,6 +13,7 @@ export default async function SettingsPage() {
     avatarUrl,
     companyName,
     role,
+    businessRole,
   } = await getMileVoxaAccount();
 
   const { data: membership } = await supabase
@@ -121,7 +123,7 @@ export default async function SettingsPage() {
       companyName={companyName}
       role={role}
     >
-      <div className="fp-tool-page">
+      <div className={`fp-tool-page ${styles.page}`}>
         <div className="fp-tool-heading">
           <div>
             <h1>Settings</h1>
@@ -137,6 +139,7 @@ export default async function SettingsPage() {
           email={user.email || ""}
           companyName={companyName || ""}
           role={role || ""}
+          businessRole={businessRole}
           initialCompanyProfile={
             companyProfileReady ? companyResult.data : null
           }

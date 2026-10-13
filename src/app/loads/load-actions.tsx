@@ -5,6 +5,13 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeUsLocation, validateLoadMiles } from "@/lib/load-domain";
+import LoadStopsEditor from "./load-stops-editor";
+import {
+  getLoadStops,
+  legacyLoadEndpoints,
+  LoadStop,
+  validateLoadStops,
+} from "@/lib/load-stops";
 
 type Load = {
   id: string;
@@ -19,6 +26,7 @@ type Load = {
   deadhead_miles: number | string | null;
   status: string | null;
   truck_id: string | null;
+  route_stops: unknown;
 };
 
 type Truck = {
@@ -49,6 +57,9 @@ export default function LoadActions({
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [error, setError] = useState("");
+  const [routeStops, setRouteStops] = useState<LoadStop[]>(() =>
+    getLoadStops(load.route_stops, load)
+  );
 
   async function changeStatus(value: string) {
     setSaving(true);
@@ -80,14 +91,16 @@ export default function LoadActions({
       form.get("loaded_miles"),
       form.get("deadhead_miles")
     );
-    const pickup = normalizeUsLocation(String(form.get("pickup") || ""));
-    const delivery = normalizeUsLocation(String(form.get("delivery") || ""));
+    const pickup = normalizeUsLocation(load.pickup || "");
+    const delivery = normalizeUsLocation(load.delivery || "");
+    const stopError = validateLoadStops(routeStops);
+    const endpoints = legacyLoadEndpoints(routeStops);
 
     if (
       !form.get("truck_id") ||
       !form.get("load_number") ||
-      !form.get("pickup_date") ||
-      !form.get("delivery_date") ||
+      !endpoints.pickupDate ||
+      !endpoints.deliveryDate ||
       rate <= 0
     ) {
       setSaving(false);
@@ -101,15 +114,9 @@ export default function LoadActions({
       return;
     }
 
-    if (!pickup.ok) {
+    if (stopError) {
       setSaving(false);
-      setError(`Pickup: ${pickup.error}`);
-      return;
-    }
-
-    if (!delivery.ok) {
-      setSaving(false);
-      setError(`Delivery: ${delivery.error}`);
+      setError(stopError);
       return;
     }
 
@@ -120,10 +127,11 @@ export default function LoadActions({
         truck_id: String(form.get("truck_id")),
         load_number: String(form.get("load_number")).trim(),
         broker: String(form.get("broker") || "").trim(),
-        pickup: pickup.value,
-        delivery: delivery.value,
-        pickup_date: String(form.get("pickup_date")),
-        delivery_date: String(form.get("delivery_date")),
+        pickup: pickup.ok ? pickup.value : endpoints.pickup,
+        delivery: delivery.ok ? delivery.value : endpoints.delivery,
+        pickup_date: endpoints.pickupDate,
+        delivery_date: endpoints.deliveryDate,
+        route_stops: routeStops,
         rate,
         loaded_miles: mileage.loadedMiles,
         deadhead_miles: mileage.deadheadMiles,
@@ -235,32 +243,7 @@ export default function LoadActions({
                       </select>
                     </label>
 
-                    <Field
-                      name="pickup"
-                      label="Pickup City, State"
-                      defaultValue={load.pickup || ""}
-                      required
-                    />
-                    <Field
-                      name="delivery"
-                      label="Delivery City, State"
-                      defaultValue={load.delivery || ""}
-                      required
-                    />
-                    <Field
-                      name="pickup_date"
-                      label="Pickup Date"
-                      type="date"
-                      defaultValue={load.pickup_date?.slice(0, 10) || ""}
-                      required
-                    />
-                    <Field
-                      name="delivery_date"
-                      label="Delivery Date"
-                      type="date"
-                      defaultValue={load.delivery_date?.slice(0, 10) || ""}
-                      required
-                    />
+                    <LoadStopsEditor stops={routeStops} onChange={setRouteStops} />
                     <Field
                       name="rate"
                       label="Rate"

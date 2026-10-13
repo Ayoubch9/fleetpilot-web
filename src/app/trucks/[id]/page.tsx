@@ -5,6 +5,12 @@ import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
 import { money, num } from "@/lib/fleetpilot-week";
 
+
+type NumericValue = number | string | null;
+type LoadRow = { id: string; load_number: NumericValue; pickup: string | null; delivery: string | null; pickup_date: string | null; rate: NumericValue; loaded_miles: NumericValue; deadhead_miles: NumericValue; status: string | null };
+type ExpenseRow = { id: string; category: string | null; expense_date: string | null; amount: NumericValue; vendor: string | null; description: string | null; gallons: NumericValue; fuel_price_per_gallon: NumericValue };
+type MaintenanceRow = { id: string; service_type: string | null; service_date: string | null; mileage: NumericValue; cost: NumericValue; vendor: string | null; next_service_mileage: NumericValue; next_service_date: string | null };
+
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ tab?: string }>;
@@ -72,28 +78,28 @@ export default async function TruckProfilePage({
   if (!truckResult.data) notFound();
 
   const truck = truckResult.data as Truck;
-  const loads = loadsResult.data ?? [];
-  const expenses = expensesResult.data ?? [];
-  const maintenance = maintenanceResult.data ?? [];
+  const loads = (loadsResult.data ?? []) as LoadRow[];
+  const expenses = (expensesResult.data ?? []) as ExpenseRow[];
+  const maintenance = (maintenanceResult.data ?? []) as MaintenanceRow[];
 
-  const revenue = loads.reduce((sum, row: any) => sum + num(row.rate), 0);
+  const revenue = loads.reduce((sum, row) => sum + num(row.rate), 0);
   const miles = loads.reduce(
-    (sum, row: any) =>
+    (sum, row) =>
       sum + num(row.loaded_miles) + num(row.deadhead_miles),
     0
   );
   const totalExpenses = expenses.reduce(
-    (sum, row: any) => sum + num(row.amount),
+    (sum, row) => sum + num(row.amount),
     0
   );
   const fuelCost = expenses
     .filter(
-      (row: any) =>
+      (row) =>
         (row.category || "").trim().toLowerCase() === "fuel"
     )
-    .reduce((sum: number, row: any) => sum + num(row.amount), 0);
+    .reduce((sum: number, row) => sum + num(row.amount), 0);
   const maintenanceCost = maintenance.reduce(
-    (sum: number, row: any) => sum + num(row.cost),
+    (sum: number, row) => sum + num(row.cost),
     0
   );
   const netProfit = revenue - totalExpenses;
@@ -255,7 +261,7 @@ export default async function TruckProfilePage({
             </div>
             <ExpensesTable
               rows={expenses.filter(
-                (row: any) =>
+                (row) =>
                   (row.category || "").toLowerCase() === "fuel"
               )}
             />
@@ -269,19 +275,19 @@ export default async function TruckProfilePage({
             </div>
             <div className="fp-truck-history">
               {[
-                ...loads.map((row: any) => ({
+                ...loads.map((row) => ({
                   date: row.pickup_date,
                   title: `Load #${row.load_number || "—"}`,
                   body: `${row.pickup || "Pickup"} → ${row.delivery || "Delivery"} · ${money(num(row.rate))}`,
                   type: "load",
                 })),
-                ...expenses.map((row: any) => ({
+                ...expenses.map((row) => ({
                   date: row.expense_date,
                   title: row.category || "Expense",
                   body: `${row.vendor || "No vendor"} · ${money(num(row.amount))}`,
                   type: "expense",
                 })),
-                ...maintenance.map((row: any) => ({
+                ...maintenance.map((row) => ({
                   date: row.service_date,
                   title: row.service_type || "Maintenance",
                   body: `${row.vendor || "No vendor"} · ${money(num(row.cost))}`,
@@ -311,7 +317,7 @@ export default async function TruckProfilePage({
   );
 }
 
-function LoadsTable({ rows }: { rows: any[] }) {
+function LoadsTable({ rows }: { rows: LoadRow[] }) {
   return (
     <div className="fp-detail-table-wrap">
       <table className="fp-detail-table">
@@ -338,7 +344,7 @@ function LoadsTable({ rows }: { rows: any[] }) {
   );
 }
 
-function ExpensesTable({ rows }: { rows: any[] }) {
+function ExpensesTable({ rows }: { rows: ExpenseRow[] }) {
   return (
     <div className="fp-detail-table-wrap">
       <table className="fp-detail-table">
@@ -362,7 +368,7 @@ function ExpensesTable({ rows }: { rows: any[] }) {
   );
 }
 
-function MaintenanceTable({ rows }: { rows: any[] }) {
+function MaintenanceTable({ rows }: { rows: MaintenanceRow[] }) {
   return (
     <div className="fp-detail-table-wrap">
       <table className="fp-detail-table">

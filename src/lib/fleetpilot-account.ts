@@ -11,17 +11,36 @@ export async function getMileVoxaAccount() {
 
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
+  const profileResult = await supabase
     .from("profiles")
-    .select("full_name, avatar_path")
+    .select("full_name, avatar_path, business_role")
     .eq("id", user.id)
     .maybeSingle();
+  let profile = profileResult.data;
+
+  if (profileResult.error) {
+    const fallback = await supabase
+      .from("profiles")
+      .select("full_name, avatar_path")
+      .eq("id", user.id)
+      .maybeSingle();
+    profile = fallback.data
+      ? { ...fallback.data, business_role: null }
+      : null;
+  }
 
   const { data: membership } = await supabase
     .from("company_members")
     .select("company_id, role")
     .eq("user_id", user.id)
     .maybeSingle();
+
+  if (
+    !membership?.company_id ||
+    user.user_metadata?.profile_setup_required === true
+  ) {
+    redirect("/onboarding");
+  }
 
   let companyName = "";
 
@@ -54,6 +73,11 @@ export async function getMileVoxaAccount() {
     supabase,
     user,
     fullName: profile?.full_name || "MileVoxa User",
+    businessRole:
+      profile?.business_role ||
+      (typeof user.user_metadata?.business_role === "string"
+        ? user.user_metadata.business_role
+        : ""),
     avatarPath: profile?.avatar_path || null,
     avatarUrl,
     companyName,

@@ -1,0 +1,977 @@
+/* ==========================================================================
+   MileVoxa Expenses — Control Center Layout V1
+   Based on the supplied Operating Expenses reference.
+   Scoped to /expenses. Existing data, formulas, filters and actions stay intact.
+   ========================================================================== */
+
+.mv-app-shell:has(.mv-expenses-control-center){
+  --mv-exp-navy:#102238;
+  --mv-exp-deep:#0B1730;
+  --mv-exp-green:#10B981;
+  --mv-exp-green-hover:#059669;
+  --mv-exp-green-soft:#ECFDF5;
+  --mv-exp-green-border:#A7F3D0;
+  --mv-exp-canvas:#EAEFF5;
+  --mv-exp-sidebar:#E2E8F0;
+  --mv-exp-surface:#F8FAFC;
+  --mv-exp-inset:#EDF2F7;
+  --mv-exp-border:#CBD5E1;
+  --mv-exp-border-dark:#94A3B8;
+  --mv-exp-muted:#475569;
+  --mv-exp-red:#DC2626;
+  --mv-exp-amber:#D97706;
+  --mv-exp-amber-bg:#FEF3C7;
+  --mv-exp-amber-border:#FCD34D;
+
+  background:var(--mv-exp-canvas)!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,Helvetica,sans-serif!important;
+}
+
+/* --------------------------------------------------------------------------
+   Signed-in shell — same treatment as Dashboard / Loads / Trucks
+   -------------------------------------------------------------------------- */
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed{
+  width:256px!important;
+  border-right:1px solid var(--mv-exp-border)!important;
+  background:var(--mv-exp-sidebar)!important;
+  color:var(--mv-exp-navy)!important;
+  box-shadow:4px 0 18px rgba(16,34,56,.05)!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed>div:first-child{
+  min-height:80px!important;
+  height:80px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  background:rgba(248,250,252,.78)!important;
+  padding:10px 14px!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .mv-sidebar-brand{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:1 1 auto!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%!important;
+  height:auto!important;
+  display:block!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-beta-sidebar-badge{
+  display:none!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-scroll{
+  padding:14px 14px 16px!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed .fp-scroll a[href]{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  border-radius:12px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  box-shadow:none!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover{
+  background:#FFFFFF!important;
+  color:var(--mv-exp-navy)!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed .fp-scroll a[href="/expenses"]{
+  background:var(--mv-exp-green)!important;
+  color:#FFFFFF!important;
+  font-weight:700!important;
+  box-shadow:0 5px 14px rgba(5,150,105,.16)!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-emoji-icon{
+  width:18px!important;
+  min-width:18px!important;
+  height:18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 18px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.10em!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-app-content{
+  min-height:100vh!important;
+  background:var(--mv-exp-canvas)!important;
+}
+
+@media(min-width:1024px){
+  .mv-app-shell:has(.mv-expenses-control-center) .fp-app-content{
+    margin-left:256px!important;
+  }
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-app-header{
+  height:80px!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  background:rgba(248,250,252,.97)!important;
+  padding-left:24px!important;
+  padding-right:24px!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-app-global-search{
+  max-width:384px!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-app-global-search input{
+  min-height:42px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-exp-inset)!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-app-global-search input:focus{
+  border-color:var(--mv-exp-green)!important;
+  background:#FFFFFF!important;
+  box-shadow:0 0 0 3px rgba(16,185,129,.08)!important;
+}
+
+/* Dashboard-style notification control */
+.mv-app-shell:has(.mv-expenses-control-center) .fp-control-center-notification{
+  position:relative!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 36px!important;
+  overflow:visible!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-exp-inset)!important;
+  color:#334155!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-control-center-notification-bell{
+  width:18px!important;
+  height:18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+.mv-app-shell:has(.mv-expenses-control-center) .fp-control-center-notification-count{
+  position:absolute!important;
+  top:-5px!important;
+  right:-5px!important;
+  min-width:16px!important;
+  height:16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+  background:var(--mv-exp-red)!important;
+  padding:0 4px!important;
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+}
+
+/* --------------------------------------------------------------------------
+   Page canvas + hero
+   -------------------------------------------------------------------------- */
+.mv-expenses-control-center.fp-expenses-page{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:24px!important;
+  background:var(--mv-exp-canvas)!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,Helvetica,sans-serif!important;
+}
+
+.mv-expenses-control-center .fp-expenses-heading{
+  min-height:86px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  padding:0 0 16px!important;
+}
+
+.mv-expenses-control-center .fp-expenses-heading-copy{
+  min-width:0!important;
+}
+
+.mv-expenses-control-center .fp-expenses-overline{
+  display:block!important;
+  margin-bottom:4px!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-expenses-control-center .fp-expenses-title{
+  margin:0!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+}
+
+.mv-expenses-control-center .fp-expenses-subtitle{
+  margin-top:5px!important;
+  color:var(--mv-exp-muted)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.5!important;
+}
+
+.mv-expenses-control-center .fp-expenses-heading-actions{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+.mv-expenses-control-center .fp-expenses-motto{
+  min-width:230px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-exp-surface)!important;
+  padding:12px 20px!important;
+}
+
+.mv-expenses-control-center .fp-expenses-motto>span{
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:24px!important;
+  line-height:1!important;
+}
+
+.mv-expenses-control-center .fp-expenses-motto strong{
+  display:block!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+}
+
+.mv-expenses-control-center .fp-expenses-motto small{
+  display:block!important;
+  margin-top:5px!important;
+  color:var(--mv-exp-green)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+}
+
+.mv-expenses-control-center .fp-expense-add-form-host{
+  position:absolute!important;
+  right:0!important;
+  top:100%!important;
+  z-index:60!important;
+}
+
+.mv-expenses-control-center .fp-expenses-heading #add-expense>form.fp-add-expense-form{
+  position:absolute!important;
+  right:0!important;
+  top:8px!important;
+  width:min(760px,calc(100vw - 330px))!important;
+  margin:0!important;
+}
+
+/* Preserve the operational scope note but make it compact. */
+.mv-expenses-control-center .fp-expenses-scope-note{
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:9px!important;
+  margin:14px 0 0!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:12px!important;
+  background:rgba(248,250,252,.72)!important;
+  padding:10px 12px!important;
+  color:#64748B!important;
+}
+
+.mv-expenses-control-center .fp-expenses-scope-note-icon{
+  width:18px!important;
+  height:18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 18px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:999px!important;
+  background:#FFFFFF!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expenses-scope-note p{
+  margin:0!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  line-height:1.5!important;
+}
+
+.mv-expenses-control-center .fp-expenses-scope-note strong{
+  color:var(--mv-exp-navy)!important;
+  font-weight:700!important;
+}
+
+/* --------------------------------------------------------------------------
+   KPI row — full width like the reference
+   -------------------------------------------------------------------------- */
+.mv-expenses-control-center .fp-expense-kpi-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin-top:24px!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile{
+  position:relative!important;
+  min-height:118px!important;
+  overflow:hidden!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-exp-surface)!important;
+  padding:20px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile::before{
+  content:""!important;
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  height:4px!important;
+  background:var(--mv-exp-navy)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile:nth-child(2)::before{
+  background:var(--mv-exp-green)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile:nth-child(3)::before{
+  background:var(--mv-exp-amber)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile:nth-child(4)::before{
+  background:var(--mv-exp-border-dark)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-label{
+  color:var(--mv-exp-muted)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.35!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-value{
+  margin-top:8px!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-tile:nth-child(2) .mv-kpi-value{
+  color:var(--mv-exp-green)!important;
+}
+
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-delta,
+.mv-expenses-control-center .fp-expense-kpi-grid .mv-kpi-note{
+  margin-top:5px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+}
+
+/* --------------------------------------------------------------------------
+   8/4 workspace
+   -------------------------------------------------------------------------- */
+.mv-expenses-control-center .fp-expenses-layout{
+  display:grid!important;
+  grid-template-columns:minmax(0,9fr) minmax(280px,3fr)!important;
+  gap:24px!important;
+  align-items:start!important;
+  margin-top:24px!important;
+}
+
+.mv-expenses-control-center .fp-expenses-table-card,
+.mv-expenses-control-center .fp-expense-side-card{
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-exp-surface)!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-expenses-control-center .fp-expenses-table-card{
+  overflow:hidden!important;
+  margin-top:0!important;
+}
+
+/* Category tabs */
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tabs{
+  min-height:64px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  background:var(--mv-exp-surface)!important;
+  padding:16px 20px!important;
+}
+
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tabs>a,
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tabs>button{
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:var(--mv-exp-inset)!important;
+  padding:0 12px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1!important;
+}
+
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tabs>a.active,
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tabs>button.active{
+  background:var(--mv-exp-navy)!important;
+  color:#FFFFFF!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expenses-table-card .mv-app-tab-count{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+/* Existing operational filters — preserve every filter, restyle only */
+.mv-expenses-control-center .fp-expense-filterbar{
+  display:grid!important;
+  grid-template-columns:minmax(230px,1.5fr) 118px 112px 112px 124px!important;
+  gap:8px!important;
+  align-items:center!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  background:rgba(234,239,245,.42)!important;
+  padding:12px 18px!important;
+}
+
+.mv-expenses-control-center .fp-expense-search,
+.mv-expenses-control-center .fp-expense-filter-button,
+.mv-expenses-control-center .fp-expense-filter-select,
+.mv-expenses-control-center .fp-expense-sort select{
+  min-height:36px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+
+.mv-expenses-control-center .fp-expense-search{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:0 12px!important;
+}
+
+.mv-expenses-control-center .fp-expense-search input{
+  min-width:0!important;
+  flex:1 1 auto!important;
+  border:0!important;
+  background:transparent!important;
+  outline:none!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+}
+
+.mv-expenses-control-center .fp-expense-filter-button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  padding:0 10px!important;
+}
+
+.mv-expenses-control-center .fp-expense-filter-select{
+  padding:0 10px!important;
+}
+
+.mv-expenses-control-center .fp-expense-sort{
+  grid-column:1 / -1!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-expenses-control-center .fp-expense-sort select{
+  flex:1 1 auto!important;
+  padding:0 12px!important;
+}
+
+/* Ledger table */
+.mv-expenses-control-center .fp-expense-table-wrap{
+  overflow-x:auto!important;
+  background:var(--mv-exp-surface)!important;
+}
+
+.mv-expenses-control-center .fp-expense-table{
+  width:100%!important;
+  min-width:930px!important;
+  border-collapse:collapse!important;
+}
+
+.mv-expenses-control-center .fp-expense-table thead{
+  background:rgba(234,239,245,.68)!important;
+}
+
+.mv-expenses-control-center .fp-expense-table th{
+  height:42px!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  padding:0 14px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+  white-space:nowrap!important;
+}
+
+.mv-expenses-control-center .fp-expense-table td{
+  min-height:58px!important;
+  border-bottom:1px solid #E2E8F0!important;
+  padding:12px 14px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+}
+
+.mv-expenses-control-center .fp-expense-number,
+.mv-expenses-control-center .fp-expense-amount{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+}
+
+.mv-expenses-control-center .fp-expense-number{
+  color:#94A3B8!important;
+  font-weight:500!important;
+}
+
+.mv-expenses-control-center .fp-expense-description{
+  color:var(--mv-exp-navy)!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expense-amount{
+  color:var(--mv-exp-navy)!important;
+  font-weight:700!important;
+  text-align:center!important;
+}
+
+.mv-expenses-control-center .fp-expense-vendor{
+  color:#475569!important;
+}
+
+.mv-expenses-control-center .fp-expense-category-badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:23px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:999px!important;
+  padding:0 8px!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1!important;
+}
+
+/* Pagination */
+.mv-expenses-control-center .fp-expense-pagination{
+  min-height:58px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  border-top:1px solid var(--mv-exp-border)!important;
+  background:rgba(234,239,245,.28)!important;
+  padding:12px 18px!important;
+  color:var(--mv-exp-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-expenses-control-center .fp-expense-page-size{
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:8px!important;
+  background:#FFFFFF!important;
+  padding:0 10px!important;
+  color:var(--mv-exp-navy)!important;
+  font-size:11px!important;
+  font-weight:600!important;
+}
+
+/* --------------------------------------------------------------------------
+   Right rail
+   -------------------------------------------------------------------------- */
+.mv-expenses-control-center .fp-expenses-right-rail{
+  display:grid!important;
+  gap:24px!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-card{
+  padding:20px!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-card h2{
+  margin:0!important;
+  color:var(--mv-exp-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  border-bottom:1px solid var(--mv-exp-border)!important;
+  padding-bottom:8px!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-head>span{
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+/* Quick Actions */
+.mv-expenses-control-center .fp-expense-side-card>div.mt-3.grid{
+  margin-top:12px!important;
+  gap:8px!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-action{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:18px minmax(0,1fr) 12px!important;
+  align-items:center!important;
+  gap:8px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-exp-canvas)!important;
+  padding:8px 12px!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-action.primary{
+  border-color:var(--mv-exp-green)!important;
+  background:var(--mv-exp-green)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 2px 5px rgba(5,150,105,.10)!important;
+}
+
+/* Category donut */
+.mv-expenses-control-center .fp-expense-donut{
+  width:112px!important;
+  height:112px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+  box-shadow:inset 0 0 0 1px rgba(16,34,56,.03)!important;
+}
+
+.mv-expenses-control-center .fp-expense-donut>div{
+  width:76px!important;
+  height:76px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:999px!important;
+  background:var(--mv-exp-surface)!important;
+}
+
+.mv-expenses-control-center .fp-expense-donut strong{
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.1!important;
+}
+
+.mv-expenses-control-center .fp-expense-donut span{
+  margin-top:4px!important;
+  color:var(--mv-exp-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:8px!important;
+  font-weight:600!important;
+  text-transform:uppercase!important;
+}
+
+.mv-expenses-control-center .fp-expense-breakdown-list{
+  border-top:1px solid var(--mv-exp-border)!important;
+  padding-top:10px!important;
+}
+
+.mv-expenses-control-center .fp-expense-breakdown-row{
+  min-height:30px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-expenses-control-center .fp-expense-breakdown-row strong{
+  color:var(--mv-exp-navy)!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expense-breakdown-row>span:last-child{
+  min-width:34px!important;
+  text-align:right!important;
+  color:var(--mv-exp-navy)!important;
+  font-weight:700!important;
+}
+
+/* Ranked expenses */
+.mv-expenses-control-center .fp-expense-ranking{
+  display:grid!important;
+  gap:8px!important;
+}
+
+.mv-expenses-control-center .fp-expense-ranking-row{
+  min-height:40px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  border:1px solid var(--mv-exp-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-exp-canvas)!important;
+  padding:8px 10px!important;
+  color:var(--mv-exp-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-expenses-control-center .fp-expense-rank{
+  width:20px!important;
+  height:20px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 20px!important;
+  border-radius:999px!important;
+  background:var(--mv-exp-inset)!important;
+  font-size:10px!important;
+}
+
+/* Reference ends with Top Expenses; keep old promo out of the visual flow. */
+.mv-expenses-control-center .fp-expense-promo{
+  display:none!important;
+}
+
+/* Existing popovers/forms keep functionality; align typography. */
+.mv-expenses-control-center .fp-expense-popover,
+.mv-expenses-control-center .fp-add-expense-form{
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+}
+
+.mv-expenses-control-center .fp-expense-popover input,
+.mv-expenses-control-center .fp-expense-popover select,
+.mv-expenses-control-center .fp-add-expense-control,
+.mv-expenses-control-center .fp-add-expense-textarea{
+  font-size:12px!important;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media(max-width:1199px){
+  .mv-expenses-control-center .fp-expenses-layout{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-expenses-control-center .fp-expenses-right-rail{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+
+  .mv-expenses-control-center .fp-expense-filterbar{
+    grid-template-columns:minmax(220px,1fr) repeat(2,minmax(105px,.5fr))!important;
+  }
+}
+
+@media(max-width:900px){
+  .mv-expenses-control-center .fp-expense-kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .mv-expenses-control-center .fp-expenses-right-rail{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(max-width:743px){
+  .mv-expenses-control-center.fp-expenses-page{
+    padding:18px 16px 90px!important;
+  }
+
+  .mv-expenses-control-center .fp-expenses-heading{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-expenses-control-center .fp-expenses-motto{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .mv-expenses-control-center .fp-expense-filterbar{
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .mv-expenses-control-center .fp-expense-search,
+  .mv-expenses-control-center .fp-expense-sort{
+    grid-column:1 / -1!important;
+  }
+
+  .mv-expenses-control-center .fp-expenses-title{
+    font-size:24px!important;
+  }
+}
+
+@media(max-width:560px){
+  .mv-expenses-control-center .fp-expense-kpi-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* === Expenses quick actions icon gap v1 START === */
+
+/* Add breathing room between the Quick Actions icon and its label only. */
+.mv-expenses-control-center .fp-expense-side-action{
+  grid-template-columns:22px minmax(0,1fr) 12px!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+}
+
+.mv-expenses-control-center .fp-expense-side-action > :first-child{
+  margin-right:4px!important;
+}
+
+/* Keep the right arrow aligned where it is. */
+.mv-expenses-control-center .fp-expense-side-action > :last-child{
+  margin-left:0!important;
+}
+
+/* === Expenses quick actions icon gap v1 END === */
+
+/* === Expenses amount center v2 START === */
+
+/* Center Amount header + all Amount values in the Expenses ledger. */
+.mv-expenses-control-center .fp-expense-table th.fp-expense-amount,
+.mv-expenses-control-center .fp-expense-table td.fp-expense-amount,
+.mv-expenses-control-center .fp-expense-table .fp-expense-amount{
+  text-align:center!important;
+}
+
+/* Amount values keep the existing mono typography and stay centered. */
+.mv-expenses-control-center .fp-expense-table td.fp-expense-amount{
+  display:table-cell!important;
+  vertical-align:middle!important;
+}
+
+/* === Expenses amount center v2 END === */
+

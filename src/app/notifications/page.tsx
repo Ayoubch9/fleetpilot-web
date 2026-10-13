@@ -16,9 +16,10 @@ export default async function NotificationsPage() {
       companyName={companyName}
       role={role}
     >
-      <div className="fp-tool-page">
+      <div className="fp-tool-page mv-notifications-control-center">
         <div className="fp-tool-heading">
           <div>
+            <span>OPERATIONAL ALERTS</span>
             <h1>Notifications</h1>
             <p>
               Operational alerts generated from your real MileVoxa data.

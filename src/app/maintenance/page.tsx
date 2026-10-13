@@ -250,6 +250,11 @@ export default async function MaintenancePage({
     );
   }
 
+  const totalMaintenanceCost = filteredBase.reduce(
+    (sum, record) => sum + num(record.cost),
+    0
+  );
+
   const completed = filteredBase.filter(
     (record) => state(record) === "Completed"
   ).length;
@@ -311,17 +316,28 @@ export default async function MaintenancePage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-maint-page">
+      <div className="fp-maint-page mv-maint-control-center">
         <section className="fp-maint-heading">
-          <div>
+          <div className="fp-maint-heading-copy">
+            <span className="fp-maint-overline">FLEET UPTIME &amp; COMPLIANCE</span>
             <h1 className="fp-maint-title">Maintenance</h1>
             <p className="fp-maint-subtitle">
-              Track and schedule maintenance to keep your fleet safe and on the road.
+              Track and schedule maintenance to keep your trucks on the road.
             </p>
           </div>
 
-          <div id="add-maintenance" className="fp-maint-add-form-host">
-            <AddMaintenanceForm trucks={trucks} />
+          <div className="fp-maint-heading-actions">
+            <div className="fp-maint-motto" aria-label="Prevent problems, drive further">
+              <span aria-hidden="true">🔧</span>
+              <div>
+                <strong>PREVENT PROBLEMS.</strong>
+                <small>DRIVE FURTHER.</small>
+              </div>
+            </div>
+
+            <div id="add-maintenance" className="fp-maint-add-form-host">
+              <AddMaintenanceForm trucks={trucks} />
+            </div>
           </div>
         </section>
 
@@ -331,28 +347,34 @@ export default async function MaintenancePage({
           </div>
         )}
 
-        <div className="fp-maint-layout mt-4">
-          <div className="min-w-0">
-            <div className="fp-maint-kpi-grid">
+        <div className="fp-maint-kpi-grid fp-maint-kpi-grid-reference">
               <KpiTile
                 label="Total Services"
-                                value={filteredBase.length}
-                                note={maintenanceRangeNote(dateFrom, dateTo)}
+                value={filteredBase.length}
+                note={maintenanceRangeNote(dateFrom, dateTo)}
               />
               <KpiTile
                 label="Completed"
-                                value={completed}
-                                note={maintenanceRangeNote(dateFrom, dateTo)}
+                value={completed}
+                note={`${filteredBase.length ? Math.round((completed / filteredBase.length) * 100) : 0}% completed rate`}
+              />
+              <KpiTile
+                label="Overdue"
+                value={overdue}
+                note={overdue > 0 ? "Requires immediate booking" : "No overdue service"}
               />
               <KpiTile
                 label="Upcoming"
-                                value={upcoming}
-                                note={maintenanceRangeNote(dateFrom, dateTo)}
+                value={upcoming}
+                note={upcoming > 0 ? `${upcoming} scheduled` : "No scheduled tasks"}
               />
             </div>
 
+        <div className="fp-maint-layout mt-4">
+          <div className="min-w-0">
             <section className="fp-maint-table-card mt-4">
               <AppTabs
+                variant="filter"
                 activeKey={stateFilter}
                 ariaLabel="Maintenance status"
                 items={[
@@ -474,14 +496,17 @@ export default async function MaintenancePage({
             </section>
 
             <section className="fp-maint-side-card">
-              <h2>Maintenance Status</h2>
+              <div className="fp-maint-side-card-head">
+                <h2>Maintenance Status</h2>
+                <span>{money(totalMaintenanceCost)} Total</span>
+              </div>
               <div className="mt-4 flex justify-center">
                 <MaintDonut total={filteredBase.length} completed={completed} upcoming={upcoming} overdue={overdue} />
               </div>
               <div className="fp-maint-stat-list mt-4">
-                <MaintStatRow label="Completed" value={completed} total={filteredBase.length} color="#58bd69" />
-                <MaintStatRow label="Upcoming" value={upcoming} total={filteredBase.length} color="#16853B" />
-                <MaintStatRow label="Overdue" value={overdue} total={filteredBase.length} color="#ef5755" />
+                <MaintStatRow label="Completed" value={completed} total={filteredBase.length} color="#10B981" />
+                <MaintStatRow label="Upcoming" value={upcoming} total={filteredBase.length} color="#102238" />
+                <MaintStatRow label="Overdue" value={overdue} total={filteredBase.length} color="#DC2626" />
               </div>
             </section>
 
@@ -531,8 +556,8 @@ function MaintDonut({ total, completed, upcoming, overdue }: { total: number; co
   const s2 = c + u;
   const s3 = Math.min(100, s2 + o);
   const background = total > 0
-    ? `conic-gradient(#58bd69 0 ${c}%, #16853B ${c}% ${s2}%, #ef5755 ${s2}% ${s3}%, #e7edf3 ${s3}% 100%)`
-    : "conic-gradient(#e7edf3 0 100%)";
+    ? `conic-gradient(#10B981 0 ${c}%, #102238 ${c}% ${s2}%, #DC2626 ${s2}% ${s3}%, #CBD5E1 ${s3}% 100%)`
+    : "conic-gradient(#CBD5E1 0 100%)";
   return (
     <div className="fp-maint-donut" style={{ background }}>
       <div><strong>{total}</strong><span>Total Services</span></div>
@@ -603,24 +628,10 @@ function dateValue(value?: string | null) {
   return new Date(`${value.slice(0,10)}T12:00:00`).getTime();
 }
 
-function SearchIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>;
-}
-function FilterIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>;
-}
-function ToolIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z"/></svg>;
-}
-function CheckIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="m8 12 2.5 2.5L16 9"/></svg>;
-}
+
+
+
+
 function CalendarIcon() {
   return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 9h16"/></svg>;
-}
-function HistoryIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M8 9h8M8 13h8"/></svg>;
-}
-function AlertIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><path d="m12 3 9 16H3L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg>;
 }

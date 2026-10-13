@@ -5,15 +5,19 @@ import PublicHeader from "@/components/public-header";
 export default function PublicLayout({
   children,
   mainClassName = "",
+  chrome = "default",
 }: {
   children: ReactNode;
   mainClassName?: string;
+  chrome?: "default" | "none";
 }) {
+  const showChrome = chrome !== "none";
+
   return (
     <div className="fp-public-shell">
-      <PublicHeader />
+      {showChrome && <PublicHeader />}
       <main className={mainClassName}>{children}</main>
-      <PublicFooter />
+      {showChrome && <PublicFooter />}
     </div>
   );
 }

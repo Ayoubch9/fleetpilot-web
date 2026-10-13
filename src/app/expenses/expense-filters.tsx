@@ -25,12 +25,12 @@ export default function ExpenseFilters({ trucks }: { trucks: Truck[] }) {
     router.push(params.toString() ? `${pathname}?${params}` : pathname, { scroll: false });
   }
 
-  useEffect(() => {
-    const current = searchParams.get("q") || "";
-    if (current !== search) {
-      setSearch(current);
-    }
-  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+  const urlSearch = searchParams.get("q") || "";
+  const [previousUrlSearch, setPreviousUrlSearch] = useState(urlSearch);
+  if (previousUrlSearch !== urlSearch) {
+    setPreviousUrlSearch(urlSearch);
+    setSearch(urlSearch);
+  }
 
   useEffect(() => {
     const timer = window.setTimeout(() => {

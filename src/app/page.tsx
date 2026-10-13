@@ -1,10 +1,24 @@
-import type { Metadata } from "next";
 import Image from "next/image";
-import PublicLayout from "@/components/public-layout";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import PublicLayout from "@/components/public-layout";
+import HomepageStickyCta from "@/components/homepage-sticky-cta";
 import { publicPageMetadata, SITE_URL } from "@/lib/seo";
 import { SUPPORT_EMAIL } from "@/lib/support";
+import styles from "./home-redesign.module.css";
 
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--mv-home-sans",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--mv-home-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = publicPageMetadata({
   title: "MileVoxa | Free Public Beta for Trucking Operations",
@@ -13,90 +27,98 @@ export const metadata: Metadata = publicPageMetadata({
   path: "/",
 });
 
-const features = [
+const problemCards = [
+  ["01", "LOADS", "What did this load really make after deadhead and fuel?", "Rate vs. Actual net"],
+  ["02", "EXPENSES", "Where did the money go this week?", "Cash leaks & fuel drafts"],
+  ["03", "MAINTENANCE", "What service is coming due on the tractor?", "Tires, PM & reserves"],
+  ["04", "SETTLEMENT", "What is left after expenses, fees and weekly costs?", "True take-home income"],
+  ["05", "DOCUMENTS", "What expires next? Where is that BOL?", "COI, med cards & IFTA"],
+];
+
+const workflowSteps = [
   {
-    icon: "truck",
-    title: "Loads & Profitability",
-    text: "Track every load, rate, loaded mile and deadhead mile. See revenue and direct profit by load, week or month.",
+    number: "STEP 01",
+    title: "Add the Load",
+    body: "Track the agreed rate, pickup and delivery, loaded miles, deadhead miles and assigned truck.",
+    note: "Common dispatcher load information can also be used to prefill a new load.",
   },
   {
-    icon: "expense",
-    title: "Expenses & Fuel",
-    text: "Record fuel and operating costs, organize categories, attach them to trucks and understand where the money goes.",
+    number: "STEP 02",
+    title: "Record What the Truck Spends",
+    body: "Log fuel, tolls, repairs, scales, reimbursements and the operating costs that affect the week.",
+    note: "Keep costs connected to the truck and the operating period they belong to.",
   },
   {
-    icon: "tool",
-    title: "Maintenance",
-    text: "Track service history, mileage thresholds and upcoming maintenance before small problems become expensive downtime.",
+    number: "STEP 03",
+    title: "MileVoxa Connects the Numbers",
+    body: "Load revenue, fuel, operating expenses, weekly fixed costs and company fees come together in one operating view.",
+    note: "The same underlying records feed the views you use across MileVoxa.",
   },
   {
-    icon: "settlement",
-    title: "Weekly Settlement",
-    text: "Bring revenue, expenses, reimbursements, fixed costs and company fees together in one weekly business view.",
-  },
-  {
-    icon: "fuel",
-    title: "Fuel Analytics",
-    text: "Watch fuel cost, gallons, average price, MPG and truck-level fuel performance from real fleet data.",
-  },
-  {
-    icon: "ai",
-    title: "Pilot AI",
-    text: "Ask questions about loads, fuel, expenses and profitability using the operational data already inside MileVoxa.",
-  },
-  {
-    icon: "document",
-    title: "Documents & Compliance",
-    text: "Keep important fleet documents organized and surface expiration dates before they become an operational problem.",
-  },
-  {
-    icon: "report",
-    title: "Reports & Export",
-    text: "Turn your operating history into useful reports and exports for reviews, planning and better business decisions.",
+    number: "STEP 04",
+    title: "See What the Truck Made",
+    body: "Review revenue, total costs, profit, all-mile RPM and the weekly result without rebuilding the math in a spreadsheet.",
+    note: "Use the result as an operating view, then verify important business decisions with your own records.",
   },
 ];
 
-const outcomes = [
-  ["Know the real number", "Stop judging a week by gross revenue alone. See what remains after the costs that actually run the truck."],
-  ["Catch problems sooner", "Maintenance due, expiring documents and operational alerts stay visible instead of living across notes and messages."],
-  ["Run one system", "Loads, trucks, fuel, expenses, maintenance and settlement data stay connected instead of being spread across spreadsheets."],
+const connectedFeatures = [
+  ["🚛", "LOADS", "Track every load, rate and mile."],
+  ["⚖️", "LOAD DECISION", "Estimate whether a load is worth taking."],
+  ["💳", "EXPENSES", "Know where operating money goes."],
+  ["⛽", "FUEL ANALYTICS", "Track gallons, cost, MPG and average fuel price."],
+  ["🚚", "TRUCKS", "Keep the fleet organized by unit."],
+  ["🔧", "MAINTENANCE", "Track services and upcoming maintenance."],
+  ["📑", "WEEKLY SETTLEMENT", "Bring weekly revenue and costs together."],
+  ["💵", "REIMBURSEMENTS", "Track money owed back to the business."],
+  ["📁", "DOCUMENTS", "Organize important trucking documents."],
+  ["🚨", "ACTION CENTER", "See what needs attention next."],
+  ["📈", "REPORTS", "Review and export operating performance."],
+  ["💡", "PILOT AI", "Ask questions about your MileVoxa data."],
+];
+
+const targetUsers = [
+  ["🚛", "OWNER-OPERATORS", "For independent operators who need clear visibility into loads, costs and operating results without building a spreadsheet system from scratch."],
+  ["🚚", "SMALL FLEETS", "For businesses managing multiple trucks that want loads, fuel, maintenance and weekly numbers organized under one company account."],
+  ["📈", "GROWING TRUCKING BUSINESSES", "For operators replacing disconnected spreadsheets, message threads and paper records with one connected operating system."],
 ];
 
 const homepageFaqs = [
   {
-    question: "Do I need a credit card for the beta?",
+    question: "Is MileVoxa really free?",
     answer:
-      "No. MileVoxa is free during the public beta and no payment card is required to join.",
+      "MileVoxa is currently free during the Public Beta. No credit card is required. Paid plans may be introduced later, and users will receive advance notice before free beta access materially changes.",
   },
   {
-    question: "Is MileVoxa only for large fleets?",
+    question: "Is MileVoxa for company drivers?",
     answer:
-      "No. The product is designed around owner-operators and small fleets that need clear operating and profitability data without enterprise complexity.",
+      "MileVoxa is mainly designed for owner-operators and small trucking businesses that manage their own loads, trucks, expenses and operating numbers.",
+  },
+  {
+    question: "Can I use MileVoxa with multiple trucks?",
+    answer:
+      "Yes. MileVoxa is designed to organize trucking-business data across multiple trucks under the same company account.",
+  },
+  {
+    question: "Does MileVoxa replace my accountant?",
+    answer:
+      "No. MileVoxa helps organize and understand operating information but is not a substitute for professional accounting, tax, legal or financial advice.",
   },
   {
     question: "Can I use the same account on web and mobile?",
     answer:
-      "Yes. Web and mobile use the same MileVoxa account and company data, so your operation stays connected across both.",
+      "Yes. Web and mobile use the same MileVoxa account and company data so the operation stays connected across both experiences.",
   },
   {
-    question: "Can MileVoxa track more than revenue?",
-    answer:
-      "Yes. Loads, fuel, expenses, maintenance, reimbursements, fixed weekly costs and fee settings feed the operating and settlement views.",
+    question: "Do I need a credit card?",
+    answer: "No credit card is required to join the free Public Beta.",
   },
   {
-    question: "What happens when the public beta changes?",
+    question: "What happens after beta?",
     answer:
-      "Paid plans will be announced later. MileVoxa will give advance notice before free beta access changes, and beta access will not automatically turn into a paid subscription. Choosing a future paid plan will require explicit action.",
-  },
-  {
-    question: "Can I import dispatcher load information?",
-    answer:
-      "Yes. MileVoxa includes a Telegram-style load importer that can read common dispatch message fields and prefill a new load.",
+      "Paid plans may be announced later. MileVoxa will provide advance notice before beta access materially changes, and free beta access will not automatically become a paid subscription. Choosing a future paid plan will require explicit action.",
   },
 ];
-
-
-
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -132,9 +154,13 @@ const faqJsonLd = {
     },
   })),
 };
+
 export default function HomePage() {
   return (
-    <PublicLayout mainClassName="fp-marketing-page fp-marketing min-h-screen bg-white text-[#0b1730]">
+    <PublicLayout
+      chrome="none"
+      mainClassName={`${styles.page} ${jakarta.variable} ${mono.variable}`}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -147,384 +173,438 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      
 
-      <section className="fp-marketing-hero mv-live-copy-hero">
-        <div className="fp-marketing-hero-copy">
-          <div className="fp-marketing-eyebrow">MileVoxa Public Beta</div>
+      <div className={styles.betaStrip}>
+        <div className={styles.containerRow}>
+          <span className={styles.betaBadge}>PUBLIC BETA</span>
+          <span>MileVoxa is free during our open public beta.</span>
+          <span className={styles.betaDot}>•</span>
+          <span className={styles.hideMobile}>No credit card required.</span>
+          <Link href="/load-decision" className={styles.inlineGreenLink}>
+            Run the Load Calculator ↗
+          </Link>
+        </div>
+      </div>
 
-          <h1>
-            Your trucking business,
-            <span>organized.</span>
-          </h1>
+      <header className={styles.header}>
+        <div className={styles.headerInner}>
+          <Link href="/" className={styles.brand} aria-label="MileVoxa home">
+            <Image unoptimized width={2499} height={556}
+              src="/branding/milevoxa-logo-full-dark.png"
+              alt="MileVoxa — Run your trucking business with clarity."
+              className={styles.headerLogo}
+            />
+          </Link>
 
-          <p>
-            Manage your loads, expenses, trucks, and weekly settlements in one place.
-            Join the free MileVoxa beta and help shape what comes next.
-          </p>
-
-          <div className="fp-marketing-trial-pill fp-beta-marketing-pill">
-            <span>PUBLIC BETA</span>
-            <strong>Free during beta. No credit card required.</strong>
-          </div>
-
-          <div className="fp-marketing-hero-actions">
-            <Link href="/signup" className="fp-marketing-button primary large">
-              Join the Free Beta <span>→</span>
+          <nav className={styles.nav} aria-label="Homepage navigation">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pilot-ai">Pilot AI</a>
+            <a href="#action-center">Action Center</a>
+            <Link href="/tools" className={styles.navMuted}>
+              Free Tools ↗
             </Link>
-            <Link href="/pricing" className="fp-marketing-button secondary large">
-              Beta Access Details
+          </nav>
+
+          <div className={styles.headerActions}>
+            <Link href="/login" className={styles.signInLink}>
+              Sign In
+            </Link>
+            <Link href="/signup" className={styles.primaryButtonSmall}>
+              Join the Free Beta
             </Link>
           </div>
+        </div>
+      </header>
 
-          <div className="fp-marketing-hero-proof">
-            <span>✓ Web + mobile account</span>
-            <span>✓ Real weekly profit</span>
-            <span>✓ Built for trucking operations</span>
+      <section className={styles.driverHero}>
+        <div className={styles.driverHeroGridBackground} aria-hidden="true" />
+        <div className={styles.driverHeroGlow} aria-hidden="true" />
+
+        <div className={styles.container}>
+          <div className={styles.driverHeroPill}>
+            <span />
+            BUILT FOR INDEPENDENT DRIVERS &amp; 1–10 TRUCK FLEETS
           </div>
-        </div>
 
-        <div className="fp-marketing-hero-visual mv-concept-image-only">
-          <Image
-            src="/milevoxa-home-hero-visual.jpg"
-            alt="MileVoxa web dashboard and mobile app for trucking operations"
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 52vw"
-          />
-          <div className="mv-concept-image-only-fade" aria-hidden="true" />
-        </div>
-      </section>
+          <div className={styles.driverHeroLayout}>
+            <div className={styles.driverHeroCopy}>
+              <h1>
+                Your truck can gross $8,000 this week.
+                <span>That doesn&apos;t mean you made $8,000.</span>
+              </h1>
 
-      <section className="fp-marketing-trust-strip" aria-label="MileVoxa value">
-        <div>
-          <strong>One place</strong>
-          <span>for the operating numbers that matter</span>
-        </div>
-        <div>
-          <strong>Weekly clarity</strong>
-          <span>instead of month-end surprises</span>
-        </div>
-        <div>
-          <strong>Real fleet data</strong>
-          <span>not disconnected spreadsheets</span>
-        </div>
-        <div>
-          <strong>Free public beta</strong>
-          <span>test MileVoxa and help us improve it</span>
-        </div>
-      </section>
+              <p className={styles.driverHeroLead}>
+                Fuel stops, unlogged deadhead miles, shop fees, and confusing
+                deductions make it tough to know what the truck actually banked.
+              </p>
 
-      <section id="features" className="fp-marketing-section">
-        <div className="fp-marketing-section-heading">
-          <div>
-            <span>Everything connected</span>
-            <h2>Run the business behind the truck.</h2>
-          </div>
-          <p>
-            MileVoxa is designed around the work owner-operators and small fleets
-            already do every week—then connects it so profitability becomes easier to
-            see and easier to act on.
-          </p>
-        </div>
+              <p className={styles.driverHeroAside}>
+                MileVoxa brings your rate cons, fuel cards, and miles into one
+                clean view so you see real take-home profit before the week closes.
+              </p>
 
-        <div className="fp-marketing-feature-grid">
-          {features.map((feature) => (
-            <article key={feature.title} className="fp-marketing-feature-card">
-              <div className={`fp-marketing-feature-icon ${feature.icon}`}>
-                <MarketingIcon type={feature.icon} />
+              <div className={styles.driverHeroActions}>
+                <Link href="/signup" className={styles.driverHeroPrimary}>
+                  Join the Free Beta
+                  <span aria-hidden="true">→</span>
+                </Link>
+
+                <a href="#how-it-works" className={styles.driverHeroSecondary}>
+                  See How It Works ↓
+                </a>
               </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
 
-      <section className="fp-marketing-dark-section">
-        <div className="fp-marketing-dark-copy">
-          <span>From gross revenue to real business performance</span>
-          <h2>Know what the truck actually makes.</h2>
-          <p>
-            Gross revenue can look good while fuel, maintenance, reimbursements,
-            company fees and fixed weekly costs quietly reduce the result. MileVoxa
-            puts those pieces into the same operating view.
-          </p>
+              <div className={styles.driverHeroTrust}>
+                <span>✓</span>
+                <p>Free public beta • No credit card required • Built for the cab</p>
+              </div>
+            </div>
 
-          <div className="fp-marketing-outcomes">
-            {outcomes.map(([title, body]) => (
-              <div key={title}>
-                <i>✓</i>
-                <div>
-                  <strong>{title}</strong>
-                  <p>{body}</p>
+            <div
+              className={styles.driverTripCard}
+              aria-label="Illustrative MileVoxa trip profit card"
+            >
+              <div className={styles.tripHeader}>
+                <div className={styles.tripIdentity}>
+                  <div className={styles.tripIcon} aria-hidden="true">
+                    🚛
+                  </div>
+
+                  <div>
+                    <div className={styles.tripRouteRow}>
+                      <strong>Gary, IN ➔ Dallas, TX</strong>
+                      <span>UNIT #01</span>
+                    </div>
+                    <small>Rate Con #4412 • 53ft Dry Van</small>
+                  </div>
+                </div>
+
+                <div className={styles.tripGross}>
+                  <small>GROSS AGREED</small>
+                  <strong>$2,450.00</strong>
                 </div>
               </div>
+
+              <div className={styles.tripCostGrid}>
+                <article className={styles.tripCostCard}>
+                  <div>
+                    <span className={styles.tripCostAmber}>⛽ Pilot / Flying J</span>
+                    <strong>-$458.61</strong>
+                    <small>118 Gal @ $3.88/gal</small>
+                  </div>
+                  <footer>Fuel Card Draft #4810</footer>
+                </article>
+
+                <article className={styles.tripCostCard}>
+                  <div>
+                    <span>🛣️ Odometer Miles</span>
+                    <strong>915 Total</strong>
+                    <small className={styles.tripDeadhead}>+95 mi empty deadhead</small>
+                  </div>
+                  <footer>820 loaded + 95 empty</footer>
+                </article>
+
+                <article className={styles.tripCostCard}>
+                  <div>
+                    <span>🔧 Fixed &amp; Shop</span>
+                    <strong>-$238.20</strong>
+                    <small>Tire reserve + factoring</small>
+                  </div>
+                  <footer className={styles.tripReclaimed}>✓ $184 lumper reclaimed</footer>
+                </article>
+              </div>
+
+              <div className={styles.tripResult}>
+                <div className={styles.tripResultPrimary}>
+                  <small>WHAT THE TRUCK ACTUALLY MADE:</small>
+                  <div>
+                    <strong>+$1,753.19</strong>
+                    <span>Take-home profit</span>
+                  </div>
+                </div>
+
+                <div className={styles.tripRates}>
+                  <div>
+                    <small>Gross Rate</small>
+                    <strong>$2.99 / mi</strong>
+                  </div>
+                  <div>
+                    <small>All-Mile RPM</small>
+                    <strong className={styles.tripRateGreen}>$2.68 / mi</strong>
+                  </div>
+                  <div>
+                    <small>Net Margin</small>
+                    <strong>71.5%</strong>
+                  </div>
+                </div>
+              </div>
+
+              <p className={styles.tripFootnote}>
+                No spreadsheets. No guesswork. See your real profit per load before
+                you reload.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionDeep}>
+        <div className={styles.container}>
+          <SectionHeading
+            eyebrow="THE DAY-TO-DAY REALITY"
+            title="Running the truck is only half the job."
+            text="The other half is running the business behind it."
+          />
+          <div className={styles.problemGrid}>
+            {problemCards.map(([number, title, body, note]) => (
+              <article key={number} className={styles.problemCard}>
+                <div>
+                  <span className={styles.numberBadge}>{number}</span>
+                  <h3>{title}</h3>
+                  <p>“{body}”</p>
+                </div>
+                <small>{note}</small>
+              </article>
+            ))}
+          </div>
+          <div className={styles.centerNote}>
+            These answers usually live in five different places. <strong>MileVoxa puts them together.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionNavy}>
+        <div className={styles.container}>
+          <div className={styles.centerHeading}>
+            <span>WORKFLOW CLARITY</span>
+            <h2>From Fragmented Tools to One Operating System</h2>
+          </div>
+
+          <div className={styles.beforeAfterGrid}>
+            <article className={`${styles.beforeAfterCard} ${styles.beforeCard}`}>
+              <div className={styles.beforeAfterTitle}><i className={styles.redDot} /> WITHOUT MILEVOXA</div>
+              <div className={styles.listStack}>
+                {[
+                  ["💬 Dispatch messages in WhatsApp & SMS", "Scattered"],
+                  ["📝 Phone notes app for odometer & miles", "Unconnected"],
+                  ["⛽ Door-pocket envelope of paper fuel receipts", "Manual Entry"],
+                  ["📊 Outdated Excel spreadsheet for accounting", "Delayed"],
+                  ["📄 Unopened settlement PDFs in email", "Unreviewed"],
+                  ["📱 4 different phone apps to piece it together", "Time Consuming"],
+                ].map(([item, status]) => (
+                  <div key={item}><span>{item}</span><b>{status}</b></div>
+                ))}
+              </div>
+            </article>
+
+            <article className={`${styles.beforeAfterCard} ${styles.afterCard}`}>
+              <div className={styles.beforeAfterTitle}><i className={styles.greenDot} /> WITH MILEVOXA</div>
+              <p className={styles.cardIntro}>One connected MileVoxa system containing:</p>
+              <div className={styles.connectedMiniGrid}>
+                {["Loads & Rates", "Expenses & Tolls", "Fuel Analytics", "Trucks & Specs", "Maintenance Logs", "Compliance Vault", "Settlements", "Action Alerts"].map((item) => (
+                  <div key={item}><span>✓</span>{item}</div>
+                ))}
+              </div>
+              <div className={styles.afterStatement}>One business. One set of numbers. <strong>One place to understand it.</strong></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className={styles.sectionDeep}>
+        <div className={styles.container}>
+          <SectionHeading
+            eyebrow="SIMPLE 4-STEP PROCESS"
+            title="From load booked to weekly profit."
+            text="How MileVoxa turns everyday operating records into a clearer business view."
+          />
+          <div className={styles.workflowGrid}>
+            {workflowSteps.map((step) => (
+              <article key={step.number} className={styles.workflowCard}>
+                <span>{step.number}</span>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+                <small>{step.note}</small>
+              </article>
+            ))}
+          </div>
+          <div className={styles.sectionCta}>
+            <Link href="/signup" className={styles.primaryButton}>
+              See your own numbers in MileVoxa →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="action-center" className={styles.sectionNavy}>
+        <div className={styles.container}>
+          <div className={styles.splitSection}>
+            <div>
+              <span className={styles.eyebrow}>OPERATIONAL AWARENESS</span>
+              <h2>Know what needs your attention today.</h2>
+              <p>Instead of checking every part of the business manually, MileVoxa surfaces important operational items in one Action Center.</p>
+              <Link href="/signup" className={styles.inlineGreenLink}>Explore Action Center in Free Beta →</Link>
+            </div>
+            <div className={styles.alertStack}>
+              <AlertCard icon="🔧" title="Maintenance Due Soon" body="Truck 02 — oil service approaching mileage threshold" meta="Odometer: 498,420 mi · target: 500,000 mi" status="1,580 mi left" tone="amber" />
+              <AlertCard icon="📄" title="Document Expiring" body="Insurance certificate — commercial auto liability" meta="Renewal required before expiration" status="12 days remaining" tone="red" />
+              <AlertCard icon="⚖️" title="Settlement Review" body="Weekly costs need attention" meta="Confirm deductions before closing the week" status="Review Needed" tone="neutral" />
+              <AlertCard icon="💵" title="Reimbursement Pending" body="Paid out-of-pocket on a completed load" meta="Carrier reimbursement still open" status="$184.52" tone="green" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pilot-ai" className={styles.sectionDeep}>
+        <div className={styles.container}>
+          <SectionHeading
+            eyebrow="FLEET INTELLIGENCE"
+            title="Ask questions about your own trucking operation."
+            text="Pilot AI works with the operational information available in your MileVoxa account to help you understand your business faster."
+          />
+          <div className={styles.aiGrid}>
+            <AiExample question="How much did Truck 2 spend on fuel this month?" answer="Review recorded fuel purchases, gallons, average price and the truck's available fuel history." />
+            <AiExample question="Which week had the highest profit?" answer="Compare the operating results MileVoxa can derive from the weeks available in your account." />
+            <AiExample question="What are my biggest expense categories?" answer="Use your recorded expenses to identify the categories that are taking the largest share of operating spend." />
+            <AiExample question="Show me my recent load performance." answer="Review recent load rates, miles, deadhead and profit-related operating information from the data already in MileVoxa." />
+          </div>
+          <p className={styles.aiDisclaimer}>*Pilot AI analyzes data available in your MileVoxa account. It does not provide certified legal, tax, accounting or financial advice.</p>
+        </div>
+      </section>
+
+      <section id="features" className={styles.sectionNavy}>
+        <div className={styles.container}>
+          <div className={styles.centerHeading}>
+            <span>COMPLETE SUITE</span>
+            <h2>Everything Connected</h2>
+            <p>Designed around the weekly workflow of an owner-operator or small fleet.</p>
+          </div>
+          <div className={styles.featureGrid}>
+            {connectedFeatures.map(([icon, title, text]) => (
+              <article key={title} className={styles.featureCard}>
+                <span>{icon}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
             ))}
           </div>
         </div>
+      </section>
 
-        <div className="fp-marketing-control-preview">
-          <div className="fp-preview-top">
-            <span>WEEKLY CONTROL CENTER</span>
-            <b>LIVE BUSINESS VIEW</b>
+      <section id="about" className={styles.sectionDeep}>
+        <div className={styles.container}>
+          <div className={styles.centerHeading}>
+            <span>TARGET AUDIENCE</span>
+            <h2>Built for people running the business behind the truck.</h2>
+            <p>MileVoxa is built for practical trucking operations that need clarity without enterprise-software complexity.</p>
           </div>
-          <div className="fp-preview-metrics">
-            <PreviewMetric label="Gross Revenue" value="$24,580" tone="blue" />
-            <PreviewMetric label="Total Costs" value="$16,241" tone="red" />
-            <PreviewMetric label="Net Profit" value="$8,339" tone="green" />
-          </div>
-          <div className="fp-preview-chart">
-            {[43, 58, 49, 72, 63, 84, 69, 92, 76, 88, 67, 96].map((height, index) => (
-              <i key={index} style={{ height: `${height}%` }} />
+          <div className={styles.targetGrid}>
+            {targetUsers.map(([icon, title, text]) => (
+              <article key={title} className={styles.targetCard}>
+                <span>{icon}</span><h3>{title}</h3><p>{text}</p>
+              </article>
             ))}
           </div>
-          <div className="fp-preview-bottom">
-            <span>Loads</span>
-            <span>Fuel</span>
-            <span>Maintenance</span>
-            <span>Fees</span>
-            <span>Profit</span>
+        </div>
+      </section>
+
+      <section className={styles.sectionNavy}>
+        <div className={`${styles.container} ${styles.betaCenter}`}>
+          <span className={styles.betaBadgeLarge}>PUBLIC BETA ACCESS</span>
+          <h2>Help Shape MileVoxa.</h2>
+          <p>MileVoxa is currently in free public beta. We&apos;re inviting owner-operators and small fleets to use the platform, tell us what works, tell us what doesn&apos;t and help us build a better trucking-business tool.</p>
+          <div className={styles.betaChecklist}>
+            {["Free during public beta", "No credit card required to sign up", "Web + mobile connected account", "Send feedback directly to the MileVoxa team", "Paid plans will be announced later", "Advance notice before free beta access materially changes"].map((item) => (
+              <div key={item}><span>✓</span>{item}</div>
+            ))}
+          </div>
+          <div className={styles.betaActions}>
+            <Link href="/signup" className={styles.primaryButton}>Join the Free Beta</Link>
+            <Link href="/pricing" className={styles.secondaryButton}>Beta Access Details</Link>
+          </div>
+          <small className={styles.betaLegal}>Free beta access will not automatically become a paid subscription. A future paid plan will require your explicit action.</small>
+        </div>
+      </section>
+
+      <section className={styles.sectionDeep}>
+        <div className={`${styles.container} ${styles.faqWrap}`}>
+          <div className={styles.centerHeading}>
+            <span>COMMON QUESTIONS</span>
+            <h2>Frequently Asked Questions</h2>
+          </div>
+          <div className={styles.faqList}>
+            {homepageFaqs.map((item) => (
+              <details key={item.question} className={styles.faqItem}>
+                <summary>{item.question}<span>+</span></summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="about" className="fp-marketing-section fp-marketing-about">
-        <div className="fp-marketing-about-card">
-          <div className="fp-marketing-eyebrow">Why MileVoxa</div>
-          <h2>Built around a simple problem: trucking data is everywhere.</h2>
-          <p>
-            Loads arrive through dispatch messages. Fuel lives in receipts. Maintenance
-            is remembered by mileage. Expenses sit in separate apps or spreadsheets.
-            At the end of the week, the most important question is still difficult:
-            <strong> what did the truck actually make?</strong>
-          </p>
-          <p>
-            MileVoxa brings those operating pieces together for owner-operators and
-            small fleets that want a clearer way to run the business—not just move the truck.
-          </p>
-        </div>
-
-        <div className="fp-marketing-about-points">
-          <AboutPoint number="01" title="For owner-operators" text="See the business behind every mile without building a spreadsheet system from scratch." />
-          <AboutPoint number="02" title="For small fleets" text="Keep trucks, loads, expenses, maintenance and documents organized under one company account." />
-          <AboutPoint number="03" title="For better decisions" text="Use real operating history to compare weeks, understand costs and decide what needs attention next." />
+      <section className={`${styles.finalCta} ${styles.gridBackground}`}>
+        <div className={styles.finalGlow} aria-hidden="true" />
+        <div className={styles.container}>
+          <h2>Stop wondering what the truck made.<span>Know.</span></h2>
+          <p>You already do the hard part — booking loads, driving miles, paying expenses and keeping the truck moving. MileVoxa helps you understand the business those miles are building.</p>
+          <div className={styles.finalActions}>
+            <Link href="/signup" className={styles.primaryButton}>Join the Free Beta</Link>
+            <Link href="/tools" className={styles.secondaryButton}>Explore Free Tools</Link>
+          </div>
+          <small>Free during beta · No credit card required · Web + mobile account</small>
         </div>
       </section>
 
-      <section className="fp-marketing-free-tools-preview">
-        <div>
-          <span>Free trucking calculators</span>
-          <h2>Useful before you ever create an account.</h2>
-          <p>
-            Calculate load profit, rate per mile, cost per mile, fuel spend,
-            owner-operator profit and lease-operator take-home with
-            MileVoxa&apos;s free tools.
-          </p>
-        </div>
-        <Link href="/tools" className="fp-marketing-button primary large">
-          Open Free Tools <span>→</span>
-        </Link>
-      </section>
-
-      <section className="fp-marketing-social-proof" aria-labelledby="social-proof-heading">
-        <div className="fp-marketing-section-heading compact">
-          <div>
-            <span>Built around real trucking workflows</span>
-            <h2 id="social-proof-heading">See where MileVoxa fits into the week.</h2>
-          </div>
-          <p>
-            These examples illustrate common ways an owner-operator or small fleet
-            can use MileVoxa. They are product scenarios, not customer testimonials.
-          </p>
-        </div>
-
-        <div className="fp-marketing-testimonial-grid">
-          <ScenarioCard
-            text="Bring the load, fuel, tolls and weekly fixed costs into one view so you can see what the load actually contributed."
-            title="Owner-operator workflow"
-            detail="Single-truck workflow"
-          />
-          <ScenarioCard
-            text="Review weekly settlement and maintenance together so cost changes are easier to catch before they become a month-end surprise."
-            title="Growing fleet workflow"
-            detail="Growing fleet workflow"
-          />
-          <ScenarioCard
-            text="Keep loads, fuel, maintenance, documents and profit reporting connected as the operation grows."
-            title="Established fleet workflow"
-            detail="Multi-truck workflow"
-          />
-        </div>
-
-        <div className="fp-marketing-proof-stats">
-          <ProofStat value="Free" label="Public beta access" detail="No credit card required" />
-          <ProofStat value="One place" label="Connected operations" detail="Loads · costs · trucks · settlement" />
-          <ProofStat value="Your data" label="Real business workflows" detail="Use your own operation while testing" />
-          <ProofStat value="Direct" label="Product feedback" detail="Tell us what should improve" />
-        </div>
-
-        <div className="fp-marketing-social-proof-trial">
-          <div className="fp-marketing-trial-pill fp-beta-marketing-pill">
-            <span>PUBLIC BETA</span>
-            <strong>Free during beta. No card required.</strong>
-          </div>
-          <Link href="/signup" className="fp-marketing-button primary">
-            Join the Free Beta <span>→</span>
+      <footer className={styles.footer}>
+        <div className={styles.footerInner}>
+          <Link href="/" className={styles.footerBrand} aria-label="MileVoxa home">
+            <Image unoptimized width={2499} height={556}
+              src="/branding/milevoxa-logo-full-dark.png"
+              alt="MileVoxa — Run your trucking business with clarity."
+              className={styles.footerLogo}
+            />
           </Link>
+          <nav aria-label="Footer navigation">
+            <Link href="/">Main Platform</Link>
+            <Link href="/tools">Free Tools</Link>
+            <Link href="/pricing">Pricing &amp; Beta</Link>
+            <Link href="/about">About</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/data-deletion">Data Deletion</Link>
+            <Link href="/contact">Contact Team</Link>
+          </nav>
+          <span>© 2026 MileVoxa</span>
         </div>
-      </section>
+      </footer>
 
-      <section className="fp-marketing-pricing-preview mv-beta-home-section">
-        <div>
-          <span>Free public beta</span>
-          <h2>Test MileVoxa with your real trucking workflow.</h2>
-          <p>
-            MileVoxa is currently in free public beta. Paid plans will be announced later,
-            and we’ll give you advance notice before free beta access changes.
-          </p>
-        </div>
-
-        <div className="fp-marketing-pricing-preview-card mv-home-beta-card">
-          <div>
-            <small>PUBLIC BETA ACCESS</small>
-            <strong>$0 during beta</strong>
-            <span>No credit card required</span>
-          </div>
-          <ul className="mv-home-pricing-plan-list">
-            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Loads & trucks</b><span className="mv-home-plan-scope">Manage the operation</span></li>
-            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Expenses & settlement</b><span className="mv-home-plan-scope">Understand weekly results</span></li>
-            <li><span className="mv-home-plan-check" aria-hidden="true">✓</span><b>Feedback built in</b><span className="mv-home-plan-scope">Help shape what comes next</span></li>
-          </ul>
-          <p className="mv-home-beta-note">
-            Beta access will not automatically become a paid subscription. A future paid plan will require your explicit action.
-          </p>
-          <div className="fp-marketing-pricing-buttons">
-            <Link href="/signup" className="fp-marketing-button primary large">Join the Free Beta</Link>
-            <Link href="/pricing" className="fp-marketing-button secondary large">Beta Access Details</Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="fp-marketing-faq fp-marketing-section">
-        <div className="fp-marketing-section-heading compact">
-          <div>
-            <span>Before you start</span>
-            <h2>Common questions.</h2>
-          </div>
-        </div>
-
-        <div className="fp-marketing-faq-grid">
-          {homepageFaqs.map((item) => (
-            <Faq key={item.question} q={item.question} a={item.answer} />
-          ))}
-        </div>
-      </section>
-
-      <section className="fp-marketing-final-cta">
-        <div>
-          <span>PUBLIC BETA</span>
-          <h2>Put your trucking operation in one place and help us improve it.</h2>
-          <p>Free during beta. No card required. Paid plans will be announced later.</p>
-        </div>
-        <div>
-          <Link href="/signup" className="fp-marketing-button primary large">
-            Join the Free Beta <span>→</span>
-          </Link>
-          <Link href="/login" className="fp-marketing-button ghost large">
-            Sign In
-          </Link>
-        </div>
-      </section>
-
-      
+      <HomepageStickyCta />
     </PublicLayout>
   );
 }
 
-function PreviewMetric({ label, value, tone }: { label: string; value: string; tone: string }) {
+function SectionHeading({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) {
   return (
-    <div className={`fp-preview-metric ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function AboutPoint({ number, title, text }: { number: string; title: string; text: string }) {
-  return (
-    <article>
-      <span>{number}</span>
-      <h3>{title}</h3>
+    <div className={styles.sectionHeading}>
+      <span>{eyebrow}</span>
+      <h2>{title}</h2>
       <p>{text}</p>
-    </article>
-  );
-}
-
-function ScenarioCard({
-  text,
-  title,
-  detail,
-}: {
-  text: string;
-  title: string;
-  detail: string;
-}) {
-  return (
-    <article className="fp-marketing-testimonial">
-      <span className="fp-marketing-placeholder-badge">ILLUSTRATIVE EXAMPLE</span>
-      <blockquote>{text}</blockquote>
-      <div>
-        <strong>{title}</strong>
-        <span>{detail}</span>
-      </div>
-    </article>
-  );
-}
-
-function ProofStat({
-  value,
-  label,
-  detail,
-}: {
-  value: string;
-  label: string;
-  detail: string;
-}) {
-  return (
-    <div className="fp-marketing-proof-stat">
-      <strong>{value}</strong>
-      <span>{label}</span>
-      <small>{detail}</small>
     </div>
   );
 }
 
-function Faq({ q, a }: { q: string; a: string }) {
+
+function AlertCard({ icon, title, body, meta, status, tone }: { icon: string; title: string; body: string; meta: string; status: string; tone: "amber" | "red" | "neutral" | "green" }) {
+  const toneClass = { amber: styles.alertAmber, red: styles.alertRed, neutral: "", green: styles.alertGreen }[tone];
   return (
-    <details className="fp-marketing-faq-item">
-      <summary>{q}<span>+</span></summary>
-      <p>{a}</p>
-    </details>
+    <article className={`${styles.alertCard} ${toneClass}`}>
+      <div className={styles.alertMain}><span className={styles.alertIcon}>{icon}</span><div><h3>{title}</h3><p>{body}</p><small>{meta}</small></div></div>
+      <b>{status}</b>
+    </article>
   );
 }
 
-
-function MarketingIcon({ type }: { type: string }) {
-  const p = {
-    viewBox: "0 0 24 24",
-    className: "h-[18px] w-[18px] fill-none stroke-current",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (type === "truck") return <svg {...p}><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>;
-  if (type === "expense") return <svg {...p}><path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>;
-  if (type === "tool") return <svg {...p}><path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z"/></svg>;
-  if (type === "settlement") return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>;
-  if (type === "fuel") return <svg {...p}><path d="M6 3h9v18H6zM8 7h5"/><path d="M15 8h2l2 3v6a2 2 0 0 0 2 2"/></svg>;
-  if (type === "ai") return <svg {...p}><path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z"/><path d="m18.5 15 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"/></svg>;
-  if (type === "document") return <svg {...p}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg>;
-  return <svg {...p}><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>;
+function AiExample({ question, answer }: { question: string; answer: string }) {
+  return <article className={styles.aiCard}><strong>Q: “{question}”</strong><p>{answer}</p></article>;
 }

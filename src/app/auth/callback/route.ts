@@ -82,6 +82,9 @@ export async function GET(request: Request) {
 
   // New social user: collect company information before creating
   // the company + owner membership.
+  await supabase.auth.updateUser({
+    data: { profile_setup_required: true },
+  });
   return safeRedirect(request, requestUrl, "/onboarding");
 }
 

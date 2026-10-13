@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMileVoxaAlerts } from "@/lib/fleetpilot-alerts";
@@ -6,9 +8,22 @@ import GlobalSearch from "@/components/global-search";
 import { getAvatarUrl } from "@/lib/fleetpilot-account";
 import SidebarSignOut from "@/components/sidebar-sign-out";
 import MobileAppNavigation from "@/components/mobile-app-navigation";
+import NavigationIcon from "@/components/navigation-icon";
 import MileVoxaBrand, { MileVoxaMark } from "@/components/milevoxa-brand";
 import BetaFeedbackCenter, { BetaFeedbackTrigger } from "@/components/beta-feedback-center";
 import { isPublicBetaEnabled } from "@/lib/beta-access";
+
+const controlCenterSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--mv-control-sans",
+  display: "swap",
+});
+
+const controlCenterMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--mv-control-mono",
+  display: "swap",
+});
 
 type ActivePage =
   | "overview"
@@ -38,25 +53,25 @@ type AppShellProps = {
 
 const operations = [
   ["overview", "Dashboard", "/dashboard", "home"],
-  ["loads", "Loads", "/loads", "truck"],
-  ["decision", "Load Decision", "/load-decision", "spark"],
+  ["loads", "Loads", "/loads", "load"],
+  ["decision", "Load Decision", "/load-decision", "decision"],
   ["trucks", "Trucks", "/trucks", "truck"],
   ["expenses", "Expenses", "/expenses", "expense"],
-  ["maintenance", "Maintenance", "/maintenance", "tool"],
-  ["reimbursements", "Reimbursements", "/reimbursements", "wallet"],
+  ["maintenance", "Maintenance", "/maintenance", "maintenance"],
+  ["reimbursements", "Reimbursements", "/reimbursements", "reimbursements"],
 ] as const;
 
 const analytics = [
-  ["settlement", "Weekly Settlement", "/settlement", "money"],
+  ["settlement", "Weekly Settlement", "/settlement", "settlement"],
   ["odometer", "Weekly Odometer", "/odometer", "odometer"],
   ["deposit", "Security Deposit", "/security-deposit", "deposit"],
   ["fuel", "Fuel Analytics", "/fuel", "fuel"],
 ] as const;
 
 const tools = [
-  ["reports", "Reports", "/reports", "file"],
-  ["pilot", "Pilot AI", "/pilot-ai", "spark"],
-  ["documents", "Documents", "/documents", "file"],
+  ["reports", "Reports", "/reports", "reports"],
+  ["pilot", "Pilot AI", "/pilot-ai", "pilot"],
+  ["documents", "Documents", "/documents", "documents"],
 ] as const;
 
 
@@ -83,6 +98,7 @@ export default async function AppShell({
   ].includes(active);
   let alertCount = 0;
   let avatarUrl: string | null = null;
+  let businessRole = "";
 
   try {
     const supabase = await createClient();
@@ -100,11 +116,29 @@ export default async function AppShell({
     alertCount = alerts.length;
 
     if (user) {
-      const { data: profile } = await supabase
+      const profileResult = await supabase
         .from("profiles")
-        .select("avatar_path")
+        .select("avatar_path, business_role")
         .eq("id", user.id)
         .maybeSingle();
+      let profile = profileResult.data;
+
+      if (profileResult.error) {
+        const fallback = await supabase
+          .from("profiles")
+          .select("avatar_path")
+          .eq("id", user.id)
+          .maybeSingle();
+        profile = fallback.data
+          ? { ...fallback.data, business_role: null }
+          : null;
+      }
+
+      businessRole =
+        profile?.business_role ||
+        (typeof user.user_metadata?.business_role === "string"
+          ? user.user_metadata.business_role
+          : "");
 
       avatarUrl = await getAvatarUrl(
         supabase,
@@ -117,15 +151,14 @@ export default async function AppShell({
   }
 
   return (
-    <main className="mv-app-shell min-h-screen bg-[#F7F9F8]">
+    <main className={`mv-app-shell min-h-screen bg-[#F7F9F8] ${(active === "overview" || active === "loads" || active === "decision" || active === "trucks" || active === "expenses" || active === "maintenance" || active === "reimbursements" || active === "settlement" || active === "odometer" || active === "deposit" || active === "fuel" || active === "reports" || active === "documents" || active === "pilot" || active === "notifications" || active === "settings") ? `${controlCenterSans.variable} ${controlCenterMono.variable}` : ""}`}>
       <aside className="fp-sidebar-fixed fixed inset-y-0 left-0 z-40 hidden bg-gradient-to-b from-[#102238] to-[#0B1730] text-white lg:flex lg:flex-col">
         <div className="px-5 py-[16px]">
           <MileVoxaBrand
             href="/dashboard"
-            onDark
+            onDark={active !== "overview" && active !== "loads" && active !== "decision" && active !== "trucks" && active !== "expenses" && active !== "maintenance" && active !== "reimbursements" && active !== "settlement" && active !== "odometer" && active !== "deposit" && active !== "fuel" && active !== "reports" && active !== "documents" && active !== "pilot" && active !== "notifications" && active !== "settings"}
             className="mv-sidebar-brand"
           />
-          {publicBeta && <div className="fp-beta-sidebar-badge">Public Beta</div>}
         </div>
 
         <div className="fp-scroll flex-1 overflow-y-auto px-3 pb-3">
@@ -167,7 +200,7 @@ export default async function AppShell({
               aria-label="MileVoxa dashboard"
             >
               <MileVoxaMark className="h-7 w-7" />
-              <img
+              <Image unoptimized
                 src="/branding/milevoxa-logo-horizontal.png"
                 width={2000}
                 height={445}
@@ -191,15 +224,11 @@ export default async function AppShell({
             <Link
               href="/notifications"
               aria-label={`${alertCount} MileVoxa notifications`}
-              className={`relative flex h-9 w-9 items-center justify-center rounded-full transition ${
-                active === "notifications" ? "bg-[#EAF6EC]" : "hover:bg-[#f4f8fc]"
-              }`}
+              className={`fp-control-center-notification relative flex items-center justify-center transition ${active === "notifications" ? "is-active" : ""}`}
             >
-              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-none stroke-[#263a53]" strokeWidth="1.8">
-                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>
-              </svg>
+              <span className="fp-control-center-notification-bell" aria-hidden="true">🔔</span>
               {alertCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#16853B] px-[3px] text-[7px] font-black text-white">
+                <span className="fp-control-center-notification-count">
                   {alertCount > 99 ? "99+" : alertCount}
                 </span>
               )}
@@ -211,14 +240,14 @@ export default async function AppShell({
             >
               <span className="fp-header-avatar">
                 {avatarUrl ? (
-                  <img src={avatarUrl} alt="" />
+                  <Image unoptimized width={64} height={64} src={avatarUrl} alt="" />
                 ) : (
                   fullName?.[0]?.toUpperCase() || "F"
                 )}
               </span>
               <span className="hidden sm:block">
                 <span className="block text-[10px] font-[700]">{fullName}</span>
-                <span className="mt-.5 block text-[8px] font-[600] text-[#7d8ea1]">{role || companyName || "Member"}</span>
+                <span className="mt-.5 block text-[8px] font-[600] text-[#7d8ea1]">{businessRole || role || companyName || "Member"}</span>
               </span>
               <span className="hidden text-[#5f7188] sm:block">⌄</span>
             </Link>
@@ -248,7 +277,6 @@ export default async function AppShell({
     </main>
   );
 }
-
 function NavSection({
   title,
   items,
@@ -302,40 +330,8 @@ function SideItem({
           : "text-[#d2deea] hover:bg-white/[.05] hover:text-white"
       }`}
     >
-      <Icon type={icon} />
+      <NavigationIcon type={icon} />
       <span>{label}</span>
     </Link>
   );
-}
-
-function Disabled({ label, icon }: { label: string; icon: string }) {
-  return (
-    <div className="flex h-[36px] items-center gap-3 rounded-[8px] px-3.5 text-[11px] font-[500] text-[#c3d0dd]">
-      <Icon type={icon} />
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function Icon({ type }: { type: string }) {
-  const p = {
-    className: "h-[15px] w-[15px] fill-none stroke-current",
-    viewBox: "0 0 24 24",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-  if (type === "home") return <svg {...p}><path d="M3 11 12 3l9 8v10H3z"/><path d="M9 21v-6h6v6"/></svg>;
-  if (type === "truck") return <svg {...p}><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>;
-  if (type === "expense") return <svg {...p}><path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>;
-  if (type === "tool") return <svg {...p}><path d="M14.5 6a4 4 0 0 0-5 5L4 16.5 7.5 20l5.5-5.5a4 4 0 0 0 5-5L15.5 12 12 8.5 14.5 6Z"/></svg>;
-  if (type === "wallet") return <svg {...p}><path d="M4 6h16v12H4z"/><path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z"/></svg>;
-  if (type === "money") return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5"/></svg>;
-  if (type === "odometer") return <svg {...p}><path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 12 4-4"/><path d="M7 16h10"/></svg>;
-  if (type === "fuel") return <svg {...p}><path d="M6 3h9v18H6zM8 7h5"/><path d="M15 8h2l2 3v6a2 2 0 0 0 2 2"/></svg>;
-  if (type === "deposit") return <svg {...p}><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="M9 11h6M12 8v6"/></svg>;
-  if (type === "file") return <svg {...p}><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg>;
-  if (type === "spark") return <svg {...p}><path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z"/></svg>;
-  if (type === "settings") return <svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.06.06-2.76 2.76-.06-.06a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.65V21H10v-.09A1.8 1.8 0 0 0 8.9 19.3a1.8 1.8 0 0 0-2 .36l-.06.06-2.76-2.76.06-.06a1.8 1.8 0 0 0 .36-2A1.8 1.8 0 0 0 2.85 13H2v-4h.85A1.8 1.8 0 0 0 4.5 7a1.8 1.8 0 0 0-.36-2l-.06-.06L6.84 2.2l.06.06a1.8 1.8 0 0 0 2 .36A1.8 1.8 0 0 0 10 1h4a1.8 1.8 0 0 0 1.1 1.62 1.8 1.8 0 0 0 2-.36l.06-.06 2.76 2.76-.06.06a1.8 1.8 0 0 0-.36 2A1.8 1.8 0 0 0 21.15 9H22v4h-.85A1.8 1.8 0 0 0 19.4 15Z"/></svg>;
-  return <svg {...p}><circle cx="12" cy="12" r="8"/></svg>;
 }

@@ -18,8 +18,8 @@ import LoadActions from "./load-actions";
 import LoadFilters from "./load-filters";
 import LoadEmptyState from "./load-empty-state";
 import LoadPeriodSelector from "./load-period-selector";
+import { isMissingRouteStopsColumn } from "@/lib/load-stops";
 import {
-  dbDate,
   monday,
   parseDate,
   plusDays,
@@ -39,6 +39,7 @@ type Load = {
   deadhead_miles: number | string | null;
   status: string | null;
   truck_id: string | null;
+  route_stops: unknown;
 };
 
 type Truck = {
@@ -118,7 +119,7 @@ export default async function LoadsPage({
     await getMileVoxaAccount();
 
   const [
-    { data: loadData, error: loadError },
+    loadResult,
     { data: truckData, error: truckError },
     { data: expenseData, error: expenseError },
     { data: fixedExpenseData, error: fixedExpenseError },
@@ -128,7 +129,7 @@ export default async function LoadsPage({
     supabase
       .from("loads")
       .select(
-        "id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status, truck_id"
+        "id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status, truck_id, route_stops"
       )
       .order("pickup_date", { ascending: false }),
     supabase
@@ -144,6 +145,19 @@ export default async function LoadsPage({
       .from("weekly_odometer_records")
       .select("week_start, start_odometer, end_odometer"),
   ]);
+
+  let loadData = loadResult.data as unknown as Load[] | null;
+  let loadError = loadResult.error;
+  if (isMissingRouteStopsColumn(loadError)) {
+    const legacyLoadResult = await supabase
+      .from("loads")
+      .select(
+        "id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status, truck_id"
+      )
+      .order("pickup_date", { ascending: false });
+    loadData = legacyLoadResult.data as unknown as Load[] | null;
+    loadError = legacyLoadResult.error;
+  }
 
   const lifecycleNow = new Date();
   const allLoads = ((loadData ?? []) as Load[]).map((load) => ({
@@ -459,10 +473,7 @@ export default async function LoadsPage({
   if (period !== "week") query.set("period", period);
   if (params.week) query.set("week", params.week);
 
-  const exportLoads = filteredLoads.map((load) => ({
-    ...load,
-    profit: loadProfit(load),
-  }));
+
 
   const errors = [
     loadError,
@@ -480,17 +491,28 @@ export default async function LoadsPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-loads-page">
+      <div className="fp-loads-page mv-loads-control-center">
         <section className="fp-loads-heading">
-          <div>
+          <div className="fp-loads-heading-copy">
+            <span className="fp-loads-overline">Dispatch &amp; Revenue Hub</span>
             <h1 className="fp-loads-title">Loads</h1>
             <p className="fp-loads-subtitle">
               Manage your loads, track profits, and keep your business moving.
             </p>
           </div>
 
-          <div id="add-load" className="fp-load-add-form-host">
-            <AddLoadForm trucks={trucks} />
+          <div className="fp-loads-heading-actions">
+            <div className="fp-loads-motto" aria-label="Every mile builds your tomorrow">
+              <span aria-hidden="true">📦</span>
+              <div>
+                <strong>EVERY MILE</strong>
+                <small>BUILDS YOUR TOMORROW.</small>
+              </div>
+            </div>
+
+            <div id="add-load" className="fp-load-add-form-host">
+              <AddLoadForm trucks={trucks} />
+            </div>
           </div>
         </section>
 
@@ -537,6 +559,7 @@ export default async function LoadsPage({
 
             <section className="fp-loads-table-card mt-4">
               <AppTabs
+                variant="filter"
                 activeKey={filter}
                 ariaLabel="Load status"
                 items={[
@@ -1047,59 +1070,4 @@ function numberValue(value: number | string | null | undefined) {
 
 function money(value: number) {
   return formatMoney(value);
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8">
-      <circle cx="11" cy="11" r="6" />
-      <path d="m16 16 4 4" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <rect x="4" y="5" width="16" height="15" rx="2" />
-      <path d="M8 3v4M16 3v4M4 9h16" />
-    </svg>
-  );
-}
-
-function FilterIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M4 6h16M7 12h10M10 18h4" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return <span className="text-[17px] font-[400]">＋</span>;
-}
-
-function ImportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M12 3v12M8 7l4-4 4 4M5 15v5h14v-5" />
-    </svg>
-  );
-}
-
-function DuplicateIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <rect x="8" y="8" width="11" height="11" rx="2" />
-      <path d="M5 16H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M12 3v12M8 11l4 4 4-4M5 19h14" />
-    </svg>
-  );
 }

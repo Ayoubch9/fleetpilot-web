@@ -14,11 +14,17 @@ export default function UsCityStateAutocomplete({
   label,
   value,
   setValue,
+  className,
+  inputClassName,
+  required = false,
 }: {
   name: string;
   label: string;
   value: string;
   setValue: (value: string) => void;
+  className?: string;
+  inputClassName?: string;
+  required?: boolean;
 }) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -26,21 +32,31 @@ export default function UsCityStateAutocomplete({
   const [activeIndex, setActiveIndex] = useState(-1);
   const requestId = useRef(0);
 
-  useEffect(() => {
-    const query = value.trim();
+  const queryEligible = value.trim().length >= 2 && !/,\s*[A-Z]{2}$/i.test(value.trim());
 
-    if (query.length < 2 || /,\s*[A-Z]{2}$/i.test(query)) {
+  const [previousValue, setPreviousValue] = useState(value);
+  if (previousValue !== value) {
+    setPreviousValue(value);
+    if (!queryEligible) {
       setSuggestions([]);
       setOpen(false);
       setLoading(false);
       setActiveIndex(-1);
+    }
+  }
+
+  useEffect(() => {
+    const query = value.trim();
+
+    if (query.length < 2 || /,\s*[A-Z]{2}$/i.test(query)) {
       return;
     }
 
     const currentRequest = ++requestId.current;
-    setLoading(true);
+    let cancelled = false;
 
     const timer = window.setTimeout(async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `/api/us-cities?q=${encodeURIComponent(query)}`,
@@ -50,7 +66,7 @@ export default function UsCityStateAutocomplete({
           suggestions?: Suggestion[];
         };
 
-        if (currentRequest !== requestId.current) return;
+        if (cancelled || currentRequest !== requestId.current) return;
 
         const next = data.suggestions || [];
         setSuggestions(next);
@@ -61,13 +77,16 @@ export default function UsCityStateAutocomplete({
         setSuggestions([]);
         setOpen(false);
       } finally {
-        if (currentRequest === requestId.current) {
+        if (!cancelled && currentRequest === requestId.current) {
           setLoading(false);
         }
       }
     }, 120);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      cancelled = true;
+    };
   }, [value]);
 
   function choose(item: Suggestion) {
@@ -78,7 +97,7 @@ export default function UsCityStateAutocomplete({
   }
 
   return (
-    <label className="fp-add-load-field fp-us-city-field">
+    <label className={`fp-add-load-field fp-us-city-field ${className ?? ""}`.trim()}>
       <span>{label}</span>
 
       <div className="fp-us-city-autocomplete">
@@ -100,7 +119,7 @@ export default function UsCityStateAutocomplete({
             window.setTimeout(() => setOpen(false), 120);
           }}
           onKeyDown={(event) => {
-            if (!open || suggestions.length === 0) return;
+            if (!open || !queryEligible || suggestions.length === 0) return;
 
             if (event.key === "ArrowDown") {
               event.preventDefault();
@@ -124,22 +143,27 @@ export default function UsCityStateAutocomplete({
             }
           }}
           autoComplete="off"
-          className="fp-add-load-control"
+          className={`fp-add-load-control ${inputClassName ?? ""}`.trim()}
+          required={required}
+          role="combobox"
+          aria-controls={`${name}-suggestions`}
+          aria-activedescendant={open && queryEligible && activeIndex >= 0 ? `${name}-suggestion-${activeIndex}` : undefined}
           aria-autocomplete="list"
-          aria-expanded={open}
+          aria-expanded={open && queryEligible}
         />
 
-        {loading && (
+        {loading && queryEligible && (
           <span className="fp-us-city-loading">Searching…</span>
         )}
 
-        {open && (
-          <div className="fp-us-city-suggestions" role="listbox">
+        {open && queryEligible && (
+          <div id={`${name}-suggestions`} className="fp-us-city-suggestions" role="listbox">
             {suggestions.length > 0 ? (
               suggestions.map((item, index) => (
                 <button
                   key={`${item.city}-${item.state}-${index}`}
                   type="button"
+                  id={`${name}-suggestion-${index}`}
                   role="option"
                   aria-selected={activeIndex === index}
                   className={

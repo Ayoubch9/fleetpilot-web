@@ -1,0 +1,1001 @@
+/* ==========================================================================
+   MileVoxa Maintenance — Control Center Layout V1
+   Based on the supplied Maintenance Hub reference.
+   Scoped to /maintenance. Existing Supabase data, scheduling, filters and
+   maintenance/expense linkage remain unchanged.
+   ========================================================================== */
+
+.mv-app-shell:has(.mv-maint-control-center){
+  --mv-maint-navy:#102238;
+  --mv-maint-deep:#0B1730;
+  --mv-maint-green:#10B981;
+  --mv-maint-green-hover:#059669;
+  --mv-maint-green-light:#34D399;
+  --mv-maint-green-soft:#ECFDF5;
+  --mv-maint-green-border:#A7F3D0;
+  --mv-maint-canvas:#EAEFF5;
+  --mv-maint-sidebar:#E2E8F0;
+  --mv-maint-surface:#F8FAFC;
+  --mv-maint-inset:#EDF2F7;
+  --mv-maint-border:#CBD5E1;
+  --mv-maint-border-dark:#94A3B8;
+  --mv-maint-muted:#475569;
+  --mv-maint-red:#DC2626;
+  --mv-maint-red-bg:#FEE2E2;
+  --mv-maint-red-border:#FCA5A5;
+  --mv-maint-amber:#D97706;
+  --mv-maint-amber-bg:#FEF3C7;
+  --mv-maint-amber-border:#FCD34D;
+
+  background:var(--mv-maint-canvas)!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,Helvetica,sans-serif!important;
+}
+
+/* --------------------------------------------------------------------------
+   Signed-in shell: same treatment as Dashboard / Loads / Trucks / Expenses
+   -------------------------------------------------------------------------- */
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed{
+  width:256px!important;
+  border-right:1px solid var(--mv-maint-border)!important;
+  background:var(--mv-maint-sidebar)!important;
+  color:var(--mv-maint-navy)!important;
+  box-shadow:4px 0 18px rgba(16,34,56,.05)!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed>div:first-child{
+  min-height:80px!important;
+  height:80px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  background:rgba(248,250,252,.78)!important;
+  padding:10px 14px!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .mv-sidebar-brand{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:1 1 auto!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%!important;
+  height:auto!important;
+  display:block!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-beta-sidebar-badge{
+  display:none!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-scroll{
+  padding:14px 14px 16px!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed .fp-scroll a[href]{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  border-radius:12px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  box-shadow:none!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover{
+  background:#FFFFFF!important;
+  color:var(--mv-maint-navy)!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed .fp-scroll a[href="/maintenance"]{
+  background:var(--mv-maint-green)!important;
+  color:#FFFFFF!important;
+  font-weight:700!important;
+  box-shadow:0 5px 14px rgba(5,150,105,.16)!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-emoji-icon{
+  width:18px!important;
+  min-width:18px!important;
+  height:18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 18px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.10em!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-app-content{
+  min-height:100vh!important;
+  background:var(--mv-maint-canvas)!important;
+}
+
+@media(min-width:1024px){
+  .mv-app-shell:has(.mv-maint-control-center) .fp-app-content{
+    margin-left:256px!important;
+  }
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-app-header{
+  height:80px!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  background:rgba(248,250,252,.97)!important;
+  padding-left:24px!important;
+  padding-right:24px!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-app-global-search{
+  max-width:384px!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-app-global-search input{
+  min-height:42px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-maint-inset)!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+}
+
+/* Dashboard-style notification */
+.mv-app-shell:has(.mv-maint-control-center) .fp-control-center-notification{
+  position:relative!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 36px!important;
+  overflow:visible!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-maint-inset)!important;
+  color:#334155!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-control-center-notification-bell{
+  width:18px!important;
+  height:18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+.mv-app-shell:has(.mv-maint-control-center) .fp-control-center-notification-count{
+  position:absolute!important;
+  top:-5px!important;
+  right:-5px!important;
+  min-width:16px!important;
+  height:16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+  background:var(--mv-maint-red)!important;
+  padding:0 4px!important;
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+}
+
+/* --------------------------------------------------------------------------
+   Page + hero
+   -------------------------------------------------------------------------- */
+.mv-maint-control-center.fp-maint-page{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:24px!important;
+  background:var(--mv-maint-canvas)!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,Helvetica,sans-serif!important;
+}
+
+.mv-maint-control-center .fp-maint-heading{
+  min-height:86px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  padding:0 0 16px!important;
+}
+
+.mv-maint-control-center .fp-maint-heading-copy{
+  min-width:0!important;
+}
+
+.mv-maint-control-center .fp-maint-overline{
+  display:block!important;
+  margin-bottom:4px!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-maint-control-center .fp-maint-title{
+  margin:0!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+}
+
+.mv-maint-control-center .fp-maint-subtitle{
+  margin-top:5px!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.5!important;
+}
+
+.mv-maint-control-center .fp-maint-heading-actions{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+.mv-maint-control-center .fp-maint-motto{
+  min-width:230px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-maint-surface)!important;
+  padding:12px 20px!important;
+}
+
+.mv-maint-control-center .fp-maint-motto>span{
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:24px!important;
+  line-height:1!important;
+}
+
+.mv-maint-control-center .fp-maint-motto strong{
+  display:block!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+}
+
+.mv-maint-control-center .fp-maint-motto small{
+  display:block!important;
+  margin-top:5px!important;
+  color:var(--mv-maint-green)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+}
+
+.mv-maint-control-center .fp-maint-add-form-host{
+  position:absolute!important;
+  right:0!important;
+  top:100%!important;
+  z-index:60!important;
+}
+
+.mv-maint-control-center .fp-maint-heading #add-maintenance>form.fp-add-maint-form{
+  position:absolute!important;
+  right:0!important;
+  top:8px!important;
+  width:min(760px,calc(100vw - 330px))!important;
+  margin:0!important;
+}
+
+/* --------------------------------------------------------------------------
+   KPI row
+   -------------------------------------------------------------------------- */
+.mv-maint-control-center .fp-maint-kpi-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin-top:28px!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile{
+  position:relative!important;
+  min-height:118px!important;
+  overflow:hidden!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-maint-surface)!important;
+  padding:20px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile::before{
+  content:""!important;
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  height:4px!important;
+  background:var(--mv-maint-navy)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile:nth-child(2)::before{
+  background:var(--mv-maint-green)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile:nth-child(3)::before{
+  background:var(--mv-maint-red)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile:nth-child(4)::before{
+  background:var(--mv-maint-border-dark)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-label{
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-value{
+  margin-top:8px!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile:nth-child(2) .mv-kpi-value{
+  color:var(--mv-maint-green)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-tile:nth-child(3) .mv-kpi-value{
+  color:var(--mv-maint-red)!important;
+}
+
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-delta,
+.mv-maint-control-center .fp-maint-kpi-grid .mv-kpi-note{
+  margin-top:5px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+}
+
+/* --------------------------------------------------------------------------
+   8 / 4 service workspace
+   -------------------------------------------------------------------------- */
+.mv-maint-control-center .fp-maint-layout{
+  display:grid!important;
+  grid-template-columns:minmax(0,9fr) minmax(280px,3fr)!important;
+  gap:24px!important;
+  align-items:start!important;
+  margin-top:28px!important;
+}
+
+.mv-maint-control-center .fp-maint-table-card,
+.mv-maint-control-center .fp-maint-side-card{
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-maint-surface)!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-maint-control-center .fp-maint-table-card{
+  overflow:hidden!important;
+  margin-top:0!important;
+}
+
+/* Tabs */
+.mv-maint-control-center .fp-maint-table-card .mv-app-tabs{
+  min-height:64px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  background:var(--mv-maint-surface)!important;
+  padding:16px 20px!important;
+}
+
+.mv-maint-control-center .fp-maint-table-card .mv-app-tabs>a,
+.mv-maint-control-center .fp-maint-table-card .mv-app-tabs>button{
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:var(--mv-maint-inset)!important;
+  padding:0 12px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+
+.mv-maint-control-center .fp-maint-table-card .mv-app-tabs>a.active,
+.mv-maint-control-center .fp-maint-table-card .mv-app-tabs>button.active{
+  background:var(--mv-maint-navy)!important;
+  color:#FFFFFF!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-table-card .mv-app-tab-count{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+/* Filters */
+.mv-maint-control-center .fp-maint-filterbar{
+  display:grid!important;
+  grid-template-columns:minmax(220px,1.5fr) 116px 112px 112px 112px 128px!important;
+  gap:8px!important;
+  align-items:center!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  background:rgba(234,239,245,.42)!important;
+  padding:12px 18px!important;
+}
+
+.mv-maint-control-center .fp-maint-search,
+.mv-maint-control-center .fp-maint-filter-button,
+.mv-maint-control-center .fp-maint-filter-select,
+.mv-maint-control-center .fp-maint-sort select{
+  min-height:36px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+
+.mv-maint-control-center .fp-maint-search{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:0 12px!important;
+}
+
+.mv-maint-control-center .fp-maint-search input{
+  min-width:0!important;
+  flex:1 1 auto!important;
+  border:0!important;
+  background:transparent!important;
+  outline:none!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+}
+
+.mv-maint-control-center .fp-maint-filter-button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  padding:0 10px!important;
+}
+
+.mv-maint-control-center .fp-maint-filter-select{
+  padding:0 10px!important;
+}
+
+.mv-maint-control-center .fp-maint-sort{
+  grid-column:1 / -1!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-maint-control-center .fp-maint-sort select{
+  flex:1 1 auto!important;
+  padding:0 12px!important;
+}
+
+/* Table */
+.mv-maint-control-center .fp-maint-table-wrap{
+  overflow-x:auto!important;
+  background:var(--mv-maint-surface)!important;
+}
+
+.mv-maint-control-center .fp-maint-table{
+  width:100%!important;
+  min-width:1040px!important;
+  border-collapse:collapse!important;
+}
+
+.mv-maint-control-center .fp-maint-table thead{
+  background:rgba(234,239,245,.68)!important;
+}
+
+.mv-maint-control-center .fp-maint-table th{
+  height:42px!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  padding:0 12px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+  white-space:nowrap!important;
+}
+
+.mv-maint-control-center .fp-maint-table td{
+  min-height:58px!important;
+  border-bottom:1px solid #E2E8F0!important;
+  padding:12px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+}
+
+.mv-maint-control-center .fp-maint-number,
+.mv-maint-control-center .fp-maint-cost{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+}
+
+.mv-maint-control-center .fp-maint-number{
+  color:#94A3B8!important;
+  font-weight:500!important;
+}
+
+.mv-maint-control-center .fp-maint-type{
+  color:var(--mv-maint-navy)!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-cost{
+  color:var(--mv-maint-navy)!important;
+  font-weight:700!important;
+  text-align:right!important;
+}
+
+.mv-maint-control-center .fp-maint-table td:nth-child(7),
+.mv-maint-control-center .fp-maint-table th:nth-child(7){
+  text-align:right!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+}
+
+.mv-maint-control-center .fp-maint-table td:nth-child(9){
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  white-space:nowrap!important;
+}
+
+/* Overdue Next Due date treatment */
+.mv-maint-control-center .fp-maint-table td.text-\[\#e5525b\]{
+  display:table-cell!important;
+  color:var(--mv-maint-red)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-actions-cell{
+  text-align:center!important;
+}
+
+/* Pagination */
+.mv-maint-control-center .fp-maint-pagination{
+  min-height:58px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  border-top:1px solid var(--mv-maint-border)!important;
+  background:rgba(234,239,245,.28)!important;
+  padding:12px 18px!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-maint-control-center .fp-maint-page-button,
+.mv-maint-control-center .fp-maint-page-size{
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:8px!important;
+  background:#FFFFFF!important;
+  padding:0 10px!important;
+  color:var(--mv-maint-navy)!important;
+  font-size:11px!important;
+  font-weight:600!important;
+}
+
+.mv-maint-control-center .fp-maint-page-button.active{
+  border-color:var(--mv-maint-green)!important;
+  background:var(--mv-maint-green)!important;
+  color:#FFFFFF!important;
+}
+
+/* --------------------------------------------------------------------------
+   Right rail
+   -------------------------------------------------------------------------- */
+.mv-maint-control-center .fp-maint-right-rail{
+  display:grid!important;
+  gap:24px!important;
+}
+
+.mv-maint-control-center .fp-maint-side-card{
+  padding:20px!important;
+}
+
+.mv-maint-control-center .fp-maint-side-card h2{
+  margin:0!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-maint-control-center .fp-maint-side-card-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  border-bottom:1px solid var(--mv-maint-border)!important;
+  padding-bottom:8px!important;
+}
+
+.mv-maint-control-center .fp-maint-side-card-head>span{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:500!important;
+}
+
+/* Quick Actions */
+.mv-maint-control-center .fp-maint-side-card>div.mt-3.grid{
+  margin-top:12px!important;
+  gap:8px!important;
+}
+
+.mv-maint-control-center .fp-maint-side-action{
+  min-height:42px!important;
+  display:grid!important;
+  grid-template-columns:22px minmax(0,1fr) 12px!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-maint-canvas)!important;
+  padding:8px 12px!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-side-action.primary{
+  border-color:var(--mv-maint-green)!important;
+  background:var(--mv-maint-green)!important;
+  color:#FFFFFF!important;
+}
+
+.mv-maint-control-center .fp-maint-side-action[href*="state=overdue"]{
+  border-color:var(--mv-maint-red-border)!important;
+  background:var(--mv-maint-red-bg)!important;
+  color:var(--mv-maint-red)!important;
+}
+
+.mv-maint-control-center .fp-maint-side-icon{
+  width:22px!important;
+  height:22px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-right:2px!important;
+  border-radius:7px!important;
+  background:rgba(255,255,255,.36)!important;
+}
+
+/* Maintenance Cost by Truck */
+.mv-maint-control-center .fp-maint-truck-cost-list{
+  display:grid!important;
+  gap:10px!important;
+  margin-top:12px!important;
+}
+
+.mv-maint-control-center .fp-maint-truck-cost-row{
+  min-height:58px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-maint-canvas)!important;
+  padding:12px!important;
+}
+
+.mv-maint-control-center .fp-maint-truck-cost-row div>strong{
+  display:block!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-truck-cost-row div>span{
+  display:block!important;
+  margin-top:3px!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:10px!important;
+  font-weight:400!important;
+}
+
+.mv-maint-control-center .fp-maint-truck-cost-row>strong{
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:16px!important;
+  font-weight:800!important;
+}
+
+/* Status donut */
+.mv-maint-control-center .fp-maint-donut{
+  width:112px!important;
+  height:112px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+}
+
+.mv-maint-control-center .fp-maint-donut>div{
+  width:76px!important;
+  height:76px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:999px!important;
+  background:var(--mv-maint-surface)!important;
+}
+
+.mv-maint-control-center .fp-maint-donut strong{
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:20px!important;
+  font-weight:800!important;
+}
+
+.mv-maint-control-center .fp-maint-donut span{
+  margin-top:4px!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:8px!important;
+  font-weight:600!important;
+  text-transform:uppercase!important;
+}
+
+.mv-maint-control-center .fp-maint-stat-list{
+  border-top:1px solid var(--mv-maint-border)!important;
+  padding-top:10px!important;
+}
+
+.mv-maint-control-center .fp-maint-stat-row{
+  min-height:30px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;
+  font-weight:500!important;
+}
+
+.mv-maint-control-center .fp-maint-stat-row strong{
+  color:var(--mv-maint-navy)!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-stat-row>span:last-child{
+  min-width:36px!important;
+  text-align:right!important;
+  font-weight:700!important;
+}
+
+/* Upcoming service panel */
+.mv-maint-control-center .fp-maint-upcoming-list{
+  display:grid!important;
+  gap:8px!important;
+}
+
+.mv-maint-control-center .fp-maint-upcoming-row{
+  min-height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  border:1px solid var(--mv-maint-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-maint-canvas)!important;
+  padding:9px 10px!important;
+  color:var(--mv-maint-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-maint-control-center .fp-maint-upcoming-row div>span{
+  display:block!important;
+  margin-top:3px!important;
+  color:var(--mv-maint-muted)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:10px!important;
+  font-weight:600!important;
+}
+
+.mv-maint-control-center .fp-maint-upcoming-icon{
+  width:26px!important;
+  height:26px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 26px!important;
+  border-radius:8px!important;
+  background:var(--mv-maint-inset)!important;
+  color:var(--mv-maint-navy)!important;
+}
+
+/* Existing proactive PromoBanner adopts reference typography. */
+.mv-maint-control-center .fp-maint-right-rail [class*="promo"]{
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+}
+
+/* Forms / popovers */
+.mv-maint-control-center .fp-add-maint-form,
+.mv-maint-control-center .fp-maint-popover{
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+}
+
+.mv-maint-control-center .fp-add-maint-control,
+.mv-maint-control-center .fp-maint-popover input,
+.mv-maint-control-center .fp-maint-popover select{
+  font-size:12px!important;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media(max-width:1199px){
+  .mv-maint-control-center .fp-maint-layout{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-maint-control-center .fp-maint-right-rail{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+
+  .mv-maint-control-center .fp-maint-filterbar{
+    grid-template-columns:minmax(220px,1fr) repeat(3,minmax(105px,.5fr))!important;
+  }
+}
+
+@media(max-width:900px){
+  .mv-maint-control-center .fp-maint-kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .mv-maint-control-center .fp-maint-right-rail{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(max-width:743px){
+  .mv-maint-control-center.fp-maint-page{
+    padding:18px 16px 90px!important;
+  }
+
+  .mv-maint-control-center .fp-maint-heading{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-maint-control-center .fp-maint-motto{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .mv-maint-control-center .fp-maint-filterbar{
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .mv-maint-control-center .fp-maint-search,
+  .mv-maint-control-center .fp-maint-sort{
+    grid-column:1 / -1!important;
+  }
+
+  .mv-maint-control-center .fp-maint-title{
+    font-size:24px!important;
+  }
+}
+
+@media(max-width:560px){
+  .mv-maint-control-center .fp-maint-kpi-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* === Maintenance table center v1 START === */
+
+/* Center every Maintenance table header and body cell. */
+.mv-maint-control-center .fp-maint-table th,
+.mv-maint-control-center .fp-maint-table td{
+  text-align:center!important;
+}
+
+/* Keep inline content visually centered inside cells. */
+.mv-maint-control-center .fp-maint-table td > *{
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* Explicitly center status, cost, next due and action cells. */
+.mv-maint-control-center .fp-maint-table .fp-maint-cost,
+.mv-maint-control-center .fp-maint-table .fp-maint-actions-cell,
+.mv-maint-control-center .fp-maint-table td:nth-child(8),
+.mv-maint-control-center .fp-maint-table td:nth-child(9),
+.mv-maint-control-center .fp-maint-table td:nth-child(10){
+  text-align:center!important;
+}
+
+/* === Maintenance table center v1 END === */
+

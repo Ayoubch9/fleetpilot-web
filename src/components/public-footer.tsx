@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function PublicFooter() {
@@ -5,7 +6,7 @@ export default function PublicFooter() {
     <footer className="fp-public-footer">
       <div className="fp-marketing-footer fp-public-footer-inner">
         <Link href="/" className="fp-marketing-brand" aria-label="MileVoxa home">
-          <img
+          <Image unoptimized
             src="/branding/milevoxa-logo-full.png"
             width={2000}
             height={612}
@@ -16,7 +17,7 @@ export default function PublicFooter() {
 
         <div aria-label="Footer navigation">
           <Link href="/#features">Features</Link>
-          <Link href="/pricing">Pricing</Link>
+          <Link href="/pricing">Pricing &amp; Beta</Link>
           <Link href="/#about">About</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>

@@ -1,11 +1,13 @@
 const fs=require("fs");
 const assert=require("assert");
 const home=fs.readFileSync("src/app/page.tsx","utf8");
-assert.ok(home.includes("Your trucking business,"));
+assert.ok(home.includes("Your truck can gross $8,000 this week."));
+assert.ok(home.includes("That doesn&apos;t mean you made $8,000."));
 assert.ok(home.includes("Join the Free Beta"));
-assert.ok(home.includes("Free during beta. No credit card required."));
+assert.ok(home.includes("No credit card required"));
 assert.ok(home.includes("Paid plans will be announced later"));
 assert.ok(home.includes("explicit action"));
+assert.ok(home.includes('href="/signup"'));
 assert.ok(!home.includes("14 DAYS FREE"));
 assert.ok(!home.includes("Start 14-Day Free Trial"));
 console.log("homepage-conversion checks passed");

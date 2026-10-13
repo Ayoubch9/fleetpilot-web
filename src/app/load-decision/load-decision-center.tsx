@@ -56,28 +56,128 @@ export default function LoadDecisionCenter({ trucks, historicalFuelPrice }: { tr
     setSaving(false); setMessage("Load added successfully. Opening Loads…"); router.push("/loads"); router.refresh();
   }
 
-  return <div className="fp-load-decision-page">
-    <div className="fp-load-decision-hero"><div><span>LOAD DECISION CENTER</span><h1>Know the load before you take it.</h1><p>Estimate the real economics of a broker offer using all miles, fuel, and your operating-cost assumptions.</p></div><div className="fp-load-decision-beta">Decision support · Beta</div></div>
-
-    <div className="fp-load-decision-grid">
-      <section className="fp-load-decision-card"><h2>Load offer</h2><p className="fp-load-decision-muted">Start with the numbers the broker gave you.</p>
-        <div className="fp-load-decision-fields">
-          <label>Truck<select value={truckId} onChange={e=>setTruckId(e.target.value)}><option value="">Select truck</option>{trucks.map(t=><option key={t.id} value={t.id}>Truck {t.unit_number}{t.make ? ` · ${t.make}` : ""}</option>)}</select></label>
-          <Field label="Rate ($)" value={rate} set={setRate}/><Field label="Loaded miles" value={loadedMiles} set={setLoadedMiles}/><Field label="Deadhead miles" value={deadheadMiles} set={setDeadheadMiles}/>
+  return (
+    <div className="fp-load-decision-page mv-load-decision-control-center">
+      <div className="fp-load-decision-hero">
+        <div className="fp-load-decision-hero-copy">
+          <span>LOAD DECISION CENTER</span>
+          <h1>Know the load before you take it.</h1>
+          <p>Estimate the real economics of a broker offer using all miles, fuel, and your operating-cost assumptions.</p>
         </div>
-        <div className="fp-load-decision-assumptions"><h3>Cost assumptions</h3><p>{historicalFuelPrice ? "Fuel price is prefilled from your recent recorded fuel purchases." : "No usable recent fuel purchase history was found, so MileVoxa started with an editable fuel-price assumption."}</p><div className="fp-load-decision-fields"><Field label="Fuel price / gal ($)" value={fuelPrice} set={setFuelPrice}/><Field label="Truck MPG" value={mpg} set={setMpg}/><Field label="Other operating cost / mile ($)" value={operatingCost} set={setOperatingCost}/><Field label="Target all-mile RPM ($)" value={targetRpm} set={setTargetRpm}/></div></div>
-      </section>
 
-      <section className="fp-load-decision-card fp-load-decision-result"><div className={`fp-load-decision-rating ${ready ? result.rating : "empty"}`}><span>{ready ? ratingLabel : "Enter a load offer"}</span><strong>{ready ? `$${result.estimatedProfit.toLocaleString(undefined,{maximumFractionDigits:0})}` : "—"}</strong><small>{ready ? "estimated contribution after fuel + operating-cost assumption" : "Results update as you type"}</small></div>
-        <div className="fp-load-decision-metrics"><Metric label="All-mile RPM" value={ready ? money(result.allMileRpm) : "—"}/><Metric label="Gross RPM" value={ready ? money(result.grossRpm) : "—"}/><Metric label="Total miles" value={ready ? result.totalMiles.toLocaleString() : "—"}/><Metric label="Fuel gallons" value={ready ? result.fuelGallons.toFixed(1) : "—"}/><Metric label="Fuel cost" value={ready ? money(result.fuelCost) : "—"}/><Metric label="Profit / mile" value={ready ? money(result.profitPerMile) : "—"}/><Metric label="Est. margin" value={ready ? `${result.marginPercent.toFixed(1)}%` : "—"}/><Metric label="Deadhead share" value={ready ? `${result.deadheadPercent.toFixed(1)}%` : "—"}/></div>
-        {ready && <div className="fp-load-decision-why"><h3>Why MileVoxa rated this {ratingLabel.toLowerCase()}</h3>{result.reasons.map(r=><p key={r}>• {r}</p>)}</div>}
-        <div className="fp-load-decision-disclaimer">Estimates are decision-support only. Actual profit can change with fuel, tolls, detention, maintenance, taxes, fees, and other costs.</div>
-        <button className="fp-load-decision-primary" disabled={!ready || !truckId} onClick={()=>setShowAccept(v=>!v)}>{showAccept ? "Close load details" : "Accept & Add Load"}</button>
-      </section>
+        <div className="fp-load-decision-motto">
+          <span aria-hidden="true">🎯</span>
+          <div>
+            <strong>PROTECT YOUR MARGIN</strong>
+            <small>BEFORE SAYING YES.</small>
+          </div>
+        </div>
+      </div>
+
+      <div className="fp-load-decision-grid">
+        <div className="fp-load-decision-input-column">
+          <section className="fp-load-decision-card">
+            <div className="fp-load-decision-card-head">
+              <h2>Load offer</h2>
+              <p>Start with the numbers the broker gave you.</p>
+            </div>
+
+            <div className="fp-load-decision-fields">
+              <label>
+                Truck
+                <select value={truckId} onChange={e=>setTruckId(e.target.value)}>
+                  <option value="">Select truck</option>
+                  {trucks.map(t=><option key={t.id} value={t.id}>Truck {t.unit_number}{t.make ? ` · ${t.make}` : ""}</option>)}
+                </select>
+              </label>
+              <Field label="Rate ($)" value={rate} set={setRate}/>
+              <Field label="Loaded miles" value={loadedMiles} set={setLoadedMiles}/>
+              <Field label="Deadhead miles" value={deadheadMiles} set={setDeadheadMiles}/>
+            </div>
+          </section>
+
+          <section className="fp-load-decision-card">
+            <div className="fp-load-decision-card-head">
+              <h2>Cost assumptions</h2>
+              <p>{historicalFuelPrice ? "Fuel price is prefilled from your recent recorded fuel purchases." : "No usable recent fuel purchase history was found, so MileVoxa started with an editable fuel-price assumption."}</p>
+            </div>
+
+            <div className="fp-load-decision-fields">
+              <Field label="Fuel price / gal ($)" value={fuelPrice} set={setFuelPrice}/>
+              <Field label="Truck MPG" value={mpg} set={setMpg}/>
+              <Field label="Other operating cost / mile ($)" value={operatingCost} set={setOperatingCost}/>
+              <Field label="Target all-mile RPM ($)" value={targetRpm} set={setTargetRpm}/>
+            </div>
+          </section>
+        </div>
+
+        <section className="fp-load-decision-card fp-load-decision-result">
+          <div className="fp-load-decision-summary-head">
+            <div>
+              <h2>{ready ? (result.rating === "good" ? "Strong Load Offer" : result.rating === "poor" ? "High Risk / Unprofitable" : "Marginal Load") : "Enter a load offer"}</h2>
+              <p>{ready ? (result.rating === "good" ? "Exceeds your current operating threshold" : result.rating === "poor" ? "Below your current operating threshold" : "Near your current operating threshold") : "Results update as you type"}</p>
+            </div>
+            <span className={`fp-load-decision-verdict-dot ${ready ? result.rating : "empty"}`} aria-hidden="true" />
+          </div>
+
+          <div className="fp-load-decision-metrics">
+            <Metric label="All-mile RPM" value={ready ? money(result.allMileRpm) : "—"}/>
+            <Metric label="Gross RPM" value={ready ? money(result.grossRpm) : "—"}/>
+            <Metric label="Total miles" value={ready ? result.totalMiles.toLocaleString() : "—"}/>
+            <Metric label="Fuel gallons" value={ready ? result.fuelGallons.toFixed(1) : "—"}/>
+            <Metric label="Fuel cost" value={ready ? money(result.fuelCost) : "—"}/>
+            <Metric label="Profit / mile" value={ready ? money(result.profitPerMile) : "—"}/>
+            <Metric label="Est. margin" value={ready ? `${result.marginPercent.toFixed(1)}%` : "—"}/>
+            <Metric label="Deadhead share" value={ready ? `${result.deadheadPercent.toFixed(1)}%` : "—"}/>
+          </div>
+
+          {ready && (
+            <div className={`fp-load-decision-why ${result.rating}`}>
+              <h3>Why MileVoxa rated this {ratingLabel.toLowerCase()}</h3>
+              <strong>{money(result.estimatedProfit)} estimated contribution</strong>
+              {result.reasons.map(r=><p key={r}>• {r}</p>)}
+            </div>
+          )}
+
+          <div className="fp-load-decision-disclaimer">
+            Estimates are decision-support only. Actual profit can change with fuel, tolls, detention, maintenance, taxes, fees, and other costs.
+          </div>
+
+          <button
+            className="fp-load-decision-primary"
+            disabled={!ready || !truckId}
+            onClick={()=>setShowAccept(v=>!v)}
+          >
+            {showAccept ? "Close load details" : "Accept & Add Load"}
+          </button>
+        </section>
+      </div>
+
+      {showAccept && ready && (
+        <form className="fp-load-decision-accept" onSubmit={saveLoad}>
+          <div>
+            <span>ACCEPTED OFFER</span>
+            <h2>Finish the dispatch details</h2>
+            <p>The rate and mileage you already analyzed will be reused automatically.</p>
+          </div>
+
+          <div className="fp-load-decision-accept-grid">
+            <label>Load ID *<input name="load_number" required/></label>
+            <label>Broker / Customer<input name="broker"/></label>
+            <label>Pickup City, State *<input name="pickup" placeholder="Dallas, TX" required/></label>
+            <label>Delivery City, State *<input name="delivery" placeholder="Atlanta, GA" required/></label>
+            <label>Pickup Date *<input name="pickup_date" type="date" required/></label>
+            <label>Delivery Date *<input name="delivery_date" type="date" required/></label>
+          </div>
+
+          {message && <p className="fp-load-decision-message">{message}</p>}
+          <button className="fp-load-decision-primary" disabled={saving}>
+            {saving ? "Adding load…" : "Add to Loads"}
+          </button>
+        </form>
+      )}
     </div>
-
-    {showAccept && ready && <form className="fp-load-decision-accept" onSubmit={saveLoad}><div><span>ACCEPTED OFFER</span><h2>Finish the dispatch details</h2><p>The rate and mileage you already analyzed will be reused automatically.</p></div><div className="fp-load-decision-accept-grid"><label>Load ID *<input name="load_number" required/></label><label>Broker / Customer<input name="broker"/></label><label>Pickup City, State *<input name="pickup" placeholder="Dallas, TX" required/></label><label>Delivery City, State *<input name="delivery" placeholder="Atlanta, GA" required/></label><label>Pickup Date *<input name="pickup_date" type="date" required/></label><label>Delivery Date *<input name="delivery_date" type="date" required/></label></div>{message && <p className="fp-load-decision-message">{message}</p>}<button className="fp-load-decision-primary" disabled={saving}>{saving ? "Adding load…" : "Add to Loads"}</button></form>}
-  </div>;
+  );
 }
 
 function Field({label,value,set}:{label:string;value:string;set:(v:string)=>void}) { return <label>{label}<input inputMode="decimal" type="number" min="0" step="0.01" value={value} onChange={e=>set(e.target.value)}/></label>; }

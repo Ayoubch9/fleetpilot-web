@@ -1,4 +1,5 @@
 "use client";
+import NextImage from "next/image";
 import AppTabs from "@/components/app-tabs";
 import { formatMoney, formatPercent } from "@/lib/format";
 
@@ -6,6 +7,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { BUSINESS_ROLES, isBusinessRole } from "@/lib/business-roles";
 
 type SettingsTab =
   | "profile"
@@ -100,6 +102,7 @@ export default function SettingsCenter({
   email,
   companyName,
   role,
+  businessRole: initialBusinessRole,
   initialCompanyProfile,
   companyProfileReady,
   initialPreferences,
@@ -107,7 +110,6 @@ export default function SettingsCenter({
   initialCompanyFeeSettings,
   initialFixedExpenses,
   businessCostsReady,
-  deletionPending,
   subscriptionInfo,
   publicBeta,
 }: {
@@ -118,6 +120,7 @@ export default function SettingsCenter({
   email: string;
   companyName: string;
   role: string;
+  businessRole: string;
   initialCompanyProfile: Partial<CompanyProfile> | null;
   companyProfileReady: boolean;
   initialPreferences: Partial<Preferences> | null;
@@ -132,6 +135,7 @@ export default function SettingsCenter({
   const router = useRouter();
   const [tab, setTab] = useState<SettingsTab>("profile");
   const [name, setName] = useState(fullName);
+  const [businessRole, setBusinessRole] = useState(initialBusinessRole);
   const [avatar, setAvatar] = useState<string | null>(avatarUrl);
   const [avatarBusy, setAvatarBusy] = useState(false);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile>({
@@ -195,20 +199,9 @@ export default function SettingsCenter({
 
   const owner = role.toLowerCase() === "owner";
 
-  const trialStart = new Date(subscriptionInfo.trialStartedAt);
   const trialEnd = new Date(subscriptionInfo.trialEndsAt);
   const now = new Date();
-  const trialDurationMs = Math.max(
-    1,
-    trialEnd.getTime() - trialStart.getTime()
-  );
-  const trialElapsedMs = Math.min(
-    trialDurationMs,
-    Math.max(0, now.getTime() - trialStart.getTime())
-  );
-  const trialProgress = Math.round(
-    (trialElapsedMs / trialDurationMs) * 100
-  );
+
   const trialDaysRemaining = Math.max(
     0,
     Math.ceil(
@@ -216,10 +209,7 @@ export default function SettingsCenter({
         (24 * 60 * 60 * 1000)
     )
   );
-  const trialDaysUsed = Math.min(
-    14,
-    Math.max(0, 14 - trialDaysRemaining)
-  );
+
   const normalizedSubscriptionStatus =
     subscriptionInfo.status.toLowerCase();
   const paidActive = [
@@ -345,13 +335,17 @@ async function removeAvatar() {
 
   async function saveProfile(event: FormEvent) {
     event.preventDefault();
+    if (!isBusinessRole(businessRole)) {
+      setMessage("Choose a business role before saving your profile.");
+      return;
+    }
     setSaving(true);
     setMessage("");
 
     const supabase = createClient();
     const { error } = await supabase
       .from("profiles")
-      .update({ full_name: name.trim() })
+      .update({ full_name: name.trim(), business_role: businessRole })
       .eq("id", userId);
 
     setSaving(false);
@@ -694,7 +688,7 @@ async function removeAvatar() {
       return;
     }
 
-    window.location.href = "/login";
+    window.location.assign(new URL("/login", window.location.origin).href);
   }
 
   async function exportAccount() {
@@ -754,7 +748,7 @@ async function removeAvatar() {
         );
       }
 
-      window.location.href = "/account-deleted?done=1";
+      window.location.assign(new URL("/account-deleted?done=1", window.location.origin).href);
     } catch (caught) {
       setMessage(
         caught instanceof Error
@@ -768,6 +762,7 @@ async function removeAvatar() {
   return (
     <>
       <AppTabs
+        className="mv-settings-option-tabs"
         activeKey={tab}
         ariaLabel="Settings sections"
         items={[
@@ -798,7 +793,7 @@ async function removeAvatar() {
               <div className="fp-settings-profile">
                 <div className="fp-settings-avatar fp-settings-avatar-photo">
                   {avatar ? (
-                    <img src={avatar} alt={`${name} profile`} />
+                    <NextImage unoptimized width={64} height={64} src={avatar} alt={`${name} profile`} />
                   ) : (
                     name?.[0]?.toUpperCase() || "F"
                   )}
@@ -859,7 +854,16 @@ async function removeAvatar() {
                   </label>
                   <label>
                     Role
-                    <input value={role} readOnly />
+                    <select
+                      required
+                      value={businessRole}
+                      onChange={(event) => setBusinessRole(event.target.value)}
+                    >
+                      <option value="" disabled>Select your role</option>
+                      {BUSINESS_ROLES.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
                   </label>
                 </div>
 
@@ -1056,8 +1060,8 @@ async function removeAvatar() {
                       </select>
                     </label>
                     <label className="fp-company-field">
-                      <span>Your Role</span>
-                      <input value={role} readOnly />
+                      <span>Company Access Role</span>
+                    <input value={role} readOnly aria-label="Company access role" />
                     </label>
                   </div>
                 </div>
@@ -1977,14 +1981,14 @@ async function removeAvatar() {
             <h2>Account</h2>
             <div className="fp-settings-summary-avatar">
               {avatar ? (
-                <img src={avatar} alt="" />
+                <NextImage unoptimized width={64} height={64} src={avatar} alt="" />
               ) : (
                 name?.[0]?.toUpperCase() || "F"
               )}
             </div>
             <strong>{name}</strong>
             <span>{companyProfile.name}</span>
-            <em>{role}</em>
+            <em>{businessRole || role}</em>
           </section>
 
           <section className="fp-panel side">

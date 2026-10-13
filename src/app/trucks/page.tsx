@@ -142,17 +142,28 @@ export default async function TrucksPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-trucks-page">
+      <div className="fp-trucks-page mv-trucks-control-center">
         <section className="fp-trucks-heading">
-          <div>
+          <div className="fp-trucks-heading-copy">
+            <span className="fp-trucks-overline">FLEET ASSET REGISTRY</span>
             <h1 className="fp-trucks-title">Trucks</h1>
             <p className="fp-trucks-subtitle">
               Manage your trucks, track performance, maintenance and keep your fleet on the road.
             </p>
           </div>
 
-          <div id="add-truck" className="fp-truck-add-form-host">
-            <AddTruckForm />
+          <div className="fp-trucks-heading-actions">
+            <div className="fp-trucks-motto" aria-label="Fleet ready">
+              <span aria-hidden="true">🚛</span>
+              <div>
+                <strong>FLEET READY</strong>
+                <small>{activeCount} ACTIVE {activeCount === 1 ? "UNIT" : "UNITS"}</small>
+              </div>
+            </div>
+
+            <div id="add-truck" className="fp-truck-add-form-host">
+              <AddTruckForm />
+            </div>
           </div>
         </section>
 
@@ -162,14 +173,14 @@ export default async function TrucksPage({
           </div>
         )}
 
-        <div className="fp-trucks-layout mt-4">
-          <div className="min-w-0">
-            <div className="fp-truck-kpi-grid">
+        <div className="fp-truck-kpi-grid fp-truck-kpi-grid-reference">
               <KpiTile
                 label="Total Trucks" value={allTrucks.length} note="—"
               />
               <KpiTile
-                label="Active Trucks" value={activeCount} note="—"
+                label="Active Trucks"
+                value={activeCount}
+                note={`${allTrucks.length ? Math.round((activeCount / allTrucks.length) * 100) : 0}% of fleet ready`}
               />
               <KpiTile
                 label="In Service" value={inServiceCount} note="—"
@@ -179,8 +190,11 @@ export default async function TrucksPage({
               />
             </div>
 
+        <div className="fp-trucks-layout mt-4">
+          <div className="min-w-0">
             <section className="fp-trucks-table-card mt-4">
               <AppTabs
+                variant="filter"
                 activeKey={statusFilter}
                 ariaLabel="Truck status"
                 items={[
@@ -249,7 +263,7 @@ export default async function TrucksPage({
                   </thead>
                   <tbody>
                     {pageTrucks.map((truck, index) => {
-                      const nextService = getNextService(
+                      const nextService = getNextServiceStatus(
                         maintenanceByTruck.get(truck.id) || [],
                         mileage(truck)
                       );
@@ -264,7 +278,9 @@ export default async function TrucksPage({
                               <div
                                 className={`fp-truck-thumb fp-truck-thumb-${index % 3}`}
                                 aria-hidden="true"
-                              />
+                              >
+                                {displayUnit(truck).slice(0, 2)}
+                              </div>
                               <div className="min-w-0">
                                 <Link
                                   href={`/trucks/${truck.id}`}
@@ -298,7 +314,11 @@ export default async function TrucksPage({
                             {mileage(truck).toLocaleString()} mi
                           </td>
 
-                          <td>{nextService}</td>
+                          <td>
+                            <span className={`fp-truck-service-due ${nextService.tone}`}>
+                              {nextService.label}
+                            </span>
+                          </td>
 
                           <td className="fp-truck-actions-cell">
                             <TruckActions truck={truck} />
@@ -340,7 +360,10 @@ export default async function TrucksPage({
             </section>
 
             <section className="fp-truck-side-card">
-              <h2>Truck Status</h2>
+              <div className="fp-truck-side-head">
+                <h2>Truck Status</h2>
+                <span>Fleet Ratio</span>
+              </div>
               <div className="mt-4 flex justify-center">
                 <TruckDonut
                   total={allTrucks.length}
@@ -453,29 +476,59 @@ function TruckStatRow({
   );
 }
 
-function getNextService(records: Maintenance[], currentMileage: number) {
-  if (records.length === 0) return "—";
-
-  const futureMileage = records
-    .map((item) => numberValue(item.next_service_mileage))
-    .filter((value) => value > currentMileage)
-    .sort((a, b) => a - b)[0];
-
-  const futureDate = records
-    .map((item) => item.next_service_date)
-    .filter((value): value is string => Boolean(value))
-    .sort()[0];
-
-  if (futureDate) {
-    return new Date(`${futureDate.slice(0, 10)}T12:00:00`).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+function getNextServiceStatus(
+  records: Maintenance[],
+  currentMileage: number
+): {
+  label: string;
+  tone: "overdue" | "soon" | "normal" | "none";
+} {
+  if (records.length === 0) {
+    return { label: "—", tone: "none" };
   }
 
-  if (futureMileage) return `${futureMileage.toLocaleString()} mi`;
-  return "—";
+  const dated = records
+    .map((item) => item.next_service_date)
+    .filter((value): value is string => Boolean(value))
+    .sort();
+
+  if (dated.length > 0) {
+    const serviceDate = dated[0].slice(0, 10);
+    const service = new Date(`${serviceDate}T12:00:00`);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.ceil(
+      (service.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    return {
+      label: service.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+      tone: diffDays <= 0 ? "overdue" : diffDays <= 14 ? "soon" : "normal",
+    };
+  }
+
+  const mileageTargets = records
+    .map((item) => numberValue(item.next_service_mileage))
+    .filter((value) => value > 0)
+    .sort((a, b) => a - b);
+
+  if (mileageTargets.length > 0) {
+    const target = mileageTargets[0];
+    const remaining = target - currentMileage;
+
+    return {
+      label: `${target.toLocaleString()} mi`,
+      tone: remaining <= 0 ? "overdue" : remaining <= 1000 ? "soon" : "normal",
+    };
+  }
+
+  return { label: "—", tone: "none" };
 }
 
 function filterHref(status: string, q: string, make: string, sort: string) {
@@ -559,37 +612,6 @@ function FilterIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
       <path d="M4 6h16M7 12h10M10 18h4" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return <span className="text-[17px] font-[400]">＋</span>;
-}
-
-function ImportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M5 19h14V9H5z" />
-      <path d="M12 3v10M8 7l4-4 4 4" />
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M5 5h14v14H5z" />
-      <path d="M12 15V5M8 9l4-4 4 4" />
-    </svg>
-  );
-}
-
-function InactiveIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v8" />
     </svg>
   );
 }

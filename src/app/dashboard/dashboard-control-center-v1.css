@@ -1,0 +1,2067 @@
+/* ==========================================================================
+   MileVoxa Control Center Layout V1
+   Dashboard-only visual redesign based on the approved Control Center mockup.
+   No data, Supabase, action, calculation, route, or API behavior changes.
+   ========================================================================== */
+
+.mv-app-shell:has(.mv-control-center-dashboard){
+  --mv-cc-navy:#102238;
+  --mv-cc-deep:#0B1730;
+  --mv-cc-green:#10B981;
+  --mv-cc-green-hover:#059669;
+  --mv-cc-green-light:#34D399;
+  --mv-cc-canvas:#EAEFF5;
+  --mv-cc-sidebar:#E2E8F0;
+  --mv-cc-surface:#F8FAFC;
+  --mv-cc-inset:#EDF2F7;
+  --mv-cc-border:#CBD5E1;
+  --mv-cc-border-dark:#94A3B8;
+  --mv-cc-text:#102238;
+  --mv-cc-muted:#475569;
+  --mv-cc-red:#DC2626;
+  --mv-cc-red-bg:#FEE2E2;
+  --mv-cc-red-border:#FCA5A5;
+  --mv-cc-amber:#D97706;
+  --mv-cc-amber-bg:#FEF3C7;
+  --mv-cc-amber-border:#FCD34D;
+  background:var(--mv-cc-canvas)!important;
+  color:var(--mv-cc-text);
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------------------------
+   Dashboard-only App Shell
+   --------------------------- */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed{
+  width:256px!important;
+  border-right:1px solid var(--mv-cc-border)!important;
+  background:var(--mv-cc-sidebar)!important;
+  color:var(--mv-cc-text)!important;
+  box-shadow:4px 0 18px rgba(16,34,56,.05)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed>div:first-child{
+  min-height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid var(--mv-cc-border);
+  background:rgba(248,250,252,.72);
+  padding:12px 20px!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .mv-sidebar-brand{
+  min-width:0;
+  flex:1;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%;
+  height:auto;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-beta-sidebar-badge{
+  border:1px solid #A7F3D0!important;
+  border-radius:999px!important;
+  background:#ECFDF5!important;
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  letter-spacing:.03em!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-scroll{
+  padding:14px 14px 16px!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed .fp-scroll a[href]{
+  border-radius:12px!important;
+  color:#334155!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  box-shadow:none!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed .fp-scroll a[href]:hover{
+  background:#FFFFFF!important;
+  color:var(--mv-cc-navy)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed .fp-scroll a[href="/dashboard"]{
+  background:var(--mv-cc-green)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 5px 14px rgba(5,150,105,.16)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.10em!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-beta-sidebar-feedback,
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-signout{
+  color:#334155!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-beta-sidebar-feedback:hover,
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-signout:hover{
+  background:#FFFFFF!important;
+  color:var(--mv-cc-navy)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-content{
+  min-height:100vh;
+  background:var(--mv-cc-canvas)!important;
+}
+
+@media(min-width:1024px){
+  .mv-app-shell:has(.mv-control-center-dashboard) .fp-app-content{
+    margin-left:256px!important;
+  }
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-header{
+  height:80px!important;
+  border-bottom:1px solid var(--mv-cc-border)!important;
+  background:rgba(248,250,252,.97)!important;
+  box-shadow:0 1px 0 rgba(16,34,56,.02)!important;
+  padding-left:24px!important;
+  padding-right:24px!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-global-search{
+  max-width:384px!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-global-search input{
+  min-height:42px!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-cc-inset)!important;
+  color:var(--mv-cc-text)!important;
+  font-size:12px!important;
+  box-shadow:inset 0 1px 2px rgba(16,34,56,.03)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-global-search input:focus{
+  border-color:var(--mv-cc-green)!important;
+  background:#FFFFFF!important;
+  box-shadow:0 0 0 3px rgba(16,185,129,.08)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-app-week-selector{
+  font-family:var(--mv-control-mono),ui-monospace,monospace;
+}
+
+/* ---------------------------
+   Dashboard canvas
+   --------------------------- */
+.mv-control-center-dashboard.fp-page{
+  width:100%;
+  max-width:none!important;
+  min-height:calc(100vh - 80px);
+  margin:0!important;
+  padding:24px!important;
+  background:var(--mv-cc-canvas);
+  color:var(--mv-cc-text);
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif;
+}
+
+.mv-control-center-dashboard .fp-number,
+.mv-control-center-dashboard [class*="tabular-nums"],
+.mv-control-center-dashboard .fp-dashboard-metric-value,
+.mv-control-center-dashboard .fp-dashboard-metric-change,
+.mv-control-center-dashboard .fp-week-progress-range,
+.mv-control-center-dashboard .fp-week-progress-state{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+}
+
+/* ---------------------------
+   Welcome / Control Center hero
+   --------------------------- */
+.mv-control-center-dashboard .fp-hero-exact{
+  position:relative!important;
+  min-height:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  overflow:visible!important;
+  border:0!important;
+  border-bottom:1px solid var(--mv-cc-border)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  padding:0 0 16px!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact::before,
+.mv-control-center-dashboard .fp-hero-exact::after{
+  display:none!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact>div:first-child{
+  max-width:none!important;
+  display:flex;
+  flex-direction:column;
+}
+
+.mv-control-center-dashboard .fp-hero-exact .fp-overline{
+  order:-1;
+  margin:0 0 4px!important;
+  color:var(--mv-cc-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase;
+}
+
+.mv-control-center-dashboard .fp-hero-exact h1{
+  margin:0!important;
+  color:var(--mv-cc-text)!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact h1 span{
+  color:var(--mv-cc-text)!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact p{
+  margin-top:5px!important;
+  color:var(--mv-cc-muted)!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.55!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact>div:last-child{
+  position:static!important;
+  min-width:210px;
+  display:flex!important;
+  align-items:center;
+  gap:12px;
+  border:1px solid var(--mv-cc-border);
+  border-radius:16px;
+  background:var(--mv-cc-surface);
+  padding:12px 16px;
+  color:var(--mv-cc-navy)!important;
+  text-align:left!important;
+  text-transform:none!important;
+  letter-spacing:.02em!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  line-height:1.28!important;
+  text-shadow:none!important;
+  filter:none!important;
+}
+
+.mv-control-center-dashboard .fp-hero-exact>div:last-child::before{
+  content:"🚛";
+  flex:0 0 auto;
+  font-size:24px;
+}
+
+.mv-control-center-dashboard .fp-hero-exact>div:last-child>div{
+  display:none!important;
+}
+
+/* ---------------------------
+   Public Beta strip
+   --------------------------- */
+.mv-control-center-dashboard .fp-beta-dashboard-banner{
+  min-height:58px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  margin-top:16px!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-cc-surface)!important;
+  padding:13px 16px!important;
+  box-shadow:0 2px 6px rgba(16,34,56,.025)!important;
+}
+
+.mv-control-center-dashboard .fp-beta-dashboard-banner>div:first-child{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-width:0;
+}
+
+.mv-control-center-dashboard .fp-beta-dashboard-banner>div:first-child>span{
+  flex:0 0 auto;
+  border:1px solid #A7F3D0!important;
+  border-radius:999px!important;
+  background:#ECFDF5!important;
+  padding:4px 9px!important;
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-beta-dashboard-banner>div:first-child>strong{
+  display:none!important;
+}
+
+.mv-control-center-dashboard .fp-beta-dashboard-banner p{
+  margin:0!important;
+  color:var(--mv-cc-muted)!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.45!important;
+}
+
+.mv-control-center-dashboard .fp-beta-dashboard-feedback{
+  flex:0 0 auto;
+  min-height:auto!important;
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+  color:var(--mv-cc-green)!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  text-decoration:underline;
+  box-shadow:none!important;
+}
+
+/* ---------------------------
+   KPI row
+   --------------------------- */
+.mv-control-center-dashboard .fp-kpi-strip{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin-top:16px!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric{
+  position:relative;
+  min-width:0;
+  min-height:126px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-areas:"copy icon"!important;
+  align-items:start!important;
+  gap:12px!important;
+  overflow:hidden;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-cc-surface)!important;
+  padding:20px!important;
+  box-shadow:0 2px 6px rgba(16,34,56,.025)!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:4px;
+  background:var(--mv-cc-border-dark);
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(1)::before{background:var(--mv-cc-red)}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(2)::before{background:var(--mv-cc-navy)}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(3)::before{background:var(--mv-cc-amber)}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(4)::before{background:var(--mv-cc-border-dark)}
+
+.mv-control-center-dashboard .fp-dashboard-metric-icon{
+  grid-area:icon;
+  width:26px!important;
+  height:26px!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:8px!important;
+  background:var(--mv-cc-inset)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-copy{
+  grid-area:copy;
+  min-width:0;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-label{
+  color:var(--mv-cc-muted)!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-value{
+  margin-top:8px!important;
+  color:var(--mv-cc-navy)!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1.1!important;
+  letter-spacing:-.025em!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(1) .fp-dashboard-metric-value{
+  color:var(--mv-cc-red)!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-change{
+  margin-top:6px!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  line-height:1.4!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-chart{
+  display:none!important;
+}
+
+/* ---------------------------
+   Shared dashboard cards
+   --------------------------- */
+.mv-control-center-dashboard .fp-card,
+.mv-control-center-dashboard .fp-action-center{
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-cc-surface)!important;
+  box-shadow:0 2px 7px rgba(16,34,56,.025)!important;
+}
+
+.mv-control-center-dashboard .fp-card h2{
+  color:var(--mv-cc-navy)!important;
+  font-size:14px!important;
+  font-weight:700!important;
+}
+
+/* ---------------------------
+   Action Center
+   --------------------------- */
+.mv-control-center-dashboard .fp-action-center{
+  margin-top:16px!important;
+  overflow:hidden;
+}
+
+.mv-control-center-dashboard .fp-action-center-head{
+  align-items:center!important;
+  border-bottom:1px solid var(--mv-cc-border)!important;
+  padding:18px 20px 14px!important;
+}
+
+.mv-control-center-dashboard .fp-action-center-head .fp-overline{
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.08em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center-head h2{
+  color:var(--mv-cc-navy)!important;
+  font-size:18px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-action-center-head p{
+  color:var(--mv-cc-muted)!important;
+  font-size:11px!important;
+}
+
+.mv-control-center-dashboard .fp-action-view-all{
+  color:var(--mv-cc-green)!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-action-summary{
+  gap:8px!important;
+  padding:12px 20px 0!important;
+}
+
+.mv-control-center-dashboard .fp-action-summary span{
+  border-radius:8px!important;
+  padding:5px 9px!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-action-list{
+  gap:10px!important;
+  padding:14px 20px 20px!important;
+}
+
+.mv-control-center-dashboard .fp-action-item{
+  grid-template-columns:78px minmax(0,1fr) auto!important;
+  gap:12px!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-left-width:4px!important;
+  border-radius:12px!important;
+  background:var(--mv-cc-canvas)!important;
+  padding:13px 14px!important;
+  box-shadow:none!important;
+}
+
+.mv-control-center-dashboard .fp-action-copy b{
+  color:var(--mv-cc-navy)!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-action-copy span,
+.mv-control-center-dashboard .fp-action-copy p{
+  color:var(--mv-cc-muted)!important;
+  font-size:10px!important;
+}
+
+.mv-control-center-dashboard .fp-action-buttons a,
+.mv-control-center-dashboard .fp-action-buttons button{
+  min-height:30px!important;
+  border-radius:8px!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+/* ---------------------------
+   Main dashboard grid
+   --------------------------- */
+.mv-control-center-dashboard .fp-dashboard-master{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(270px,.90fr)!important;
+  gap:24px!important;
+  margin-top:24px!important;
+  align-items:start;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left{
+  display:contents!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-analytics-row{
+  display:contents!important;
+}
+
+.mv-control-center-dashboard .fp-chart-card{
+  grid-column:1!important;
+  grid-row:1!important;
+}
+
+.mv-control-center-dashboard .fp-breakdown-card{
+  grid-column:2!important;
+  grid-row:1!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-right-rail{
+  grid-column:3!important;
+  grid-row:1 / span 4!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  align-content:start!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-recent-row{
+  grid-column:1 / 3!important;
+  grid-row:2!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.65fr) minmax(250px,.85fr)!important;
+  gap:24px!important;
+  margin-top:0!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left-footer{
+  grid-column:1 / 3!important;
+  grid-row:3!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:24px!important;
+  margin-top:0!important;
+}
+
+.mv-control-center-dashboard .fp-quote-card{
+  display:none!important;
+}
+
+/* Reference-like combined Week Progress + Quick Actions card */
+.mv-control-center-dashboard .fp-week-progress-card{
+  border-radius:16px 16px 0 0!important;
+  border-bottom:0!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-card{
+  border-radius:0 0 16px 16px!important;
+  border-top:1px solid var(--mv-cc-border)!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-card{
+  margin-top:24px!important;
+}
+
+/* Chart / expense cards */
+.mv-control-center-dashboard .fp-chart-card,
+.mv-control-center-dashboard .fp-breakdown-card,
+.mv-control-center-dashboard .fp-week-progress-card,
+.mv-control-center-dashboard .fp-quick-actions-card,
+.mv-control-center-dashboard .fp-pilot-card,
+.mv-control-center-dashboard .fp-recent-card,
+.mv-control-center-dashboard .fp-activity-card{
+  min-width:0;
+  overflow:hidden;
+}
+
+.mv-control-center-dashboard .fp-chart-card>div:first-child,
+.mv-control-center-dashboard .fp-breakdown-card>div:first-child,
+.mv-control-center-dashboard .fp-week-progress-card>div:first-child,
+.mv-control-center-dashboard .fp-quick-actions-card>div:first-child,
+.mv-control-center-dashboard .fp-pilot-card>div:first-child,
+.mv-control-center-dashboard .fp-recent-card>div:first-child,
+.mv-control-center-dashboard .fp-activity-card>div:first-child{
+  border-bottom:1px solid var(--mv-cc-border);
+  padding-top:15px!important;
+  padding-bottom:12px!important;
+}
+
+/* Week progress */
+.mv-control-center-dashboard .fp-week-progress-link{
+  gap:16px!important;
+  padding:16px!important;
+}
+
+.mv-control-center-dashboard .fp-week-progress-range{
+  color:var(--mv-cc-navy)!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-week-progress-state{
+  color:var(--mv-cc-green)!important;
+  font-size:9px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-week-progress-detail strong{
+  color:var(--mv-cc-navy)!important;
+  font-size:11px!important;
+}
+
+.mv-control-center-dashboard .fp-week-progress-detail span,
+.mv-control-center-dashboard .fp-week-progress-open{
+  color:var(--mv-cc-muted)!important;
+  font-size:9px!important;
+}
+
+/* Quick Actions keep their real modals + handlers */
+.mv-control-center-dashboard .fp-quick-actions-list{
+  display:grid!important;
+  gap:8px!important;
+  padding:0 14px 16px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-list button{
+  min-height:38px!important;
+  border-radius:11px!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-list button:first-child{
+  border-color:var(--mv-cc-green)!important;
+  background:var(--mv-cc-green)!important;
+  color:#FFFFFF!important;
+}
+
+/* Recent loads */
+.mv-control-center-dashboard .fp-recent-loads-table thead{
+  background:var(--mv-cc-inset)!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-table th{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-table td{
+  border-top:1px solid #E2E8F0!important;
+  color:#334155!important;
+  font-size:10px!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-table tbody tr:hover{
+  background:#FFFFFF!important;
+}
+
+/* Fleet status */
+.mv-control-center-dashboard .fp-fleet-status-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+
+.mv-control-center-dashboard .fp-fleet-status-grid>div{
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-cc-canvas)!important;
+  box-shadow:none!important;
+}
+
+/* Pilot AI */
+.mv-control-center-dashboard .fp-pilot-card .fp-pilot-intro{
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-cc-canvas)!important;
+  padding:12px!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-orb{
+  background:var(--mv-cc-navy)!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-start{
+  border-radius:11px!important;
+  background:var(--mv-cc-green)!important;
+  color:#FFFFFF!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-question{
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:10px!important;
+  background:var(--mv-cc-canvas)!important;
+  color:#334155!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-question:hover{
+  border-color:var(--mv-cc-green)!important;
+  background:#FFFFFF!important;
+  color:var(--mv-cc-navy)!important;
+}
+
+/* ---------------------------
+   Responsive Control Center
+   --------------------------- */
+@media(max-width:1279px){
+  .mv-control-center-dashboard .fp-dashboard-master{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  }
+
+  .mv-control-center-dashboard .fp-chart-card{
+    grid-column:1!important;
+  }
+
+  .mv-control-center-dashboard .fp-breakdown-card{
+    grid-column:2!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-recent-row,
+  .mv-control-center-dashboard .fp-dashboard-left-footer{
+    grid-column:1 / 3!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-right-rail{
+    grid-column:1 / 3!important;
+    grid-row:4!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:16px!important;
+  }
+
+  .mv-control-center-dashboard .fp-week-progress-card,
+  .mv-control-center-dashboard .fp-quick-actions-card{
+    border:1px solid var(--mv-cc-border)!important;
+    border-radius:16px!important;
+  }
+
+  .mv-control-center-dashboard .fp-pilot-card{
+    margin-top:0!important;
+  }
+}
+
+@media(max-width:1023px){
+  .mv-control-center-dashboard.fp-page{
+    min-height:calc(100vh - 68px);
+    padding:18px 16px 92px!important;
+  }
+
+  .mv-control-center-dashboard .fp-hero-exact>div:last-child{
+    display:none!important;
+  }
+
+  .mv-control-center-dashboard .fp-kpi-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-master{
+    gap:16px!important;
+  }
+}
+
+@media(max-width:820px){
+  .mv-control-center-dashboard .fp-dashboard-master{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-chart-card,
+  .mv-control-center-dashboard .fp-breakdown-card,
+  .mv-control-center-dashboard .fp-dashboard-recent-row,
+  .mv-control-center-dashboard .fp-dashboard-left-footer,
+  .mv-control-center-dashboard .fp-dashboard-right-rail{
+    grid-column:1!important;
+    grid-row:auto!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-recent-row{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-right-rail{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-fleet-status-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+@media(max-width:640px){
+  .mv-control-center-dashboard .fp-hero-exact h1{
+    font-size:25px!important;
+  }
+
+  .mv-control-center-dashboard .fp-beta-dashboard-banner{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-control-center-dashboard .fp-beta-dashboard-banner>div:first-child{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-control-center-dashboard .fp-kpi-strip{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-action-item{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-fleet-status-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+}
+
+/* === END MileVoxa Control Center Layout V1 === */
+
+/* === Control Center detail polish v1.2 START === */
+.mv-control-center-dashboard .fp-quick-actions-card h2,
+.mv-control-center-dashboard .fp-pilot-card h2{
+  color:var(--mv-cc-navy)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:17px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:-.03em!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-card>div:first-child,
+.mv-control-center-dashboard .fp-pilot-card>div:first-child{
+  padding-top:18px!important;
+  padding-bottom:14px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-list{
+  gap:10px!important;
+  padding:14px 14px 16px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-list button,
+.mv-control-center-dashboard .fp-quick-row{
+  min-height:60px!important;
+  border-radius:14px!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-left>span:last-child{
+  font-size:13px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:-.02em!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-arrow{
+  font-size:24px!important;
+  font-weight:700!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-icon{
+  width:40px!important;
+  height:40px!important;
+  border-radius:12px!important;
+}
+
+/* Keep the Dashboard action rail compact beside the larger analytics cards. */
+.mv-control-center-dashboard .fp-quick-actions-list{
+  gap:8px!important;
+  padding:10px 12px 12px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-actions-list button,
+.mv-control-center-dashboard .fp-quick-row{
+  min-height:52px!important;
+  padding:6px 10px!important;
+  border-radius:12px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-left>span:last-child{
+  font-size:12px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-arrow{
+  font-size:20px!important;
+}
+
+.mv-control-center-dashboard .fp-quick-row .fp-quick-icon{
+  width:34px!important;
+  height:34px!important;
+  border-radius:10px!important;
+}
+
+/* Recent Activity uses the shared Dashboard surfaces and accent colors. */
+.mv-control-center-dashboard .fp-activity-card{
+  border-color:var(--mv-cc-border)!important;
+  background:var(--mv-cc-surface)!important;
+}
+
+.mv-control-center-dashboard .fp-activity-card>div:first-child{
+  border-color:var(--mv-cc-border)!important;
+  background:var(--mv-cc-surface)!important;
+}
+
+.mv-control-center-dashboard .fp-activity-list{
+  background:var(--mv-cc-surface)!important;
+}
+
+.mv-control-center-dashboard .fp-activity-row{
+  border-color:transparent!important;
+  background:transparent!important;
+}
+
+.mv-control-center-dashboard .fp-activity-row:hover{
+  border-color:var(--mv-cc-border)!important;
+  background:var(--mv-cc-inset)!important;
+}
+
+.mv-control-center-dashboard .fp-activity-text{
+  color:var(--mv-cc-navy)!important;
+}
+
+.mv-control-center-dashboard .fp-activity-time{
+  color:var(--mv-cc-muted)!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-intro{
+  display:block!important;
+  margin-top:14px!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-cc-canvas)!important;
+  padding:16px!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-summary{
+  margin:0!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:13px!important;
+  font-weight:500!important;
+  line-height:1.58!important;
+  letter-spacing:-.01em!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-start{
+  margin-top:14px!important;
+  min-height:44px!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:-.02em!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-question{
+  min-height:48px!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-question span:last-child{
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.35!important;
+  letter-spacing:-.01em!important;
+}
+
+.mv-control-center-dashboard .fp-pilot-question-icon{
+  font-size:12px!important;
+  font-weight:700!important;
+}
+/* === Control Center detail polish v1.2 END === */
+
+/* === Action Center header alignment v1 START === */
+.mv-control-center-dashboard .fp-action-center-head{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:flex-start!important;
+  gap:18px!important;
+}
+
+.mv-control-center-dashboard .fp-action-head-copy{
+  min-width:0!important;
+  flex:1 1 auto!important;
+}
+
+.mv-control-center-dashboard .fp-action-head-right{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex-wrap:wrap!important;
+  gap:12px!important;
+  margin-left:auto!important;
+}
+
+.mv-control-center-dashboard .fp-action-summary--inline{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:0!important;
+}
+
+.mv-control-center-dashboard .fp-action-summary--inline span{
+  border-radius:14px!important;
+  padding:8px 14px!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.02em!important;
+}
+
+.mv-control-center-dashboard .fp-action-view-all{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+@media (max-width: 980px){
+  .mv-control-center-dashboard .fp-action-center-head{
+    align-items:stretch!important;
+  }
+
+  .mv-control-center-dashboard .fp-action-head-right{
+    justify-content:flex-start!important;
+    margin-left:0!important;
+  }
+}
+/* === Action Center header alignment v1 END === */
+
+/* === Action Center exact-match polish v1 START === */
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-center-head{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:20px!important;
+  border-bottom:1px solid var(--mv-cc-border)!important;
+  padding:14px 20px 12px!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-head-copy{
+  min-width:0!important;
+  flex:1 1 auto!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-head-copy .fp-overline{
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.10em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-title-row{
+  display:flex!important;
+  align-items:baseline!important;
+  flex-wrap:wrap!important;
+  gap:10px!important;
+  margin-top:4px!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-title-row h2{
+  margin:0!important;
+  color:var(--mv-cc-navy)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:18px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-title-row p{
+  margin:0!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1.3!important;
+  letter-spacing:.01em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-head-right{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex-wrap:wrap!important;
+  gap:10px!important;
+  margin-left:auto!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-summary--inline{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:0!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-summary--inline span{
+  border-radius:12px!important;
+  padding:5px 10px!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.02em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-summary--inline .critical{
+  border:1px solid #FCA5A5!important;
+  background:#FEE2E2!important;
+  color:#DC2626!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-summary--inline .warning{
+  border:1px solid #FCD34D!important;
+  background:#FEF3C7!important;
+  color:#D97706!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-summary--inline .attention{
+  border:1px solid #BFDBFE!important;
+  background:#EFF6FF!important;
+  color:#2563EB!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-view-all{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  color:var(--mv-cc-green)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-list{
+  display:grid!important;
+  gap:8px!important;
+  padding:14px 20px 16px!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item{
+  min-height:76px!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:12px!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-left-width:4px!important;
+  border-radius:14px!important;
+  background:var(--mv-cc-canvas)!important;
+  padding:12px 16px!important;
+  box-shadow:none!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.critical{
+  border-left-color:#DC2626!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.warning{
+  border-left-color:#D97706!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.attention{
+  border-left-color:#2563EB!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-severity{
+  align-self:start!important;
+  padding-top:3px!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-severity span{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:4px!important;
+  padding:5px 8px!important;
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.critical .fp-action-severity span{
+  background:#DC2626!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.warning .fp-action-severity span{
+  background:#D97706!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-item.attention .fp-action-severity span{
+  background:#2563EB!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-copy{
+  min-width:0!important;
+  align-self:center!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-copy b{
+  display:block!important;
+  color:var(--mv-cc-navy)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  line-height:1.25!important;
+  letter-spacing:-.02em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-copy>span{
+  display:none!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-copy p{
+  margin:7px 0 0!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:500!important;
+  line-height:1.45!important;
+  letter-spacing:.01em!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:10px!important;
+  white-space:nowrap!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons form{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons a,
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons button{
+  min-height:36px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid var(--mv-cc-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+  padding:0 14px!important;
+  color:var(--mv-cc-navy)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons a:hover,
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons button:hover{
+  border-color:var(--mv-cc-border-dark)!important;
+  background:#FFFFFF!important;
+  color:var(--mv-cc-navy)!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons button[value="acknowledge"]{
+  border-color:var(--mv-cc-green)!important;
+  background:var(--mv-cc-green)!important;
+  color:#FFFFFF!important;
+}
+
+.mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons button[value="acknowledge"]:hover{
+  border-color:var(--mv-cc-green-hover)!important;
+  background:var(--mv-cc-green-hover)!important;
+  color:#FFFFFF!important;
+}
+
+@media(max-width:900px){
+  .mv-control-center-dashboard .fp-action-center.compact .fp-action-center-head{
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+
+  .mv-control-center-dashboard .fp-action-center.compact .fp-action-head-right{
+    justify-content:flex-start!important;
+    margin-left:0!important;
+  }
+
+  .mv-control-center-dashboard .fp-action-center.compact .fp-action-item{
+    grid-template-columns:auto minmax(0,1fr)!important;
+  }
+
+  .mv-control-center-dashboard .fp-action-center.compact .fp-action-buttons{
+    grid-column:1 / -1!important;
+    justify-content:flex-start!important;
+    padding-left:0!important;
+  }
+}
+/* === Action Center exact-match polish v1 END === */
+
+/* === Control Center KPI exact match v2 START === */
+
+/*
+  Exact translation of the approved KPI reference:
+  gap-4, rounded-2xl, p-5, h-1 accent,
+  text-xs labels, 24px mono values, 11px mono helper text,
+  24px icon boxes. Existing MileVoxa font families are preserved.
+*/
+.mv-control-center-dashboard .fp-kpi-strip{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin-top:16px!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric{
+  position:relative!important;
+  min-width:0!important;
+
+  /* Important: remove older fixed KPI sizing. */
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 24px!important;
+  grid-template-areas:"copy icon"!important;
+  align-items:start!important;
+  column-gap:12px!important;
+
+  overflow:hidden!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:16px!important;
+  background:#F8FAFC!important;
+  padding:20px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+/* globals.css previously disables metric pseudo-elements.
+   display:block is required for the reference top accent to actually show. */
+.mv-control-center-dashboard .fp-dashboard-metric::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:2!important;
+  top:0!important;
+  right:0!important;
+  left:0!important;
+  height:4px!important;
+  border-radius:16px 16px 0 0!important;
+  background:#94A3B8!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric::after{
+  content:none!important;
+  display:none!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(1)::before{
+  background:#DC2626!important;
+}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(2)::before{
+  background:#102238!important;
+}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(3)::before{
+  background:#D97706!important;
+}
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(4)::before{
+  background:#94A3B8!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-copy{
+  grid-area:copy!important;
+  min-width:0!important;
+  padding:0!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-label{
+  min-height:24px!important;
+  display:flex!important;
+  align-items:center!important;
+  margin:0!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+  letter-spacing:0!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-value{
+  margin-top:8px!important;
+  color:#102238!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:32px!important;
+  letter-spacing:-.035em!important;
+  white-space:nowrap!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric[data-empty="true"] .fp-dashboard-metric-value{
+  color:#64748B!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(1) .fp-dashboard-metric-value{
+  color:#DC2626!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-change{
+  margin-top:4px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:16px!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-icon{
+  grid-area:icon!important;
+  width:24px!important;
+  height:24px!important;
+  min-width:24px!important;
+  min-height:24px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:start!important;
+  justify-self:end!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:#EDF2F7!important;
+  color:#102238!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(1) .fp-dashboard-metric-icon{
+  border:1px solid #FCA5A5!important;
+  background:#FEE2E2!important;
+  color:#DC2626!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(2) .fp-dashboard-metric-icon{
+  border:0!important;
+  background:#EDF2F7!important;
+  color:#102238!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(3) .fp-dashboard-metric-icon{
+  border:1px solid #FCD34D!important;
+  background:#FEF3C7!important;
+  color:#D97706!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric:nth-child(4) .fp-dashboard-metric-icon{
+  border:0!important;
+  background:#EDF2F7!important;
+  color:#102238!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-metric-chart{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+}
+
+/* Keep the reference proportions before changing to the existing mobile layout. */
+@media(max-width:1279px) and (min-width:821px){
+  .mv-control-center-dashboard .fp-kpi-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+@media(max-width:820px){
+  .mv-control-center-dashboard .fp-kpi-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+@media(max-width:640px){
+  .mv-control-center-dashboard .fp-kpi-strip{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-metric{
+    border-radius:16px!important;
+    padding:20px!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-metric::before{
+    border-radius:16px 16px 0 0!important;
+  }
+}
+
+/* === Control Center KPI exact match v2 END === */
+
+/* === Expense Breakdown polish v1.1 START === */
+
+.mv-control-center-dashboard .fp-breakdown-card{
+  background:#F8FAFC!important;
+}
+
+/* Legend labels */
+.mv-control-center-dashboard .fp-breakdown-card .grid-rows-6>div>div>span:last-child{
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.4!important;
+  letter-spacing:-.01em!important;
+}
+
+/* Percentages */
+.mv-control-center-dashboard .fp-breakdown-card .grid-rows-6>div>span:last-child{
+  color:#102238!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.4!important;
+  letter-spacing:0!important;
+}
+
+/* Color dots */
+.mv-control-center-dashboard .fp-breakdown-card .grid-rows-6>div>div>span:first-child{
+  width:11px!important;
+  height:11px!important;
+}
+
+/* Donut center amount */
+.mv-control-center-dashboard .fp-breakdown-card .fp-number{
+  color:#102238!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:15px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+}
+
+/* Slightly more breathing room for the larger legend type. */
+.mv-control-center-dashboard .fp-breakdown-card .grid-rows-6{
+  gap:10px!important;
+}
+
+/* === Expense Breakdown polish v1.1 END === */
+
+/* === Fleet Status exact match v2 START === */
+
+/*
+  Exact proportions from the approved reference:
+  - outer section: 170px
+  - header: 57px
+  - body top: 16px
+  - KPI card: 72px
+  - body bottom: 24px
+  - horizontal inset: 24px
+  - card gap: 16px
+
+  These values intentionally override the older global 188px Fleet Footer
+  height that made V1 too tall and caused the cards to clip.
+*/
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid){
+  height:170px!important;
+  min-height:170px!important;
+  max-height:170px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:16px!important;
+  background:#F8FAFC!important;
+  box-shadow:none!important;
+}
+
+/* Compact header exactly like Screenshot 2 */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>div:first-child{
+  height:57px!important;
+  min-height:57px!important;
+  max-height:57px!important;
+  flex:0 0 57px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  border-bottom:1px solid #CBD5E1!important;
+  padding:0 24px!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>div:first-child h2{
+  margin:0!important;
+  color:#102238!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:-.025em!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>div:first-child a[href="/trucks"]{
+  display:inline-flex!important;
+  align-items:center!important;
+  color:#10B981!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:-.01em!important;
+  white-space:nowrap!important;
+}
+
+/* Body and four KPI cards */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>.fp-fleet-status-grid{
+  flex:1 1 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:16px!important;
+  padding:16px 24px 24px!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi{
+  width:100%!important;
+  height:72px!important;
+  min-height:72px!important;
+  max-height:72px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#E8EEF5!important;
+  padding:10px 12px!important;
+  box-shadow:none!important;
+  text-align:center!important;
+}
+
+/* Screenshot 2 has no decorative icons. */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi-icon{
+  display:none!important;
+}
+
+/* Values: compact JetBrains Mono */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi .fp-number{
+  margin:0!important;
+  color:#102238!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:-.04em!important;
+}
+
+/* Labels: reference scale */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi>div:last-child{
+  margin:3px 0 0!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1.15!important;
+  letter-spacing:-.01em!important;
+  white-space:nowrap!important;
+}
+
+/* Service Due warning treatment */
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi:nth-child(2){
+  border-color:#FCA5A5!important;
+  background:#FEE2E2!important;
+}
+
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi:nth-child(2) .fp-number,
+.mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi:nth-child(2)>div:last-child{
+  color:#DC2626!important;
+}
+
+/* Tablet/mobile retain the same visual system without clipping. */
+@media(max-width:1023px){
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid){
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>div:first-child{
+    height:57px!important;
+    min-height:57px!important;
+    max-height:57px!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>.fp-fleet-status-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    padding:16px 24px 24px!important;
+  }
+}
+
+@media(max-width:560px){
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>.fp-fleet-status-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:12px!important;
+    padding:14px 16px 18px!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid)>div:first-child{
+    padding:0 16px!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi .fp-number{
+    font-size:22px!important;
+  }
+
+  .mv-control-center-dashboard .fp-dashboard-left-footer>section:has(.fp-fleet-status-grid) .fp-fleet-kpi>div:last-child{
+    font-size:10px!important;
+  }
+}
+
+/* === Fleet Status exact match v2 END === */
+
+/* === Control Center sidebar emoji icons v2 START === */
+
+/* Exact icon direction from the supplied Control Center layout:
+   colorful native emoji, text-base scale, consistent fixed icon column. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-emoji-icon{
+  width:18px!important;
+  min-width:18px!important;
+  height:18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 18px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  opacity:1!important;
+}
+
+/* Match the reference gap between emoji and sidebar label. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed .fp-scroll a[href]{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+/* === Control Center sidebar emoji icons v2 END === */
+
+/* === Control Center notification bell v1 START === */
+
+/* Exact direction from the supplied layout:
+   36x36 rounded-xl inset button + emoji bell + red count badge. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-control-center-notification{
+  position:relative!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 36px!important;
+  overflow:visible!important;
+
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#EDF2F7!important;
+  color:#334155!important;
+
+  box-shadow:0 1px 2px rgba(16,34,56,.04)!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-control-center-notification:hover{
+  border-color:#94A3B8!important;
+  background:#FFFFFF!important;
+}
+
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-control-center-notification.is-active{
+  border-color:#A7F3D0!important;
+  background:#ECFDF5!important;
+}
+
+/* Native colorful bell used by the reference layout. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-control-center-notification-bell{
+  width:18px!important;
+  height:18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+/* Red notification badge positioned like the supplied mockup. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-control-center-notification-count{
+  position:absolute!important;
+  top:-5px!important;
+  right:-5px!important;
+
+  min-width:16px!important;
+  height:16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+
+  border:0!important;
+  border-radius:999px!important;
+  background:#DC2626!important;
+  padding:0 4px!important;
+
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+  letter-spacing:0!important;
+
+  box-shadow:0 1px 2px rgba(16,34,56,.10)!important;
+}
+
+/* === Control Center notification bell v1 END === */
+
+/* === Recent Loads empty state v1 START === */
+
+/* Match the supplied Control Center Recent Loads reference. */
+.mv-control-center-dashboard .fp-recent-card{
+  overflow:hidden!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:16px!important;
+  background:#F8FAFC!important;
+  box-shadow:none!important;
+}
+
+.mv-control-center-dashboard .fp-recent-card>div:first-child{
+  min-height:57px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  border-bottom:1px solid #CBD5E1!important;
+  padding:0 24px!important;
+}
+
+.mv-control-center-dashboard .fp-recent-card>div:first-child h2{
+  margin:0!important;
+  color:#102238!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:-.025em!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-view-all{
+  color:#10B981!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:-.01em!important;
+}
+
+/* Inner body spacing from the reference. */
+.mv-control-center-dashboard .fp-recent-loads-wrap{
+  padding:16px 24px 24px!important;
+}
+
+/* When empty, hide the table completely so only the reference empty panel shows. */
+.mv-control-center-dashboard .fp-recent-loads-wrap:has(.fp-recent-loads-empty) .fp-recent-loads-table{
+  display:none!important;
+}
+
+/* Reference empty panel: slate canvas, dashed border, centered content. */
+.mv-control-center-dashboard .fp-recent-loads-empty{
+  min-height:184px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px dashed #CBD5E1!important;
+  border-radius:12px!important;
+  background:rgba(234,239,245,.72)!important;
+  padding:28px 20px!important;
+  text-align:center!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-empty-icon{
+  display:block!important;
+  margin-bottom:8px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:30px!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-empty p{
+  margin:0!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+  letter-spacing:-.01em!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-empty-button{
+  min-height:40px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-top:12px!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#FFFFFF!important;
+  padding:0 18px!important;
+  color:#102238!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:-.01em!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.035)!important;
+  transition:border-color .18s ease,color .18s ease,background .18s ease!important;
+}
+
+.mv-control-center-dashboard .fp-recent-loads-empty-button:hover{
+  border-color:#10B981!important;
+  background:#F8FAFC!important;
+  color:#10B981!important;
+}
+
+@media(max-width:640px){
+  .mv-control-center-dashboard .fp-recent-card>div:first-child{
+    padding:0 16px!important;
+  }
+
+  .mv-control-center-dashboard .fp-recent-loads-wrap{
+    padding:14px 16px 18px!important;
+  }
+
+  .mv-control-center-dashboard .fp-recent-loads-empty{
+    min-height:170px!important;
+    padding:24px 16px!important;
+  }
+}
+
+/* === Recent Loads empty state v1 END === */
+
+/* === Control Center sidebar brand v1 START === */
+
+/* Full-width brand treatment for the top of the Control Center sidebar. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed>div:first-child{
+  min-height:80px!important;
+  height:80px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  border-bottom:1px solid var(--mv-cc-border)!important;
+  background:rgba(248,250,252,.78)!important;
+  padding:10px 14px!important;
+}
+
+/* Let the logo own the entire top row. */
+.mv-app-shell:has(.mv-control-center-dashboard) .mv-sidebar-brand{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:1 1 auto!important;
+}
+
+/* Larger MileVoxa lockup, centered across the sidebar width. */
+.mv-app-shell:has(.mv-control-center-dashboard) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%!important;
+  height:auto!important;
+  display:block!important;
+}
+
+/* Sidebar beta badge is intentionally removed from the Dashboard brand row. */
+.mv-app-shell:has(.mv-control-center-dashboard) .fp-beta-sidebar-badge{
+  display:none!important;
+}
+
+@media(max-width:1023px){
+  .mv-app-shell:has(.mv-control-center-dashboard) .fp-sidebar-fixed>div:first-child{
+    min-height:80px!important;
+    height:80px!important;
+  }
+
+  .mv-app-shell:has(.mv-control-center-dashboard) .mv-sidebar-brand .mv-brand-lockup{
+    width:210px!important;
+  }
+}
+
+/* === Control Center sidebar brand v1 END === */
+

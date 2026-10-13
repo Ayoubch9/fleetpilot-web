@@ -1,0 +1,356 @@
+.page{
+  --privacy-navy:#102238;
+  --privacy-deep:#0B1730;
+  --privacy-border:#1B3A6B;
+  --privacy-border-light:#264E8C;
+  --privacy-green:#10B981;
+  --privacy-green-hover:#059669;
+  --privacy-green-light:#34D399;
+
+  /* Shared Homepage header/footer variables — keep public chrome identical. */
+  --green:#10B981;
+  --green-hover:#059669;
+  --green-light:#34D399;
+  --privacy-text:#F8FAFC;
+  --privacy-muted:#CBD5E1;
+  --privacy-soft:#94A3B8;
+  --mv-home-sans:var(--mv-privacy-sans);
+  --mv-home-mono:var(--mv-privacy-mono);
+  min-height:100vh;
+  background:var(--privacy-navy);
+  color:var(--privacy-text);
+  font-family:var(--mv-privacy-sans),ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.page *{box-sizing:border-box}
+.page h1,.page h2,.page p{margin:0}
+.page a{text-decoration:none}
+
+.hero{
+  border-bottom:1px solid var(--privacy-border);
+  background:linear-gradient(180deg,var(--privacy-deep) 0%,var(--privacy-navy) 58%,var(--privacy-navy) 100%);
+  padding:64px 0;
+  text-align:center;
+}
+.heroInner{
+  width:min(896px,calc(100% - 48px));
+  margin:0 auto;
+}
+.heroBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:16px;
+  border:1px solid var(--privacy-border);
+  border-radius:999px;
+  background:var(--privacy-navy);
+  padding:6px 11px;
+  color:var(--privacy-green);
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:700;
+  line-height:1rem;
+  letter-spacing:.02em;
+}
+.heroBadge span{
+  width:6px;
+  height:6px;
+  border-radius:999px;
+  background:var(--privacy-green);
+}
+.hero h1{
+  color:#FFFFFF;
+  font-size:48px;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-.035em;
+}
+.hero>div>p{
+  max-width:700px;
+  margin:16px auto 0;
+  color:var(--privacy-muted);
+  font-size:16px;
+  font-weight:400;
+  line-height:1.7;
+}
+.heroMeta{
+  margin-top:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  color:var(--privacy-soft);
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:500;
+}
+
+.content{
+  background:var(--privacy-navy);
+  padding:64px 0 80px;
+}
+.contentInner{
+  width:min(896px,calc(100% - 48px));
+  margin:0 auto;
+}
+
+.commitmentCard{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:48px;
+  border:2px solid rgba(16,185,129,.40);
+  border-radius:16px;
+  background:var(--privacy-navy);
+  padding:28px 30px;
+  box-shadow:0 18px 52px rgba(0,0,0,.16);
+}
+.shield{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(16,185,129,.20);
+  border-radius:12px;
+  background:rgba(16,185,129,.10);
+  font-size:18px;
+}
+.commitmentCard h2{
+  color:#FFFFFF;
+  font-size:18px;
+  font-weight:700;
+  line-height:1.4;
+}
+.commitmentCard p{
+  margin-top:6px;
+  color:var(--privacy-muted);
+  font-size:14px;
+  line-height:1.7;
+}
+.commitmentCard strong{color:#FFFFFF}
+
+.sections{
+  display:grid;
+  gap:30px;
+}
+.policyCard{
+  border:1px solid var(--privacy-border);
+  border-radius:16px;
+  background:var(--privacy-navy);
+  padding:28px 30px;
+}
+.sectionLabel{
+  display:block;
+  margin-bottom:5px;
+  color:var(--privacy-green);
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:700;
+  line-height:1rem;
+}
+.policyCard h2{
+  color:#FFFFFF;
+  font-size:18px;
+  font-weight:700;
+  line-height:1.4;
+}
+.policyBody{
+  margin-top:12px;
+  display:grid;
+  gap:12px;
+  color:var(--privacy-muted);
+  font-size:14px;
+  font-weight:400;
+  line-height:1.75;
+}
+.policyBody p{margin:0}
+.policyBody strong{color:#FFFFFF}
+.policyBody a{
+  color:var(--privacy-green-light);
+  font-weight:600;
+}
+.policyBody a:hover{text-decoration:underline}
+
+.contactBox{
+  margin-top:6px;
+  display:grid;
+  gap:5px;
+  border:1px solid var(--privacy-border);
+  border-radius:12px;
+  background:var(--privacy-deep);
+  padding:16px;
+  color:var(--privacy-muted);
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+}
+.contactBox strong{color:#FFFFFF}
+.contactBox a{
+  width:max-content;
+  color:var(--privacy-green-light);
+}
+
+@media(max-width:700px){
+  .heroInner,
+  .contentInner{
+    width:calc(100% - 28px);
+  }
+  .hero{padding:54px 0}
+  .hero h1{font-size:38px}
+  .hero>div>p{font-size:14px}
+  .heroMeta{
+    flex-wrap:wrap;
+    font-size:10px;
+  }
+  .content{padding:50px 0 64px}
+  .commitmentCard{
+    padding:22px;
+  }
+  .policyCard{
+    padding:22px;
+  }
+  .policyBody{
+    font-size:13px;
+  }
+}
+
+
+/* Privacy Typography Match V3
+   Mirrors the supplied privacy layout's Tailwind typography:
+   Plus Jakarta Sans + JetBrains Mono. */
+
+.heroBadge{
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:700;
+  line-height:1rem;
+}
+
+.hero h1{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:48px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.025em;
+}
+
+.hero>div>p{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:16px;
+  font-weight:400;
+  line-height:1.625;
+}
+
+.heroMeta{
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:500;
+  line-height:1rem;
+}
+
+/* Plain-English privacy rule card */
+.commitmentCard h2{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:18px;
+  font-weight:700;
+  line-height:1.4;
+}
+
+.commitmentCard p{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:14px;
+  font-weight:400;
+  line-height:1.625;
+}
+
+.commitmentCard strong{
+  font-weight:700;
+}
+
+/* Legal cards — exact desktop scale from the supplied layout:
+   SECTION label = text-xs
+   title = text-lg
+   body = sm:text-sm
+   leading-relaxed = 1.625 */
+.sectionLabel{
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:700;
+  line-height:1rem;
+  letter-spacing:0;
+}
+
+.policyCard h2{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:18px;
+  font-weight:700;
+  line-height:1.4;
+  letter-spacing:0;
+}
+
+.policyBody{
+  font-family:var(--mv-privacy-sans),ui-sans-serif,sans-serif;
+  font-size:14px;
+  font-weight:400;
+  line-height:1.625;
+  gap:16px;
+}
+
+.policyBody p,
+.policyBody li{
+  font-size:14px;
+  font-weight:400;
+  line-height:1.625;
+}
+
+.policyBody strong{
+  font-weight:700;
+}
+
+.policyBody ul,
+.policyBody ol{
+  margin:0;
+  padding-left:22px;
+}
+
+.policyBody li + li{
+  margin-top:10px;
+}
+
+.policyBody ul{
+  list-style:disc;
+}
+
+.policyBody ol{
+  list-style:decimal;
+}
+
+.contactBox{
+  font-family:var(--mv-privacy-mono),ui-monospace,monospace;
+  font-size:12px;
+  font-weight:500;
+  line-height:1.5;
+}
+
+@media(max-width:639px){
+  .hero h1{
+    font-size:30px;
+    line-height:1.15;
+  }
+
+  .hero>div>p{
+    font-size:14px;
+    line-height:1.625;
+  }
+
+  .commitmentCard p,
+  .policyBody,
+  .policyBody p,
+  .policyBody li{
+    font-size:12px;
+    line-height:1.625;
+  }
+}

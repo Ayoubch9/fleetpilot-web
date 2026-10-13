@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+
 // Isolated Supabase branch only. Does not run migrations or change production.
 const assert = require("node:assert/strict");
 const crypto = require("node:crypto");

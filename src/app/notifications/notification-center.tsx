@@ -43,6 +43,7 @@ export default function NotificationCenter({
 
       <section className="fp-panel fp-alert-center">
         <AppTabs
+          variant="filter"
           activeKey={filter}
           ariaLabel="Notification severity"
           items={[

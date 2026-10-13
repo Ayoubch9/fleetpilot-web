@@ -1,9 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney } from "@/lib/format";
+import Link from "next/link";
 
 type Truck = {
   id: string;
@@ -84,11 +85,13 @@ export default function OdometerManager({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
+  const [previousInputs, setPreviousInputs] = useState({ weekStart, trucks, records, mileageRate });
+  if (previousInputs.weekStart !== weekStart || previousInputs.trucks !== trucks || previousInputs.records !== records || previousInputs.mileageRate !== mileageRate) {
+    setPreviousInputs({ weekStart, trucks, records, mileageRate });
     setValues(initialState(trucks, records, mileageRate));
     setError("");
     setSuccess("");
-  }, [weekStart, trucks, records, mileageRate]);
+  }
 
   const summary = useMemo(() => {
     let miles = 0;
@@ -256,7 +259,7 @@ export default function OdometerManager({
   }
 
   return (
-    <form onSubmit={save}>
+    <form className="fp-odometer-form" onSubmit={save}>
       <div className="fp-odometer-week-isolation">
         <strong>{weekLabel}</strong>
         <span>
@@ -277,7 +280,7 @@ export default function OdometerManager({
           <strong>{rateLabel}</strong>
           <small>
             {records.length > 0
-              ? "Uses this week's saved rate"
+              ? "Uses this week&apos;s saved rate"
               : "New week uses the current company rate"}
           </small>
         </div>
@@ -285,10 +288,11 @@ export default function OdometerManager({
         <div>
           <span>Weekly Mileage Expense</span>
           <strong>{formatMoney(summary.fee)}</strong>
-          <small>Each truck's weekly miles × its saved weekly rate</small>
+          <small>Each truck&apos;s weekly miles × its saved weekly rate</small>
         </div>
       </section>
 
+      <div className="fp-odometer-layout">
       <section className="fp-odometer-card">
         <div className="fp-odometer-card-head">
           <div>
@@ -408,6 +412,50 @@ export default function OdometerManager({
           </button>
         </div>
       </section>
+      <aside className="fp-odometer-rail">
+        <section className="fp-odometer-rail-card">
+          <h2>Quick Actions</h2>
+          <button type="submit" disabled={saving} className="primary">
+            {saving ? "Saving..." : `Save ${weekLabel}`}<span aria-hidden="true">›</span>
+          </button>
+          <Link href="/settlement">View Weekly Settlement<span aria-hidden="true">›</span></Link>
+          <Link href="/trucks">Update Fleet Specs<span aria-hidden="true">›</span></Link>
+        </section>
+
+        <section className="fp-odometer-rail-card">
+          <div className="fp-odometer-rail-heading">
+            <h2>Weekly Summary</h2>
+            <span>{weekLabel}</span>
+          </div>
+          <div className="fp-odometer-truck-totals">
+            {trucks.map((truck) => {
+              const row = values[truck.id];
+              const start = numberOrNull(row?.start || "");
+              const end = numberOrNull(row?.end || "");
+              const miles = start != null && end != null && end >= start ? end - start : null;
+              const fee = miles == null || !mileageFeeActive ? 0 : miles * (row?.rate ?? mileageRate);
+              return (
+                <div key={truck.id}>
+                  <span>Truck #{truck.unitNumber}</span>
+                  <strong>{miles == null ? "—" : `${miles.toLocaleString()} mi · ${formatMoney(fee)}`}</strong>
+                </div>
+              );
+            })}
+            <div className="total">
+              <span>Total Mileage Expense</span>
+              <strong>{formatMoney(summary.fee)}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section className="fp-odometer-advisory">
+          <span aria-hidden="true">🛣️</span>
+          <h2>Every mile counts toward settlement.</h2>
+          <p>Accurate weekly odometer readings keep mileage fees aligned with the miles your trucks actually run.</p>
+          <Link href="/settlement">Open settlement →</Link>
+        </section>
+      </aside>
+      </div>
     </form>
   );
 }

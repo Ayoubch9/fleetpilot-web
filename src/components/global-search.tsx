@@ -35,6 +35,15 @@ export default function GlobalSearch() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const [previousQuery, setPreviousQuery] = useState(query);
+  if (previousQuery !== query) {
+    setPreviousQuery(query);
+    if (query.trim().length < 2) {
+      setResults([]);
+      setLoading(false);
+    }
+  }
+
   const pageMatches = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return pageItems.slice(0, 6);
@@ -56,11 +65,7 @@ export default function GlobalSearch() {
   useEffect(() => {
     const q = query.trim();
 
-    if (q.length < 2) {
-      setResults([]);
-      setLoading(false);
-      return;
-    }
+    if (q.length < 2) return;
 
     let cancelled = false;
     const timer = window.setTimeout(async () => {
@@ -219,7 +224,7 @@ export default function GlobalSearch() {
     };
   }, [query]);
 
-  const combined = [...pageMatches, ...results].slice(0, 12);
+  const combined = [...pageMatches, ...(query.trim().length >= 2 ? results : [])].slice(0, 12);
 
   return (
     <div className="fp-global-search" ref={rootRef}>
@@ -261,7 +266,7 @@ export default function GlobalSearch() {
         <div className="fp-global-search-menu">
           <div className="fp-global-search-menu-head">
             <span>{query.trim().length >= 2 ? "Search Results" : "Quick Navigation"}</span>
-            {loading && <b>Searching…</b>}
+            {loading && query.trim().length >= 2 && <b>Searching…</b>}
           </div>
 
           {combined.length > 0 ? (

@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import MileVoxaBrand from "@/components/milevoxa-brand";
+import { BUSINESS_ROLES } from "@/lib/business-roles";
 
 function formatSupabaseError(error: {
   message?: string;
@@ -42,14 +43,25 @@ export default function SocialOnboarding({
   email,
   provider,
   suggestedName,
+  suggestedCompanyName,
+  suggestedRole,
+  suggestedDotNumber,
+  suggestedMcNumber,
 }: {
   email: string;
-  provider: "Google";
+  provider: "Google" | "email";
   suggestedName: string;
+  suggestedCompanyName: string;
+  suggestedRole: string;
+  suggestedDotNumber: string;
+  suggestedMcNumber: string;
 }) {
   const router = useRouter();
   const [fullName, setFullName] = useState(suggestedName);
-  const [companyName, setCompanyName] = useState("");
+  const [companyName, setCompanyName] = useState(suggestedCompanyName);
+  const [businessRole, setBusinessRole] = useState(suggestedRole);
+  const [dotNumber, setDotNumber] = useState(suggestedDotNumber);
+  const [mcNumber, setMcNumber] = useState(suggestedMcNumber);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -65,6 +77,9 @@ export default function SocialOnboarding({
         {
           p_full_name: fullName.trim(),
           p_company_name: companyName.trim(),
+          p_business_role: businessRole,
+          p_dot_number: dotNumber.trim() || null,
+          p_mc_number: mcNumber.trim() || null,
         }
       );
 
@@ -81,6 +96,11 @@ export default function SocialOnboarding({
           "MileVoxa did not receive a valid company from Supabase."
         );
       }
+
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: { profile_setup_required: false, business_role: businessRole },
+      });
+      if (metadataError) throw metadataError;
 
       router.replace("/dashboard");
       router.refresh();
@@ -106,7 +126,7 @@ export default function SocialOnboarding({
           <span>ONE LAST STEP</span>
           <h1>Set up your MileVoxa company.</h1>
           <p>
-            Your {provider} account is connected. Now create the trucking
+            Your {provider === "Google" ? "Google" : "email"} account is connected. Now create the trucking
             company workspace that will be shared across MileVoxa web and
             mobile.
           </p>
@@ -155,6 +175,40 @@ export default function SocialOnboarding({
               />
             </label>
 
+            <label>
+              <span>Your Role</span>
+              <select
+                required
+                value={businessRole}
+                onChange={(event) => setBusinessRole(event.target.value)}
+              >
+                <option value="" disabled>Select your role</option>
+                {BUSINESS_ROLES.map((role) => (
+                  <option key={role} value={role}>{role}</option>
+                ))}
+              </select>
+            </label>
+
+            <div className="fp-social-onboarding-identifiers">
+              <label>
+                <span>USDOT Number <small>(optional)</small></span>
+                <input
+                  value={dotNumber}
+                  inputMode="numeric"
+                  placeholder="USDOT number"
+                  onChange={(event) => setDotNumber(event.target.value)}
+                />
+              </label>
+              <label>
+                <span>MC Number <small>(optional)</small></span>
+                <input
+                  value={mcNumber}
+                  placeholder="MC number"
+                  onChange={(event) => setMcNumber(event.target.value)}
+                />
+              </label>
+            </div>
+
             {error && (
               <div className="fp-social-onboarding-error">{error}</div>
             )}
@@ -162,10 +216,10 @@ export default function SocialOnboarding({
             <button
               type="submit"
               disabled={
-                loading || !fullName.trim() || !companyName.trim()
+                loading || !fullName.trim() || !companyName.trim() || !businessRole
               }
             >
-              {loading ? "Creating your company..." : "Open MileVoxa →"}
+              {loading ? "Saving your profile..." : "Open MileVoxa →"}
             </button>
           </form>
 

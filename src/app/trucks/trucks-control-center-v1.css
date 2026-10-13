@@ -1,0 +1,333 @@
+/* MileVoxa Trucks — Control Center Layout V1 */
+.mv-app-shell:has(.mv-trucks-control-center){
+  --tc-navy:#102238;--tc-deep:#0B1730;--tc-green:#10B981;--tc-green-hover:#059669;
+  --tc-green-soft:#ECFDF5;--tc-green-border:#A7F3D0;--tc-canvas:#EAEFF5;
+  --tc-sidebar:#E2E8F0;--tc-surface:#F8FAFC;--tc-inset:#EDF2F7;
+  --tc-border:#CBD5E1;--tc-border-dark:#94A3B8;--tc-muted:#475569;
+  --tc-red:#DC2626;--tc-amber:#D97706;
+  background:var(--tc-canvas)!important;color:var(--tc-navy)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,sans-serif!important;
+}
+
+/* Shared signed-in shell: same as Dashboard/Loads */
+.mv-app-shell:has(.mv-trucks-control-center) .fp-sidebar-fixed{
+  width:256px!important;background:var(--tc-sidebar)!important;color:var(--tc-navy)!important;
+  border-right:1px solid var(--tc-border)!important;box-shadow:4px 0 18px rgba(16,34,56,.05)!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-sidebar-fixed>div:first-child{
+  height:80px!important;min-height:80px!important;display:flex!important;align-items:center!important;
+  justify-content:center!important;padding:10px 14px!important;background:rgba(248,250,252,.78)!important;
+  border-bottom:1px solid var(--tc-border)!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .mv-sidebar-brand{
+  width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;max-width:100%!important;height:auto!important;display:block!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-beta-sidebar-badge{display:none!important}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-scroll{padding:14px 14px 16px!important}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-sidebar-fixed .fp-scroll a[href]{
+  display:flex!important;align-items:center!important;gap:12px!important;border-radius:12px!important;
+  color:#334155!important;font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+  font-size:12px!important;font-weight:600!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-sidebar-fixed .fp-scroll a[href="/trucks"]{
+  background:var(--tc-green)!important;color:#fff!important;font-weight:700!important;
+  box-shadow:0 5px 14px rgba(5,150,105,.16)!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-sidebar-emoji-icon{
+  width:18px!important;height:18px!important;flex:0 0 18px!important;font-size:16px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-app-content{background:var(--tc-canvas)!important;min-height:100vh!important}
+@media(min-width:1024px){.mv-app-shell:has(.mv-trucks-control-center) .fp-app-content{margin-left:256px!important}}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-app-header{
+  height:80px!important;background:rgba(248,250,252,.97)!important;border-bottom:1px solid var(--tc-border)!important;
+  padding-left:24px!important;padding-right:24px!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-app-global-search{max-width:384px!important}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-app-global-search input{
+  min-height:42px!important;background:var(--tc-inset)!important;border:1px solid var(--tc-border)!important;
+  border-radius:12px!important;font-size:12px!important;font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;
+}
+
+/* Dashboard-style notification bell */
+.mv-app-shell:has(.mv-trucks-control-center) .fp-control-center-notification{
+  position:relative!important;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;
+  border:1px solid var(--tc-border)!important;border-radius:12px!important;background:var(--tc-inset)!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-control-center-notification-bell{
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:16px!important;line-height:1!important;
+}
+.mv-app-shell:has(.mv-trucks-control-center) .fp-control-center-notification-count{
+  position:absolute!important;top:-5px!important;right:-5px!important;min-width:16px!important;height:16px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;
+  background:var(--tc-red)!important;color:#fff!important;padding:0 4px!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;font-weight:700!important;line-height:16px!important;
+}
+
+/* Page */
+.mv-trucks-control-center.fp-trucks-page{
+  width:100%!important;max-width:none!important;margin:0!important;padding:24px!important;background:var(--tc-canvas)!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,sans-serif!important;
+}
+.mv-trucks-control-center .fp-trucks-heading{
+  min-height:86px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:24px!important;border-bottom:1px solid var(--tc-border)!important;padding:0 0 16px!important;
+}
+.mv-trucks-control-center .fp-trucks-overline{
+  display:block!important;margin-bottom:4px!important;color:var(--tc-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;font-weight:800!important;
+  line-height:1.2!important;letter-spacing:.14em!important;text-transform:uppercase!important;
+}
+.mv-trucks-control-center .fp-trucks-title{
+  margin:0!important;color:var(--tc-navy)!important;font-size:30px!important;font-weight:800!important;
+  line-height:1.08!important;letter-spacing:-.04em!important;
+}
+.mv-trucks-control-center .fp-trucks-subtitle{
+  margin-top:5px!important;color:var(--tc-muted)!important;font-size:12px!important;font-weight:400!important;line-height:1.5!important;
+}
+.mv-trucks-control-center .fp-trucks-heading-actions{position:relative!important;display:flex!important;align-items:center!important;gap:12px!important}
+.mv-trucks-control-center .fp-trucks-motto{
+  min-width:222px!important;display:flex!important;align-items:center!important;gap:14px!important;
+  border:1px solid var(--tc-border)!important;border-radius:16px!important;background:var(--tc-surface)!important;padding:12px 20px!important;
+}
+.mv-trucks-control-center .fp-trucks-motto>span{font-size:24px!important;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif!important}
+.mv-trucks-control-center .fp-trucks-motto strong{display:block!important;color:var(--tc-navy)!important;font-size:12px!important;font-weight:800!important;line-height:1!important}
+.mv-trucks-control-center .fp-trucks-motto small{
+  display:block!important;margin-top:5px!important;color:var(--tc-green)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:11px!important;font-weight:700!important;
+}
+.mv-trucks-control-center .fp-truck-add-form-host{position:absolute!important;right:0!important;top:100%!important;z-index:60!important}
+.mv-trucks-control-center .fp-trucks-heading #add-truck>form.fp-add-truck-form{
+  position:absolute!important;right:0!important;top:8px!important;width:min(760px,calc(100vw - 330px))!important;margin:0!important;
+}
+
+/* KPI row */
+.mv-trucks-control-center .fp-truck-kpi-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin-top:28px!important;
+}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile{
+  position:relative!important;min-height:118px!important;overflow:hidden!important;border:1px solid var(--tc-border)!important;
+  border-radius:16px!important;background:var(--tc-surface)!important;padding:20px!important;
+}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile::before{
+  content:""!important;position:absolute!important;top:0!important;left:0!important;right:0!important;height:4px!important;background:var(--tc-navy)!important;
+}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile:nth-child(2)::before{background:var(--tc-green)!important}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile:nth-child(3)::before{background:var(--tc-amber)!important}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile:nth-child(4)::before{background:var(--tc-border-dark)!important}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-label{font-size:12px!important;font-weight:700!important;color:var(--tc-muted)!important}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-value{
+  margin-top:8px!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:24px!important;font-weight:800!important;
+  line-height:1.12!important;letter-spacing:-.035em!important;color:var(--tc-navy)!important;
+}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-tile:nth-child(2) .mv-kpi-value{color:var(--tc-green)!important}
+.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-note,.mv-trucks-control-center .fp-truck-kpi-grid .mv-kpi-delta{
+  margin-top:5px!important;color:#64748B!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:11px!important;font-weight:600!important;
+}
+
+/* 8/4 workspace */
+.mv-trucks-control-center .fp-trucks-layout{
+  display:grid!important;grid-template-columns:minmax(0,9fr) minmax(280px,3fr)!important;gap:24px!important;align-items:start!important;margin-top:28px!important;
+}
+.mv-trucks-control-center .fp-trucks-table-card,.mv-trucks-control-center .fp-truck-side-card{
+  border:1px solid var(--tc-border)!important;border-radius:16px!important;background:var(--tc-surface)!important;
+}
+.mv-trucks-control-center .fp-trucks-table-card{overflow:hidden!important;margin-top:0!important}
+.mv-trucks-control-center .fp-trucks-table-card .mv-app-tabs{
+  min-height:64px!important;display:flex!important;align-items:center!important;gap:6px!important;overflow-x:auto!important;
+  border-bottom:1px solid var(--tc-border)!important;padding:16px 20px!important;background:var(--tc-surface)!important;
+}
+.mv-trucks-control-center .fp-trucks-table-card .mv-app-tabs>a,.mv-trucks-control-center .fp-trucks-table-card .mv-app-tabs>button{
+  min-height:30px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;border:0!important;border-radius:8px!important;
+  background:var(--tc-inset)!important;padding:0 12px!important;color:#475569!important;font-size:12px!important;font-weight:600!important;
+}
+.mv-trucks-control-center .fp-trucks-table-card .mv-app-tabs>a.active,.mv-trucks-control-center .fp-trucks-table-card .mv-app-tabs>button.active{
+  background:var(--tc-navy)!important;color:#fff!important;font-weight:700!important;
+}
+.mv-trucks-control-center .fp-trucks-table-card .mv-app-tab-count{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;font-weight:700!important;
+}
+
+/* Filter bar */
+.mv-trucks-control-center .fp-truck-filterbar{
+  display:grid!important;grid-template-columns:minmax(220px,1fr) 112px 112px 128px!important;gap:10px!important;align-items:center!important;
+  padding:14px 18px!important;background:rgba(234,239,245,.42)!important;border-bottom:1px solid var(--tc-border)!important;
+}
+.mv-trucks-control-center .fp-truck-search,.mv-trucks-control-center .fp-truck-filter-select,
+.mv-trucks-control-center .fp-truck-filter-button,.mv-trucks-control-center .fp-truck-sort select{
+  min-height:36px!important;border:1px solid var(--tc-border)!important;border-radius:10px!important;background:#fff!important;color:#475569!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",sans-serif!important;font-size:12px!important;font-weight:600!important;
+}
+.mv-trucks-control-center .fp-truck-search{display:flex!important;align-items:center!important;gap:8px!important;padding:0 12px!important}
+.mv-trucks-control-center .fp-truck-search input{
+  min-width:0!important;flex:1 1 auto!important;border:0!important;background:transparent!important;outline:none!important;font-size:12px!important;
+}
+.mv-trucks-control-center .fp-truck-filter-select,.mv-trucks-control-center .fp-truck-filter-button{padding:0 12px!important}
+.mv-trucks-control-center .fp-truck-filter-button{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important}
+.mv-trucks-control-center .fp-truck-sort{
+  grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:10px!important;color:#64748B!important;font-size:11px!important;
+}
+.mv-trucks-control-center .fp-truck-sort select{flex:1 1 auto!important;padding:0 12px!important}
+
+/* Table typography */
+.mv-trucks-control-center .fp-truck-table-wrap{overflow-x:auto!important;background:var(--tc-surface)!important}
+.mv-trucks-control-center .fp-truck-table{width:100%!important;min-width:930px!important;border-collapse:collapse!important}
+.mv-trucks-control-center .fp-truck-table thead{background:rgba(234,239,245,.68)!important}
+.mv-trucks-control-center .fp-truck-table th{
+  height:42px!important;padding:0 14px!important;border-bottom:1px solid var(--tc-border)!important;color:#64748B!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:11px!important;font-weight:700!important;
+  letter-spacing:.07em!important;text-transform:uppercase!important;white-space:nowrap!important;
+}
+.mv-trucks-control-center .fp-truck-table td{
+  padding:12px 14px!important;border-bottom:1px solid #E2E8F0!important;color:#334155!important;font-size:12px!important;font-weight:500!important;vertical-align:middle!important;
+}
+.mv-trucks-control-center .fp-truck-number,.mv-trucks-control-center .fp-truck-mileage{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:12px!important;
+}
+.mv-trucks-control-center .fp-truck-number{color:#94A3B8!important}
+.mv-trucks-control-center .fp-truck-mileage{color:var(--tc-navy)!important;font-weight:700!important;white-space:nowrap!important}
+.mv-trucks-control-center .fp-truck-identity{display:flex!important;align-items:center!important;gap:10px!important}
+.mv-trucks-control-center .fp-truck-thumb{
+  width:32px!important;height:32px!important;display:flex!important;align-items:center!important;justify-content:center!important;flex:0 0 32px!important;
+  border-radius:8px!important;background:var(--tc-navy)!important;color:#fff!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;font-weight:700!important;
+}
+.mv-trucks-control-center .fp-truck-name{color:var(--tc-navy)!important;font-size:12px!important;font-weight:700!important}
+.mv-trucks-control-center .fp-truck-plate{
+  margin-top:2px!important;color:var(--tc-muted)!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;
+}
+.mv-trucks-control-center .fp-truck-model strong{display:block!important;font-size:12px!important;font-weight:600!important}
+.mv-trucks-control-center .fp-truck-model span{display:block!important;margin-top:2px!important;color:var(--tc-muted)!important;font-size:11px!important}
+.mv-trucks-control-center .fp-truck-actions-cell{text-align:center!important}
+
+/* Pagination */
+.mv-trucks-control-center .fp-truck-pagination{
+  min-height:58px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;
+  border-top:1px solid var(--tc-border)!important;background:rgba(234,239,245,.28)!important;padding:12px 18px!important;
+  color:var(--tc-muted)!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:11px!important;
+}
+.mv-trucks-control-center .fp-truck-page-button,.mv-trucks-control-center .fp-truck-page-size{
+  min-height:30px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border:1px solid var(--tc-border)!important;
+  border-radius:8px!important;background:#fff!important;padding:0 10px!important;color:var(--tc-navy)!important;font-size:11px!important;font-weight:600!important;
+}
+.mv-trucks-control-center .fp-truck-page-button.active{background:var(--tc-green)!important;border-color:var(--tc-green)!important;color:#fff!important}
+
+/* Right rail */
+.mv-trucks-control-center .fp-trucks-right-rail{display:grid!important;gap:24px!important}
+.mv-trucks-control-center .fp-truck-side-card{padding:20px!important}
+.mv-trucks-control-center .fp-truck-side-card h2{
+  margin:0!important;color:var(--tc-muted)!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;
+  font-size:12px!important;font-weight:800!important;letter-spacing:.09em!important;text-transform:uppercase!important;
+}
+.mv-trucks-control-center .fp-truck-side-head{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;border-bottom:1px solid var(--tc-border)!important;padding-bottom:8px!important;
+}
+.mv-trucks-control-center .fp-truck-side-head>span{
+  color:#64748B!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:10px!important;font-weight:500!important;
+}
+.mv-trucks-control-center .fp-truck-side-action{
+  min-height:42px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 12px!important;align-items:center!important;gap:8px!important;
+  border:1px solid var(--tc-border)!important;border-radius:12px!important;background:var(--tc-canvas)!important;padding:8px 12px!important;
+  color:var(--tc-navy)!important;font-size:12px!important;font-weight:700!important;
+}
+.mv-trucks-control-center .fp-truck-side-action.primary{background:var(--tc-green)!important;border-color:var(--tc-green)!important;color:#fff!important}
+.mv-trucks-control-center .fp-truck-side-icon{display:none!important}
+.mv-trucks-control-center .fp-truck-donut{width:112px!important;height:112px!important;border-radius:999px!important}
+.mv-trucks-control-center .fp-truck-donut strong{
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:24px!important;font-weight:800!important;color:var(--tc-navy)!important;
+}
+.mv-trucks-control-center .fp-truck-donut span{
+  color:var(--tc-muted)!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:9px!important;font-weight:600!important;text-transform:uppercase!important;
+}
+.mv-trucks-control-center .fp-truck-stat-list{border-top:1px solid var(--tc-border)!important;padding-top:10px!important}
+.mv-trucks-control-center .fp-truck-stat-row{
+  min-height:30px!important;color:#475569!important;font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:12px!important;font-weight:500!important;
+}
+.mv-trucks-control-center .fp-truck-stat-row strong{color:var(--tc-navy)!important;font-weight:700!important}
+.mv-trucks-control-center .fp-truck-ranking{display:grid!important;gap:10px!important}
+.mv-trucks-control-center .fp-truck-ranking-row{
+  min-height:40px!important;display:flex!important;align-items:center!important;gap:10px!important;border:1px solid var(--tc-border)!important;border-radius:12px!important;
+  background:var(--tc-canvas)!important;padding:8px 10px!important;color:var(--tc-navy)!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",monospace!important;font-size:12px!important;font-weight:700!important;
+}
+.mv-trucks-control-center .fp-truck-rank{
+  width:20px!important;height:20px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;
+  background:var(--tc-inset)!important;font-size:10px!important;
+}
+
+@media(max-width:1199px){
+  .mv-trucks-control-center .fp-trucks-layout{grid-template-columns:1fr!important}
+  .mv-trucks-control-center .fp-trucks-right-rail{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:900px){
+  .mv-trucks-control-center .fp-truck-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .mv-trucks-control-center .fp-trucks-right-rail{grid-template-columns:1fr!important}
+}
+@media(max-width:743px){
+  .mv-trucks-control-center.fp-trucks-page{padding:18px 16px 90px!important}
+  .mv-trucks-control-center .fp-trucks-heading{align-items:flex-start!important;flex-direction:column!important}
+  .mv-trucks-control-center .fp-trucks-motto{width:100%!important;min-width:0!important}
+  .mv-trucks-control-center .fp-truck-filterbar{grid-template-columns:1fr 1fr!important}
+  .mv-trucks-control-center .fp-truck-search,.mv-trucks-control-center .fp-truck-sort{grid-column:1/-1!important}
+  .mv-trucks-control-center .fp-trucks-title{font-size:24px!important}
+}
+@media(max-width:560px){.mv-trucks-control-center .fp-truck-kpi-grid{grid-template-columns:1fr!important}}
+
+/* === Trucks service due badge v1 START === */
+
+.mv-trucks-control-center .fp-truck-service-due{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:30px!important;
+  border:1px solid transparent!important;
+  border-radius:9px!important;
+  padding:0 10px!important;
+  white-space:nowrap!important;
+
+  color:#475569!important;
+  font-family:var(--mv-control-mono),"JetBrains Mono",ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+}
+
+/* Due today or overdue — matches the red date treatment in the reference. */
+.mv-trucks-control-center .fp-truck-service-due.overdue{
+  border-color:#FCA5A5!important;
+  background:#FEE2E2!important;
+  color:#DC2626!important;
+}
+
+/* Useful early warning: within 14 days or 1,000 miles. */
+.mv-trucks-control-center .fp-truck-service-due.soon{
+  border-color:#FCD34D!important;
+  background:#FEF3C7!important;
+  color:#B45309!important;
+}
+
+/* Future service remains understated. */
+.mv-trucks-control-center .fp-truck-service-due.normal{
+  min-height:auto!important;
+  border-color:transparent!important;
+  background:transparent!important;
+  padding:0!important;
+  color:#475569!important;
+}
+
+.mv-trucks-control-center .fp-truck-service-due.none{
+  min-height:auto!important;
+  border-color:transparent!important;
+  background:transparent!important;
+  padding:0!important;
+  color:#94A3B8!important;
+}
+
+/* === Trucks service due badge v1 END === */
+

@@ -1,4 +1,5 @@
 import { calculateWeekFinance } from "@/lib/week-finance";
+import "./settlement-control-center.css";
 import { CHART_PALETTE } from "@/lib/chart-palette";
 import KpiTile from "@/components/kpi-tile";
 import { formatPercent } from "@/lib/format";
@@ -257,12 +258,10 @@ export default async function SettlementPage({
 
   const {
     grossRevenue,
-    loadedMiles,
     deadheadMiles,
     totalMiles,
     variableExpenses,
     reimbursementTotal,
-    netVariableExpenses,
     fixedTotal,
     fuelCost,
     odometerMiles,
@@ -528,14 +527,19 @@ export default async function SettlementPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-settle-page">
+      <div className="fp-settle-page mv-settle-control-center">
         <section className="fp-settle-heading">
           <div>
+            <span className="fp-settle-overline">SETTLEMENT &amp; NET RECONCILER</span>
             <h1 className="fp-settle-title">Weekly Settlement</h1>
             <p className="fp-settle-subtitle">
               Calculate and review your weekly business settlement with every
               cost accounted for.
             </p>
+          </div>
+          <div className="fp-settle-motto">
+            <span aria-hidden="true">📑</span>
+            <div><strong>YOUR MILES.</strong><small>YOUR PROFIT.</small></div>
           </div>
         </section>
 
@@ -548,27 +552,40 @@ export default async function SettlementPage({
           </div>
         )}
 
+        <div className="fp-settle-kpi-grid">
+          <KpiTile
+            label="Gross Revenue"
+            value={money(grossRevenue)}
+            note={`${loads.length} loads this week`}
+          />
+          <KpiTile
+            label="Total Miles"
+            value={`${totalMiles.toLocaleString()} mi`}
+            note={`${odometerMiles.toLocaleString()} odometer mi`}
+          />
+          <KpiTile
+            label="Costs"
+            value={money(totalExpenses)}
+            note="Net variable + fixed + company fees"
+          />
+          <KpiTile
+            className={netProfit >= 0 ? "is-positive" : "is-negative"}
+            label="Net Profit"
+            value={money(netProfit)}
+            note={totalMiles > 0 ? `${money(profitPerMile)} profit / mile` : "n/a profit / mile"}
+          />
+        </div>
+
         <div className="fp-settle-layout mt-4">
           <div className="min-w-0">
-            <div className="fp-settle-kpi-grid">
-              <KpiTile
-              label="Gross Revenue"
-                              value={money(grossRevenue)}
-                              note={`${loads.length} loads this week`}
-            />
-              <KpiTile
-              label="Total Miles"
-                              value={`${totalMiles.toLocaleString()} mi`}
-                              note={`${odometerMiles.toLocaleString()} odometer mi`}
-            />
-              <KpiTile
-              label="Net Profit"
-                              value={money(netProfit)}
-                              note={totalMiles > 0 ? `${money(profitPerMile)} profit / mile` : "n/a profit / mile"}
-            />
-            </div>
-
             <section className="fp-settle-table-card mt-4">
+              <div className="fp-settle-table-heading">
+                <div>
+                  <h2>{tab === "loads" ? "Settlement Loads" : tab === "costs" ? "Weekly Costs" : "Week Reimbursements"}</h2>
+                  <p>{displayDate(start)} – {displayDate(sunday)}</p>
+                </div>
+                <span>{tab === "loads" ? filteredLoads.length : tab === "costs" ? filteredCosts.length : filteredReimbursements.length} records shown</span>
+              </div>
               <SettlementControls
                 tab={tab}
                 loadCount={loads.length}
@@ -614,7 +631,7 @@ export default async function SettlementPage({
             <section className="fp-settle-weekly-overview mt-4">
               <div className="fp-settle-weekly-overview-heading">
                 <div>
-                  <span>WEEKLY OVERVIEW</span>
+                  <span>Weekly Summary</span>
                   <h2>
                     {displayDate(start)} – {displayDate(sunday)}
                   </h2>
@@ -1110,46 +1127,4 @@ function dateValue(value?: string | null) {
   if (!value) return 0;
   const parsed = Date.parse(`${value.slice(0, 10)}T12:00:00`);
   return Number.isFinite(parsed) ? parsed : 0;
-}
-
-
-
-
-function CalculatorIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[14px] w-[14px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <rect x="5" y="3" width="14" height="18" rx="2" />
-      <path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2" />
-    </svg>
-  );
-}
-
-function ImportIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[13px] w-[13px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M5 19h14V9H5z" />
-      <path d="M12 3v10M8 7l4-4 4 4" />
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[13px] w-[13px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M5 5h14v14H5z" />
-      <path d="M12 15V5M8 9l4-4 4 4" />
-    </svg>
-  );
 }

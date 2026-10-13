@@ -14,17 +14,28 @@ const migration=read("supabase_public_beta_feedback_v4_4_0.sql");
 const settings=read("src/app/settings/settings-center.tsx");
 
 for(const text of [
-  "Your trucking business,",
+  "Your truck can gross $8,000 this week.",
   "Join the Free Beta",
-  "Free during beta. No credit card required.",
+  "Free during beta · No credit card required · Web + mobile account",
   "Paid plans will be announced later",
-]) assert.ok(home.includes(text),`home missing ${text}`);
+]){
+  assert.ok(home.includes(text),`home missing ${text}`);
+}
 
-assert.ok(pricing.includes("Free access while we build MileVoxa with truckers."));
-assert.ok(pricing.includes("will not be charged automatically"));
+assert.ok(pricing.includes("MileVoxa is currently 100% free during Public Beta"));
+assert.ok(
+  pricing.includes("cannot be billed automatically") ||
+  pricing.includes("You will never be auto-charged")
+);
 assert.ok(plans.includes("$0<span>during beta</span>"));
 assert.ok(plans.includes("futurePaidPlanConfiguration"));
-assert.ok(signup.includes("Free public beta · No card required"));
+
+assert.ok(
+  signup.includes("Free during beta. No credit card required.") ||
+  signup.includes("Free public beta · No card required"),
+  "signup must clearly state free beta access and no card requirement"
+);
+
 assert.ok(shell.includes("Public Beta"));
 assert.ok(shell.includes("Send Feedback"));
 assert.ok(beta.includes('PUBLIC_BETA_ENV = "MILEVOXA_PUBLIC_BETA"'));

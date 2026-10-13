@@ -79,7 +79,7 @@ export default function SidebarSignOut({
       // Ignore storage cleanup errors.
     }
 
-    window.location.href = "/login";
+    window.location.assign(new URL("/login", window.location.origin).href);
   }
 
   async function requestSignOut() {

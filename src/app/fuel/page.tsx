@@ -1,4 +1,3 @@
-import { CHART_PALETTE, chartCategoryColor } from "@/lib/chart-palette";
 import KpiTile from "@/components/kpi-tile";
 import { formatPercent } from "@/lib/format";
 import { cookies } from "next/headers";
@@ -14,6 +13,12 @@ import {
   selectedWeek,
   weekEnd,
 } from "@/lib/fleetpilot-week";
+
+const FUEL_CHART_COLORS = {
+  navy: "#102238",
+  green: "#10B981",
+  gray: "#64748B",
+} as const;
 
 type SearchParams = Promise<{
   week?: string;
@@ -199,10 +204,7 @@ export default async function FuelPage({
       sum + num(row.loaded_miles) + num(row.deadhead_miles),
     0
   );
-  const grossRevenue = loads.reduce(
-    (sum, row) => sum + num(row.rate),
-    0
-  );
+
   const averagePrice =
     totalGallons > 0 ? totalFuelSpend / totalGallons : 0;
   const estimatedMpg =
@@ -306,9 +308,10 @@ export default async function FuelPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-fuel-page">
+      <div className="fp-fuel-page mv-fuel-control-center">
         <section className="fp-fuel-heading">
           <div>
+            <span className="fp-fuel-eyebrow">FLEET FUEL PERFORMANCE</span>
             <h1 className="fp-fuel-title">Fuel Analytics</h1>
             <p className="fp-fuel-subtitle">
               Track fuel costs, mileage and efficiency. Find insights to
@@ -380,14 +383,14 @@ export default async function FuelPage({
                         <span>
                           <i
                             className="cost"
-                            style={{ backgroundColor: CHART_PALETTE.green }}
+                            style={{ backgroundColor: FUEL_CHART_COLORS.green }}
                           />
                           Fuel Cost
                         </span>
                         <span>
                           <i
                             className="revenue"
-                            style={{ backgroundColor: CHART_PALETTE.navy }}
+                            style={{ backgroundColor: FUEL_CHART_COLORS.navy }}
                           />
                           Gross Revenue
                         </span>
@@ -563,7 +566,7 @@ export default async function FuelPage({
                   <h2>Fuel Insights</h2>
                   <div className="fp-fuel-insights-list mt-3">
                     <Insight
-                      icon="trend"
+                      icon="wallet"
                       text={`${money(totalFuelSpend)} spent on fuel in the filtered period.`}
                     />
                     <Insight
@@ -573,13 +576,13 @@ export default async function FuelPage({
                       } has the highest truck fuel spend.`}
                     />
                     <Insight
-                      icon="price"
+                      icon="fuel"
                       text={`Average fuel price is ${money(
                         averagePrice
                       )} per gallon.`}
                     />
                     <Insight
-                      icon="mpg"
+                      icon="trend"
                       text={`Estimated fleet MPG is ${estimatedMpg.toFixed(
                         2
                       )}.`}
@@ -603,6 +606,10 @@ export default async function FuelPage({
                       <br />
                       Higher Profits.
                     </div>
+                    <p className="fp-fuel-promo-subtitle">
+                      Track fuel purchases against the miles your trucks run to
+                      spot rising costs and protect your margins.
+                    </p>
                     <div className="mt-4 h-[3px] w-10 bg-[#16853B]" />
                   </div>
                 </div>
@@ -650,11 +657,11 @@ function groupFuel(
   }
 
   const colors = [
-    chartCategoryColor(0),
-    chartCategoryColor(1),
-    chartCategoryColor(2),
-    chartCategoryColor(3),
-    chartCategoryColor(4),
+    FUEL_CHART_COLORS.green,
+    FUEL_CHART_COLORS.gray,
+    FUEL_CHART_COLORS.navy,
+    "#94A3B8",
+    "#059669",
   ];
 
   return [...map.entries()]
@@ -806,7 +813,7 @@ function FuelTrendChart({
               width="22"
               height={Math.max(2, barHeight)}
               rx="2"
-              fill={CHART_PALETTE.navy}
+              fill={FUEL_CHART_COLORS.navy}
             />
             <text
               x={x}
@@ -824,7 +831,7 @@ function FuelTrendChart({
       <polyline
         points={points}
         fill="none"
-        stroke={CHART_PALETTE.green}
+        stroke={FUEL_CHART_COLORS.green}
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -842,7 +849,7 @@ function FuelTrendChart({
             cy={y}
             r="3"
             fill="#fff"
-            stroke={CHART_PALETTE.green}
+            stroke={FUEL_CHART_COLORS.green}
             strokeWidth="2"
           />
         );
@@ -859,18 +866,17 @@ function FuelDonut({
   items: FuelGroupItem[];
 }) {
   const safe = Math.max(1, total);
-  let cursor = 0;
+  const cursor = items.reduce((sum, item) => sum + (item.amount / safe) * 100, 0);
 
-  const stops = items.map((item) => {
+  const stops = items.map((item, index) => {
     const share = (item.amount / safe) * 100;
-    const from = cursor;
-    const to = cursor + share;
-    cursor = to;
+    const from = items.slice(0, index).reduce((sum, entry) => sum + (entry.amount / safe) * 100, 0);
+    const to = from + share;
     return `${item.color} ${from}% ${to}%`;
   });
 
   if (cursor < 100) {
-    stops.push(`#e7edf3 ${cursor}% 100%`);
+    stops.push(`#CBD5E1 ${cursor}% 100%`);
   }
 
   return (
@@ -917,21 +923,20 @@ function Insight({
   icon,
   text,
 }: {
-  icon: "trend" | "truck" | "price" | "mpg";
+  icon: "wallet" | "truck" | "fuel" | "trend";
   text: string;
 }) {
+  const iconGlyph = {
+    wallet: "💵",
+    truck: "🚛",
+    fuel: "⛽",
+    trend: "📈",
+  }[icon];
+
   return (
     <div className="fp-fuel-insight">
-      <span>
-        {icon === "truck" ? (
-          <TruckIcon />
-        ) : icon === "price" ? (
-          <TagIcon />
-        ) : icon === "mpg" ? (
-          <MileageIcon />
-        ) : (
-          <TrendIcon />
-        )}
+      <span className={`fp-fuel-insight-icon ${icon}`} aria-hidden="true">
+        {iconGlyph}
       </span>
       <p>{text}</p>
     </div>
@@ -994,85 +999,4 @@ function sortLabel(sort: string) {
   if (sort === "gallons-desc") return "Gallons (Highest)";
   if (sort === "price-desc") return "Price/Gal (Highest)";
   return "Date (Newest)";
-}
-
-function WalletIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M4 6h16v12H4z" />
-      <path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z" />
-    </svg>
-  );
-}
-
-function FuelPumpIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M6 3h9v18H6z" />
-      <path d="M8 7h5" />
-      <path d="M15 8h2l2 3v6a2 2 0 0 0 2 2" />
-    </svg>
-  );
-}
-
-function TagIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M4 4h9l7 7-9 9-7-7V4Z" />
-      <circle cx="9" cy="9" r="1.5" />
-    </svg>
-  );
-}
-
-function MileageIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 12l4-3M7 16h10" />
-    </svg>
-  );
-}
-
-function TruckIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M3 7h11v9H3z" />
-      <path d="M14 10h4l3 3v3h-7z" />
-      <circle cx="7" cy="18" r="2" />
-      <circle cx="18" cy="18" r="2" />
-    </svg>
-  );
-}
-
-function TrendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[15px] w-[15px] fill-none stroke-current"
-      strokeWidth="1.8"
-    >
-      <path d="M4 16l5-5 4 3 7-8" />
-      <path d="M16 6h4v4" />
-    </svg>
-  );
 }

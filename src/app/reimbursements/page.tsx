@@ -101,7 +101,6 @@ export default async function ReimbursementsPage({
     ].filter(Boolean)
   )].sort((a, b) => a.localeCompare(b));
 
-
   const linkedExpense = (row: Reimbursement) =>
     row.expense_id ? expenseMap.get(row.expense_id) : undefined;
 
@@ -258,16 +257,28 @@ export default async function ReimbursementsPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-reimb-page">
+      <div className="fp-reimb-page mv-reimb-control-center">
         <section className="fp-reimb-heading">
-          <div>
+          <div className="fp-reimb-heading-copy">
+            <span className="fp-reimb-overline">CASH RECOVERY &amp; RECONCILIATION</span>
             <h1 className="fp-reimb-title">Reimbursements</h1>
             <p className="fp-reimb-subtitle">
               Track recovered business expenses and reimbursement history.
             </p>
           </div>
-          <div id="add-reimbursement" className="fp-reimb-add-form-host">
-            <AddReimbursementForm expenses={expenses} trucks={trucks} />
+
+          <div className="fp-reimb-heading-actions">
+            <div className="fp-reimb-motto" aria-label="Recover more, protect profit">
+              <span aria-hidden="true">💵</span>
+              <div>
+                <strong>RECOVER MORE.</strong>
+                <small>PROTECT PROFIT.</small>
+              </div>
+            </div>
+
+            <div id="add-reimbursement" className="fp-reimb-add-form-host">
+              <AddReimbursementForm expenses={expenses} trucks={trucks} />
+            </div>
           </div>
         </section>
 
@@ -277,25 +288,34 @@ export default async function ReimbursementsPage({
           </div>
         )}
 
+        <div className="fp-reimb-kpi-grid fp-reimb-kpi-grid-reference">
+          <KpiTile
+            label="Total Reimbursed"
+            value={money(total)}
+            note={`${filteredBase.length} Records Total`}
+          />
+          <KpiTile
+            label="Records"
+            value={`${filteredBase.length}`}
+            note="Logged entries"
+          />
+          <KpiTile
+            label="Full Recovery"
+            value={money(fullAmount)}
+            note={`${filteredBase.length ? Math.round((fullCount / filteredBase.length) * 100) : 0}% of total entries`}
+          />
+          <KpiTile
+            label="Partial Recovery"
+            value={money(partialAmount)}
+            note={`${filteredBase.length ? Math.round((partialCount / filteredBase.length) * 100) : 0}% of total entries`}
+          />
+        </div>
+
         <div className="fp-reimb-layout mt-4">
           <div className="min-w-0">
-            <div className="fp-reimb-kpi-grid">
-              <KpiTile
-                label="Total Reimbursed" value={money(total)} note={reimbursementRangeNote(dateFrom, dateTo)}
-              />
-              <KpiTile
-                label="Records" value={`${filteredBase.length}`} note={reimbursementRangeNote(dateFrom, dateTo)}
-              />
-              <KpiTile
-                label="Full Recovery" value={money(fullAmount)} note={`${fullCount} records`}
-              />
-              <KpiTile
-                label="Partial Recovery" value={money(partialAmount)} note={`${partialCount} records`}
-              />
-            </div>
-
             <section className="fp-reimb-table-card mt-4">
               <AppTabs
+                variant="filter"
                 activeKey={kind}
                 ariaLabel="Reimbursement status"
                 items={[
@@ -396,7 +416,10 @@ export default async function ReimbursementsPage({
             </section>
 
             <section className="fp-reimb-side-card">
-              <h2>Recovery Breakdown</h2>
+              <div className="fp-reimb-side-head">
+                <h2>Recovery Breakdown</h2>
+                <span>{money(total)} Total</span>
+              </div>
               <div className="mt-4 flex justify-center">
                 <ReimbDonut
                   total={total}
@@ -406,16 +429,16 @@ export default async function ReimbursementsPage({
                 />
               </div>
               <div className="fp-reimb-stat-list mt-4">
-                <ReimbStatRow label="Full Recovery" amount={fullAmount} total={total} color="#58bd69" />
-                <ReimbStatRow label="Partial Recovery" amount={partialAmount} total={total} color="#f4b53e" />
-                <ReimbStatRow label="Standalone" amount={standaloneAmount} total={total} color="#16853B" />
+                <ReimbStatRow label="Full Recovery" amount={fullAmount} total={total} color="#10B981" />
+                <ReimbStatRow label="Partial Recovery" amount={partialAmount} total={total} color="#D97706" />
+                <ReimbStatRow label="Standalone" amount={standaloneAmount} total={total} color="#102238" />
               </div>
             </section>
 
             <section className="fp-reimb-side-card">
-              <div className="flex items-center justify-between">
+              <div className="fp-reimb-side-head">
                 <h2>Top Recovered Categories</h2>
-                <span className="text-[9px] font-[600] text-[#16853B]">View All →</span>
+                <span>By Amount</span>
               </div>
               <div className="fp-reimb-ranking mt-3">
                 {topCategories.map(([label, amount], index) => (
@@ -439,9 +462,6 @@ export default async function ReimbursementsPage({
     </AppShell>
   );
 }
-
-
-
 
 function ReimbDonut({
   total,
@@ -467,12 +487,12 @@ function ReimbDonut({
   const background =
     total > 0
       ? `conic-gradient(
-          #58bd69 0 ${fullPct}%,
-          #f4b53e ${fullPct}% ${partialEnd}%,
-          #16853B ${partialEnd}% ${standaloneEnd}%,
-          #e7edf3 ${standaloneEnd}% 100%
+          #10B981 0 ${fullPct}%,
+          #D97706 ${fullPct}% ${partialEnd}%,
+          #102238 ${partialEnd}% ${standaloneEnd}%,
+          #CBD5E1 ${standaloneEnd}% 100%
         )`
-      : "conic-gradient(#e7edf3 0 100%)";
+      : "conic-gradient(#CBD5E1 0 100%)";
 
   return (
     <div className="fp-reimb-donut" style={{ background }}>
@@ -504,19 +524,9 @@ function reimbursementKindHref(base: URLSearchParams, kind: string) {
   return `/reimbursements${params.toString() ? `?${params}` : ""}`;
 }
 
-function reimbursementRangeNote(from?: string, to?: string) {
-  if (from && to) return `${shortRangeDate(from)} – ${shortRangeDate(to)}`;
-  if (from) return `from ${shortRangeDate(from)}`;
-  if (to) return `through ${shortRangeDate(to)}`;
-  return "current filtered view";
-}
 
-function shortRangeDate(value: string) {
-  return new Date(`${value}T12:00:00`).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
+
+
 
 function pageHref(base: URLSearchParams, page: number) {
   const params = new URLSearchParams(base);
@@ -545,31 +555,4 @@ function money(value: number) {
 function shortDate(value?: string | null) {
   if (!value) return "—";
   return new Date(`${value.slice(0,10)}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-}
-function SearchIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>;
-}
-function FilterIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>;
-}
-function CalendarIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 9h16"/></svg>;
-}
-function WalletIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><path d="M4 6h16v12H4z"/><path d="M16 10h5v4h-5a2 2 0 0 1 0-4Z"/></svg>;
-}
-function ClockIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>;
-}
-function CheckIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="m8 12 2.5 2.5L16 9"/></svg>;
-}
-function PartialIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-none stroke-current" strokeWidth="1.8"><circle cx="12" cy="12" r="8"/><path d="M9 9l6 6M15 9l-6 6"/></svg>;
-}
-function ImportIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M5 19h14V9H5z"/><path d="M12 3v10M8 7l4-4 4 4"/></svg>;
-}
-function ExportIcon() {
-  return <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8"><path d="M5 5h14v14H5z"/><path d="M12 15V5M8 9l4-4 4 4"/></svg>;
 }

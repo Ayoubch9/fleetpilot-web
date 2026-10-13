@@ -54,7 +54,16 @@ assert.deepStrictEqual(darkNavyLike,[],"near-navy variants remain");
 const shell=fs.readFileSync("src/components/app-shell.tsx","utf8");
 const css=fs.readFileSync("src/app/globals.css","utf8");
 
-assert.ok(shell.includes('className="mv-app-shell min-h-screen'));
+/*
+ * The AppShell class can now be a JSX template literal because the
+ * Control Center applies dashboard-only next/font variables conditionally.
+ * Keep validating the required base shell classes without requiring one
+ * exact JSX serialization.
+ */
+assert.ok(
+  shell.includes("mv-app-shell min-h-screen"),
+  "AppShell base class is missing"
+);
 assert.ok(css.includes(".mv-app-shell th{"));
 assert.ok(css.includes("background:#F1F5F9!important"));
 assert.ok(css.includes("padding:12px 16px!important"));

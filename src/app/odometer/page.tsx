@@ -85,7 +85,7 @@ export default async function OdometerPage({
       companyName={companyName}
       role={role}
     >
-      <div className="fp-odometer-page">
+      <div className="fp-odometer-page mv-odometer-control-center">
         <section className="fp-odometer-heading">
           <div>
             <span>WEEKLY MILEAGE</span>

@@ -19,7 +19,14 @@ export default async function OnboardingPage() {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (membership?.company_id) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("business_role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const isPendingSignup = user.user_metadata?.profile_setup_required === true;
+  if (membership?.company_id && !isPendingSignup && profile?.business_role) {
     redirect("/dashboard");
   }
 
@@ -31,8 +38,12 @@ export default async function OnboardingPage() {
   return (
     <SocialOnboarding
       email={user.email || ""}
-      provider="Google"
+      provider={user.app_metadata?.provider === "google" ? "Google" : "email"}
       suggestedName={String(suggestedName)}
+      suggestedCompanyName={String(user.user_metadata?.company_name || "")}
+      suggestedRole={String(user.user_metadata?.business_role || "")}
+      suggestedDotNumber={String(user.user_metadata?.dot_number || "")}
+      suggestedMcNumber={String(user.user_metadata?.mc_number || "")}
     />
   );
 }

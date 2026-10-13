@@ -1,5 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./reimbursements/reimbursements-control-center-v1.css";
+import "./maintenance/maintenance-control-center-v1.css";
+import "./expenses/expenses-control-center-v1.css";
+import "./trucks/trucks-control-center-v1.css";
+import "./load-decision/load-decision-control-center-v1.css";
+import "./loads/loads-control-center-v1.css";
+import "./dashboard/dashboard-control-center-v1.css";
+import "./odometer/odometer-control-center-v1.css";
+import "./security-deposit/security-deposit-control-center-v1.css";
+import "./fuel/fuel-control-center-v1.css";
+import "./control-center-notification-v1.css";
+import "./notifications/notifications-control-center-v1.css";
+import "./reports/reports-control-center-v1.css";
+import "./pilot-ai/pilot-ai-control-center-v1.css";
+import "./documents/documents-control-center-v1.css";
+import "./forms-control-center-v1.css";
+import "./app-shell-consistency-v1.css";
 import { SITE_URL } from "@/lib/seo";
 
 import GoogleAnalytics from "@/components/google-analytics";

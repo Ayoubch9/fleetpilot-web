@@ -1,0 +1,406 @@
+/* Shared signed-in sidebar: keep every product page aligned with Dashboard. */
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed {
+  width: 256px !important;
+  border-right: 1px solid #cbd5e1 !important;
+  background: #e2e8f0 !important;
+  color: #102238 !important;
+  box-shadow: 4px 0 18px rgb(16 34 56 / 5%) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed > div:first-child {
+  display: flex !important;
+  min-height: 80px !important;
+  height: 80px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  background: rgb(248 250 252 / 78%) !important;
+  padding: 10px 14px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .mv-sidebar-brand {
+  display: flex !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .mv-sidebar-brand .mv-brand-lockup {
+  display: block !important;
+  width: 210px !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-scroll {
+  padding: 14px 14px 16px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-scroll a[href] {
+  display: flex !important;
+  min-height: 39px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border-radius: 12px !important;
+  padding: 0 13px !important;
+  color: #334155 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  box-shadow: none !important;
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-scroll a[href]:hover {
+  background: #fff !important;
+  color: #102238 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-scroll a[href*="/"][class*="bg-gradient"] {
+  background: #10b981 !important;
+  color: #fff !important;
+  box-shadow: 0 5px 14px rgb(5 150 105 / 16%) !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-scroll [class*="uppercase"] {
+  color: #64748b !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-sidebar-emoji-icon {
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .border-t {
+  border-color: #cbd5e1 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .my-3 {
+  margin-top: 14px !important;
+  margin-bottom: 14px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-beta-sidebar-feedback {
+  display: flex !important;
+  width: 100% !important;
+  min-height: 39px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-top: 4px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  padding: 0 13px !important;
+  color: #334155 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-beta-sidebar-feedback::before {
+  color: #059669 !important;
+  font-size: 14px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-beta-sidebar-feedback:hover {
+  border-color: #a7f3d0 !important;
+  background: #ecfdf5 !important;
+  color: #102238 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-sidebar-signout {
+  display: flex !important;
+  width: 100% !important;
+  min-height: 39px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
+  border: 1px solid #dc2626 !important;
+  border-radius: 12px !important;
+  background: #dc2626 !important;
+  padding: 0 13px !important;
+  color: #fff !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-sidebar-signout:hover:not(:disabled) {
+  border-color: #b91c1c !important;
+  background: #b91c1c !important;
+  color: #fff !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-sidebar-signout:focus-visible {
+  outline: 3px solid rgb(220 38 38 / 30%) !important;
+  outline-offset: 2px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-sidebar-fixed .fp-sidebar-signout:disabled {
+  cursor: wait !important;
+  opacity: 0.65 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-app-header {
+  height: 80px !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  background: rgb(248 250 252 / 97%) !important;
+  box-shadow: 0 1px 0 rgb(16 34 56 / 2%) !important;
+  padding-right: 24px !important;
+  padding-left: 24px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-app-global-search {
+  max-width: 384px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-app-global-search input {
+  min-height: 42px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  background: #edf2f7 !important;
+  color: #102238 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account {
+  display: flex !important;
+  min-height: 56px !important;
+  align-items: center !important;
+  gap: 9px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  padding: 4px 9px 4px 6px !important;
+  color: #102238 !important;
+  box-shadow: 0 1px 2px rgb(16 34 56 / 3.5%) !important;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account:hover {
+  border-color: #a7f3d0 !important;
+  background: #fff !important;
+  box-shadow: 0 3px 10px rgb(16 34 56 / 7%) !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account:focus-visible {
+  outline: 3px solid rgb(16 185 129 / 28%) !important;
+  outline-offset: 2px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account .fp-header-avatar {
+  width: 42px !important;
+  height: 42px !important;
+  flex-basis: 42px !important;
+  border: 2px solid #d1fae5 !important;
+  background: #102238 !important;
+  font-size: 12px !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account > span:nth-child(2) > span:first-child {
+  color: #102238 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account > span:nth-child(2) > span:last-child {
+  margin-top: 3px !important;
+  color: #64748b !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.mv-app-shell.mv-app-shell .fp-header-account > span:last-child {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .mv-app-shell.mv-app-shell .fp-header-account {
+    min-height: 42px !important;
+    gap: 0 !important;
+    padding: 3px !important;
+  }
+
+  .mv-app-shell.mv-app-shell .fp-header-account .fp-header-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
+  }
+}
+
+/* Settings section tabs intentionally use the active fill without the shared underline. */
+.mv-app-shell.mv-app-shell .mv-settings-option-tabs.mv-settings-option-tabs > button.active::after,
+.mv-app-shell.mv-app-shell .mv-settings-option-tabs.mv-settings-option-tabs > a.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-settings-option-tabs.mv-settings-option-tabs > button.active,
+.mv-app-shell.mv-app-shell .mv-settings-option-tabs.mv-settings-option-tabs > a.active {
+  box-shadow: none !important;
+}
+
+@media (min-width: 1024px) {
+  .mv-app-shell.mv-app-shell .fp-app-content {
+    margin-left: 256px !important;
+  }
+}
+
+/* Tablet browsers keep the website sidebar; the 184px rail gives iPad
+   portrait pages, including iPad mini, a useful canvas while search controls
+   move below account actions. Phone navigation remains active below 744px. */
+@media (min-width: 744px) and (max-width: 1023px) {
+  .mv-app-shell.mv-app-shell {
+    --mv-tablet-sidebar-width: 184px;
+  }
+
+  .mv-app-shell.mv-app-shell .fp-sidebar-fixed {
+    display: flex !important;
+    width: 184px !important;
+  }
+
+  .mv-app-shell.mv-app-shell .fp-app-content {
+    margin-left: 184px !important;
+  }
+}
+
+/* Shared status and record-filter options. Use AppTabs variant="filter" on
+   new filter groups to keep the Loads reference consistent across pages. */
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter {
+  min-height: 64px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  padding: 10px 20px !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a,
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button {
+  min-height: 30px !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px !important;
+  background: #edf2f7 !important;
+  padding: 0 12px !important;
+  color: #475569 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a:hover,
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button:not(:disabled):hover {
+  border-color: #cbd5e1 !important;
+  background: #e2e8f0 !important;
+  color: #102238 !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a.active,
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button.active {
+  border-color: #102238 !important;
+  background: #102238 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 2px rgb(16 34 56 / 10%) !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a::after,
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button::after {
+  display: none !important;
+  content: none !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter .mv-app-tab-count {
+  min-width: 18px !important;
+  height: 18px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: #102238 !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  text-align: center !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > .active .mv-app-tab-count {
+  background: #dcfce7 !important;
+  color: #047857 !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a:focus-visible,
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button:focus-visible {
+  outline: 3px solid rgb(16 185 129 / 35%) !important;
+  outline-offset: 2px !important;
+}
+
+.mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.55 !important;
+}
+
+@media (max-width: 640px) {
+  .mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter {
+    min-height: 48px !important;
+    padding: 8px 12px !important;
+  }
+
+  .mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > a,
+  .mv-app-shell.mv-app-shell .mv-app-tabs.mv-app-tabs--filter > button {
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Keep native select indicators aligned consistently across signed-in pages. */
+body:has(.mv-app-shell) select:not([multiple]):not([size]) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%) !important;
+  background-position:
+    calc(100% - 22px) 50%,
+    calc(100% - 17px) 50% !important;
+  background-repeat: no-repeat !important;
+  background-size: 5px 5px !important;
+}
+
+@media (forced-colors: active) {
+  body:has(.mv-app-shell) select:not([multiple]):not([size]) {
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+    background-image: none !important;
+  }
+}

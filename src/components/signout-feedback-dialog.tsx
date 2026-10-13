@@ -61,7 +61,9 @@ export default function SignOutFeedbackDialog({
     };
   }, [open]);
 
-  useEffect(() => {
+  const [previousOpen, setPreviousOpen] = useState(open);
+  if (previousOpen !== open) {
+    setPreviousOpen(open);
     if (!open) {
       setRating(0);
       setTags([]);
@@ -69,7 +71,7 @@ export default function SignOutFeedbackDialog({
       setBusy(false);
       setStatus("");
     }
-  }, [open]);
+  }
 
   const prompt = useMemo(() => {
     if (tags.includes("Missing feature")) return "What feature would help you most?";

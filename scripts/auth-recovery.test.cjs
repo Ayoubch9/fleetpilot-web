@@ -32,7 +32,10 @@ assert.ok(
 assert.ok(!login.includes("<h2"), "login must not place H2 before H1");
 assert.ok(!signup.includes("<h2"), "signup must not place H2 before H1");
 
-assert.ok(signup.includes("Company name (optional)"));
+assert.ok(
+  /Company Name \(optional\)/i.test(signup),
+  "signup must keep the optional company-name field"
+);
 assert.ok(signup.includes('required={false}'));
 assert.ok(signup.includes("`${clean} Trucking`"));
 assert.ok(signup.includes('"My Trucking Business"'));

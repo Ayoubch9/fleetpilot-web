@@ -16,7 +16,7 @@ const og=read("src/app/opengraph-image.tsx");
 assert.ok(seo.includes('SITE_URL = "https://www.milevoxa.com"'));
 assert.ok(root.includes("metadataBase: new URL(SITE_URL)"));
 assert.ok(home.includes('title: "MileVoxa | Free Public Beta for Trucking Operations"'));
-assert.ok(pricing.includes('title: "Public Beta Access | MileVoxa"'));
+assert.ok(pricing.includes('title: "Pricing & Public Beta | MileVoxa"'));
 assert.ok(tools.includes('path: "/tools"'));
 assert.ok(calculator.includes("publicPageMetadata"));
 assert.ok(seo.includes("alternates:"));

@@ -16,16 +16,18 @@ export default function AppTabs({
   onChange,
   ariaLabel = "Section tabs",
   className = "",
+  variant = "tabs",
 }: {
   items: AppTabItem[];
   activeKey: string;
   onChange?: (key: string) => void;
   ariaLabel?: string;
   className?: string;
+  variant?: "tabs" | "filter";
 }) {
   return (
     <nav
-      className={`mv-app-tabs ${className}`.trim()}
+      className={`mv-app-tabs ${variant === "filter" ? "mv-app-tabs--filter" : ""} ${className}`.trim()}
       aria-label={ariaLabel}
     >
       {items.map((item) => {
@@ -57,7 +59,7 @@ export default function AppTabs({
             key={item.key}
             type="button"
             className={active ? "active" : ""}
-            aria-selected={active}
+            aria-pressed={active}
             disabled={item.disabled}
             onClick={() => onChange?.(item.key)}
           >

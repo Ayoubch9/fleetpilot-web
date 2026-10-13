@@ -1,13 +1,14 @@
 "use client";
-import { formatMoney, formatPercent } from "@/lib/format";
 
+import type { ReactNode } from "react";
 import { useState } from "react";
 import Link from "next/link";
-
+import { formatMoney, formatPercent } from "@/lib/format";
 import {
   TOOL_DEFINITIONS,
   type ToolKey,
 } from "@/lib/free-tools";
+import styles from "./free-tools-redesign.module.css";
 
 export default function FreeTools({
   initialActive = "load",
@@ -17,42 +18,65 @@ export default function FreeTools({
   navigationMode?: "tabs" | "routes";
 }) {
   const [active, setActive] = useState<ToolKey>(initialActive);
+  const activeTool = TOOL_DEFINITIONS.find((tool) => tool.key === active);
+  const activeIndex = Math.max(
+    1,
+    TOOL_DEFINITIONS.findIndex((tool) => tool.key === active) + 1
+  );
 
   return (
-    <div className="fp-free-tools-shell">
-      <aside className="fp-free-tools-menu">
-        <span>FREE TRUCKING TOOLS</span>
-        <h2>Run the numbers before the road.</h2>
-        <p>No account required. Use these calculators as often as you want.</p>
+    <div className={styles.shell}>
+      <div className={styles.selectorHeader}>
         <div>
-          {TOOL_DEFINITIONS.map((tool) =>
-            navigationMode === "routes" ? (
-              <Link
-                key={tool.key}
-                href={`/tools/${tool.slug}`}
-                className={active === tool.key ? "active" : ""}
-                aria-current={active === tool.key ? "page" : undefined}
-              >
-                <strong>{tool.title}</strong>
-                <small>{tool.text}</small>
-              </Link>
-            ) : (
-              <button
-                type="button"
-                key={tool.key}
-                className={active === tool.key ? "active" : ""}
-                aria-pressed={active === tool.key}
-                onClick={() => setActive(tool.key)}
-              >
-                <strong>{tool.title}</strong>
-                <small>{tool.text}</small>
-              </button>
-            )
-          )}
+          <span>CALCULATOR SUITE</span>
+          <h2>Choose a calculator</h2>
+          <p>No account required. Your existing MileVoxa formulas stay unchanged.</p>
         </div>
-      </aside>
+        <div className={styles.freeBadge}>100% FREE</div>
+      </div>
 
-      <section className="fp-free-tool-workspace">
+      <nav className={styles.toolMenu} aria-label="Free trucking calculators">
+        {TOOL_DEFINITIONS.map((tool, index) =>
+          navigationMode === "routes" ? (
+            <Link
+              key={tool.key}
+              href={`/tools/${tool.slug}`}
+              scroll={false}
+              className={active === tool.key ? styles.selectedTool : styles.toolChoice}
+              aria-current={active === tool.key ? "page" : undefined}
+            >
+              <span className={styles.toolNumber}>TOOL {String(index + 1).padStart(2, "0")}</span>
+              <strong>{tool.title}</strong>
+              <small>{tool.text}</small>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              key={tool.key}
+              className={active === tool.key ? styles.selectedTool : styles.toolChoice}
+              aria-pressed={active === tool.key}
+              onClick={() => setActive(tool.key)}
+            >
+              <span className={styles.toolNumber}>TOOL {String(index + 1).padStart(2, "0")}</span>
+              <strong>{tool.title}</strong>
+              <small>{tool.text}</small>
+            </button>
+          )
+        )}
+      </nav>
+
+      <section className={styles.workspace}>
+        <div className={styles.workspaceTopbar}>
+          <div>
+            <span>CALCULATOR {String(activeIndex).padStart(2, "0")}</span>
+            <strong>{activeTool?.title}</strong>
+          </div>
+          <div className={styles.liveBadge}>
+            <span />
+            LIVE CALCULATION
+          </div>
+        </div>
+
         {active === "cpm" && <CostPerMile />}
         {active === "load" && <LoadProfit />}
         {active === "owner" && <OwnerProfit />}
@@ -60,9 +84,9 @@ export default function FreeTools({
         {active === "fuel" && <FuelCost />}
         {active === "rpm" && <RatePerMile />}
 
-        <div className="fp-tool-cta">
+        <div className={styles.cta}>
           <div>
-            <span>Want these numbers saved automatically?</span>
+            <span>WANT THESE NUMBERS SAVED AUTOMATICALLY?</span>
             <strong>MileVoxa connects loads, trucks and costs for you.</strong>
           </div>
           <Link href="/signup">Join the Free Beta →</Link>
@@ -79,17 +103,23 @@ function CostPerMile() {
   const [fixed,setFixed]=useState(900);
   const [other,setOther]=useState(250);
   const total=fuel+maintenance+fixed+other;
-  return <ToolFrame title="Trucking Cost Per Mile" text="Add your weekly operating costs and miles.">
-    <Field label="Miles" value={miles} set={setMiles}/>
-    <Field label="Fuel" value={fuel} set={setFuel} money/>
-    <Field label="Maintenance" value={maintenance} set={setMaintenance} money/>
-    <Field label="Fixed Costs" value={fixed} set={setFixed} money/>
-    <Field label="Other Costs" value={other} set={setOther} money/>
-    <Results rows={[
-      ["Total Cost",usd(total)],
-      ["Cost / Mile",usd(miles>0?total/miles:0)],
-    ]}/>
-  </ToolFrame>;
+
+  return (
+    <ToolFrame
+      title="Trucking Cost Per Mile"
+      text="Add your weekly operating costs and miles."
+    >
+      <Field label="Miles" value={miles} set={setMiles}/>
+      <Field label="Fuel" value={fuel} set={setFuel} money/>
+      <Field label="Maintenance" value={maintenance} set={setMaintenance} money/>
+      <Field label="Fixed Costs" value={fixed} set={setFixed} money/>
+      <Field label="Other Costs" value={other} set={setOther} money/>
+      <Results rows={[
+        ["Total Cost",usd(total)],
+        ["Cost / Mile",usd(miles>0?total/miles:0)],
+      ]}/>
+    </ToolFrame>
+  );
 }
 
 function LoadProfit() {
@@ -103,22 +133,28 @@ function LoadProfit() {
   const miles=loaded+deadhead;
   const costs=fuel+tolls+driver+other;
   const profit=rate-costs;
-  return <ToolFrame title="Load Profit Calculator" text="Estimate what a load leaves after direct operating costs.">
-    <Field label="Load Rate" value={rate} set={setRate} money/>
-    <Field label="Loaded Miles" value={loaded} set={setLoaded}/>
-    <Field label="Deadhead Miles" value={deadhead} set={setDeadhead}/>
-    <Field label="Fuel Cost" value={fuel} set={setFuel} money/>
-    <Field label="Tolls" value={tolls} set={setTolls} money/>
-    <Field label="Driver Pay" value={driver} set={setDriver} money/>
-    <Field label="Other Load Costs" value={other} set={setOther} money/>
-    <Results rows={[
-      ["Estimated Profit",usd(profit)],
-      ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
-      ["True RPM",usd(miles>0?rate/miles:0)],
-      ["Profit / Mile",usd(miles>0?profit/miles:0)],
-      ["Margin",formatPercent(rate>0?(profit/rate*100):0)],
-    ]}/>
-  </ToolFrame>;
+
+  return (
+    <ToolFrame
+      title="Load Profit Calculator"
+      text="Estimate what a load leaves after direct operating costs."
+    >
+      <Field label="Load Rate" value={rate} set={setRate} money/>
+      <Field label="Loaded Miles" value={loaded} set={setLoaded}/>
+      <Field label="Deadhead Miles" value={deadhead} set={setDeadhead}/>
+      <Field label="Fuel Cost" value={fuel} set={setFuel} money/>
+      <Field label="Tolls" value={tolls} set={setTolls} money/>
+      <Field label="Driver Pay" value={driver} set={setDriver} money/>
+      <Field label="Other Load Costs" value={other} set={setOther} money/>
+      <Results rows={[
+        ["Estimated Profit",usd(profit)],
+        ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
+        ["True RPM",usd(miles>0?rate/miles:0)],
+        ["Profit / Mile",usd(miles>0?profit/miles:0)],
+        ["Margin",formatPercent(rate>0?(profit/rate*100):0)],
+      ]}/>
+    </ToolFrame>
+  );
 }
 
 function OwnerProfit() {
@@ -129,21 +165,26 @@ function OwnerProfit() {
   const [fees,setFees]=useState(900);
   const cost=fuel+variable+fixed+fees;
   const profit=revenue-cost;
-  return <ToolFrame title="Owner-Operator Profit Calculator" text="See what remains after the weekly costs that run the truck.">
-    <Field label="Weekly Revenue" value={revenue} set={setRevenue} money/>
-    <Field label="Fuel" value={fuel} set={setFuel} money/>
-    <Field label="Other Variable Costs" value={variable} set={setVariable} money/>
-    <Field label="Fixed Costs" value={fixed} set={setFixed} money/>
-    <Field label="Company / Dispatch Fees" value={fees} set={setFees} money/>
-    <Results rows={[
-      ["Total Costs",usd(cost)],
-      ["Weekly Net Profit",usd(profit)],
-      ["Profit Margin",formatPercent(revenue>0?(profit/revenue*100):0)],
-      ["Monthly Run Rate",usd(profit*4.33)],
-    ]}/>
-  </ToolFrame>;
-}
 
+  return (
+    <ToolFrame
+      title="Owner-Operator Profit Calculator"
+      text="See what remains after the weekly costs that run the truck."
+    >
+      <Field label="Weekly Revenue" value={revenue} set={setRevenue} money/>
+      <Field label="Fuel" value={fuel} set={setFuel} money/>
+      <Field label="Other Variable Costs" value={variable} set={setVariable} money/>
+      <Field label="Fixed Costs" value={fixed} set={setFixed} money/>
+      <Field label="Company / Dispatch Fees" value={fees} set={setFees} money/>
+      <Results rows={[
+        ["Total Costs",usd(cost)],
+        ["Weekly Net Profit",usd(profit)],
+        ["Profit Margin",formatPercent(revenue>0?(profit/revenue*100):0)],
+        ["Monthly Run Rate",usd(profit*4.33)],
+      ]}/>
+    </ToolFrame>
+  );
+}
 
 function LeaseOperatorProfit() {
   const [gross,setGross]=useState(8500);
@@ -164,66 +205,50 @@ function LeaseOperatorProfit() {
   const grossPerMile=miles>0?gross/miles:0;
   const deductionPercent=gross>0?(totalDeductions/gross)*100:0;
 
-  return <ToolFrame
-    title="Lease Operator / Contractor Driver Calculator"
-    text="Estimate what a leased-truck driver keeps after the weekly deductions that come out of gross revenue."
-  >
-    <Field label="Weekly Gross Revenue" value={gross} set={setGross} money/>
-    <Field label="Weekly Miles" value={miles} set={setMiles}/>
-    <Field label="Truck Lease / Rent" value={lease} set={setLease} money/>
-    <Field label="Fuel Cost" value={fuel} set={setFuel} money/>
-    <Field label="Insurance / Weekly Fixed Charge" value={insurance} set={setInsurance} money/>
-    <Field label="Company / Dispatch Fee %" value={companyPercent} set={setCompanyPercent} step=".1"/>
-    <Field label="Maintenance Reserve / Mile" value={maintenanceRate} set={setMaintenanceRate} money step=".01"/>
-    <Field label="Other Weekly Deductions" value={other} set={setOther} money/>
+  return (
+    <ToolFrame
+      title="Lease Operator / Contractor Driver Calculator"
+      text="Estimate what a leased-truck driver keeps after the weekly deductions that come out of gross revenue."
+    >
+      <Field label="Weekly Gross Revenue" value={gross} set={setGross} money/>
+      <Field label="Weekly Miles" value={miles} set={setMiles}/>
+      <Field label="Truck Lease / Rent" value={lease} set={setLease} money/>
+      <Field label="Fuel Cost" value={fuel} set={setFuel} money/>
+      <Field label="Insurance / Weekly Fixed Charge" value={insurance} set={setInsurance} money/>
+      <Field label="Company / Dispatch Fee %" value={companyPercent} set={setCompanyPercent} step=".1"/>
+      <Field label="Maintenance Reserve / Mile" value={maintenanceRate} set={setMaintenanceRate} money step=".01"/>
+      <Field label="Other Weekly Deductions" value={other} set={setOther} money/>
 
-    <Results rows={[
-      ["Estimated Take-Home",usd(takeHome)],
-      ["Total Deductions",usd(totalDeductions)],
-      ["Company Fee",usd(companyFee)],
-      ["Maintenance Reserve",usd(maintenanceReserve)],
-      ["Gross / Mile",usd(grossPerMile)],
-      ["Take-Home / Mile",usd(profitPerMile)],
-      ["Deductions",formatPercent(deductionPercent)],
-    ]}/>
+      <Results rows={[
+        ["Estimated Take-Home",usd(takeHome)],
+        ["Total Deductions",usd(totalDeductions)],
+        ["Company Fee",usd(companyFee)],
+        ["Maintenance Reserve",usd(maintenanceReserve)],
+        ["Gross / Mile",usd(grossPerMile)],
+        ["Take-Home / Mile",usd(profitPerMile)],
+        ["Deductions",formatPercent(deductionPercent)],
+      ]}/>
 
-    <div className="fp-tool-lease-breakdown">
-      <div>
-        <span>Truck lease / rent</span>
-        <strong>{usd(lease)}</strong>
+      <div className={styles.breakdown}>
+        <Breakdown label="Truck lease / rent" value={usd(lease)} />
+        <Breakdown label="Fuel" value={usd(fuel)} />
+        <Breakdown label="Insurance / fixed charge" value={usd(insurance)} />
+        <Breakdown label="Company / dispatch fee" value={usd(companyFee)} />
+        <Breakdown label="Maintenance reserve" value={usd(maintenanceReserve)} />
+        <Breakdown label="Other deductions" value={usd(other)} />
       </div>
-      <div>
-        <span>Fuel</span>
-        <strong>{usd(fuel)}</strong>
-      </div>
-      <div>
-        <span>Insurance / fixed charge</span>
-        <strong>{usd(insurance)}</strong>
-      </div>
-      <div>
-        <span>Company / dispatch fee</span>
-        <strong>{usd(companyFee)}</strong>
-      </div>
-      <div>
-        <span>Maintenance reserve</span>
-        <strong>{usd(maintenanceReserve)}</strong>
-      </div>
-      <div>
-        <span>Other deductions</span>
-        <strong>{usd(other)}</strong>
-      </div>
-    </div>
 
-    <div className="fp-tool-helper-note">
-      <strong>Built for leased-truck drivers and contractors</strong>
-      <p>
-        Use the numbers from your settlement statement. If your carrier deducts
-        items separately—such as trailer rent, permits, ELD, occupational
-        accident insurance, escrow, or advances—include them under Other Weekly
-        Deductions.
-      </p>
-    </div>
-  </ToolFrame>;
+      <div className={styles.helperNote}>
+        <strong>Built for leased-truck drivers and contractors</strong>
+        <p>
+          Use the numbers from your settlement statement. If your carrier
+          deducts items separately—such as trailer rent, permits, ELD,
+          occupational accident insurance, escrow, or advances—include them
+          under Other Weekly Deductions.
+        </p>
+      </div>
+    </ToolFrame>
+  );
 }
 
 function FuelCost() {
@@ -232,16 +257,22 @@ function FuelCost() {
   const [price,setPrice]=useState(3.65);
   const gallons=mpg>0?miles/mpg:0;
   const cost=gallons*price;
-  return <ToolFrame title="Fuel Cost Calculator" text="Estimate gallons and fuel spend for a trip or week.">
-    <Field label="Miles" value={miles} set={setMiles}/>
-    <Field label="Truck MPG" value={mpg} set={setMpg} step=".1"/>
-    <Field label="Fuel Price / Gallon" value={price} set={setPrice} money step=".01"/>
-    <Results rows={[
-      ["Estimated Gallons",`${gallons.toFixed(1)} gal`],
-      ["Estimated Fuel Cost",usd(cost)],
-      ["Fuel Cost / Mile",usd(miles>0?cost/miles:0)],
-    ]}/>
-  </ToolFrame>;
+
+  return (
+    <ToolFrame
+      title="Fuel Cost Calculator"
+      text="Estimate gallons and fuel spend for a trip or week."
+    >
+      <Field label="Miles" value={miles} set={setMiles}/>
+      <Field label="Truck MPG" value={mpg} set={setMpg} step=".1"/>
+      <Field label="Fuel Price / Gallon" value={price} set={setPrice} money step=".01"/>
+      <Results rows={[
+        ["Estimated Gallons",`${gallons.toFixed(1)} gal`],
+        ["Estimated Fuel Cost",usd(cost)],
+        ["Fuel Cost / Mile",usd(miles>0?cost/miles:0)],
+      ]}/>
+    </ToolFrame>
+  );
 }
 
 function RatePerMile() {
@@ -249,32 +280,95 @@ function RatePerMile() {
   const [loaded,setLoaded]=useState(1200);
   const [deadhead,setDeadhead]=useState(120);
   const total=loaded+deadhead;
-  return <ToolFrame title="Rate Per Mile Calculator" text="Compare the advertised RPM with the true RPM after deadhead.">
-    <Field label="Load Rate" value={rate} set={setRate} money/>
-    <Field label="Loaded Miles" value={loaded} set={setLoaded}/>
-    <Field label="Deadhead Miles" value={deadhead} set={setDeadhead}/>
-    <Results rows={[
-      ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
-      ["True RPM",usd(total>0?rate/total:0)],
-      ["Total Miles",`${total.toLocaleString()} mi`],
-      ["Deadhead",formatPercent(total>0?(deadhead/total*100):0)],
-    ]}/>
-  </ToolFrame>;
+
+  return (
+    <ToolFrame
+      title="Rate Per Mile Calculator"
+      text="Compare the advertised RPM with the true RPM after deadhead."
+    >
+      <Field label="Load Rate" value={rate} set={setRate} money/>
+      <Field label="Loaded Miles" value={loaded} set={setLoaded}/>
+      <Field label="Deadhead Miles" value={deadhead} set={setDeadhead}/>
+      <Results rows={[
+        ["Loaded RPM",usd(loaded>0?rate/loaded:0)],
+        ["True RPM",usd(total>0?rate/total:0)],
+        ["Total Miles",`${total.toLocaleString()} mi`],
+        ["Deadhead",formatPercent(total>0?(deadhead/total*100):0)],
+      ]}/>
+    </ToolFrame>
+  );
 }
 
-function ToolFrame({title,text,children}:{title:string;text:string;children:React.ReactNode}) {
-  return <div className="fp-tool-frame">
-    <div className="fp-tool-frame-heading"><span>FREE CALCULATOR</span><h2>{title}</h2><p>{text}</p></div>
-    <div className="fp-tool-form-grid">{children}</div>
-  </div>;
+function ToolFrame({
+  title,
+  text,
+  children,
+}: {
+  title:string;
+  text:string;
+  children:ReactNode;
+}) {
+  return (
+    <div className={styles.toolFrame}>
+      <div className={styles.frameHeading}>
+        <span>FREE CALCULATOR</span>
+        <h2>{title}</h2>
+        <p>{text}</p>
+      </div>
+      <div className={styles.formGrid}>{children}</div>
+    </div>
+  );
 }
 
-function Field({label,value,set,money=false,step="1"}:{label:string;value:number;set:(v:number)=>void;money?:boolean;step?:string}) {
-  return <label className="fp-tool-field"><span>{label}</span><div className="fp-tool-input">{money&&<b>$</b>}<input type="number" step={step} value={value} onChange={e=>set(Number(e.target.value)||0)}/></div></label>;
+function Field({
+  label,
+  value,
+  set,
+  money=false,
+  step="1",
+}: {
+  label:string;
+  value:number;
+  set:(v:number)=>void;
+  money?:boolean;
+  step?:string;
+}) {
+  return (
+    <label className={styles.field}>
+      <span>{label}</span>
+      <div className={styles.inputWrap}>
+        {money && <b>$</b>}
+        <input
+          type="number"
+          step={step}
+          value={value}
+          onChange={(e)=>set(Number(e.target.value)||0)}
+        />
+      </div>
+    </label>
+  );
 }
 
 function Results({rows}:{rows:[string,string][]}) {
-  return <div className="fp-tool-results">{rows.map(([label,value],index)=><div key={label} className={index===0?"primary":""}><span>{label}</span><strong>{value}</strong></div>)}</div>;
+  return (
+    <div className={styles.results}>
+      {rows.map(([label,value],index)=>(
+        <div key={label} className={index===0 ? styles.primaryResult : styles.resultCard}>
+          <span>{label}</span>
+          <strong>{value}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Breakdown({label,value}:{label:string;value:string}) {
+  return (
+    <div>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
 }
 
 function usd(value:number) {

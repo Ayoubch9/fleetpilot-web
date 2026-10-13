@@ -559,7 +559,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function extractOutputText(payload: any) {
+type OutputPayload = { output_text?: string; output?: Array<{ type?: string; content?: Array<{ type?: string; text?: string }> }> };
+
+function extractOutputText(payload: OutputPayload) {
   if (typeof payload?.output_text === "string" && payload.output_text.trim()) {
     return payload.output_text.trim();
   }

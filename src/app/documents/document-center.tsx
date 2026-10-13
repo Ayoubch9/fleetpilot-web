@@ -1,7 +1,7 @@
 "use client";
 
 import AppTabs from "@/components/app-tabs";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DocumentActions from "./document-actions";
 import { documentStatus } from "@/lib/document-domain";
 
@@ -53,6 +53,23 @@ export default function DocumentCenter({
   const [focusedId, setFocusedId] = useState(initialFocus);
   const [searchOpen, setSearchOpen] = useState(Boolean(initialSearch));
 
+  const [previousInitial, setPreviousInitial] = useState({ initialSearch, initialFocus });
+  if (previousInitial.initialSearch !== initialSearch || previousInitial.initialFocus !== initialFocus) {
+    setPreviousInitial({ initialSearch, initialFocus });
+    if (initialSearch || initialFocus) {
+    setTab("all");
+    setTypeFilter("all");
+    setTruckFilter("all");
+    setStatusFilter("all");
+    setFolderFilter("all");
+    setPackOnly(false);
+
+    if (initialSearch) setQuery(initialSearch);
+    if (initialFocus) setFocusedId(initialFocus);
+
+    }
+  }
+
   const truckMap = useMemo(
     () => new Map(trucks.map((truck) => [truck.id, truck])),
     [trucks]
@@ -80,7 +97,7 @@ export default function DocumentCenter({
     [docs]
   );
 
-  function searchableText(doc: Doc) {
+  const searchableText = useCallback((doc: Doc) => {
     return [
       doc.name,
       doc.file_name,
@@ -97,7 +114,7 @@ export default function DocumentCenter({
     ]
       .join(" ")
       .toLowerCase();
-  }
+  }, [truckMap, folderMap]);
 
   const directMatches = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -105,7 +122,7 @@ export default function DocumentCenter({
     return docs
       .filter((doc) => searchableText(doc).includes(q))
       .slice(0, 8);
-  }, [docs, query, truckMap, folderMap]);
+  }, [docs, query, searchableText]);
 
   const filtered = useMemo(() => {
     return [...docs]
@@ -161,8 +178,7 @@ export default function DocumentCenter({
     packOnly,
     sort,
     tab,
-    truckMap,
-    folderMap,
+    searchableText,
   ]);
 
   function scrollToDocument(id: string) {
@@ -215,16 +231,6 @@ export default function DocumentCenter({
   useEffect(() => {
     if (!initialSearch && !initialFocus) return;
 
-    setTab("all");
-    setTypeFilter("all");
-    setTruckFilter("all");
-    setStatusFilter("all");
-    setFolderFilter("all");
-    setPackOnly(false);
-
-    if (initialSearch) setQuery(initialSearch);
-    if (initialFocus) setFocusedId(initialFocus);
-
     const timer = window.setTimeout(() => {
       const q = initialSearch.trim().toLowerCase();
       const targetId =
@@ -237,7 +243,7 @@ export default function DocumentCenter({
     }, 140);
 
     return () => window.clearTimeout(timer);
-  }, [initialSearch, initialFocus, docs]);
+  }, [initialSearch, initialFocus, docs, searchableText]);
 
   useEffect(() => {
     if (!focusedId) return;
@@ -252,6 +258,7 @@ export default function DocumentCenter({
   return (
     <section className="fp-panel fp-doc-center">
       <AppTabs
+        variant="filter"
         activeKey={tab}
         ariaLabel="Document status"
         items={[

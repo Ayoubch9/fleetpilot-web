@@ -510,6 +510,7 @@ export default function SecurityDepositManager({
             </div>
 
             <AppTabs
+              variant="filter"
               activeKey={historyFilter}
               ariaLabel="Security deposit ledger"
               items={[

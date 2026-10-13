@@ -1,15 +1,12 @@
 const fs=require("fs");
 const assert=require("assert");
 const page=fs.readFileSync("src/app/page.tsx","utf8");
-const css=fs.readFileSync("src/app/globals.css","utf8");
-
-assert.ok(page.includes("Your trucking business,"));
-assert.ok(page.includes("organized."));
-assert.ok(page.includes('href="/signup"'));
-assert.ok(page.includes('href="/pricing"'));
-assert.ok(page.includes('src="/milevoxa-home-hero-visual.jpg"'));
+const css=fs.readFileSync("src/app/home-redesign.module.css","utf8");
+assert.ok(page.includes("Pilot / Flying J"));
+assert.ok(page.includes("Odometer Miles"));
+assert.ok(page.includes("Fixed &amp; Shop"));
+assert.ok(page.includes("All-Mile RPM"));
 assert.ok(!page.includes('src="/milevoxa-home-hero-concept.jpg"'));
-assert.ok(css.includes(".mv-concept-image-only"));
-assert.ok(css.includes(".mv-concept-image-only-fade"));
-assert.ok(css.includes("object-fit:cover!important"));
+assert.ok(css.includes(".driverTripCard"));
+assert.ok(css.includes(".tripResult"));
 console.log("home-hero-visual-only checks passed");

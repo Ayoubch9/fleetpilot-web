@@ -1,17 +1,20 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SocialAuthButtons from "@/components/social-auth-buttons";
-import MileVoxaBrand from "@/components/milevoxa-brand";
 import { trackEvent } from "@/lib/analytics";
+import styles from "./login-redesign.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberDevice, setRememberDevice] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -21,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -36,77 +39,215 @@ export default function LoginPage() {
       method: "email",
     });
 
-    router.push("/dashboard");
+    router.push(
+      authData.user?.user_metadata?.profile_setup_required === true
+        ? "/onboarding"
+        : "/dashboard"
+    );
     router.refresh();
   }
 
   return (
-    <AuthLayout
-      title="Welcome back"
-      subtitle="Sign in to your MileVoxa control center."
-    >
-      <SocialAuthButtons />
-      <div className="fp-auth-divider"><span>or continue with email</span></div>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <Field label="Email" type="email" value={email} set={setEmail} placeholder="you@example.com" />
-        <Field label="Password" type="password" value={password} set={setPassword} placeholder="Your password" />
-        <div className="-mt-2 text-right">
-          <Link
-            href="/forgot-password"
-            className="text-[14px] font-bold text-[#16853B] hover:underline"
-          >
-            Forgot password?
-          </Link>
-        </div>
-        {error && <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-600">{error}</div>}
-        <button disabled={loading} className="mv-auth-primary">
-          {loading ? "Signing in..." : "Sign In →"}
-        </button>
-      </form>
-      <div className="mt-6 text-center text-sm text-[#7b8da2]">
-        New to MileVoxa? <Link href="/signup" className="font-black text-[#16853B]">Create account</Link>
+    <main className={`${styles.page} mv-login-page`}>
+      <header className={styles.mobileHeader}>
+        <Link href="/" className={styles.mobileBrand} aria-label="MileVoxa home">
+          <Image unoptimized width={2000} height={445}
+            src="/branding/milevoxa-logo-horizontal.png"
+            alt="MileVoxa"
+          />
+        </Link>
+        <Link href="/signup" className={styles.mobileJoin}>
+          Join Free Beta
+        </Link>
+      </header>
+
+      <div className={styles.split}>
+        <section className={styles.brandPanel}>
+          <div className={styles.ambientGlow} aria-hidden="true" />
+
+          <div className={styles.brandTop}>
+            <Link href="/" className={styles.darkBrand} aria-label="MileVoxa home">
+              <Image unoptimized width={2499} height={556}
+                src="/branding/milevoxa-logo-full-dark.png"
+                alt="MileVoxa — Run your trucking business with clarity."
+              />
+            </Link>
+
+            <div className={styles.story}>
+              <div className={styles.storyBadge}>
+                <span />
+                BUILT FOR REAL CARRIERS
+              </div>
+
+              <div className={styles.storyHeadline}>
+                You know your gross rate.
+                <span>Now know what the truck banked.</span>
+              </div>
+
+              <p>
+                Stop digging through crumpled fuel receipts, disjointed text
+                messages, and spreadsheet formulas. Log in to review your live
+                profit-per-mile, upcoming PM services, and weekly settlements
+                in one place.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.previewCard}>
+            <div className={styles.previewHead}>
+              <div>
+                <span className={styles.statusDot} />
+                <strong>Weekly Settlement Preview</strong>
+              </div>
+              <span>Truck 01</span>
+            </div>
+
+            <div className={styles.previewMetrics}>
+              <div>
+                <small>Gross Booked</small>
+                <strong>$7,850.00</strong>
+              </div>
+              <div>
+                <small>Diesel &amp; Tolls</small>
+                <strong>-$2,140.00</strong>
+              </div>
+              <div className={styles.netMetric}>
+                <small>Operating Net</small>
+                <strong>+$3,330.00</strong>
+              </div>
+            </div>
+
+            <div className={styles.aiNote}>
+              <span>⚡</span>
+              <p>
+                Pilot AI: &quot;Fuel burn was 6.8 MPG this week (+0.3 MPG
+                improvement on Midwest lane).&quot;
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.brandProof}>
+            <span><b>✓</b> Web + Mobile Synced</span>
+            <span><b>✓</b> Secure Account Access</span>
+            <span><b>✓</b> Instant Cab Access</span>
+          </div>
+        </section>
+
+        <section className={styles.loginPanel}>
+          <div className={styles.desktopSignup}>
+            <span>First time using MileVoxa?</span>
+            <Link href="/signup">Join Free Public Beta</Link>
+          </div>
+
+          <div className={styles.formShell}>
+            <div className={styles.formIntro}>
+              <div className={styles.portalBadge}>
+                <span />
+                CARRIER PORTAL LOGIN
+              </div>
+              <h1>Access Your Business</h1>
+              <p>
+                Sign in to manage loads, fuel expenses, and live settlements.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <label className={styles.field}>
+                <span>Email Address</span>
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="operator@fleet.com"
+                  autoComplete="email"
+                />
+              </label>
+
+              <label className={styles.field}>
+                <div className={styles.passwordLabel}>
+                  <span>Password</span>
+                  <Link href="/forgot-password">Forgot password?</Link>
+                </div>
+
+                <div className={styles.passwordWrap}>
+                  <input
+                    required
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="••••••••••••"
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((current) => !current)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "HIDE" : "SHOW"}
+                  </button>
+                </div>
+              </label>
+
+              <label className={styles.remember}>
+                <input
+                  type="checkbox"
+                  checked={rememberDevice}
+                  onChange={(event) => setRememberDevice(event.target.checked)}
+                />
+                <span>Remember this device</span>
+              </label>
+
+              {error && (
+                <div className={styles.error} role="alert">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className={styles.submit}
+              >
+                <span>{loading ? "Signing in..." : "Sign In to Dashboard"}</span>
+                {!loading && <span>→</span>}
+              </button>
+            </form>
+
+            <div className={styles.oauthDivider}>
+              <span>or continue with</span>
+            </div>
+
+            <div className={styles.googleAuth}>
+              <SocialAuthButtons />
+            </div>
+
+            <div className={styles.betaDivider}>
+              <span>Public Beta Program</span>
+            </div>
+
+            <div className={styles.betaPrompt}>
+              <p>Running 1–10 trucks and need real profit clarity?</p>
+              <Link href="/signup">
+                Create your Free Beta Account (No credit card) →
+              </Link>
+            </div>
+          </div>
+
+          <footer className={styles.footer}>
+            <span>© 2026 MileVoxa</span>
+            <nav aria-label="Login footer navigation">
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+              <Link href="/pricing">Pricing &amp; Beta</Link>
+              <Link href="/about">About</Link>
+              <Link href="/tools">Free Tools</Link>
+              <Link href="/data-deletion">Data Deletion</Link>
+              <Link href="/contact">Contact</Link>
+            </nav>
+          </footer>
+        </section>
       </div>
-    </AuthLayout>
-  );
-}
-
-function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
-  return (
-    <main className="mv-login-page grid min-h-screen lg:grid-cols-[.92fr_1.08fr]">
-      <section className="relative hidden overflow-hidden border-r border-[#102238] bg-[#102238] p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <MileVoxaBrand onDark />
-        <div>
-          <div className="text-[10px] font-black uppercase tracking-[.2em] text-[#55b772]">Trucking business intelligence</div>
-          <div className="mt-5 max-w-lg text-5xl font-black leading-[1.02] tracking-[-.05em]">
-            Every mile. Every cost. <span className="text-[#55b772]">One clear business.</span>
-          </div>
-          <p className="mt-6 max-w-md leading-7 text-[#9fb0bf]">
-            Open the same MileVoxa business account you use on mobile and manage your operation from a larger control center.
-          </p>
-        </div>
-        <div className="text-xs font-bold text-[#8da0b2]">MileVoxa · Web + Mobile</div>
-        <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#16853B]/10 blur-[100px]" />
-      </section>
-      <section className="flex items-center justify-center bg-[#F7F9F8] px-5 py-10">
-        <div className="w-full max-w-[430px]">
-          <MileVoxaBrand showTagline={false} className="mb-10 justify-center lg:hidden" />
-          <div className="mb-8">
-            <div className="text-[10px] font-black uppercase tracking-[.18em] text-[#16853B]">MileVoxa Account</div>
-            <h1 className="mt-3 text-4xl font-black tracking-[-.04em] text-[#102238]">{title}</h1>
-            <p className="mt-3 text-sm leading-6 text-[#6d7f94]">{subtitle}</p>
-          </div>
-          <div className="fleet-card rounded-[28px] p-7 sm:p-8">{children}</div>
-        </div>
-      </section>
     </main>
-  );
-}
-
-function Field({ label, type, value, set, placeholder }: { label: string; type: string; value: string; set: (value: string) => void; placeholder: string }) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-[10px] font-black uppercase tracking-[.12em] text-[#7b8da2]">{label}</span>
-      <input required type={type} value={value} onChange={(event) => set(event.target.value)} placeholder={placeholder} className="mv-auth-input" />
-    </label>
   );
 }

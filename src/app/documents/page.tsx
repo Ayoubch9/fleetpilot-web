@@ -1,4 +1,3 @@
-import { CHART_PALETTE,chartCategoryColor } from "@/lib/chart-palette";
 import KpiTile from "@/components/kpi-tile";
 import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
@@ -10,6 +9,9 @@ import TruckDocumentPack from "./truck-document-pack";
 
 type Doc={id:string;name:string;document_type:string|null;truck_id:string|null;expiration_date:string|null;storage_path:string;file_name:string;created_at:string|null;folder_id:string|null;jurisdiction:string|null;issue_date:string|null;effective_date:string|null;document_number:string|null;carry_in_truck:boolean;notes:string|null};
 type Truck={id:string;unit_number:string}; type Folder={id:string;name:string};
+
+const documentTypeColors = ["#10B981", "#102238", "#EA580C", "#7C3AED", "#64748B"] as const;
+const documentTypeColor = (index: number) => documentTypeColors[index % documentTypeColors.length];
 
 export default async function DocumentsPage({
  searchParams,
@@ -32,16 +34,16 @@ export default async function DocumentsPage({
  const setupMissing=Boolean((documentResult.error&&/relation .*documents.* does not exist|could not find the table|schema cache|column .* does not exist/i.test(documentResult.error.message))||(folderResult.error&&/relation .*document_folders.* does not exist|could not find the table|schema cache/i.test(folderResult.error.message)));
  const expiring=docs.filter(d=>documentStatus(d.expiration_date)==="Expiring Soon"); const expired=docs.filter(d=>documentStatus(d.expiration_date)==="Expired"); const packDocs=docs.filter(d=>d.carry_in_truck);
  const typeCounts=new Map<string,number>(); for(const d of docs){const k=d.document_type||"Other";typeCounts.set(k,(typeCounts.get(k)||0)+1)}
- return <AppShell active="documents" fullName={fullName} companyName={companyName} role={role}><div className="fp-tool-page fp-documents-v2">
-  <div className="fp-tool-heading"><div><h1>Documents</h1><p>Your fleet document vault for registrations, inspections, insurance, agreements, permits and driver-ready truck documents.</p></div>{companyId&&!setupMissing?<DocumentManager companyId={companyId} trucks={trucks} folders={folders}/>:<button className="fp-primary-btn" disabled>＋ Upload Document</button>}</div>
+ return <AppShell active="documents" fullName={fullName} companyName={companyName} role={role}><div className="fp-tool-page fp-documents-v2 mv-documents-control-center">
+  <div className="fp-tool-heading"><div><span className="fp-doc-overline">Compliance &amp; Cab Wallet</span><h1>Documents</h1><p>Your fleet document vault for registrations, inspections, insurance, agreements, permits and driver-ready truck documents.</p></div><div className="fp-doc-header-actions">{companyId&&!setupMissing?<DocumentManager companyId={companyId} trucks={trucks} folders={folders}/>:<button className="fp-primary-btn" disabled>＋ Upload Document</button>}</div></div>
   {setupMissing&&<div className="fp-doc-setup-notice">Run <b>supabase_documents_command_center_v4_3_68.sql</b> once in Supabase SQL Editor to enable the upgraded Documents Command Center.</div>}
-  <div className="mv-kpi-grid mt-4 fp-doc-kpis"><KpiTile label="Total Documents" value={docs.length} note="Stored in MileVoxa"/><KpiTile label="Truck Pack" value={packDocs.length} note="Marked for driver access"/><KpiTile label="Expiring Soon" value={expiring.length} note="Next 30 days"/><KpiTile label="Expired" value={expired.length} note="Needs attention"/></div>
+  <div className="mv-kpi-grid mt-4 fp-doc-kpis"><KpiTile className="fp-doc-kpi-total" label="Total Documents" value={docs.length} note="Stored in MileVoxa"/><KpiTile className="fp-doc-kpi-pack" label="Truck Pack" value={packDocs.length} note="Marked for driver access"/><KpiTile className="fp-doc-kpi-expiring" label="Expiring Soon" value={expiring.length} note="Next 30 days"/><KpiTile className="fp-doc-kpi-expired" label="Expired" value={expired.length} note="Needs attention"/></div>
   <TruckDocumentPack docs={docs} trucks={trucks}/>
   <div className="fp-doc-layout"><DocumentCenter docs={docs} trucks={trucks} folders={folders} setupMissing={setupMissing} initialSearch={initialSearch} initialFocus={initialFocus}/><aside className="fp-right-stack">
     {companyId&&!setupMissing?<DocumentQuickActions companyId={companyId}/>:<section className="fp-panel side"><h2>Quick Actions</h2><p className="fp-muted-center">Complete Documents setup to enable actions.</p></section>}
-    <section className="fp-panel side"><h2>Documents by Type</h2><DocumentTypeDonut total={docs.length} items={[...typeCounts.entries()].slice(0,7)}/><div className="fp-doc-type-list">{[...typeCounts.entries()].slice(0,7).map(([name,count],index,entries)=>{const color=entries.length===1?CHART_PALETTE.green:chartCategoryColor(index);return <p key={name}><span className="fp-doc-type-label"><i style={{backgroundColor:color}}/>{name}</span><b>{count}</b></p>})}{docs.length===0&&<p className="fp-muted-center">No document types yet.</p>}</div></section>
-    <div className="fp-tool-promo"><div>Stay Compliant.<br/>Keep Moving.</div><small>MileVoxa</small></div>
+    <section className="fp-panel side"><h2>Documents by Type</h2><DocumentTypeDonut total={docs.length} items={[...typeCounts.entries()].slice(0,7)}/><div className="fp-doc-type-list">{[...typeCounts.entries()].slice(0,7).map(([name,count],index,entries)=>{const color=entries.length===1?documentTypeColors[0]:documentTypeColor(index);return <p key={name}><span className="fp-doc-type-label"><i style={{backgroundColor:color}}/>{name}</span><b>{count}</b></p>})}{docs.length===0&&<p className="fp-muted-center">No document types yet.</p>}</div></section>
+    <section className="fp-doc-advisory"><span aria-hidden="true">🛡️</span><h3>Audit-Ready Cab Compliance.</h3><p>Keep registrations, inspections and insurance current across all power units to prevent roadside fines and out-of-service orders.</p></section>
   </aside></div>
  </div></AppShell>
 }
-function DocumentTypeDonut({total,items}:{total:number;items:Array<[string,number]>}){if(total<=0||!items.length)return <div className="fp-document-type-donut empty"><div><strong>0</strong><span>Total Documents</span></div></div>;let cursor=0;const stops=items.map(([,count],index)=>{const share=(count/total)*100,start=cursor,end=cursor+share;cursor=end;const color=items.length===1?CHART_PALETTE.green:chartCategoryColor(index);return `${color} ${start}% ${end}%`});return <div className="fp-document-type-donut" style={{background:`conic-gradient(${stops.join(", ")})`}}><div><strong>{total}</strong><span>Total Documents</span></div></div>}
+function DocumentTypeDonut({total,items}:{total:number;items:Array<[string,number]>}){if(total<=0||!items.length)return <div className="fp-document-type-donut empty"><div><strong>0</strong><span>Total Documents</span></div></div>;const stops=items.map(([,count],index)=>{const share=(count/total)*100,start=items.slice(0,index).reduce((sum,[,value])=>sum+(value/total)*100,0),end=start+share;const color=items.length===1?documentTypeColors[0]:documentTypeColor(index);return `${color} ${start}% ${end}%`});return <div className="fp-document-type-donut" style={{background:`conic-gradient(${stops.join(", ")})`}}><div><strong>{total}</strong><span>Total Documents</span></div></div>}

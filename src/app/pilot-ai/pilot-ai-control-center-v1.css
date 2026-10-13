@@ -1,0 +1,591 @@
+.mv-pilot-ai-control-center {
+  --mv-pilot-canvas: #EAEFF5;
+  --mv-pilot-surface: #F8FAFC;
+  --mv-pilot-inset: #EDF2F7;
+  --mv-pilot-border: #CBD5E1;
+  --mv-pilot-navy: #102238;
+  --mv-pilot-muted: #475569;
+  --mv-pilot-green: #10B981;
+  --mv-pilot-green-soft: #ECFDF5;
+  --mv-pilot-green-border: #A7F3D0;
+  width: 100% !important;
+  max-width: 1780px !important;
+  margin: 0 auto !important;
+  padding: 24px 26px 34px !important;
+  color: #102238 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif !important;
+}
+
+/* Match the shared Dashboard/Loads Control Center sidebar and page shell. */
+.mv-app-shell:has(.mv-pilot-ai-control-center) {
+  --mv-pilot-canvas: #EAEFF5;
+  --mv-pilot-surface: #F8FAFC;
+  --mv-pilot-inset: #EDF2F7;
+  --mv-pilot-border: #CBD5E1;
+  --mv-pilot-navy: #102238;
+  --mv-pilot-muted: #475569;
+  --mv-pilot-green: #10B981;
+  --mv-pilot-green-soft: #ECFDF5;
+  --mv-pilot-green-border: #A7F3D0;
+  background: var(--mv-pilot-canvas) !important;
+  color: var(--mv-pilot-navy) !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed {
+  width: 256px !important;
+  border-right: 1px solid var(--mv-pilot-border) !important;
+  background: #E2E8F0 !important;
+  color: var(--mv-pilot-navy) !important;
+  box-shadow: 4px 0 18px rgba(16, 34, 56, .05) !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed > div:first-child {
+  min-height:68px !important;
+  height:68px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  border-bottom: 1px solid var(--mv-pilot-border) !important;
+  background: rgba(248, 250, 252, .78) !important;
+  padding: 10px 14px !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .mv-sidebar-brand {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .mv-sidebar-brand .mv-brand-lockup {
+  width: 210px !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-beta-sidebar-badge {
+  display: none !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-scroll {
+  padding: 14px 14px 16px !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed .fp-scroll a[href] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border-radius: 12px !important;
+  color: #334155 !important;
+  font-family: var(--mv-control-sans), Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover {
+  background: #FFFFFF !important;
+  color: var(--mv-pilot-navy) !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed .fp-scroll a[href="/pilot-ai"] {
+  background: var(--mv-pilot-green) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 14px rgba(5, 150, 105, .16) !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-emoji-icon {
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 18px !important;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"] {
+  color: #64748B !important;
+  font-family: var(--mv-control-mono), ui-monospace, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .1em !important;
+}
+
+.mv-app-shell:has(.mv-pilot-ai-control-center) .fp-app-content {
+  min-height: 100vh !important;
+  background: var(--mv-pilot-canvas) !important;
+}
+
+@media (min-width: 1200px) {
+  .mv-app-shell:has(.mv-pilot-ai-control-center) .fp-app-content {
+    margin-left: 256px !important;
+  }
+}
+
+.mv-pilot-ai-control-center .fp-tool-heading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  margin-bottom: 22px !important;
+  border-bottom: 1px solid var(--mv-pilot-border) !important;
+  padding-bottom: 16px !important;
+}
+
+.mv-pilot-ai-control-center .fp-pilot-overline {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--mv-pilot-navy);
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.mv-pilot-ai-control-center .fp-tool-heading h1 {
+  margin: 0 !important;
+  color: #102238 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif !important;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.035em !important;
+  line-height: 1.15 !important;
+}
+
+.mv-pilot-ai-control-center .fp-tool-heading p {
+  margin: 5px 0 0 !important;
+  color: var(--mv-pilot-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+.mv-pilot-ai-control-center .fp-pilot-hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--mv-pilot-border);
+  border-radius: 14px;
+  background: var(--mv-pilot-surface);
+  padding: 11px 16px;
+  box-shadow: 0 1px 2px rgba(16, 34, 56, .04);
+}
+
+.mv-pilot-ai-control-center .fp-pilot-hero-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  background: #EEF2F7;
+  font-size: 21px;
+}
+
+.mv-pilot-ai-control-center .fp-pilot-hero-badge strong,
+.mv-pilot-ai-control-center .fp-pilot-hero-badge small {
+  display: block;
+}
+
+.mv-pilot-ai-control-center .fp-pilot-hero-badge strong {
+  color: var(--mv-pilot-navy);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.mv-pilot-ai-control-center .fp-pilot-hero-badge small {
+  margin-top: 2px;
+  color: var(--mv-pilot-green);
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mv-pilot-ai-control-center .fp-ai-layout {
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr) !important;
+  align-items: start !important;
+  gap: 22px !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-chat,
+.mv-pilot-ai-control-center .fp-panel.side {
+  border: 1px solid var(--mv-pilot-border) !important;
+  border-radius: 16px !important;
+  background: var(--mv-pilot-surface) !important;
+  box-shadow: 0 1px 2px rgba(16, 34, 56, .04) !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-chat {
+  min-width: 0;
+  padding: 22px !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #D8E1EA;
+  padding-bottom: 13px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-panel-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--mv-pilot-navy);
+  color: #34D399;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mv-pilot-ai-control-center .fp-ai-panel-heading h2,
+.mv-pilot-ai-control-center .fp-ai-side-heading h2 {
+  margin: 0 !important;
+  color: var(--mv-pilot-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.015em !important;
+  line-height: 1.3 !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-panel-heading p {
+  margin: 2px 0 0;
+  color: var(--mv-pilot-muted);
+  font-size: 12px !important;
+  line-height: 1.4;
+}
+
+.mv-pilot-ai-control-center .fp-ai-connected {
+  margin-left: auto;
+  border: 1px solid var(--mv-pilot-green-border);
+  border-radius: 6px;
+  background: var(--mv-pilot-green-soft);
+  padding: 4px 8px;
+  color: var(--mv-pilot-green);
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.mv-pilot-ai-control-center .fp-ai-message-list {
+  display: grid;
+  gap: 10px;
+  max-height: 480px;
+  overflow: auto;
+  margin-top: 0;
+  padding: 2px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-message {
+  max-width: 88%;
+  border: 1px solid var(--mv-pilot-border);
+  border-radius: 13px;
+  background: var(--mv-pilot-inset);
+  padding: 13px 14px;
+  color: #334155;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif;
+  font-size: 13px !important;
+  line-height: 1.55;
+}
+
+.mv-pilot-ai-control-center .fp-ai-message p {
+  margin: 0;
+  font-size: inherit !important;
+  line-height: inherit;
+}
+
+.mv-pilot-ai-control-center .fp-ai-message.user {
+  border-color: var(--mv-pilot-green);
+  background: var(--mv-pilot-green);
+  color: #fff;
+}
+
+.mv-pilot-ai-control-center .fp-ai-message-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--mv-pilot-green-border);
+  border-radius: 8px;
+  background: var(--mv-pilot-green-soft);
+  color: var(--mv-pilot-green);
+  font-size: 13px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-composer {
+  grid-template-columns: minmax(0, 1fr) 42px !important;
+  gap: 8px !important;
+  margin-top: 18px !important;
+  border-top: 1px solid #D8E1EA !important;
+  padding-top: 14px !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-composer input {
+  height: 42px !important;
+  border: 1px solid var(--mv-pilot-border) !important;
+  border-radius: 10px !important;
+  background: var(--mv-pilot-inset) !important;
+  padding: 0 13px !important;
+  color: var(--mv-pilot-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif !important;
+  font-size: 13px !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-composer input:focus {
+  border-color: var(--mv-pilot-green) !important;
+  background: #fff !important;
+  outline: 2px solid rgba(22, 133, 59, .12) !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-composer button {
+  min-height: 42px !important;
+  border: 1px solid var(--mv-pilot-green) !important;
+  border-radius: 10px !important;
+  background: var(--mv-pilot-green) !important;
+  color: #fff !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-chip-row button {
+  border: 1px solid var(--mv-pilot-border);
+  border-radius: 9px;
+  background: var(--mv-pilot-inset);
+  padding: 7px 10px;
+  color: #334155;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif;
+  font-size: 12px !important;
+  line-height: 1.35;
+}
+
+.mv-pilot-ai-control-center .fp-ai-chip-row button:hover:not(:disabled) {
+  border-color: var(--mv-pilot-green-border);
+  background: #fff;
+  color: var(--mv-pilot-navy);
+}
+
+.mv-pilot-ai-control-center .fp-ai-note {
+  display: block;
+  margin-top: 10px;
+  color: #64748B;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 10px !important;
+  line-height: 1.45;
+}
+
+.mv-pilot-ai-control-center .fp-right-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.mv-pilot-ai-control-center .fp-panel.side {
+  min-width: 0;
+  padding: 17px !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-side-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #D8E1EA;
+  padding-bottom: 9px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-side-heading h2 {
+  color: #475569 !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase;
+}
+
+.mv-pilot-ai-control-center .fp-ai-side-heading > span {
+  color: var(--mv-pilot-green);
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 10px !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mv-pilot-ai-control-center .fp-ai-suggest {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 9px !important;
+  min-height: 0 !important;
+  margin: 0 0 7px !important;
+  border: 1px solid var(--mv-pilot-border) !important;
+  border-radius: 10px !important;
+  background: var(--mv-pilot-inset) !important;
+  padding: 10px 11px !important;
+  color: #334155 !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  text-decoration: none !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-suggest:hover {
+  border-color: var(--mv-pilot-green-border) !important;
+  background: #fff !important;
+  color: var(--mv-pilot-navy) !important;
+}
+
+.mv-pilot-ai-control-center .fp-ai-suggest-spark {
+  flex: 0 0 auto;
+  color: var(--mv-pilot-green);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.mv-pilot-ai-control-center .fp-ai-insight {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto !important;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 7px !important;
+  border: 1px solid var(--mv-pilot-border);
+  border-radius: 10px;
+  background: var(--mv-pilot-inset);
+  padding: 10px 11px;
+}
+
+.mv-pilot-ai-control-center .fp-ai-insight > span {
+  display: block;
+  width: 8px !important;
+  height: 8px !important;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--mv-pilot-green);
+  color: transparent;
+  font-size: 0;
+}
+
+.mv-pilot-ai-control-center .fp-ai-insight p {
+  margin: 0;
+  color: var(--mv-pilot-muted);
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", sans-serif;
+  font-size: 12px !important;
+  line-height: 1.4;
+}
+
+.mv-pilot-ai-control-center .fp-ai-insight strong {
+  color: var(--mv-pilot-navy);
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace;
+  font-size: 12px !important;
+  font-weight: 700;
+  text-align: right;
+}
+
+.mv-pilot-ai-control-center .fp-ai-error {
+  margin-top: 10px;
+  border: 1px solid #FCA5A5;
+  border-radius: 9px;
+  background: #FEF2F2;
+  padding: 9px 11px;
+  color: #B91C1C;
+  font-size: 11px !important;
+}
+
+@media (max-width: 1120px) {
+  .mv-pilot-ai-control-center .fp-ai-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-right-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .mv-pilot-ai-control-center {
+    max-width: none !important;
+    padding: 18px 14px 28px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-tool-heading {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 13px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-tool-heading h1 {
+    font-size: 25px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-panel-heading h2 {
+    font-size: 16px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-pilot-hero-badge {
+    padding: 9px 12px;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-chat {
+    padding: 16px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-panel-heading {
+    flex-wrap: wrap;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-panel-heading > div:nth-child(2) {
+    min-width: 0;
+    flex: 1 1 180px;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-panel-heading p {
+    font-size: 11px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-message,
+  .mv-pilot-ai-control-center .fp-ai-message p {
+    font-size: 12px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-suggest,
+  .mv-pilot-ai-control-center .fp-ai-chip-row button {
+    font-size: 11px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-insight p,
+  .mv-pilot-ai-control-center .fp-ai-insight strong {
+    font-size: 11px !important;
+  }
+
+  .mv-pilot-ai-control-center .fp-right-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mv-pilot-ai-control-center .fp-ai-message {
+    max-width: 96%;
+  }
+}
+

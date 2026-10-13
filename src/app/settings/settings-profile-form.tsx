@@ -21,7 +21,6 @@ export default function SettingsProfileForm({
   const [name, setName] = useState(fullName);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const [billingBusy, setBillingBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [deleteReason, setDeleteReason] = useState("");
@@ -79,28 +78,7 @@ export default function SettingsProfileForm({
   }
 
 
-async function billingAction(mode: "checkout" | "portal") {
-  setBillingBusy(true);
-  setMessage("");
 
-  try {
-    const response = await fetch(`/api/billing/${mode}`, {
-      method: "POST",
-    });
-    const payload = await response.json();
-
-    if (!response.ok || !payload?.url) {
-      throw new Error(payload?.error || "Billing is unavailable.");
-    }
-
-    window.location.href = payload.url;
-  } catch (caught) {
-    setMessage(
-      caught instanceof Error ? caught.message : "Billing is unavailable."
-    );
-    setBillingBusy(false);
-  }
-}
 
 async function requestDeletion() {
   setDeleteBusy(true);
@@ -182,7 +160,7 @@ async function requestDeletion() {
         <section className="fp-panel side">
           <h2>Quick Actions</h2>
           <button className="fp-side-action" onClick={resetPassword}>▣ <span>Change Password</span><b>›</b></button>
-          <button className="fp-side-action" type="button" onClick={() => { window.location.href = "/pricing"; }}>▣ <span>Beta Access Details</span><b>›</b></button>
+          <button className="fp-side-action" type="button" onClick={() => { window.location.assign(new URL("/pricing", window.location.origin).href); }}>▣ <span>Beta Access Details</span><b>›</b></button>
           <button className="fp-side-action" onClick={exportProfile}>▣ <span>Export Your Data</span><b>›</b></button>
           <button className="fp-side-action danger" onClick={() => setDeleteOpen(true)}>▣ <span>Delete Account</span><b>›</b></button>
         </section>

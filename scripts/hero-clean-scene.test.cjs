@@ -1,16 +1,11 @@
 const fs=require("fs");
 const assert=require("assert");
-
 const page=fs.readFileSync("src/app/page.tsx","utf8");
-const css=fs.readFileSync("src/app/globals.css","utf8");
-
-assert.ok(page.includes('src="/milevoxa-home-hero-visual.jpg"'));
-assert.ok(css.includes("MileVoxa Hero Clean Scene Crop v4.3.25"));
-assert.ok(css.includes("height:auto!important"));
-assert.ok(css.includes("inset:0!important"));
-assert.ok(css.includes("width:100%!important"));
-assert.ok(css.includes("height:100%!important"));
-assert.ok(css.includes("width:18%!important"));
-assert.ok(css.includes("border-radius:0!important"));
-
+const css=fs.readFileSync("src/app/home-redesign.module.css","utf8");
+assert.ok(page.includes("Rate Con #4412"));
+assert.ok(page.includes("Fuel Card Draft #4810"));
+assert.ok(page.includes("+95 mi empty deadhead"));
+assert.ok(page.includes("WHAT THE TRUCK ACTUALLY MADE:"));
+assert.ok(css.includes(".tripCostGrid"));
+assert.ok(css.includes(".tripResultPrimary"));
 console.log("hero-clean-scene checks passed");

@@ -1,0 +1,129 @@
+/* MileVoxa Fuel Analytics Control Center. Visual-only page styles. */
+.mv-app-shell:has(.mv-fuel-control-center){
+  --mv-fuel-navy:#102238;
+  --mv-fuel-green:#10B981;
+  --mv-fuel-canvas:#EAEFF5;
+  --mv-fuel-sidebar:#E2E8F0;
+  --mv-fuel-surface:#F8FAFC;
+  --mv-fuel-inset:#EDF2F7;
+  --mv-fuel-border:#CBD5E1;
+  --mv-fuel-muted:#475569;
+  background:var(--mv-fuel-canvas)!important;
+  color:#102238!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,sans-serif!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed{width:256px!important;border-right:1px solid var(--mv-fuel-border)!important;background:var(--mv-fuel-sidebar)!important;color:var(--mv-fuel-navy)!important;box-shadow:4px 0 18px rgba(16,34,56,.05)!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed>div:first-child{height:68px!important;min-height:68px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;padding:12px 20px!important;border-bottom:1px solid var(--mv-fuel-border)!important;background:rgba(248,250,252,.72)!important}
+.mv-app-shell:has(.mv-fuel-control-center) .mv-sidebar-brand{min-width:0!important;flex:1!important}
+.mv-app-shell:has(.mv-fuel-control-center) .mv-sidebar-brand .mv-brand-lockup{width:210px!important;max-width:100%!important;height:auto!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-scroll{padding:14px!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed .fp-scroll a[href]{border-radius:12px!important;color:#334155!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important;font-weight:600!important;box-shadow:none!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover{background:#fff!important;color:var(--mv-fuel-navy)!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed .fp-scroll a[href="/fuel"]{background:var(--mv-fuel-green)!important;color:var(--mv-fuel-navy)!important;box-shadow:0 5px 14px rgba(5,150,105,.16)!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{color:#64748B!important;font-family:var(--mv-control-mono),monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.1em!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-app-content{margin-left:256px!important;background:var(--mv-fuel-canvas)!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-app-header{height:68px!important;border-color:var(--mv-fuel-border)!important;background:rgba(248,250,252,.97)!important;padding-left:24px!important;padding-right:24px!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-app-global-search{max-width:384px!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-app-global-search input{min-height:42px!important;border:1px solid var(--mv-fuel-border)!important;border-radius:12px!important;background:var(--mv-fuel-inset)!important;color:var(--mv-fuel-navy)!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important}
+.mv-app-shell:has(.mv-fuel-control-center) .fp-control-center-notification{border-color:var(--mv-fuel-border)!important;background:var(--mv-fuel-inset)!important}
+
+.mv-fuel-control-center.fp-fuel-page{width:100%!important;max-width:none!important;margin:0!important;padding:24px!important;background:var(--mv-fuel-canvas)!important;color:#102238!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important;line-height:1.5!important}
+.mv-fuel-control-center .fp-fuel-heading{align-items:center!important;border-bottom:1px solid var(--mv-fuel-border)!important;padding-bottom:16px!important}
+.mv-fuel-control-center .fp-fuel-heading>div> .fp-fuel-eyebrow{display:block!important;color:var(--mv-fuel-navy)!important;font:800 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.12em!important}
+.mv-fuel-control-center .fp-fuel-title{margin:4px 0 0!important;color:#102238!important;font:800 30px/1.2 var(--mv-control-sans),sans-serif!important;letter-spacing:-.03em!important}
+.mv-fuel-control-center .fp-fuel-subtitle{margin-top:5px!important;color:var(--mv-fuel-muted)!important;font:400 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-data-note{margin-top:12px!important;border:1px solid #A7F3D0!important;border-radius:12px!important;background:#ECFDF5!important;padding:10px 12px!important}
+.mv-fuel-control-center .fp-fuel-data-note-icon{background:#D1FAE5!important;color:#047857!important}
+.mv-fuel-control-center .fp-fuel-data-note p{color:#334155!important;font:500 11px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-data-note strong{color:var(--mv-fuel-navy)!important;font-weight:700!important}
+.mv-fuel-control-center .fp-fuel-kpi-grid{gap:14px!important;margin-top:18px!important}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile{position:relative;min-width:0;overflow:hidden;border:1px solid var(--mv-fuel-border)!important;border-radius:16px!important;background:var(--mv-fuel-surface)!important;padding:17px!important;box-shadow:0 1px 2px rgba(16,34,56,.025)!important}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile:before{position:absolute;inset:0 0 auto;height:3px;background:var(--mv-fuel-navy);content:""}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile:nth-child(2):before{background:var(--mv-fuel-green)}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile:nth-child(3):before{background:#D97706}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile:nth-child(4):before{background:#94A3B8}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-label{color:var(--mv-fuel-muted)!important;font:700 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-value{margin-top:8px!important;color:var(--mv-fuel-navy)!important;font:800 22px/1.25 var(--mv-control-mono),monospace!important;letter-spacing:-.03em!important}
+.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-note{margin-top:5px!important;color:#64748B!important;font:500 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-analytics-card,.mv-fuel-control-center .fp-fuel-transactions-card,.mv-fuel-control-center .fp-fuel-insights-card{min-width:0;border:1px solid var(--mv-fuel-border)!important;border-radius:16px!important;background:var(--mv-fuel-surface)!important;box-shadow:0 1px 2px rgba(16,34,56,.025)!important}
+.mv-fuel-control-center .fp-fuel-analytics-card{display:grid!important;grid-template-columns:max-content minmax(0,1fr)!important;align-items:center!important;margin-top:18px!important;overflow:hidden!important}
+.mv-fuel-control-center .mv-app-tabs{grid-column:1;grid-row:1;gap:4px!important;border:0!important;background:var(--mv-fuel-surface)!important;padding:12px 8px 12px 16px!important}
+.mv-fuel-control-center .mv-app-tabs button{min-height:38px!important;border-radius:10px 10px 0 0!important;padding:0 14px!important;color:#475569!important;font:600 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .mv-app-tabs button.active{border-color:var(--mv-fuel-navy)!important;background:var(--mv-fuel-navy)!important;color:#fff!important}
+.mv-fuel-control-center .fp-fuel-filterbar-operational{grid-column:2;grid-row:1;grid-template-columns:minmax(180px,1.5fr) 130px 128px minmax(165px,.9fr)!important;gap:8px!important;border:0!important;border-bottom:1px solid var(--mv-fuel-border)!important;padding:12px 16px 12px 8px!important}
+.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search,.mv-fuel-control-center .fp-fuel-filter-select,.mv-fuel-control-center .fp-fuel-filter-button,.mv-fuel-control-center .fp-fuel-sort select{height:42px!important;border:1px solid var(--mv-fuel-border)!important;border-radius:10px!important;background:var(--mv-fuel-inset)!important;color:#334155!important;font:500 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search{padding:0 12px!important}
+.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search input{color:#334155!important;font:500 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search input::placeholder{color:#64748B!important}
+.mv-fuel-control-center .fp-fuel-sort{grid-template-columns:48px minmax(0,1fr)!important;color:#64748B!important;font:600 10px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-filter-button.active{border-color:#A7F3D0!important;background:#ECFDF5!important;color:#047857!important}
+.mv-fuel-control-center .fp-fuel-overview-grid,.mv-fuel-control-center .fp-fuel-breakdown-view{grid-column:1/-1!important;border-top:1px solid var(--mv-fuel-border)!important}
+.mv-fuel-control-center .fp-fuel-overview-grid{grid-template-columns:minmax(0,1.7fr) minmax(250px,.7fr)!important}
+.mv-fuel-control-center .fp-fuel-trend-panel{border-color:var(--mv-fuel-border)!important;padding:20px!important}
+.mv-fuel-control-center .fp-fuel-truck-cost-panel{padding:20px!important}
+.mv-fuel-control-center .fp-fuel-trend-panel h2,.mv-fuel-control-center .fp-fuel-truck-cost-panel h2,.mv-fuel-control-center .fp-fuel-transactions-heading h2,.mv-fuel-control-center .fp-fuel-insights-card h2{color:var(--mv-fuel-navy)!important;font:700 15px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-legend{gap:14px!important;color:#475569!important;font:500 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-legend i{width:9px!important;height:9px!important;border-radius:2px!important}
+.mv-fuel-control-center .fp-fuel-trend-panel svg{box-sizing:border-box;display:block;width:100%;height:auto;max-height:270px;margin-top:14px!important;border:1px solid var(--mv-fuel-border);border-radius:12px;background:var(--mv-fuel-inset);padding:14px 16px 10px}
+.mv-fuel-control-center .fp-fuel-trend-panel svg line{stroke:#CBD5E1!important}
+.mv-fuel-control-center .fp-fuel-trend-panel svg text{fill:#64748B!important;font:500 10px var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-donut{width:188px!important;height:188px!important;box-shadow:none!important}
+.mv-fuel-control-center .fp-fuel-donut>div{width:160px!important;height:160px!important;background:var(--mv-fuel-inset)!important;box-shadow:inset 0 0 0 1px var(--mv-fuel-border)!important}
+.mv-fuel-control-center .fp-fuel-donut strong{max-width:100%!important;overflow:visible!important;color:var(--mv-fuel-navy)!important;font:800 22px/1.2 var(--mv-control-mono),monospace!important;letter-spacing:-.04em!important;text-overflow:clip!important}
+.mv-fuel-control-center .fp-fuel-donut span{margin-top:7px!important;color:#64748B!important;font:600 12px/1.4 var(--mv-control-mono),monospace!important;text-transform:uppercase}
+.mv-fuel-control-center .fp-fuel-truck-list{gap:11px!important;border-top:1px solid var(--mv-fuel-border)!important;padding-top:12px!important}
+.mv-fuel-control-center .fp-fuel-truck-row{grid-template-columns:11px minmax(0,1fr) 84px 38px!important;color:#475569!important;font:500 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-truck-row strong{color:var(--mv-fuel-navy)!important;font:700 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-bottom-grid{grid-template-columns:minmax(0,1fr) 300px!important;gap:18px!important;margin-top:18px!important}
+.mv-fuel-control-center .fp-fuel-transactions-card{overflow:hidden!important}
+.mv-fuel-control-center .fp-fuel-transactions-heading{border-bottom:1px solid var(--mv-fuel-border)!important;padding:16px 18px 12px!important}
+.mv-fuel-control-center .fp-fuel-transactions-heading small{color:#64748B!important;font:500 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-transactions-heading>span{color:#64748B!important;font:500 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-transactions-heading b{color:var(--mv-fuel-navy)!important;font:700 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-table-wrap{padding:12px 16px!important}
+.mv-fuel-control-center .fp-fuel-table{min-width:850px!important}
+.mv-fuel-control-center .fp-fuel-table thead{background:rgba(234,239,245,.72)!important}
+.mv-fuel-control-center .fp-fuel-table th{height:40px!important;border-bottom:1px solid var(--mv-fuel-border)!important;padding:0 9px!important;color:#64748B!important;font:700 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.05em!important;white-space:nowrap}
+.mv-fuel-control-center .fp-fuel-table td{height:48px!important;border-bottom:1px solid #E2E8F0!important;padding:0 9px!important;color:#334155!important;font:500 12px/1.45 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-table td.fp-fuel-number,.mv-fuel-control-center .fp-fuel-table td.fp-fuel-money,.mv-fuel-control-center .fp-fuel-table td:nth-child(5),.mv-fuel-control-center .fp-fuel-table td:nth-child(6),.mv-fuel-control-center .fp-fuel-table td:nth-child(8){font-family:var(--mv-control-mono),monospace!important;font-weight:600!important;white-space:nowrap}
+.mv-fuel-control-center .fp-fuel-table td.fp-fuel-money{font-weight:700!important;color:var(--mv-fuel-navy)!important}
+.mv-fuel-control-center .fp-fuel-table-footer{min-height:52px!important;border-top:1px solid var(--mv-fuel-border)!important;background:rgba(234,239,245,.32)!important;color:#64748B!important;font:500 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-page-size{height:32px!important;border-color:var(--mv-fuel-border)!important;border-radius:9px!important;background:#fff!important;color:#475569!important;font:600 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-insights-column{gap:14px!important}
+.mv-fuel-control-center .fp-fuel-insights-card{padding:18px!important}
+.mv-fuel-control-center .fp-fuel-insights-card h2{border-bottom:1px solid var(--mv-fuel-border)!important;padding-bottom:10px!important;font-family:var(--mv-control-mono),monospace!important;font-size:12px!important;letter-spacing:.06em!important;text-transform:uppercase}
+.mv-fuel-control-center .fp-fuel-insights-list{gap:12px!important}
+.mv-fuel-control-center .fp-fuel-insight{grid-template-columns:32px minmax(0,1fr)!important;gap:10px!important}
+.mv-fuel-control-center .fp-fuel-insight>span{width:30px!important;height:30px!important;border-radius:7px!important;background:#ECFDF5!important;color:#059669!important;font:400 16px/1 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-insight-icon.wallet{background:#DCFCE7!important}
+.mv-fuel-control-center .fp-fuel-insight-icon.truck{background:#EDE9FE!important}
+.mv-fuel-control-center .fp-fuel-insight-icon.fuel{background:#FEE2E2!important}
+.mv-fuel-control-center .fp-fuel-insight-icon.trend{background:#EDE9FE!important}
+.mv-fuel-control-center .fp-fuel-insight p{color:#475569!important;font:500 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-insight p strong{color:var(--mv-fuel-navy)!important;font-weight:700!important}
+.mv-fuel-control-center .fp-fuel-promo{min-height:180px!important;border:1px solid var(--mv-fuel-navy)!important;border-radius:16px!important;background-image:linear-gradient(135deg,#102238,#0B1730,#102238)!important;padding:20px!important;box-shadow:0 8px 22px rgba(16,34,56,.1)!important}
+.mv-fuel-control-center .fp-fuel-promo>div:first-child{display:none!important}
+.mv-fuel-control-center .fp-fuel-promo .relative{position:relative!important;z-index:1!important}
+.mv-fuel-control-center .fp-fuel-promo .relative>div:first-child{color:#fff!important;font:700 16px/1.3 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-promo-subtitle{max-width:280px;margin:10px 0 0!important;color:#CBD5E1!important;font:400 12px/1.55 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-promo .relative>div:last-child{background:var(--mv-fuel-green)!important}
+.mv-fuel-control-center .fp-fuel-breakdown-view{padding:20px!important}
+.mv-fuel-control-center .fp-fuel-breakdown-heading h2{color:var(--mv-fuel-navy)!important;font:700 16px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-breakdown-heading p{color:#64748B!important;font:400 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-breakdown-heading>strong{color:var(--mv-fuel-navy)!important;font:800 20px/1.3 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-breakdown-table thead{background:rgba(234,239,245,.72)!important}
+.mv-fuel-control-center .fp-fuel-breakdown-table th{height:40px!important;border-bottom:1px solid var(--mv-fuel-border)!important;color:#64748B!important;font:700 10px/1.4 var(--mv-control-mono),monospace!important}
+.mv-fuel-control-center .fp-fuel-breakdown-table td{height:48px!important;border-color:#E2E8F0!important;color:#334155!important;font:500 12px/1.45 var(--mv-control-sans),sans-serif!important}
+.mv-fuel-control-center .fp-fuel-breakdown-table td:nth-child(n+2){font-family:var(--mv-control-mono),monospace!important}
+
+@media(max-width:1400px){.mv-fuel-control-center .fp-fuel-analytics-card{grid-template-columns:1fr!important}.mv-fuel-control-center .mv-app-tabs{grid-column:1!important;grid-row:1!important;border-bottom:1px solid var(--mv-fuel-border)!important;padding:12px 16px 0!important}.mv-fuel-control-center .fp-fuel-filterbar-operational{grid-column:1!important;grid-row:2!important;border-bottom:1px solid var(--mv-fuel-border)!important;padding:12px 16px!important}.mv-fuel-control-center .fp-fuel-overview-grid,.mv-fuel-control-center .fp-fuel-breakdown-view{grid-column:1!important;grid-row:auto!important}}
+@media(min-width:744px) and (max-width:1023px){.mv-app-shell:has(.mv-fuel-control-center) .fp-app-content{margin-left:184px!important}}
+@media(max-width:743px){.mv-app-shell:has(.mv-fuel-control-center) .fp-app-content{margin-left:0!important}}
+@media(max-width:1150px){.mv-fuel-control-center .fp-fuel-filterbar-operational{grid-template-columns:minmax(220px,1.4fr) 130px 130px minmax(180px,.8fr)!important;gap:8px!important}}
+@media(max-width:1100px){.mv-fuel-control-center .fp-fuel-bottom-grid{grid-template-columns:1fr!important}.mv-fuel-control-center .fp-fuel-insights-column{grid-template-columns:repeat(2,minmax(0,1fr))}.mv-fuel-control-center .fp-fuel-overview-grid{grid-template-columns:1fr!important}.mv-fuel-control-center .fp-fuel-trend-panel{border-right:0!important;border-bottom:1px solid var(--mv-fuel-border)!important}}
+@media(max-width:900px){.mv-fuel-control-center .fp-fuel-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.mv-fuel-control-center .fp-fuel-filterbar-operational{grid-template-columns:1fr 1fr!important}.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search,.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-sort{grid-column:1/-1!important}}
+@media(max-width:743px){.mv-fuel-control-center.fp-fuel-page{padding:20px 16px 32px!important}.mv-fuel-control-center .fp-fuel-title{font-size:26px!important}.mv-fuel-control-center .fp-fuel-heading{align-items:flex-start!important}.mv-fuel-control-center .fp-fuel-trend-panel,.mv-fuel-control-center .fp-fuel-truck-cost-panel{padding:16px!important}.mv-fuel-control-center .fp-fuel-insights-column{grid-template-columns:1fr!important}.mv-fuel-control-center .fp-fuel-transactions-heading{align-items:flex-start!important;gap:8px!important;flex-direction:column!important}}
+@media(max-width:560px){.mv-fuel-control-center .fp-fuel-kpi-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-tile{padding:13px!important}.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-value{font-size:17px!important}.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-label{font-size:11px!important}.mv-fuel-control-center .fp-fuel-kpi-grid .mv-kpi-note{font-size:10px!important}.mv-fuel-control-center .fp-fuel-filterbar-operational{grid-template-columns:1fr!important}.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-search,.mv-fuel-control-center .fp-fuel-filterbar-operational .fp-fuel-sort{grid-column:auto!important}.mv-fuel-control-center .fp-fuel-trend-panel>div:first-child{align-items:flex-start!important;gap:8px!important;flex-direction:column!important}.mv-fuel-control-center .fp-fuel-legend{flex-wrap:wrap}}
+

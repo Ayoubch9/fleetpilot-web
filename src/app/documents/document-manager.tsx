@@ -25,6 +25,18 @@ export default function DocumentManager({companyId,trucks,folders}:{companyId:st
     return()=>{window.removeEventListener("milevoxa:documents-upload",a);window.removeEventListener("milevoxa:documents-bulk-import",b)};
   },[]);
 
+  useEffect(()=>{
+    if(!open&&!bulkOpen) return;
+    const shell=document.querySelector(".mv-app-shell");
+    const dialog=document.querySelector(".mv-documents-form-theme");
+    if(!(shell instanceof HTMLElement)||!(dialog instanceof HTMLElement)) return;
+    const shellStyles=getComputedStyle(shell);
+    for(const property of ["--mv-control-sans","--mv-control-mono"]){
+      const value=shellStyles.getPropertyValue(property).trim();
+      if(value) dialog.style.setProperty(property,value);
+    }
+  },[open,bulkOpen]);
+
   async function uploadOne(file:File, form:FormData, fallback?:string){
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
@@ -122,7 +134,7 @@ export default function DocumentManager({companyId,trucks,folders}:{companyId:st
       <div className="fp-doc-modal-backdrop" role="presentation" onMouseDown={(event) => {
         if (event.target === event.currentTarget) setOpen(false);
       }}>
-        <div className="fp-doc-modal" role="dialog" aria-modal="true" aria-label="Upload Document">
+        <div className="fp-doc-modal mv-documents-form-theme" role="dialog" aria-modal="true" aria-label="Upload Document">
           <form onSubmit={upload} className="fp-document-upload-form fp-document-upload-form-v2">
             <Header title="Upload Truck or Company Document" subtitle="Add searchable metadata for compliance, renewals and driver access." close={()=>setOpen(false)}/>
             <Fields trucks={trucks} folders={folders} today={today} includeName/>
@@ -138,7 +150,7 @@ export default function DocumentManager({companyId,trucks,folders}:{companyId:st
       <div className="fp-doc-modal-backdrop" role="presentation" onMouseDown={(event) => {
         if (event.target === event.currentTarget) setBulkOpen(false);
       }}>
-        <div className="fp-doc-modal" role="dialog" aria-modal="true" aria-label="Import Multiple Documents">
+        <div className="fp-doc-modal mv-documents-form-theme" role="dialog" aria-modal="true" aria-label="Import Multiple Documents">
           <form onSubmit={bulkUpload} className="fp-document-upload-form fp-document-upload-form-v2">
             <Header title="Import Multiple Documents" subtitle="Upload several files using shared truck, type and folder metadata." close={()=>setBulkOpen(false)}/>
             <Fields trucks={trucks} folders={folders} today={today}/>
@@ -157,7 +169,7 @@ function Header({title,subtitle,close}:{title:string;subtitle:string;close:()=>v
   return <div className="fp-doc-form-heading"><div><span>DOCUMENT VAULT</span><h2>{title}</h2><p>{subtitle}</p></div><button type="button" onClick={close}>×</button></div>
 }
 
-function Fields({trucks,folders,today,includeName=false}:{trucks:Truck[];folders:Folder[];today:string;includeName?:boolean}){
+function Fields({trucks,folders,includeName=false}:{trucks:Truck[];folders:Folder[];today:string;includeName?:boolean}){
   return <div className="fp-doc-form-grid">
     {includeName && <label className="span-2"><span>Document Name</span><input name="name" placeholder="2026 Indiana Cab Card"/></label>}
     <label><span>Document Type</span><select name="document_type" defaultValue="Other">{DOCUMENT_TYPES.map(x=><option key={x}>{x}</option>)}</select></label>

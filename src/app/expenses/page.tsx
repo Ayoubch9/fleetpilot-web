@@ -260,7 +260,7 @@ if (isExactExpenseNumberLookup) {
   const breakdown = categorySummary.map((item) => ({
     label: item.label,
     amount: item.amount,
-    color: item.color,
+    color: expenseChartColor(item.key),
   }));
   const rankedCategories = [...breakdown]
     .sort((a, b) => b.amount - a.amount)
@@ -291,13 +291,15 @@ if (isExactExpenseNumberLookup) {
       companyName={companyName}
       role={role}
     >
-      <div className="fp-expenses-page">
+      <div className="fp-expenses-page mv-expenses-control-center">
         <section className="fp-expenses-heading">
-          <div>
+          <div className="fp-expenses-heading-copy">
+            <span className="fp-expenses-overline">OPERATING EXPENDITURES</span>
             <h1 className="fp-expenses-title">Expenses</h1>
             <p className="fp-expenses-subtitle">
               Track and manage all your business expenses. Keep your costs under control.
             </p>
+
             <div className="fp-expenses-scope-note">
               <span className="fp-expenses-scope-note-icon" aria-hidden="true">i</span>
               <p>
@@ -309,8 +311,18 @@ if (isExactExpenseNumberLookup) {
             </div>
           </div>
 
-          <div id="add-expense" className="fp-expense-add-form-host">
-            <AddExpenseForm trucks={trucks} loads={loads} />
+          <div className="fp-expenses-heading-actions">
+            <div className="fp-expenses-motto" aria-label="Lower costs, higher miles">
+              <span aria-hidden="true">⛽</span>
+              <div>
+                <strong>LOWER COSTS</strong>
+                <small>HIGHER MILES</small>
+              </div>
+            </div>
+
+            <div id="add-expense" className="fp-expense-add-form-host">
+              <AddExpenseForm trucks={trucks} loads={loads} />
+            </div>
           </div>
         </section>
 
@@ -320,9 +332,7 @@ if (isExactExpenseNumberLookup) {
           </div>
         )}
 
-        <div className="fp-expenses-layout mt-4">
-          <div className="min-w-0">
-            <div className="fp-expense-kpi-grid">
+        <div className="fp-expense-kpi-grid fp-expense-kpi-grid-reference">
               <KpiTile
                 label="Total Expenses"
                                 value={money(total)}
@@ -349,8 +359,11 @@ if (isExactExpenseNumberLookup) {
               />
             </div>
 
+        <div className="fp-expenses-layout mt-4">
+          <div className="min-w-0">
             <section className="fp-expenses-table-card mt-4">
               <AppTabs
+                variant="filter"
                 activeKey={categoryFilter}
                 ariaLabel="Expense categories"
                 items={TAB_CATEGORIES.map((tab) => ({
@@ -379,7 +392,7 @@ if (isExactExpenseNumberLookup) {
                   </thead>
 
                   <tbody>
-                    {pageExpenses.map((expense, index) => {
+                    {pageExpenses.map((expense) => {
                       const truck = expense.truck_id
                         ? truckMap.get(expense.truck_id)
                         : null;
@@ -492,7 +505,10 @@ if (isExactExpenseNumberLookup) {
             </section>
 
             <section className="fp-expense-side-card">
-              <h2>Expenses by Category</h2>
+              <div className="fp-expense-side-head">
+                <h2>Expenses by Category</h2>
+                <span>{money(total)} Total</span>
+              </div>
 
               <div className="mt-4 flex justify-center">
                 <ExpenseDonut total={total} items={breakdown} />
@@ -512,8 +528,8 @@ if (isExactExpenseNumberLookup) {
             <section className="fp-expense-side-card">
               <div className="flex items-center justify-between">
                 <h2>Top Expenses</h2>
-                <span className="text-[9px] font-[600] text-[#16853B]">
-                  View All →
+                <span className="text-[9px] font-[600] text-[#64748B]">
+                  By Amount
                 </span>
               </div>
 
@@ -625,6 +641,14 @@ type ExpenseCategory = {
   color: string;
 };
 
+
+function expenseChartColor(key: string) {
+  if (key === "fuel") return "#10B981";
+  if (key === "maintenance") return "#102238";
+  if (key === "tolls") return "#D97706";
+  if (key === "insurance") return "#DC2626";
+  return "#64748B";
+}
 
 function categoryMeta(category?: string | null) {
   const key = categoryKey(category);
@@ -748,61 +772,4 @@ function numberValue(value: number | string | null | undefined) {
 
 function money(value: number) {
   return formatMoney(value);
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[14px] w-[14px] fill-none stroke-current" strokeWidth="1.8">
-      <circle cx="11" cy="11" r="6" />
-      <path d="m16 16 4 4" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <rect x="4" y="5" width="16" height="15" rx="2" />
-      <path d="M8 3v4M16 3v4M4 9h16" />
-    </svg>
-  );
-}
-
-function FilterIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M4 6h16M7 12h10M10 18h4" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return <span className="text-[17px] font-[400]">＋</span>;
-}
-
-function ImportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M5 19h14V9H5z" />
-      <path d="M12 3v10M8 7l4-4 4 4" />
-    </svg>
-  );
-}
-
-function ExportIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <path d="M5 5h14v14H5z" />
-      <path d="M12 15V5M8 9l4-4 4 4" />
-    </svg>
-  );
-}
-
-function RecurringIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] fill-none stroke-current" strokeWidth="1.8">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v5l3 2" />
-    </svg>
-  );
 }

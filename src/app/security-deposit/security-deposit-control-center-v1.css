@@ -1,0 +1,111 @@
+/* MileVoxa Security Deposit Control Center. Visual-only styles scoped to this page. */
+.mv-app-shell:has(.mv-security-deposit-control-center){
+  --mv-deposit-navy:#102238;
+  --mv-deposit-green:#10B981;
+  --mv-deposit-canvas:#EAEFF5;
+  --mv-deposit-sidebar:#E2E8F0;
+  --mv-deposit-surface:#F8FAFC;
+  --mv-deposit-inset:#EDF2F7;
+  --mv-deposit-border:#CBD5E1;
+  --mv-deposit-muted:#475569;
+  background:var(--mv-deposit-canvas)!important;
+  color:#102238!important;
+  font-family:var(--mv-control-sans),"Plus Jakarta Sans",Arial,sans-serif!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed{width:256px!important;border-right:1px solid var(--mv-deposit-border)!important;background:var(--mv-deposit-sidebar)!important;color:var(--mv-deposit-navy)!important;box-shadow:4px 0 18px rgba(16,34,56,.05)!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed>div:first-child{height:68px!important;min-height:68px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;padding:12px 20px!important;border-bottom:1px solid var(--mv-deposit-border)!important;background:rgba(248,250,252,.72)!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .mv-sidebar-brand{min-width:0!important;flex:1!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .mv-sidebar-brand .mv-brand-lockup{width:210px!important;max-width:100%!important;height:auto!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-scroll{padding:14px!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed .fp-scroll a[href]{border-radius:12px!important;color:#334155!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important;font-weight:600!important;box-shadow:none!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover{background:#fff!important;color:var(--mv-deposit-navy)!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed .fp-scroll a[href="/security-deposit"]{background:var(--mv-deposit-green)!important;color:#fff!important;box-shadow:0 5px 14px rgba(5,150,105,.16)!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{color:#64748B!important;font-family:var(--mv-control-mono),monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.1em!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-content{margin-left:256px!important;background:var(--mv-deposit-canvas)!important}
+@media(min-width:744px) and (max-width:1023px){.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-content{margin-left:184px!important}}
+@media(max-width:743px){.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-content{margin-left:0!important}}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-header{height:68px!important;border-color:var(--mv-deposit-border)!important;background:rgba(248,250,252,.97)!important;padding-left:24px!important;padding-right:24px!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-global-search{max-width:384px!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-app-global-search input{min-height:42px!important;border:1px solid var(--mv-deposit-border)!important;border-radius:12px!important;background:var(--mv-deposit-inset)!important;color:var(--mv-deposit-navy)!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important}
+.mv-app-shell:has(.mv-security-deposit-control-center) .fp-control-center-notification{border-color:var(--mv-deposit-border)!important;background:var(--mv-deposit-inset)!important}
+
+.mv-security-deposit-control-center.fp-deposit-page{width:100%!important;max-width:none!important;margin:0!important;padding:24px!important;background:var(--mv-deposit-canvas)!important;color:#102238!important;font-family:var(--mv-control-sans),sans-serif!important;font-size:12px!important;line-height:1.5!important}
+.mv-security-deposit-control-center .fp-deposit-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;border-bottom:1px solid var(--mv-deposit-border)!important;padding-bottom:16px!important}
+.mv-security-deposit-control-center .fp-deposit-heading>div:first-child>span{color:var(--mv-deposit-navy)!important;font:800 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.12em!important}
+.mv-security-deposit-control-center .fp-deposit-heading h1{margin:4px 0 0!important;color:#102238!important;font:800 30px/1.2 var(--mv-control-sans),sans-serif!important;letter-spacing:-.03em!important}
+.mv-security-deposit-control-center .fp-deposit-heading p{margin-top:5px!important;color:var(--mv-deposit-muted)!important;font:400 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-heading-callout{display:flex;align-items:center;gap:12px;border:1px solid var(--mv-deposit-border);border-radius:16px;background:var(--mv-deposit-surface);padding:12px 16px;box-shadow:0 1px 2px rgba(16,34,56,.025)}
+.mv-security-deposit-control-center .fp-deposit-heading-callout>span{font-size:22px}
+.mv-security-deposit-control-center .fp-deposit-heading-callout>div{display:grid;gap:3px}
+.mv-security-deposit-control-center .fp-deposit-heading-callout strong{color:var(--mv-deposit-navy);font:800 10px/1.4 var(--mv-control-sans),sans-serif;letter-spacing:.06em}
+.mv-security-deposit-control-center .fp-deposit-heading-callout small{color:#059669;font:700 10px/1.4 var(--mv-control-mono),monospace}
+.mv-security-deposit-control-center .fp-deposit-warning,.mv-security-deposit-control-center .fp-deposit-message{font:600 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;margin-top:18px!important}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile{position:relative;min-width:0;overflow:hidden;border:1px solid var(--mv-deposit-border)!important;border-radius:16px!important;background:var(--mv-deposit-surface)!important;padding:17px!important;box-shadow:0 1px 2px rgba(16,34,56,.025)!important}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile:before{position:absolute;inset:0 0 auto;height:3px;background:var(--mv-deposit-navy);content:""}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile:nth-child(2):before{background:#10B981}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile:nth-child(3):before{background:#D97706}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile:nth-child(4):before{background:#94A3B8}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-label{color:var(--mv-deposit-muted)!important;font:700 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-value{margin-top:8px!important;color:var(--mv-deposit-navy)!important;font:800 22px/1.25 var(--mv-control-mono),monospace!important;letter-spacing:-.03em!important}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile:nth-child(2) .mv-kpi-value{color:#059669!important}
+.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-note{margin-top:5px!important;color:#64748B!important;font:500 11px/1.4 var(--mv-control-mono),monospace!important}
+.mv-security-deposit-control-center .fp-deposit-layout{grid-template-columns:minmax(0,2fr) minmax(280px,1fr)!important;gap:20px!important;margin-top:20px!important}
+.mv-security-deposit-control-center .fp-deposit-card,.mv-security-deposit-control-center .fp-deposit-side-card{min-width:0;border:1px solid var(--mv-deposit-border)!important;border-radius:16px!important;background:var(--mv-deposit-surface)!important;box-shadow:0 1px 2px rgba(16,34,56,.025)!important}
+.mv-security-deposit-control-center .fp-deposit-card{margin-bottom:16px!important;padding:20px!important}
+.mv-security-deposit-control-center .fp-deposit-card-heading{border-color:var(--mv-deposit-border)!important;padding-bottom:14px!important}
+.mv-security-deposit-control-center .fp-deposit-card-heading>div:first-child>span{color:#059669!important;font:800 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.1em!important}
+.mv-security-deposit-control-center .fp-deposit-card-heading h2{color:var(--mv-deposit-navy)!important;font:700 16px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-card-heading p{color:var(--mv-deposit-muted)!important;font:400 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-status{border:1px solid #BFDBFE!important;border-radius:999px!important;background:#EFF6FF!important;padding:6px 10px!important;color:#1D4ED8!important;font:700 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-status.partially_returned{border-color:#FCD34D!important;background:#FFFBEB!important;color:#B45309!important}
+.mv-security-deposit-control-center .fp-deposit-status.fully_returned{border-color:#A7F3D0!important;background:#ECFDF5!important;color:#047857!important}
+.mv-security-deposit-control-center .fp-deposit-status.closed{border-color:var(--mv-deposit-border)!important;background:var(--mv-deposit-inset)!important;color:#64748B!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid{gap:14px!important;margin-top:16px!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid label,.mv-security-deposit-control-center .fp-deposit-side-card form label{gap:6px!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid label>span,.mv-security-deposit-control-center .fp-deposit-side-card form label>span{color:#475569!important;font:600 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid input,.mv-security-deposit-control-center .fp-deposit-settings-grid select,.mv-security-deposit-control-center .fp-deposit-settings-grid textarea,.mv-security-deposit-control-center .fp-deposit-side-card form input,.mv-security-deposit-control-center .fp-deposit-side-card form select,.mv-security-deposit-control-center .fp-deposit-side-card form textarea{border:1px solid var(--mv-deposit-border)!important;border-radius:10px!important;background:#fff!important;padding:0 11px!important;color:var(--mv-deposit-navy)!important;font:500 12px/1.5 var(--mv-control-sans),sans-serif!important;box-shadow:none!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid input,.mv-security-deposit-control-center .fp-deposit-settings-grid select,.mv-security-deposit-control-center .fp-deposit-side-card form input,.mv-security-deposit-control-center .fp-deposit-side-card form select{height:42px!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid textarea,.mv-security-deposit-control-center .fp-deposit-side-card form textarea{padding:10px 11px!important}
+.mv-security-deposit-control-center .fp-deposit-settings-grid input:focus,.mv-security-deposit-control-center .fp-deposit-settings-grid select:focus,.mv-security-deposit-control-center .fp-deposit-side-card form input:focus,.mv-security-deposit-control-center .fp-deposit-side-card form select:focus,.mv-security-deposit-control-center .fp-deposit-side-card form textarea:focus{border-color:var(--mv-deposit-green)!important;box-shadow:0 0 0 3px rgba(16,185,129,.12)!important;outline:none!important}
+.mv-security-deposit-control-center .fp-deposit-money-input{height:42px!important;border-color:var(--mv-deposit-border)!important;border-radius:10px!important;background:#fff!important;padding:0 11px!important}
+.mv-security-deposit-control-center .fp-deposit-money-input input{height:auto!important;border:0!important;background:transparent!important;padding:0!important}
+.mv-security-deposit-control-center .fp-deposit-progress-block{gap:8px!important;margin-top:16px!important;border-color:var(--mv-deposit-border)!important;border-radius:12px!important;background:var(--mv-deposit-inset)!important;padding:13px!important}
+.mv-security-deposit-control-center .fp-deposit-progress-block span{color:var(--mv-deposit-muted)!important;font:500 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-progress-block strong{color:var(--mv-deposit-navy)!important;font:700 12px/1.4 var(--mv-control-mono),monospace!important}
+.mv-security-deposit-control-center .fp-deposit-progress-track{height:8px!important;background:#D8E1EB!important}
+.mv-security-deposit-control-center .fp-deposit-progress-track i{background:var(--mv-deposit-green)!important}
+.mv-security-deposit-control-center .fp-deposit-save-row>span{color:#64748B!important;font:500 11px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-save-row>button,.mv-security-deposit-control-center .fp-deposit-side-card form>button{min-height:42px!important;border:1px solid var(--mv-deposit-green)!important;border-radius:10px!important;background:var(--mv-deposit-green)!important;padding:0 15px!important;color:#fff!important;font:700 12px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-table-wrap{margin-top:14px!important}
+.mv-security-deposit-control-center .fp-deposit-table{min-width:850px!important}
+.mv-security-deposit-control-center .fp-deposit-table thead{background:rgba(234,239,245,.72)!important}
+.mv-security-deposit-control-center .fp-deposit-table th{height:40px!important;border-bottom:1px solid var(--mv-deposit-border)!important;padding:0 10px!important;color:#64748B!important;font:700 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.06em!important;text-transform:uppercase!important;white-space:nowrap}
+.mv-security-deposit-control-center .fp-deposit-table td{height:48px!important;border-bottom:1px solid #E2E8F0!important;padding:0 10px!important;color:#334155!important;font:500 12px/1.45 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-table td.fp-deposit-money,.mv-security-deposit-control-center .fp-deposit-table td.fp-deposit-balance-increase,.mv-security-deposit-control-center .fp-deposit-table td.fp-deposit-balance-decrease{font-family:var(--mv-control-mono),monospace!important;font-weight:700!important}
+.mv-security-deposit-control-center .fp-deposit-type{padding:5px 9px!important;font:700 10px/1.3 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-row-delete{font:600 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-empty{color:#64748B!important;font:500 12px/1.5 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-right{gap:14px!important}
+.mv-security-deposit-control-center .fp-deposit-side-card{padding:18px!important}
+.mv-security-deposit-control-center .fp-deposit-side-card h2{color:var(--mv-deposit-navy)!important;font:700 16px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-side-card form{gap:12px!important;margin-top:14px!important}
+.mv-security-deposit-control-center .fp-deposit-side-card form>button{width:100%!important;margin-top:2px!important}
+.mv-security-deposit-control-center .fp-deposit-explainer{border-color:var(--mv-deposit-border)!important;background:linear-gradient(145deg,#102238,#102238)!important;padding:20px!important}
+.mv-security-deposit-control-center .fp-deposit-explainer>span,.mv-security-deposit-control-center .fp-deposit-release-card>span{color:#6EE7B7!important;font:700 10px/1.4 var(--mv-control-mono),monospace!important;letter-spacing:.08em!important}
+.mv-security-deposit-control-center .fp-deposit-explainer h2{color:#fff!important;font:700 15px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-explainer p,.mv-security-deposit-control-center .fp-deposit-release-card>p{color:#CBD5E1!important;font:400 12px/1.55 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-explainer>div{border-color:rgba(255,255,255,.16)!important;padding-top:12px!important}
+.mv-security-deposit-control-center .fp-deposit-explainer>div span{color:#CBD5E1!important;font:500 11px/1.4 var(--mv-control-sans),sans-serif!important}
+.mv-security-deposit-control-center .fp-deposit-explainer>div strong,.mv-security-deposit-control-center .fp-deposit-release-card>strong{color:#fff!important;font:700 16px/1.4 var(--mv-control-mono),monospace!important}
+.mv-security-deposit-control-center .fp-deposit-release-card{background:var(--mv-deposit-inset)!important}
+.mv-security-deposit-control-center .fp-deposit-release-card>span{color:#059669!important}
+.mv-security-deposit-control-center .fp-deposit-release-card>strong{color:var(--mv-deposit-navy)!important}
+.mv-security-deposit-control-center .fp-deposit-release-card>p{color:var(--mv-deposit-muted)!important}
+
+@media(max-width:1100px){.mv-security-deposit-control-center .fp-deposit-layout{grid-template-columns:1fr!important}.mv-security-deposit-control-center .fp-deposit-right{grid-template-columns:repeat(2,minmax(0,1fr))}.mv-security-deposit-control-center .fp-deposit-right>.fp-deposit-side-card:first-child{grid-column:1/-1}}
+@media(max-width:743px){.mv-security-deposit-control-center.fp-deposit-page{padding:20px 16px 32px!important}.mv-security-deposit-control-center .fp-deposit-heading{align-items:flex-start!important;flex-direction:column!important}.mv-security-deposit-control-center .fp-deposit-heading h1{font-size:26px!important}.mv-security-deposit-control-center .fp-deposit-heading-callout{align-self:stretch}.mv-security-deposit-control-center .fp-deposit-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-tile{padding:14px!important}.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-value{font-size:18px!important}.mv-security-deposit-control-center .fp-deposit-card{padding:15px!important}.mv-security-deposit-control-center .fp-deposit-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.mv-security-deposit-control-center .fp-deposit-settings-grid label.wide{grid-column:1/-1!important}.mv-security-deposit-control-center .fp-deposit-save-row{align-items:stretch!important;flex-direction:column!important}.mv-security-deposit-control-center .fp-deposit-save-row>button{width:100%!important}.mv-security-deposit-control-center .fp-deposit-right{grid-template-columns:1fr!important}.mv-security-deposit-control-center .fp-deposit-right>.fp-deposit-side-card:first-child{grid-column:auto}}
+@media(max-width:520px){.mv-security-deposit-control-center .fp-deposit-settings-grid{grid-template-columns:1fr!important}.mv-security-deposit-control-center .fp-deposit-settings-grid label.wide{grid-column:auto!important}.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-label{font-size:11px!important}.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-value{font-size:16px!important}.mv-security-deposit-control-center .fp-deposit-kpis .mv-kpi-note{font-size:10px!important}}
+

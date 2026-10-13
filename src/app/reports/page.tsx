@@ -522,9 +522,10 @@ const exportRows: string[][] = [
       companyName={companyName}
       role={role}
     >
-      <div className="fp-tool-page fp-reports-v2">
+      <div className="fp-tool-page fp-reports-v2 mv-reports-control-center">
         <div className="fp-tool-heading">
           <div>
+            <span className="fp-report-overline">Financial &amp; Audit Intelligence</span>
             <h1>Reports</h1>
             <p>
               Review revenue, full operating costs, fleet activity and profitability.
@@ -585,12 +586,14 @@ const exportRows: string[][] = [
 <div className="fp-report-content-stack">
   <section className="fp-panel fp-report-section-panel">
     <div className="fp-report-section-heading">
-      <span>BUSINESS OVERVIEW</span>
-      <h2>{reportLabel}</h2>
-      <p>
-        Full business costs include recorded expenses, weekly fixed
-        expenses, company revenue fees and odometer mileage fees.
-      </p>
+      <div>
+        <h2>Business Overview</h2>
+        <p>
+          Full business costs include recorded expenses, weekly fixed
+          expenses, company revenue fees and odometer mileage fees.
+        </p>
+      </div>
+      <strong className="fp-report-section-period">{reportLabel}</strong>
     </div>
 
     <div className="fp-report-business-grid">

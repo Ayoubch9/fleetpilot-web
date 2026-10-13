@@ -1,0 +1,982 @@
+/* Shared form styling for the signed-in MileVoxa workspace. Keep each form's
+   existing structure while standardizing the control-center colors and type. */
+:where(.mv-app-shell) {
+  --mv-form-surface: #F8FAFC;
+  --mv-form-inset: #EDF2F7;
+  --mv-form-border: #CBD5E1;
+  --mv-form-navy: #102238;
+  --mv-form-muted: #64748B;
+  --mv-form-green: #10B981;
+  --mv-form-green-dark: #059669;
+}
+
+/* Export filters and report dialogs use portals, so style them at the document
+   level while keeping the same control-center palette and type scale. */
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) {
+  border-color: #CBD5E1 !important;
+  border-radius: 14px !important;
+  background: #F8FAFC !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > header {
+  border-color: #CBD5E1 !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > header span {
+  color: #059669 !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > header h2 {
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > header p {
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) :is(.fp-expense-export-body, .fp-maint-export-body, .fp-reimb-export-body, .fp-truck-export-body, .fp-report-modal-body) :is(label > span, .fp-maint-export-section > strong, .fp-reimb-export-section > strong, .fp-truck-export-section > strong) {
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) :is(input, select) {
+  min-height: 40px !important;
+  border-color: #CBD5E1 !important;
+  border-radius: 10px !important;
+  background: #FFFFFF !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) :is(input, select):focus {
+  border-color: #10B981 !important;
+  outline: 2px solid rgb(16 185 129 / 18%) !important;
+  outline-offset: 1px !important;
+  box-shadow: none !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-hint,
+  .fp-maint-export-hint,
+  .fp-reimb-export-hint,
+  .fp-truck-export-hint
+) {
+  border-color: #A7F3D0 !important;
+  border-radius: 10px !important;
+  background: #ECFDF5 !important;
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) .fp-report-modal-error {
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > footer {
+  border-color: #CBD5E1 !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > footer button {
+  min-height: 36px !important;
+  border-color: #CBD5E1 !important;
+  border-radius: 9px !important;
+  background: #FFFFFF !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > footer button.primary {
+  border-color: #059669 !important;
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 14px rgb(16 185 129 / 16%) !important;
+}
+
+body:has(.mv-app-shell) :is(
+  .fp-expense-export-modal,
+  .fp-maint-export-modal,
+  .fp-reimb-export-modal,
+  .fp-truck-export-modal,
+  .fp-report-modal
+) > footer button.primary:hover:not(:disabled) {
+  background: #059669 !important;
+}
+
+/* Account data export is a card instead of a dialog, but belongs to the same
+   export workflow and should use the same controls. */
+body:has(.mv-app-shell) .fp-data-export-card,
+body:has(.mv-app-shell) .fp-legal-data-action {
+  border-color: #CBD5E1 !important;
+  border-radius: 12px !important;
+  background: #EDF2F7 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-data-export-card, .fp-legal-data-action) strong {
+  color: #102238 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-data-export-card, .fp-legal-data-action) span {
+  color: #64748B !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-data-export-card, .fp-legal-data-action) button {
+  min-height: 36px !important;
+  border: 1px solid #059669 !important;
+  border-radius: 9px !important;
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+/* Dashboard Quick Add lives in a body portal, outside the shell's form rules. */
+body:has(.mv-app-shell) .fp-quick-modal {
+  border-color: #CBD5E1 !important;
+  border-radius: 14px !important;
+  background: #F8FAFC !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-head {
+  border-color: #CBD5E1 !important;
+  background: #F8FAFC !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-head h2 {
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-head p {
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-icon,
+body:has(.mv-app-shell) .fp-quick-modal-icon.load,
+body:has(.mv-app-shell) .fp-quick-modal-icon.expense,
+body:has(.mv-app-shell) .fp-quick-modal-icon.fuel,
+body:has(.mv-app-shell) .fp-quick-modal-icon.maintenance {
+  border: 1px solid #A7F3D0 !important;
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-close {
+  border-color: #CBD5E1 !important;
+  border-radius: 9px !important;
+  background: #EDF2F7 !important;
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-fields label > span {
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-fields :is(input, select) {
+  min-height: 40px !important;
+  height: 40px !important;
+  border-color: #CBD5E1 !important;
+  border-radius: 10px !important;
+  background: #FFFFFF !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-fields :is(input, select):focus {
+  border-color: #10B981 !important;
+  outline: 2px solid rgb(16 185 129 / 18%) !important;
+  outline-offset: 1px !important;
+  box-shadow: none !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-load-helper {
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-error {
+  border-color: #FECACA !important;
+  border-radius: 10px !important;
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-more-details {
+  border-color: #CBD5E1 !important;
+  border-radius: 10px !important;
+  background: #EDF2F7 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-more-details strong {
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-more-details span {
+  color: #64748B !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-more-details a {
+  color: #059669 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-footer {
+  border-color: #CBD5E1 !important;
+  background: #F8FAFC !important;
+  box-shadow: 0 -8px 18px rgb(16 34 56 / 3%) !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-footer button {
+  min-height: 36px !important;
+  height: auto !important;
+  border-color: #CBD5E1 !important;
+  border-radius: 9px !important;
+  background: #FFFFFF !important;
+  color: #102238 !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-footer button.primary {
+  border-color: #059669 !important;
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 14px rgb(16 185 129 / 16%) !important;
+}
+
+body:has(.mv-app-shell) .fp-quick-modal-footer button.primary:hover:not(:disabled) {
+  background: #059669 !important;
+}
+
+.mv-app-shell form,
+body:has(.mv-app-shell) form[class*="fp-"] {
+  --mv-control-sans: "Plus Jakarta Sans";
+  --mv-control-mono: "JetBrains Mono";
+  --mv-form-surface: #F8FAFC;
+  --mv-form-inset: #EDF2F7;
+  --mv-form-border: #CBD5E1;
+  --mv-form-navy: #102238;
+  --mv-form-muted: #64748B;
+  --mv-form-green: #10B981;
+  --mv-form-green-dark: #059669;
+  color: var(--mv-form-navy, #102238);
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif;
+}
+
+.mv-app-shell form label,
+body:has(.mv-app-shell) form[class*="fp-"] label {
+  color: var(--mv-form-navy, #102238);
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mv-app-shell form label > span,
+.mv-app-shell form [class*="field"] > span,
+body:has(.mv-app-shell) form[class*="fp-"] label > span,
+body:has(.mv-app-shell) form[class*="fp-"] [class*="field"] > span {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.mv-app-shell form header span,
+body:has(.mv-app-shell) form[class*="fp-"] header span {
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.mv-app-shell form :is(header h1, header h2, header h3),
+body:has(.mv-app-shell) form[class*="fp-"] :is(header h1, header h2, header h3) {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.25 !important;
+}
+
+.mv-app-shell form header p,
+body:has(.mv-app-shell) form[class*="fp-"] header p {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+.mv-app-shell form [class*="form-intro"] > div > span,
+body:has(.mv-app-shell) form[class*="fp-"] [class*="form-intro"] > div > span {
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.mv-app-shell form [class*="form-intro"] strong,
+body:has(.mv-app-shell) form[class*="fp-"] [class*="form-intro"] strong {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 14px !important;
+}
+
+.mv-app-shell form [class*="form-intro"] p,
+.mv-app-shell form small,
+body:has(.mv-app-shell) form[class*="fp-"] [class*="form-intro"] p,
+body:has(.mv-app-shell) form[class*="fp-"] small {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  line-height: 1.45 !important;
+}
+
+.mv-app-shell form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.mv-app-shell form select,
+.mv-app-shell form textarea,
+body:has(.mv-app-shell) form[class*="fp-"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+body:has(.mv-app-shell) form[class*="fp-"] select,
+body:has(.mv-app-shell) form[class*="fp-"] textarea {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 10px !important;
+  background-color: #FFFFFF !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+.mv-app-shell form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+.mv-app-shell form select:focus,
+.mv-app-shell form textarea:focus,
+body:has(.mv-app-shell) form[class*="fp-"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+body:has(.mv-app-shell) form[class*="fp-"] select:focus,
+body:has(.mv-app-shell) form[class*="fp-"] textarea:focus {
+  border-color: var(--mv-form-green, #10B981) !important;
+  outline: 2px solid rgb(16 185 129 / 18%) !important;
+  outline-offset: 1px !important;
+}
+
+.mv-app-shell form input::placeholder,
+.mv-app-shell form textarea::placeholder,
+body:has(.mv-app-shell) form[class*="fp-"] input::placeholder,
+body:has(.mv-app-shell) form[class*="fp-"] textarea::placeholder {
+  color: #94A3B8;
+  opacity: 1;
+}
+
+.mv-app-shell form input[type="checkbox"],
+.mv-app-shell form input[type="radio"],
+body:has(.mv-app-shell) form[class*="fp-"] input[type="checkbox"],
+body:has(.mv-app-shell) form[class*="fp-"] input[type="radio"] {
+  accent-color: var(--mv-form-green, #10B981);
+}
+
+.mv-app-shell form button,
+body:has(.mv-app-shell) form[class*="fp-"] button {
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mv-app-shell form button[type="submit"],
+.mv-app-shell form button:not([type="button"]):not([type="reset"]),
+.mv-app-shell form button.primary,
+body:has(.mv-app-shell) form[class*="fp-"] button[type="submit"],
+body:has(.mv-app-shell) form[class*="fp-"] button:not([type="button"]):not([type="reset"]),
+body:has(.mv-app-shell) form[class*="fp-"] button.primary {
+  border-color: var(--mv-form-green-dark, #059669) !important;
+  background: var(--mv-form-green, #10B981) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 14px rgb(16 185 129 / 16%) !important;
+}
+
+.mv-app-shell form button[type="submit"]:hover:not(:disabled),
+.mv-app-shell form button:not([type="button"]):not([type="reset"]):hover:not(:disabled),
+.mv-app-shell form button.primary:hover:not(:disabled),
+body:has(.mv-app-shell) form[class*="fp-"] button[type="submit"]:hover:not(:disabled),
+body:has(.mv-app-shell) form[class*="fp-"] button:not([type="button"]):not([type="reset"]):hover:not(:disabled),
+body:has(.mv-app-shell) form[class*="fp-"] button.primary:hover:not(:disabled) {
+  background: var(--mv-form-green-dark, #059669) !important;
+}
+
+.mv-app-shell form button:disabled,
+body:has(.mv-app-shell) form[class*="fp-"] button:disabled {
+  cursor: wait;
+}
+
+/* Loads and Expenses used legacy 7–9px form type and blue accents. Keep their
+   existing modal geometry, but bring headings and helper copy onto the shared
+   control-center scale. */
+.mv-loads-control-center .fp-add-load-form,
+.mv-expenses-control-center .fp-add-expense-form {
+  border-color: var(--mv-form-border) !important;
+  border-radius: 14px !important;
+  background: var(--mv-form-surface) !important;
+  color: var(--mv-form-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+.mv-loads-control-center .fp-add-load-header span,
+.mv-expenses-control-center .fp-add-expense-form > header span {
+  color: var(--mv-form-green-dark) !important;
+  font-family: var(--mv-control-mono), "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: .08em !important;
+}
+
+.mv-loads-control-center .fp-add-load-header h3,
+.mv-expenses-control-center .fp-add-expense-form h2 {
+  color: var(--mv-form-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.25 !important;
+}
+
+.mv-loads-control-center .fp-add-load-header p,
+.mv-loads-control-center .fp-add-load-required,
+.mv-loads-control-center .fp-add-load-footer > span,
+.mv-loads-control-center .fp-add-load-error,
+.mv-expenses-control-center .fp-add-expense-form p,
+.mv-expenses-control-center .fp-add-expense-error {
+  color: var(--mv-form-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+.mv-loads-control-center .fp-add-load-field > span,
+.mv-expenses-control-center .fp-add-expense-field > span {
+  color: var(--mv-form-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  letter-spacing: 0 !important;
+}
+
+.mv-loads-control-center .fp-add-load-control,
+.mv-loads-control-center .fp-smart-load-textarea,
+.mv-expenses-control-center .fp-add-expense-control,
+.mv-expenses-control-center .fp-add-expense-textarea {
+  min-height: 40px !important;
+  border-color: var(--mv-form-border) !important;
+  border-radius: 10px !important;
+  background: #FFFFFF !important;
+  color: var(--mv-form-navy) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+.mv-loads-control-center .fp-add-load-header,
+.mv-loads-control-center .fp-add-load-footer,
+.mv-expenses-control-center .fp-add-expense-footer {
+  border-color: var(--mv-form-border) !important;
+}
+
+.mv-loads-control-center .fp-smart-load-panel {
+  border-color: var(--mv-form-border) !important;
+  border-radius: 10px !important;
+  background: var(--mv-form-inset) !important;
+}
+
+.mv-loads-control-center .fp-telegram-import-help {
+  color: var(--mv-form-muted) !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+.mv-loads-control-center .fp-smart-load-parse {
+  min-height: 38px !important;
+  border: 1px solid var(--mv-form-green-dark) !important;
+  border-radius: 9px !important;
+  background: var(--mv-form-green) !important;
+  color: #FFFFFF !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  box-shadow: 0 5px 14px rgb(16 185 129 / 16%) !important;
+}
+
+.mv-loads-control-center .fp-smart-load-parse:hover:not(:disabled) {
+  background: var(--mv-form-green-dark) !important;
+}
+
+.mv-loads-control-center .fp-add-load-save,
+.mv-expenses-control-center .fp-add-expense-save {
+  min-height: 40px !important;
+  border: 1px solid var(--mv-form-green-dark) !important;
+  border-radius: 10px !important;
+  background: var(--mv-form-green) !important;
+  color: #FFFFFF !important;
+  font-family: var(--mv-control-sans), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  box-shadow: 0 5px 14px rgb(16 185 129 / 16%) !important;
+}
+
+.mv-loads-control-center .fp-add-load-save:hover:not(:disabled),
+.mv-expenses-control-center .fp-add-expense-save:hover:not(:disabled) {
+  background: var(--mv-form-green-dark) !important;
+}
+
+/* Portaled edit dialogs sit outside .mv-app-shell, so style their local surface
+   with the same tokens while preserving each modal's existing structure. */
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) {
+  border-color: var(--mv-form-border, #CBD5E1);
+  background: var(--mv-form-surface, #F8FAFC);
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) :is(input, select, textarea) {
+  border-color: var(--mv-form-border, #CBD5E1);
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 12px;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) :is(header h2, h2) {
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 18px;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) :is(header span, label) {
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) label > span {
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) :is(header p, small) {
+  color: var(--mv-form-muted, #64748B);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 11px;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) button[type="submit"],
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) button:not([type="button"]):not([type="reset"]),
+body:has(.mv-app-shell) :is(.fp-expense-edit-modal, .fp-load-edit-modal, .fp-maint-edit-modal, .fp-reimb-edit-modal, .fp-truck-edit-modal) .primary {
+  border-color: #059669;
+  background: #10B981;
+  color: #FFFFFF;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 11px;
+}
+
+/* Settings has a few editable panels built from grouped controls instead of a
+   single form element. Keep those panels on the same control-center scale. */
+.mv-app-shell .fp-settings-control-grid :is(label, .fp-company-field-label) {
+  color: var(--mv-form-navy, #102238);
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mv-app-shell .fp-settings-control-grid label > span {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 10px !important;
+  background-color: #FFFFFF !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(input, select, textarea):focus {
+  border-color: var(--mv-form-green, #10B981) !important;
+  outline: 2px solid rgb(16 185 129 / 18%) !important;
+  outline-offset: 1px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(button.fp-primary-btn, button.settings-save, button.prefs-save) {
+  border-color: var(--mv-form-green-dark, #059669) !important;
+  background: var(--mv-form-green, #10B981) !important;
+  color: #FFFFFF !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-settings-section-heading > div:first-child > span,
+.mv-app-shell .fp-settings-control-grid .fp-business-fee-card-heading span,
+.mv-app-shell .fp-settings-control-grid .fp-company-section-title > span:first-child {
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-settings-section-heading h2 {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(.fp-settings-copy, .fp-company-section-title span, .fp-business-fee-card p, .fp-business-cost-sync-note p) {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  line-height: 1.45 !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(.fp-company-section-title strong, .fp-business-fee-card-heading strong, .fp-business-cost-sync-note strong) {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-business-cost-sync-note {
+  border-color: #A7F3D0 !important;
+  background: #F0FDF4 !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-business-cost-sync-icon {
+  background: #DCFCE7 !important;
+  color: var(--mv-form-green-dark, #059669) !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(.fp-company-form-section, .fp-preference-section) {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  background: var(--mv-form-surface, #F8FAFC) !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-business-fee-card {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  background: var(--mv-form-inset, #EDF2F7) !important;
+}
+
+.mv-app-shell .fp-settings-control-grid > main > .fp-settings-main-card > h2 {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-toggle-setting strong {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-toggle-setting > div > span {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-toggle-setting > button.on {
+  background: var(--mv-form-green, #10B981) !important;
+}
+
+.mv-app-shell .fp-settings-control-grid :is(.fp-avatar-upload-button, .fp-avatar-actions > button) {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 9px !important;
+  background: var(--mv-form-surface, #F8FAFC) !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+.mv-app-shell .fp-settings-control-grid .fp-avatar-profile-info > small {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+/* CSV import guides are portaled to document.body, so give each workflow its
+   own scoped surface with the same typography and palette as in-shell forms. */
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) {
+  border: 1px solid var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 14px !important;
+  background: var(--mv-form-surface, #F8FAFC) !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > header {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > header span {
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > header h2 {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.25 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > header p {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-card, .fp-import-guide-example, .fp-maint-import-guide-card, .fp-maint-import-guide-example, .fp-reimb-import-guide-card, .fp-reimb-import-guide-example, .fp-truck-import-guide-card, .fp-truck-import-guide-example) {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 10px !important;
+  background: var(--mv-form-inset, #EDF2F7) !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-title, .fp-maint-import-guide-title, .fp-reimb-import-guide-title, .fp-truck-import-guide-title) strong {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-title, .fp-maint-import-guide-title, .fp-reimb-import-guide-title, .fp-truck-import-guide-title) span,
+body:has(.mv-app-shell) :is(.fp-import-guide-rules, .fp-maint-import-guide-rules, .fp-reimb-import-guide-rules, .fp-truck-import-guide-rules),
+body:has(.mv-app-shell) :is(.fp-import-guide-copy, .fp-maint-import-guide-copy, .fp-reimb-import-guide-copy, .fp-truck-import-guide-copy) {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-rules, .fp-maint-import-guide-rules, .fp-reimb-import-guide-rules, .fp-truck-import-guide-rules) b {
+  color: var(--mv-form-navy, #102238) !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-chip-row code, .fp-maint-import-chip-row code, .fp-reimb-import-chip-row code, .fp-truck-import-chip-row code) {
+  border-color: #A7F3D0 !important;
+  border-radius: 7px !important;
+  background: #ECFDF5 !important;
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-copy code, .fp-maint-import-guide-copy code, .fp-reimb-import-guide-copy code, .fp-truck-import-guide-copy code) {
+  color: var(--mv-form-green-dark, #059669) !important;
+  font-family: "JetBrains Mono", monospace !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-example code, .fp-maint-import-guide-example code, .fp-reimb-import-guide-example code, .fp-truck-import-guide-example code) {
+  border-radius: 8px !important;
+  background: var(--mv-form-navy, #102238) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-actions, .fp-maint-import-guide-actions, .fp-reimb-import-guide-actions, .fp-truck-import-guide-actions) button,
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > footer button {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 9px !important;
+  background: #FFFFFF !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-import-guide-actions, .fp-maint-import-guide-actions, .fp-reimb-import-guide-actions, .fp-truck-import-guide-actions) button.primary,
+body:has(.mv-app-shell) :is(.fp-expense-import-modal, .fp-maint-import-modal, .fp-reimb-import-modal, .fp-truck-import-modal) > footer button.primary {
+  border-color: var(--mv-form-green-dark, #059669) !important;
+  background: var(--mv-form-green, #10B981) !important;
+  color: #FFFFFF !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-file, .fp-maint-import-file, .fp-reimb-import-file, .fp-truck-import-file) {
+  border-color: #A7F3D0 !important;
+  border-radius: 9px !important;
+  background: #F0FDF4 !important;
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-file, .fp-maint-import-file, .fp-reimb-import-file, .fp-truck-import-file) strong {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-file, .fp-maint-import-file, .fp-reimb-import-file, .fp-truck-import-file) span {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-import-error, .fp-maint-import-error, .fp-reimb-import-error, .fp-truck-import-error) {
+  border-color: #FCA5A5 !important;
+  border-radius: 9px !important;
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) .fp-truck-import-preview > div {
+  border-color: var(--mv-form-border, #CBD5E1) !important;
+  border-radius: 9px !important;
+  background: var(--mv-form-inset, #EDF2F7) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+}
+
+body:has(.mv-app-shell) .fp-truck-import-preview strong {
+  color: var(--mv-form-navy, #102238) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 11px !important;
+}
+
+body:has(.mv-app-shell) .fp-truck-import-preview span,
+body:has(.mv-app-shell) .fp-truck-import-preview :is(small, em) {
+  color: var(--mv-form-muted, #64748B) !important;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: 10px !important;
+}
+
+body:has(.mv-app-shell) .fp-doc-modal.mv-documents-form-theme :is(.fp-document-upload-form, .fp-document-upload-form-v2) {
+  overflow-x: hidden !important;
+}
+
+body:has(.mv-app-shell) .fp-doc-modal.mv-documents-form-theme .fp-document-file-field input[type="file"] {
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}

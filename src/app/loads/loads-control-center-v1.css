@@ -1,0 +1,1780 @@
+/* ==========================================================================
+   MileVoxa Loads Hub — Control Center Layout V1
+   Visual translation of the approved Loads Hub reference.
+   Scoped to /loads only. Real data, formulas, filters and actions are preserved.
+   ========================================================================== */
+
+.mv-app-shell:has(.mv-loads-control-center){
+  --mv-loads-navy:#102238;
+  --mv-loads-deep:#0B1730;
+  --mv-loads-green:#10B981;
+  --mv-loads-green-hover:#059669;
+  --mv-loads-green-light:#34D399;
+  --mv-loads-green-soft:#ECFDF5;
+  --mv-loads-green-border:#A7F3D0;
+  --mv-loads-canvas:#EAEFF5;
+  --mv-loads-sidebar:#E2E8F0;
+  --mv-loads-surface:#F8FAFC;
+  --mv-loads-inset:#EDF2F7;
+  --mv-loads-border:#CBD5E1;
+  --mv-loads-border-dark:#94A3B8;
+  --mv-loads-text:#102238;
+  --mv-loads-muted:#475569;
+  --mv-loads-red:#DC2626;
+  --mv-loads-red-bg:#FEE2E2;
+  --mv-loads-red-border:#FCA5A5;
+  --mv-loads-amber:#D97706;
+  --mv-loads-amber-bg:#FEF3C7;
+  --mv-loads-amber-border:#FCD34D;
+
+  background:var(--mv-loads-canvas)!important;
+  color:var(--mv-loads-text)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+}
+
+/* --------------------------------------------------------------------------
+   Shared signed-in shell on Loads
+   Keep the same Control Center shell established on Dashboard.
+   -------------------------------------------------------------------------- */
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed{
+  width:256px!important;
+  border-right:1px solid var(--mv-loads-border)!important;
+  background:var(--mv-loads-sidebar)!important;
+  color:var(--mv-loads-text)!important;
+  box-shadow:4px 0 18px rgba(16,34,56,.05)!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed>div:first-child{
+  min-height:80px!important;
+  height:80px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  background:rgba(248,250,252,.78)!important;
+  padding:10px 14px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .mv-sidebar-brand{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:1 1 auto!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%!important;
+  height:auto!important;
+  display:block!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-beta-sidebar-badge{
+  display:none!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-scroll{
+  padding:14px 14px 16px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed .fp-scroll a[href]{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  border-radius:12px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  box-shadow:none!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed .fp-scroll a[href]:hover{
+  background:#FFFFFF!important;
+  color:var(--mv-loads-navy)!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed .fp-scroll a[href="/loads"]{
+  background:var(--mv-loads-green)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 5px 14px rgba(5,150,105,.16)!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-emoji-icon{
+  width:18px!important;
+  min-width:18px!important;
+  height:18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 18px!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed .fp-scroll [class*="uppercase"]{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.10em!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-app-content{
+  min-height:100vh!important;
+  background:var(--mv-loads-canvas)!important;
+}
+
+@media(min-width:1024px){
+  .mv-app-shell:has(.mv-loads-control-center) .fp-app-content{
+    margin-left:256px!important;
+  }
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-app-header{
+  height:80px!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  background:rgba(248,250,252,.97)!important;
+  box-shadow:0 1px 0 rgba(16,34,56,.02)!important;
+  padding-left:24px!important;
+  padding-right:24px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-app-global-search{
+  max-width:384px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-app-global-search input{
+  min-height:42px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-loads-inset)!important;
+  color:var(--mv-loads-text)!important;
+  font-size:12px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-app-global-search input:focus{
+  border-color:var(--mv-loads-green)!important;
+  background:#FFFFFF!important;
+  box-shadow:0 0 0 3px rgba(16,185,129,.08)!important;
+}
+
+/* --------------------------------------------------------------------------
+   Loads page canvas / hero
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center.fp-loads-page{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:24px!important;
+  background:var(--mv-loads-canvas)!important;
+  color:var(--mv-loads-text)!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+}
+
+.mv-loads-control-center .fp-loads-heading{
+  min-height:78px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  padding:0 0 16px!important;
+}
+
+.mv-loads-control-center .fp-loads-heading-copy{
+  min-width:0!important;
+}
+
+.mv-loads-control-center .fp-loads-overline{
+  display:block!important;
+  margin-bottom:4px!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-loads-title{
+  margin:0!important;
+  color:var(--mv-loads-text)!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+}
+
+.mv-loads-control-center .fp-loads-subtitle{
+  margin-top:5px!important;
+  color:var(--mv-loads-muted)!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.5!important;
+}
+
+.mv-loads-control-center .fp-loads-heading-actions{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+.mv-loads-control-center .fp-loads-motto{
+  min-width:214px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-loads-surface)!important;
+  padding:11px 16px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-loads-control-center .fp-loads-motto>span{
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:24px!important;
+  line-height:1!important;
+}
+
+.mv-loads-control-center .fp-loads-motto strong{
+  display:block!important;
+  color:var(--mv-loads-navy)!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  line-height:1.05!important;
+  letter-spacing:.05em!important;
+}
+
+.mv-loads-control-center .fp-loads-motto small{
+  display:block!important;
+  margin-top:4px!important;
+  color:var(--mv-loads-green)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+  letter-spacing:.02em!important;
+}
+
+.mv-loads-control-center .fp-load-add-form-host{
+  position:absolute!important;
+  right:0!important;
+  top:100%!important;
+  z-index:60!important;
+}
+
+.mv-loads-control-center .fp-loads-heading #add-load>form.fp-add-load-form{
+  position:absolute!important;
+  right:0!important;
+  top:8px!important;
+  width:min(760px,calc(100vw - 330px))!important;
+  margin:0!important;
+}
+
+/* --------------------------------------------------------------------------
+   Performance period
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-period-shell{
+  min-height:54px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:14px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:14px!important;
+  background:var(--mv-loads-surface)!important;
+  padding:8px 10px 8px 16px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.02)!important;
+}
+
+.mv-loads-control-center .fp-load-period-context span{
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-load-period-context strong{
+  margin-top:2px!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-period-switch{
+  display:flex!important;
+  gap:4px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:10px!important;
+  background:var(--mv-loads-inset)!important;
+  padding:3px!important;
+}
+
+.mv-loads-control-center .fp-load-period-switch button{
+  min-height:30px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  padding:0 12px!important;
+  color:#475569!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-period-switch button.active{
+  background:var(--mv-loads-navy)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.10)!important;
+}
+
+/* --------------------------------------------------------------------------
+   KPI cards
+   Reference: rounded-2xl / p-5 / h-1 accent / 24px mono values
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-kpi-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin-top:16px!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile{
+  position:relative!important;
+  min-width:0!important;
+  min-height:118px!important;
+  overflow:hidden!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-loads-surface)!important;
+  padding:20px!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  top:0!important;
+  right:0!important;
+  left:0!important;
+  height:4px!important;
+  background:var(--mv-loads-navy)!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(3)::before,
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(4)::before{
+  background:var(--mv-loads-green)!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile::after{
+  position:absolute!important;
+  top:20px!important;
+  right:20px!important;
+  width:24px!important;
+  height:24px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:8px!important;
+  background:var(--mv-loads-inset)!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(1)::after{content:"#"!important}
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(2)::after{content:"$"!important}
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(3)::after{
+  content:"✓"!important;
+  border:1px solid var(--mv-loads-green-border)!important;
+  background:var(--mv-loads-green-soft)!important;
+  color:var(--mv-loads-green)!important;
+}
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(4)::after{content:"Ø"!important}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-label{
+  padding-right:36px!important;
+  color:var(--mv-loads-muted)!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.35!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-value{
+  margin-top:8px!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-tile:nth-child(3) .mv-kpi-value{
+  color:var(--mv-loads-green)!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-delta,
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-note{
+  display:inline!important;
+  margin-top:5px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-note::before{
+  content:" "!important;
+}
+
+/* --------------------------------------------------------------------------
+   Main workspace = reference 8 / 4 columns
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-loads-layout{
+  grid-template-columns:minmax(0,2fr) minmax(280px,1fr)!important;
+  gap:24px!important;
+  margin-top:16px!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card,
+.mv-loads-control-center .fp-load-side-card{
+  border:1px solid var(--mv-loads-border)!important;
+  background:var(--mv-loads-surface)!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.025)!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card{
+  overflow:hidden!important;
+  border-radius:16px!important;
+  margin-top:16px!important;
+}
+
+/* Status tabs become the pill strip from the reference. */
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs{
+  min-height:62px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  background:var(--mv-loads-surface)!important;
+  padding:14px 18px!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>a,
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>button{
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:var(--mv-loads-inset)!important;
+  padding:0 11px!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>a::after,
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>button::after{
+  display:none!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>a.active,
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>button.active{
+  background:var(--mv-loads-navy)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 1px 2px rgba(16,34,56,.08)!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tab-count{
+  min-width:17px!important;
+  height:17px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.14)!important;
+  padding:0 5px!important;
+  color:inherit!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+}
+
+/* Filters */
+.mv-loads-control-center .fp-load-filterbar{
+  grid-template-columns:minmax(220px,1.45fr) 108px 106px 150px!important;
+  gap:8px!important;
+  align-items:center!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  background:var(--mv-loads-surface)!important;
+  padding:12px 18px!important;
+}
+
+.mv-loads-control-center .fp-load-search,
+.mv-loads-control-center .fp-filter-button,
+.mv-loads-control-center .fp-filter-select,
+.mv-loads-control-center .fp-load-sort select{
+  min-height:34px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:8px!important;
+  background:#FFFFFF!important;
+  color:#475569!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:10px!important;
+  font-weight:600!important;
+}
+
+.mv-loads-control-center .fp-load-search{
+  padding:0 10px!important;
+}
+
+.mv-loads-control-center .fp-load-search input{
+  color:var(--mv-loads-text)!important;
+  font-size:10px!important;
+}
+
+.mv-loads-control-center .fp-load-sort{
+  grid-column:1 / -1!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:9px!important;
+}
+
+/* Table */
+.mv-loads-control-center .fp-load-table-wrap{
+  padding:0!important;
+  background:var(--mv-loads-surface)!important;
+}
+
+.mv-loads-control-center .fp-load-table{
+  min-width:860px!important;
+}
+
+.mv-loads-control-center .fp-load-table thead{
+  background:rgba(234,239,245,.68)!important;
+}
+
+.mv-loads-control-center .fp-load-table th{
+  height:40px!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  padding:0 14px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-load-table td{
+  height:56px!important;
+  border-bottom:1px solid #E2E8F0!important;
+  padding:0 14px!important;
+  color:#334155!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:10.5px!important;
+  font-weight:500!important;
+}
+
+.mv-loads-control-center .fp-load-number,
+.mv-loads-control-center .fp-load-rate,
+.mv-loads-control-center .fp-load-profit-positive,
+.mv-loads-control-center .fp-load-profit-negative,
+.mv-loads-control-center .fp-load-profit-unavailable{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+}
+
+.mv-loads-control-center .fp-load-route-cell{
+  color:var(--mv-loads-navy)!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-pagination{
+  min-height:54px!important;
+  border-top:1px solid var(--mv-loads-border)!important;
+  padding:10px 18px!important;
+  color:#64748B!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:9px!important;
+}
+
+/* Empty state = reference centered package card. */
+.mv-loads-control-center .mv-load-empty-card{
+  max-width:400px!important;
+  min-height:260px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  margin:0 auto!important;
+  border:0!important;
+  background:transparent!important;
+  padding:40px 20px!important;
+  text-align:center!important;
+  box-shadow:none!important;
+}
+
+.mv-loads-control-center .mv-load-empty-icon{
+  width:56px!important;
+  height:56px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:16px!important;
+  background:var(--mv-loads-canvas)!important;
+}
+
+.mv-loads-control-center .mv-load-empty-icon svg{
+  display:none!important;
+}
+
+.mv-loads-control-center .mv-load-empty-icon::before{
+  content:"📦"!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:30px!important;
+  line-height:1!important;
+}
+
+.mv-loads-control-center .mv-load-empty-card strong{
+  color:var(--mv-loads-navy)!important;
+  font-size:16px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .mv-load-stop-editor{
+  grid-column:1 / -1;
+  display:grid;
+  gap:10px;
+  margin:4px 0;
+}
+.mv-loads-control-center .mv-load-stop-heading,
+.mv-loads-control-center .mv-load-stop-card-heading{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.mv-loads-control-center .mv-load-stop-heading{
+  justify-content:space-between;
+  padding:2px 0;
+}
+.mv-loads-control-center .mv-load-stop-heading div{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.mv-loads-control-center .mv-load-stop-heading span{
+  color:#64748B;
+  font:700 9px var(--mv-control-mono),ui-monospace,monospace;
+  letter-spacing:.08em;
+}
+.mv-loads-control-center .mv-load-stop-heading strong{
+  color:var(--mv-loads-navy);
+  font-size:12px;
+}
+.mv-loads-control-center .mv-load-stop-heading button,
+.mv-loads-control-center .mv-load-stop-actions button{
+  border:1px solid var(--mv-loads-border);
+  border-radius:8px;
+  background:#F8FAFC;
+  padding:6px 9px;
+  color:var(--mv-loads-navy);
+  font-size:10px;
+  font-weight:700;
+}
+.mv-loads-control-center .mv-load-stop-heading button:disabled,
+.mv-loads-control-center .mv-load-stop-actions button:disabled{
+  opacity:.45;
+}
+.mv-loads-control-center .mv-load-stop-card{
+  display:grid;
+  gap:10px;
+  border:1px solid var(--mv-loads-border);
+  border-radius:12px;
+  background:#F8FAFC;
+  padding:12px;
+}
+.mv-loads-control-center .mv-load-stop-card-heading strong{
+  color:var(--mv-loads-navy);
+  font-size:11px;
+}
+.mv-loads-control-center .mv-load-stop-number{
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#E2E8F0;
+  color:var(--mv-loads-navy);
+  font:700 10px var(--mv-control-mono),ui-monospace,monospace;
+}
+.mv-loads-control-center .mv-load-stop-actions{
+  display:flex;
+  gap:5px;
+  margin-left:auto;
+}
+.mv-loads-control-center .mv-load-stop-fields{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px 12px;
+}
+.mv-loads-control-center .mv-load-stop-fields .mv-load-stop-location{
+  grid-column:1 / -1;
+}
+.mv-loads-control-center .mv-load-stop-location .mv-load-stop-city-input{
+  text-align:left;
+}
+.mv-loads-control-center .mv-load-route-detail ol{
+  display:grid;
+  gap:0;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.mv-loads-control-center .mv-load-route-detail li{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  border-top:1px solid var(--mv-loads-border);
+  padding:13px 0;
+}
+.mv-loads-control-center .mv-load-route-index{
+  width:24px;
+  height:24px;
+  display:grid;
+  flex:0 0 auto;
+  place-items:center;
+  border-radius:50%;
+  background:#E2E8F0;
+  color:var(--mv-loads-navy);
+  font:700 10px var(--mv-control-mono),ui-monospace,monospace;
+}
+.mv-loads-control-center .mv-load-route-detail li>div{min-width:0;flex:1;}
+.mv-loads-control-center .mv-load-route-detail li strong{color:var(--mv-loads-navy);font-size:11px;}
+.mv-loads-control-center .mv-load-route-detail li p{margin:3px 0;color:#334155;font-size:11px;white-space:pre-line;}
+.mv-loads-control-center .mv-load-route-detail li small{display:block;color:#64748B;font-size:10px;}
+.mv-loads-control-center .mv-load-route-detail li .mv-load-route-instructions{margin-top:4px;color:#475569;}
+.mv-loads-control-center .mv-load-route-kind{color:#64748B;font:700 9px var(--mv-control-mono),ui-monospace,monospace;}
+@media(max-width:640px){
+  .mv-loads-control-center .mv-load-stop-fields{grid-template-columns:1fr;}
+  .mv-loads-control-center .mv-load-stop-fields .mv-load-stop-location{grid-column:auto;}
+}
+
+.mv-loads-control-center .mv-load-empty-card p{
+  max-width:330px!important;
+  margin-top:4px!important;
+  color:var(--mv-loads-muted)!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+
+.mv-loads-control-center .mv-load-empty-card button{
+  min-height:40px!important;
+  margin-top:6px!important;
+  border:1px solid var(--mv-loads-green)!important;
+  border-radius:12px!important;
+  background:var(--mv-loads-green)!important;
+  padding:0 18px!important;
+  color:#FFFFFF!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+/* --------------------------------------------------------------------------
+   Right rail
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-loads-right-rail{
+  display:grid!important;
+  gap:24px!important;
+}
+
+.mv-loads-control-center .fp-load-side-card{
+  border-radius:16px!important;
+  padding:20px!important;
+}
+
+.mv-loads-control-center .fp-load-side-card h2{
+  margin:0!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-load-quick-card>div{
+  margin-top:12px!important;
+  gap:8px!important;
+}
+
+.mv-loads-control-center .fp-load-side-action{
+  min-height:42px!important;
+  grid-template-columns:minmax(0,1fr) 12px!important;
+  gap:8px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:12px!important;
+  background:var(--mv-loads-canvas)!important;
+  padding:8px 12px!important;
+  color:var(--mv-loads-navy)!important;
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-side-action.primary{
+  border-color:var(--mv-loads-green)!important;
+  background:var(--mv-loads-green)!important;
+  color:#FFFFFF!important;
+  box-shadow:0 4px 10px rgba(5,150,105,.12)!important;
+}
+
+.mv-loads-control-center .fp-load-side-icon{
+  display:none!important;
+}
+
+.mv-loads-control-center .fp-load-quick-copy strong{
+  font-size:11px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-quick-copy small{
+  display:none!important;
+}
+
+/* Keep the existing real Load Statistics formulas / donut, restyled only. */
+.mv-loads-control-center .fp-load-chart-shell{
+  margin-top:4px!important;
+  gap:8px!important;
+}
+
+.mv-loads-control-center .fp-load-donut{
+  width:128px!important;
+  height:128px!important;
+  box-shadow:none!important;
+}
+
+.mv-loads-control-center .fp-load-donut-center{
+  width:78px!important;
+  height:78px!important;
+  background:var(--mv-loads-surface)!important;
+  box-shadow:inset 0 0 0 1px var(--mv-loads-border)!important;
+}
+
+.mv-loads-control-center .fp-load-donut-center strong{
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:22px!important;
+  font-weight:800!important;
+}
+
+.mv-loads-control-center .fp-load-donut-center span,
+.mv-loads-control-center .fp-load-donut-caption,
+.mv-loads-control-center .fp-load-stat-row{
+  font-size:10px!important;
+}
+
+.mv-loads-control-center .fp-load-stat-row{
+  min-height:30px!important;
+  color:#475569!important;
+}
+
+.mv-loads-control-center .fp-load-stat-row strong,
+.mv-loads-control-center .fp-load-stat-row>span:last-child{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+}
+
+/* Top Lanes reference styling. */
+.mv-loads-control-center .fp-top-lane-row{
+  min-height:36px!important;
+  border-color:var(--mv-loads-border)!important;
+  color:#475569!important;
+  font-size:10px!important;
+}
+
+.mv-loads-control-center .fp-lane-rank{
+  background:var(--mv-loads-inset)!important;
+  color:var(--mv-loads-navy)!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+}
+
+/* The old promo card is replaced by the hero-side motto from the supplied layout. */
+.mv-loads-control-center .fp-load-promo{
+  display:none!important;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media(max-width:1199px){
+  .mv-loads-control-center .fp-loads-layout{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-loads-control-center .fp-loads-right-rail{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+
+@media(max-width:900px){
+  .mv-loads-control-center .fp-load-kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .mv-loads-control-center .fp-loads-right-rail{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(max-width:743px){
+  .mv-loads-control-center.fp-loads-page{
+    padding:18px 16px 90px!important;
+  }
+
+  .mv-loads-control-center .fp-loads-heading{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-loads-control-center .fp-loads-motto{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .mv-loads-control-center .fp-load-period-shell{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+
+  .mv-loads-control-center .fp-load-period-switch{
+    width:100%!important;
+  }
+
+  .mv-loads-control-center .fp-load-period-switch button{
+    flex:1 1 0!important;
+  }
+
+  .mv-loads-control-center .fp-load-filterbar{
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .mv-loads-control-center .fp-load-search,
+  .mv-loads-control-center .fp-load-sort{
+    grid-column:1 / -1!important;
+  }
+}
+
+@media(max-width:560px){
+  .mv-loads-control-center .fp-load-kpi-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  .mv-loads-control-center .fp-loads-title{
+    font-size:26px!important;
+  }
+}
+
+/* === Load status control restore v3 START === */
+
+/*
+  Restore the OLD MileVoxa row behavior shown in Screenshot 2:
+  [ Completed badge ] [ COMPLETED v ] [ ... ]
+
+  The green badge remains the visual status badge.
+  The separate select shows the current status text + native dropdown arrow.
+  Nothing is hidden, so Windows/Chromium native options stay readable.
+*/
+
+/* Keep the wider Loads workspace improvement. */
+.mv-loads-control-center .fp-loads-layout{
+  grid-template-columns:minmax(0,2.8fr) minmax(250px,.85fr)!important;
+  gap:20px!important;
+}
+
+.mv-loads-control-center .fp-loads-right-rail{
+  min-width:0!important;
+  gap:20px!important;
+}
+
+.mv-loads-control-center .fp-load-side-card{
+  padding:18px!important;
+}
+
+/* Row actions: badge + visible status select + menu button. */
+.mv-loads-control-center .fp-load-row-actions{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:8px!important;
+}
+
+/* Remove the fake overlay chevron from V1/V2. */
+.mv-loads-control-center .fp-load-row-actions::before{
+  content:none!important;
+  display:none!important;
+}
+
+/* Restore visible text selector like the old version. */
+.mv-loads-control-center .fp-load-status-select{
+  position:relative!important;
+  z-index:auto!important;
+
+  width:auto!important;
+  min-width:104px!important;
+  height:34px!important;
+
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  padding:0 22px 0 8px!important;
+
+  color:#64748B!important;
+  -webkit-text-fill-color:#64748B!important;
+  text-shadow:none!important;
+
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+  text-transform:uppercase!important;
+
+  opacity:1!important;
+  cursor:pointer!important;
+  appearance:auto!important;
+  color-scheme:light!important;
+}
+
+/* Keep all native dropdown choices readable. */
+.mv-loads-control-center .fp-load-status-select option{
+  background:#FFFFFF!important;
+  color:#102238!important;
+  -webkit-text-fill-color:#102238!important;
+
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  text-transform:none!important;
+}
+
+/* Native selected option remains readable. */
+.mv-loads-control-center .fp-load-status-select option:checked{
+  background:#102238!important;
+  color:#FFFFFF!important;
+  -webkit-text-fill-color:#FFFFFF!important;
+}
+
+/* No bordered box around the select — match Screenshot 2. */
+.mv-loads-control-center .fp-load-status-select:hover,
+.mv-loads-control-center .fp-load-status-select:focus,
+.mv-loads-control-center .fp-load-status-select:active{
+  border:0!important;
+  background:transparent!important;
+  color:#475569!important;
+  -webkit-text-fill-color:#475569!important;
+  outline:none!important;
+  box-shadow:none!important;
+}
+
+/* Keep the action menu compact and aligned. */
+.mv-loads-control-center .fp-load-action-menu-button{
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+}
+
+/* Mobile/tablet fallback. */
+@media(max-width:1199px){
+  .mv-loads-control-center .fp-loads-layout{
+    grid-template-columns:1fr!important;
+    gap:18px!important;
+  }
+}
+
+/* === Load status control restore v3 END === */
+
+/* === Load status alignment v4 START === */
+
+/*
+  Match the old MileVoxa row spacing from Screenshot 2:
+  [ Completed badge ]   [ COMPLETED ▼ ]   [ ... ]
+*/
+
+/* Give Status and Actions their own real table space. */
+.mv-loads-control-center .fp-load-table th:nth-child(8),
+.mv-loads-control-center .fp-load-table td:nth-child(8){
+  width:128px!important;
+  min-width:128px!important;
+  padding-left:14px!important;
+  padding-right:18px!important;
+}
+
+.mv-loads-control-center .fp-load-table th:nth-child(9),
+.mv-loads-control-center .fp-load-table td:nth-child(9){
+  width:176px!important;
+  min-width:176px!important;
+  padding-left:18px!important;
+  padding-right:14px!important;
+}
+
+/* Prevent badge / selector from visually touching each other. */
+.mv-loads-control-center .fp-load-table td:nth-child(8){
+  white-space:nowrap!important;
+}
+
+.mv-loads-control-center .fp-load-actions-cell{
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
+
+/* Align the select + ellipsis like the old version. */
+.mv-loads-control-center .fp-load-row-actions{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:10px!important;
+  padding:0!important;
+  margin:0!important;
+}
+
+/* Visible current status text + native chevron. */
+.mv-loads-control-center .fp-load-status-select{
+  width:116px!important;
+  min-width:116px!important;
+  max-width:116px!important;
+  height:36px!important;
+
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  padding:0 24px 0 0!important;
+
+  color:#64748B!important;
+  -webkit-text-fill-color:#64748B!important;
+
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+  text-transform:uppercase!important;
+
+  opacity:1!important;
+  cursor:pointer!important;
+  appearance:auto!important;
+}
+
+/* Keep native dropdown choices readable. */
+.mv-loads-control-center .fp-load-status-select option{
+  background:#FFFFFF!important;
+  color:#102238!important;
+  -webkit-text-fill-color:#102238!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  text-transform:none!important;
+}
+
+/* Three-dot action button alignment. */
+.mv-loads-control-center .fp-load-action-menu-button{
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  flex:0 0 40px!important;
+  margin:0!important;
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+}
+
+/* Keep table wide enough for the restored Status / Actions spacing. */
+.mv-loads-control-center .fp-load-table{
+  min-width:980px!important;
+}
+
+/* === Load status alignment v4 END === */
+
+/* === Load status alignment v5 START === */
+
+/*
+  Desired row alignment:
+  [ Completed ]  COMPLETED ▼                            [...]
+
+  Keep the status selector close to the green badge.
+  Keep the three-dot action button pinned to the far right.
+*/
+
+/* Give the status badge enough room but remove the oversized visual gap. */
+.mv-loads-control-center .fp-load-table th:nth-child(8),
+.mv-loads-control-center .fp-load-table td:nth-child(8){
+  width:112px!important;
+  min-width:112px!important;
+  padding-left:14px!important;
+  padding-right:8px!important;
+}
+
+/* Actions cell owns the remaining right-side space. */
+.mv-loads-control-center .fp-load-table th:nth-child(9),
+.mv-loads-control-center .fp-load-table td:nth-child(9){
+  width:184px!important;
+  min-width:184px!important;
+  padding-left:8px!important;
+  padding-right:14px!important;
+}
+
+.mv-loads-control-center .fp-load-actions-cell{
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
+
+/* Selector stays directly after the badge; menu is pushed to the far right. */
+.mv-loads-control-center .fp-load-row-actions{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  padding:0!important;
+  margin:0!important;
+}
+
+.mv-loads-control-center .fp-load-status-select{
+  width:108px!important;
+  min-width:108px!important;
+  max-width:108px!important;
+  height:34px!important;
+  flex:0 0 108px!important;
+
+  margin:0!important;
+  padding:0 22px 0 0!important;
+
+  border:0!important;
+  background:transparent!important;
+
+  color:#64748B!important;
+  -webkit-text-fill-color:#64748B!important;
+
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+  text-transform:uppercase!important;
+
+  appearance:auto!important;
+  opacity:1!important;
+  cursor:pointer!important;
+}
+
+/* Keep the menu button aligned all the way to the right. */
+.mv-loads-control-center .fp-load-action-menu-button{
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  flex:0 0 40px!important;
+  margin-left:auto!important;
+
+  border:1px solid var(--mv-loads-border)!important;
+  border-radius:10px!important;
+  background:#FFFFFF!important;
+}
+
+/* Keep popup options readable. */
+.mv-loads-control-center .fp-load-status-select option{
+  background:#FFFFFF!important;
+  color:#102238!important;
+  -webkit-text-fill-color:#102238!important;
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  text-transform:none!important;
+}
+
+/* Slightly reduce total minimum width so horizontal scrolling is less aggressive. */
+.mv-loads-control-center .fp-load-table{
+  min-width:940px!important;
+}
+
+/* === Load status alignment v5 END === */
+
+/* === Loads sidebar logo fix v1 START === */
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-sidebar-fixed>div:first-child{
+  min-height:80px!important;
+  height:80px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-bottom:1px solid var(--mv-loads-border)!important;
+  background:rgba(248,250,252,.78)!important;
+  padding:10px 14px!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .mv-sidebar-brand{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:1 1 auto!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .mv-sidebar-brand .mv-brand-lockup{
+  width:210px!important;
+  max-width:100%!important;
+  height:auto!important;
+  display:block!important;
+}
+
+/* Keep the sidebar Public Beta badge removed, matching Dashboard. */
+.mv-app-shell:has(.mv-loads-control-center) .fp-beta-sidebar-badge{
+  display:none!important;
+}
+
+/* === Loads sidebar logo fix v1 END === */
+
+/* === Loads notification bell fix v1 START === */
+
+/*
+  Match the exact Control Center notification style already used on Dashboard:
+  36x36 rounded slate button, colorful bell, red count badge at top-right.
+*/
+.mv-app-shell:has(.mv-loads-control-center) .fp-control-center-notification{
+  position:relative!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 36px!important;
+  overflow:visible!important;
+
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#EDF2F7!important;
+  color:#334155!important;
+
+  box-shadow:0 1px 2px rgba(16,34,56,.04)!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-control-center-notification:hover{
+  border-color:#94A3B8!important;
+  background:#FFFFFF!important;
+}
+
+.mv-app-shell:has(.mv-loads-control-center) .fp-control-center-notification.is-active{
+  border-color:#A7F3D0!important;
+  background:#ECFDF5!important;
+}
+
+/* Colorful native bell like the supplied layout. */
+.mv-app-shell:has(.mv-loads-control-center) .fp-control-center-notification-bell{
+  width:18px!important;
+  height:18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1!important;
+}
+
+/* Red badge positioned outside the button at the top-right. */
+.mv-app-shell:has(.mv-loads-control-center) .fp-control-center-notification-count{
+  position:absolute!important;
+  top:-5px!important;
+  right:-5px!important;
+
+  min-width:16px!important;
+  height:16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+
+  border:0!important;
+  border-radius:999px!important;
+  background:#DC2626!important;
+  padding:0 4px!important;
+
+  color:#FFFFFF!important;
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:16px!important;
+  letter-spacing:0!important;
+
+  box-shadow:0 1px 2px rgba(16,34,56,.10)!important;
+}
+
+/* === Loads notification bell fix v1 END === */
+
+/* === Loads typography match v1 START === */
+
+/*
+  TYPOGRAPHY ONLY.
+  Matches the supplied Loads Hub reference:
+  - Plus Jakarta Sans for UI/body
+  - JetBrains Mono for figures, technical labels, metrics
+  - No layout, widths, spacing, colors, formulas, filters, or data changed.
+*/
+
+.mv-loads-control-center{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+}
+
+/* --------------------------------------------------------------------------
+   Page hero
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-loads-overline{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-loads-title{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+}
+
+.mv-loads-control-center .fp-loads-subtitle{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.5!important;
+  letter-spacing:0!important;
+}
+
+/* Motto */
+.mv-loads-control-center .fp-loads-motto strong{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+}
+
+.mv-loads-control-center .fp-loads-motto small{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+  letter-spacing:.01em!important;
+}
+
+/* --------------------------------------------------------------------------
+   Performance period
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-period-context span{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.08em!important;
+}
+
+.mv-loads-control-center .fp-load-period-context strong{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.25!important;
+}
+
+.mv-loads-control-center .fp-load-period-switch button{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+}
+
+/* --------------------------------------------------------------------------
+   KPI cards
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-label{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.35!important;
+  letter-spacing:0!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-value{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:24px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+  letter-spacing:-.035em!important;
+}
+
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-delta,
+.mv-loads-control-center .fp-load-kpi-grid .mv-kpi-note{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+  letter-spacing:0!important;
+}
+
+/* --------------------------------------------------------------------------
+   Status tabs
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>a,
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>button{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>a.active,
+.mv-loads-control-center .fp-loads-table-card .mv-app-tabs>button.active{
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-loads-table-card .mv-app-tab-count{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1!important;
+}
+
+/* --------------------------------------------------------------------------
+   Filters / search / sorting
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-search,
+.mv-loads-control-center .fp-filter-button,
+.mv-loads-control-center .fp-filter-select,
+.mv-loads-control-center .fp-load-sort select{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.2!important;
+}
+
+.mv-loads-control-center .fp-load-search input{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+}
+
+.mv-loads-control-center .fp-load-sort{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:500!important;
+  line-height:1.3!important;
+}
+
+/* --------------------------------------------------------------------------
+   Loads table
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-table th{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-load-table td{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+  letter-spacing:0!important;
+}
+
+.mv-loads-control-center .fp-load-route-cell{
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+.mv-loads-control-center .fp-load-number,
+.mv-loads-control-center .fp-load-rate,
+.mv-loads-control-center .fp-load-profit-positive,
+.mv-loads-control-center .fp-load-profit-negative,
+.mv-loads-control-center .fp-load-profit-unavailable{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.35!important;
+}
+
+/* Secondary time/meta text inside cells */
+.mv-loads-control-center .fp-load-table td small,
+.mv-loads-control-center .fp-load-table td [class*="text-[8px]"],
+.mv-loads-control-center .fp-load-table td [class*="text-[9px]"]{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:500!important;
+  line-height:1.2!important;
+}
+
+/* Visible status select restored from the old UI */
+.mv-loads-control-center .fp-load-status-select{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+}
+
+.mv-loads-control-center .fp-load-status-select option{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+
+/* Pagination */
+.mv-loads-control-center .fp-load-pagination{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:500!important;
+  line-height:1.3!important;
+}
+
+.mv-loads-control-center .fp-load-pagination button,
+.mv-loads-control-center .fp-load-pagination select{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:11px!important;
+  font-weight:600!important;
+}
+
+/* --------------------------------------------------------------------------
+   Empty state
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .mv-load-empty-card strong{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:16px!important;
+  font-weight:700!important;
+  line-height:1.3!important;
+}
+
+.mv-loads-control-center .mv-load-empty-card p{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  line-height:1.55!important;
+}
+
+.mv-loads-control-center .mv-load-empty-card button{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+}
+
+/* --------------------------------------------------------------------------
+   Right rail — Quick Actions / Load Statistics / Top Lanes
+   -------------------------------------------------------------------------- */
+.mv-loads-control-center .fp-load-side-card h2{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+}
+
+.mv-loads-control-center .fp-load-side-action,
+.mv-loads-control-center .fp-load-quick-copy strong{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+}
+
+.mv-loads-control-center .fp-load-donut-center strong{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:20px!important;
+  font-weight:800!important;
+  line-height:1!important;
+}
+
+.mv-loads-control-center .fp-load-donut-center span,
+.mv-loads-control-center .fp-load-donut-caption{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  line-height:1.3!important;
+}
+
+.mv-loads-control-center .fp-load-stat-row{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+}
+
+.mv-loads-control-center .fp-load-stat-row strong,
+.mv-loads-control-center .fp-load-stat-row>span:last-child{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:12px!important;
+  font-weight:700!important;
+}
+
+/* Top Lanes */
+.mv-loads-control-center .fp-top-lane-row{
+  font-family:var(--mv-control-sans),Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  font-weight:500!important;
+  line-height:1.35!important;
+}
+
+.mv-loads-control-center .fp-lane-rank{
+  font-family:var(--mv-control-mono),ui-monospace,monospace!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+
+/* Any small rail metadata should follow the reference's 10px mono style. */
+.mv-loads-control-center .fp-load-side-card [class*="text-[9px]"],
+.mv-loads-control-center .fp-load-side-card [class*="text-[10px]"]{
+  font-size:10px!important;
+}
+
+/* Mobile title follows the reference 24px base heading scale. */
+@media(max-width:743px){
+  .mv-loads-control-center .fp-loads-title{
+    font-size:24px!important;
+  }
+}
+
+/* === Loads typography match v1 END === */
+

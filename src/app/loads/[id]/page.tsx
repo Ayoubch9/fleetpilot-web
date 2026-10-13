@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app-shell";
 import { getMileVoxaAccount } from "@/lib/fleetpilot-account";
+import { getLoadStops, isMissingRouteStopsColumn } from "@/lib/load-stops";
 import {
   dbDate,
   money,
@@ -29,6 +30,7 @@ type Load = {
   loaded_miles: number | string | null;
   deadhead_miles: number | string | null;
   status: string | null;
+  route_stops: unknown;
 };
 
 type Expense = {
@@ -46,17 +48,30 @@ export default async function LoadProfitabilityPage({ params }: Props) {
   const { supabase, fullName, companyName, role } =
     await getMileVoxaAccount();
 
-  const { data: loadData } = await supabase
+  const loadResult = await supabase
     .from("loads")
     .select(
-      "id, truck_id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status"
+      "id, truck_id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status, route_stops"
     )
     .eq("id", id)
     .maybeSingle();
 
+  let loadData = loadResult.data as unknown as Load | null;
+  if (isMissingRouteStopsColumn(loadResult.error)) {
+    const legacyLoadResult = await supabase
+      .from("loads")
+      .select(
+        "id, truck_id, load_number, broker, pickup, delivery, pickup_date, delivery_date, rate, loaded_miles, deadhead_miles, status"
+      )
+      .eq("id", id)
+      .maybeSingle();
+    loadData = legacyLoadResult.data as unknown as Load | null;
+  }
+
   if (!loadData) notFound();
 
   const load = loadData as Load;
+  const routeStops = getLoadStops(load.route_stops, load);
   const weekStart = selectedWeek(load.pickup_date || undefined);
   const weekEndDate = weekEnd(weekStart);
   const weekFrom = dbDate(weekStart);
@@ -202,6 +217,38 @@ export default async function LoadProfitabilityPage({ params }: Props) {
             <span>{load.broker || "No broker"}</span>
             <span>{load.status || "Upcoming"}</span>
           </div>
+        </section>
+
+        <section className="fp-detail-card mv-load-route-detail">
+          <div className="fp-detail-card-heading">
+            <div>
+              <span>ROUTE</span>
+              <h2>{routeStops.length} Stops</h2>
+            </div>
+          </div>
+          <ol>
+            {routeStops.map((stop, index) => (
+              <li key={stop.id}>
+                <span className="mv-load-route-index">{index + 1}</span>
+                <div>
+                  <strong>{stop.facility || (stop.kind === "PICKUP" ? "Pickup" : stop.kind === "DELIVERY" ? "Delivery" : "Stop")}</strong>
+                  <p>{stop.location}</p>
+                  <small>
+                    {stop.appointmentDate || "Date TBD"}
+                    {stop.timeCertainty === "ANYTIME"
+                      ? " · Anytime / 24 hours"
+                      : stop.appointmentTime
+                        ? ` · ${stop.appointmentTime}`
+                        : stop.timeCertainty === "TBD"
+                          ? " · Time TBD"
+                          : ""}
+                  </small>
+                  {stop.instructions && <small className="mv-load-route-instructions">{stop.instructions}</small>}
+                </div>
+                <span className="mv-load-route-kind">{stop.kind}</span>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <div className="fp-detail-kpi-grid">
