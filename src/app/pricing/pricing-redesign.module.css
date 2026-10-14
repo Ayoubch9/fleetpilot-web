@@ -734,6 +734,20 @@
   .faqSection .centerHeading h2{font-size:24px}
   .finalCta h2{font-size:30px}
   .finalCta p{font-size:14px}
+
+  .hero h1 span{
+    white-space:nowrap;
+    font-size:clamp(22px,7vw,30px);
+  }
+  .planHeading p,
+  .planIntro,
+  .philosophyIntro,
+  .philosophyList span,
+  .compareSection .centerHeading p,
+  .faqSection .centerHeading p,
+  .faqList p{
+    font-size:14px;
+  }
 }
 
 

@@ -17,6 +17,7 @@ import "./pilot-ai/pilot-ai-control-center-v1.css";
 import "./documents/documents-control-center-v1.css";
 import "./forms-control-center-v1.css";
 import "./app-shell-consistency-v1.css";
+import "./readability-layout-audit-v1.css";
 import { SITE_URL } from "@/lib/seo";
 
 import GoogleAnalytics from "@/components/google-analytics";
