@@ -1092,9 +1092,9 @@ async function removeAvatar() {
                   <span>SHARED COMPANY ACCOUNTING</span>
                   <h2>Business Costs & Fees</h2>
                   <p className="fp-settings-copy">
-                    These settings are stored in the same Supabase company
-                    records used by MileVoxa mobile. Changes made here are
-                    available to both apps.
+                    Company fees and fixed weekly costs are shared across your
+                    MileVoxa workspace. Dashboard, Weekly Settlement, and Load
+                    Profitability use them when showing business results.
                   </p>
                 </div>
                 <div className="fp-company-role-badge">{role}</div>
@@ -1111,11 +1111,11 @@ async function removeAvatar() {
               <div className="fp-business-cost-sync-note">
                 <span className="fp-business-cost-sync-icon">↔</span>
                 <div>
-                  <strong>Mobile + Web synchronized through Supabase</strong>
+                  <strong>Shared across MileVoxa</strong>
                   <p>
-                    This page does not keep a separate web copy. Weekly
-                    Settlement, Dashboard and Load Profitability use these same
-                    company records.
+                    Changes apply to your company in both the website and mobile
+                    app, including Dashboard, Weekly Settlement, and Load
+                    Profitability.
                   </p>
                 </div>
               </div>

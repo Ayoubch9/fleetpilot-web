@@ -24,6 +24,18 @@ assert.match(css, /max-width:\s*743px/);
 assert.match(css, /font-size:\s*16px\s*!important/);
 assert.match(css, /min-width:\s*220px\s*!important/);
 assert.match(css, /font-size:\s*14px\s*!important/);
+assert.match(css, /\.fp-beta-access-actions > div:first-child span[\s\S]*?font-size:\s*14px\s*!important/);
+assert.match(css, /\.fp-action-copy span[\s\S]*?font-size:\s*13px\s*!important/);
+assert.match(css, /\.mv-reports-control-center \.mv-kpi-value[\s\S]*?font-size:\s*24px\s*!important/);
+assert.match(css, /\.fp-document-type-donut\) span[\s\S]*?font-size:\s*12px\s*!important/);
+assert.match(css, /\.fp-expense-popover[\s\S]*?\.fp-settle-filter-portal[\s\S]*?font-size:\s*14px\s*!important/);
+assert.match(css, /@media \(max-width:\s*743px\)[\s\S]*?\.fp-settle-filter-portal\) :is\(input, select, textarea\)[\s\S]*?font-size:\s*16px\s*!important/);
+
+const settings = read("src/app/settings/settings-center.tsx");
+assert.match(settings, /Company fees and fixed weekly costs are shared across your[\s\S]*?MileVoxa workspace/);
+assert.match(settings, /<strong>Shared across MileVoxa<\/strong>/);
+const deposit = read("src/app/security-deposit/security-deposit-manager.tsx");
+assert.match(deposit, /These company settings guide the deposit balances shown in[\s\S]*?Weekly Settlement/);
 
 for (const [route, file, selector] of [
   ["privacy", "privacy/privacy-redesign.module.css", ".policyBody li"],

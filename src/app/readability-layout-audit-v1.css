@@ -245,3 +245,294 @@ body:has(.mv-app-shell) :is(.fp-beta-feedback-modal, .fp-quick-modal) :is(input,
     font-size: 16px !important;
   }
 }
+
+/* Bring the smaller text roles and secondary controls onto the shared scale. */
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content a[href] {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-load-side-action,
+  .fp-truck-side-action,
+  .fp-expense-side-action,
+  .fp-maint-side-action,
+  .fp-reimb-side-action,
+  .fp-settle-side-action,
+  .fp-pilot-start,
+  .fp-recent-loads-empty-button,
+  .fp-doc-pack-action
+) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  [class*="-note"],
+  [class*="-caption"],
+  [class*="-helper"],
+  [class*="-guidance"],
+  [class*="-description"],
+  [class*="-message"],
+  [class*="-summary"],
+  [class*="-secondary-link"],
+  [class*="-empty"]
+) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-overline,
+  [class*="-overline"],
+  [class*="-eyebrow"],
+  [class*="-badge"],
+  .mv-app-tab-count,
+  .fp-control-center-notification-count,
+  .fp-action-severity
+) {
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-app-tabs--filter .mv-app-tab-count {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .mv-kpi-label,
+  .fp-kpi-label,
+  .fp-dashboard-metric-label,
+  .fp-load-sort > span,
+  .fp-truck-sort > span,
+  .fp-expense-sort > span,
+  .fp-maint-sort > span,
+  .fp-reimb-sort > span,
+  .fp-settle-sort > span,
+  .fp-fuel-sort > span
+) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-load-sort > span,
+  .fp-truck-sort > span,
+  .fp-expense-sort > span,
+  .fp-maint-sort > span,
+  .fp-reimb-sort > span,
+  .fp-settle-sort > span,
+  .fp-fuel-sort > span
+) {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  [class*="-pagination"] button,
+  [class*="-pagination"] a,
+  [class*="-pagination"] span,
+  [class*="-pagination"] small,
+  [class*="-pagination"] p
+) {
+  font-size: 13px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-panel.side,
+  [class*="-side-card"],
+  [class*="-rail-card"],
+  .fp-chart-card,
+  .fp-breakdown-card,
+  .fp-recent-card,
+  .fp-quick-actions-card
+) :is(h2, h3) {
+  font-size: 16px !important;
+  line-height: 1.3 !important;
+}
+
+/* Dashboard annotations, business-attention copy and side-card actions. */
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(.fp-week-label, .fp-week-label strong) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .fp-week-label span {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-header .fp-app-week-selector .fp-week-label strong {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-header .fp-app-week-selector .fp-week-label span {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-header .fp-header-account > span:nth-child(2) span:first-child {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-header .fp-header-account > span:nth-child(2) span:last-child {
+  font-size: 13px !important;
+}
+
+body:has(.mv-app-shell) .fp-mobile-bottom-nav :is(a, button) > span {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .fp-mobile-more-grid > a > span:last-child {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-beta-dashboard-banner p,
+  .fp-action-copy span,
+  .fp-action-copy p,
+  .fp-action-empty span,
+  .fp-action-setup,
+  .fp-week-progress-detail span,
+  .fp-week-progress-open,
+  .fp-pilot-summary,
+  .fp-pilot-question,
+  .fp-recent-loads-empty p,
+  .fp-expense-promo p,
+  .fp-load-promo p,
+  .fp-truck-promo p,
+  .fp-maint-promo p,
+  .fp-reimb-promo p
+) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(
+  .fp-action-copy b,
+  .fp-action-empty b,
+  .fp-beta-dashboard-banner strong,
+  .fp-recent-loads-empty-button
+) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(.fp-expense-donut, .fp-load-donut-center, .fp-maint-donut, .fp-reimb-donut, .fp-document-type-donut) span {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content :is(.fp-load-donut-caption, .fp-expense-donut-caption, .fp-maint-donut-caption, .fp-reimb-donut-caption, .fp-doc-type-label) {
+  font-size: 13px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .fp-doc-pack-score > div:first-child span {
+  font-size: 13px !important;
+}
+
+/* Settings beta access, all settings labels and shared preference guidance. */
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell:has([class*="settings-control-center_"]) .fp-app-content :is(
+  [class*="-intro"],
+  [class*="-copy"],
+  [class*="-guidance"],
+  [class*="-description"],
+  [class*="-note"],
+  [class*="-helper"]
+) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell:has([class*="settings-control-center_"]) .fp-app-content :is(
+  .fp-beta-access-points > div,
+  .fp-subscription-feature-grid > div,
+  .fp-beta-access-actions > div:first-child span,
+  .fp-beta-existing-paid-note span,
+  .fp-subscription-storage-note span
+) {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell:has([class*="settings-control-center_"]) .fp-app-content :is(
+  .fp-subscription-fact > span,
+  .fp-trial-progress-top span,
+  .fp-trial-progress-dates
+) {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell:has([class*="settings-control-center_"]) .fp-app-content :is([class*="chip"], [class*="toggle-name"]) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell:has([class*="settings-control-center_"]) .fp-app-content .fp-beta-access-actions > div:first-child strong {
+  font-size: 14px !important;
+}
+
+/* Weekly Settlement and report-specific data roles retain prominent amounts. */
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-settle-control-center .fp-settle-side-card h2 {
+  font-size: 16px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-settle-control-center :is(
+  .fp-settle-week-action-label,
+  .fp-settle-cost-row > span:not(.fp-settle-rank),
+  .fp-settle-overview-legend > span,
+  .fp-settle-deposit-summary span
+) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-settle-control-center :is(.fp-settle-deposit-note, .fp-settle-table-heading p, .fp-settle-weekly-overview-heading p) {
+  font-size: 13px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center .mv-kpi-label {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center .mv-kpi-value {
+  font-size: 24px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center :is(.mv-kpi-note, .fp-report-daily-note, .fp-report-table-note, .fp-report-business-grid p) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center :is(.fp-report-period-current strong, .fp-report-section-period) {
+  font-size: 14px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center .fp-report-meta-strip span,
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center .fp-report-period-current span {
+  font-size: 12px !important;
+}
+
+body:has(.mv-app-shell) .mv-app-shell.mv-app-shell .fp-app-content .mv-reports-control-center .fp-compact-table td {
+  font-size: 14px !important;
+}
+
+/* Popovers and dialogs are often portaled outside the app-content element. */
+body:has(.mv-app-shell) :is(.fp-expense-popover, .fp-report-modal, .fp-doc-modal, .fp-expense-edit-modal, .fp-expense-delete-modal, .fp-expense-export-modal, .fp-expense-import-modal, .fp-fuel-date-popover, .fp-settle-filter-portal) :is(p, label, button, input, select, textarea) {
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-popover, .fp-report-modal, .fp-doc-modal, .fp-expense-edit-modal, .fp-expense-delete-modal, .fp-expense-export-modal, .fp-expense-import-modal, .fp-fuel-date-popover, .fp-settle-filter-portal) :is(small, [class*="helper"], [class*="copy"], [class*="description"]) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) :is(.fp-expense-popover, .fp-report-modal, .fp-doc-modal, .fp-expense-edit-modal, .fp-expense-delete-modal, .fp-expense-export-modal, .fp-expense-import-modal, .fp-fuel-date-popover, .fp-settle-filter-portal) h3 {
+  font-size: 16px !important;
+}
+
+body:has(.mv-app-shell) .fp-beta-feedback-modal .fp-beta-feedback-contact :is(b, span, small) {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body:has(.mv-app-shell) .fp-beta-feedback-modal .fp-beta-feedback-contact b {
+  font-size: 14px !important;
+}
+
+@media (max-width: 743px) {
+  body:has(.mv-app-shell) :is(.fp-expense-popover, .fp-report-modal, .fp-doc-modal, .fp-expense-edit-modal, .fp-expense-export-modal, .fp-expense-import-modal, .fp-fuel-date-popover, .fp-settle-filter-portal) :is(input, select, textarea) {
+    font-size: 16px !important;
+  }
+}

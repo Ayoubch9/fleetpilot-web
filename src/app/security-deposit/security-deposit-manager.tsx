@@ -482,8 +482,8 @@ export default function SecurityDepositManager({
 
             <div className="fp-deposit-save-row">
               <span>
-                Settings are company-level and will later be shared with the
-                MileVoxa mobile app through the same Supabase records.
+                These company settings guide the deposit balances shown in
+                Weekly Settlement.
               </span>
               <button
                 type="button"
