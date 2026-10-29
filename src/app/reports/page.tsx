@@ -9,6 +9,7 @@ import {
   monday,
   plusDays,
 } from "@/lib/fleetpilot-week";
+import { getActiveReportWorkWeeks } from "@/lib/report-week-fixed-expenses";
 import ReportActions from "./report-actions";
 import ReportPeriodControls from "./report-period-controls";
 
@@ -187,8 +188,22 @@ export default async function ReportsPage({
   );
 
   const weeklyFixed = activeFixed.reduce((sum, row) => sum + n(row.amount), 0);
-  const weeksInPeriod = countWeeks(range.start, range.end);
-  const fixedTotal = selectedTruck ? 0 : weeklyFixed * weeksInPeriod;
+  const reportWeekKeys = reportWeeks(range.start, range.end);
+  const activeWorkWeekKeys = getActiveReportWorkWeeks(
+    reportWeekKeys,
+    allLoads.map((load) => {
+      if (selectedTruck && load.truck_id !== selectedTruck) return null;
+      if (load.status === "CANCELLED" || load.status === "EXPIRED") return null;
+      if (!load.pickup_date) return null;
+
+      const pickupDate = parseDate(load.pickup_date.slice(0, 10));
+      return pickupDate ? dbDate(monday(pickupDate)) : null;
+    })
+  );
+  const weeksInPeriod = reportWeekKeys.length;
+  const activeWorkWeeks = activeWorkWeekKeys.size;
+  const activeWeeksNote = `${activeWorkWeeks} of ${weeksInPeriod} report ${weeksInPeriod === 1 ? "week had" : "weeks had"} loads`;
+  const fixedTotal = selectedTruck ? 0 : weeklyFixed * activeWorkWeeks;
 
   const grossRevenue = loads.reduce((sum, load) => sum + n(load.rate), 0);
   const loadedMiles = loads.reduce((sum, load) => sum + n(load.loaded_miles), 0);
@@ -285,7 +300,7 @@ export default async function ReportsPage({
       amount: fixedTotal,
       note: selectedTruck
         ? "Company-level fixed costs excluded from truck-only report"
-        : `${weeksInPeriod} reporting ${weeksInPeriod === 1 ? "week" : "weeks"}`,
+        : activeWeeksNote,
       color: chartCategoryColor(categoryMap.size),
     },
     {
@@ -410,7 +425,9 @@ const dailyRows = reportDates.map((date) => {
     weekBookingDate.get(weekKey) === dateKey;
 
   const fixed =
-    !selectedTruck && bookWeeklyCosts ? weeklyFixed : 0;
+    !selectedTruck && bookWeeklyCosts && activeWorkWeekKeys.has(weekKey)
+      ? weeklyFixed
+      : 0;
 
   const revenueFeeForDay =
     !selectedTruck && revenueFeeActive
@@ -614,7 +631,7 @@ const exportRows: string[][] = [
         note={
           selectedTruck
             ? "Company-level costs excluded from truck-only report"
-            : `${weeksInPeriod} weekly cycle${weeksInPeriod === 1 ? "" : "s"}`
+            : activeWeeksNote
         }
       />
       <Metric
@@ -708,9 +725,9 @@ const exportRows: string[][] = [
     </div>
 
     <div className="fp-report-daily-note">
-      Weekly fixed expenses and weekly odometer fees are booked on the
-      first displayed day of each reporting week so the daily rows
-      reconcile to the report totals.
+      Weekly fixed expenses are included only for weeks with a valid load that is not cancelled or expired.
+      Fixed expenses and odometer fees are booked on the first displayed day
+      of their reporting week so the daily rows reconcile to the report totals.
     </div>
 
     <div className="fp-report-table-wrap">
@@ -885,14 +902,14 @@ function inRange(value: string | null | undefined, start: Date, end: Date) {
   return date >= start && date <= end;
 }
 
-function countWeeks(start: Date, end: Date) {
+function reportWeeks(start: Date, end: Date) {
   let cursor = monday(start);
-  let count = 0;
-  while (cursor <= end && count < 60) {
-    count += 1;
+  const keys: string[] = [];
+  while (cursor <= end && keys.length < 60) {
+    keys.push(dbDate(cursor));
     cursor = plusDays(cursor, 7);
   }
-  return Math.max(count, 1);
+  return keys.length ? keys : [dbDate(monday(start))];
 }
 
 function calendarDays(start: Date, end: Date) {
